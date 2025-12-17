@@ -1,0 +1,87 @@
+name: Release Provider
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Version: ${VERSION}"
+
+      - name: Build binaries for all platforms
+        run: |
+          make clean
+          make checksums VERSION=${{ steps.version.outputs.version }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/pulumi-resource-webflow-v${{ steps.version.outputs.version }}-linux-x64.tar.gz
+            dist/pulumi-resource-webflow-v${{ steps.version.outputs.version }}-linux-arm64.tar.gz
+            dist/pulumi-resource-webflow-v${{ steps.version.outputs.version }}-darwin-x64.tar.gz
+            dist/pulumi-resource-webflow-v${{ steps.version.outputs.version }}-darwin-arm64.tar.gz
+            dist/pulumi-resource-webflow-v${{ steps.version.outputs.version }}-windows-x64.zip
+            dist/checksums.sha256
+          body: |
+            # Webflow Pulumi Provider v${{ steps.version.outputs.version }}
+
+            ## Installation
+
+            Install the provider using the Pulumi CLI:
+
+            ```bash
+            pulumi plugin install resource webflow --version ${{ steps.version.outputs.version }}
+            ```
+
+            Or manually download from the assets below.
+
+            ## Checksums
+
+            Verify the integrity of downloaded files using the SHA256 checksums:
+
+            ```bash
+            sha256sum -c checksums.sha256
+            ```
+
+            ## Supported Platforms
+
+            - Linux x64
+            - Linux ARM64
+            - macOS x64
+            - macOS ARM64
+            - Windows x64
+
+            ## Changes
+
+            See the commit log for detailed changes in this release.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update release with correct plugin URLs
+        run: |
+          echo "Release created successfully"
+          echo "Release assets available at: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}"

@@ -10,7 +10,7 @@
     },
     "go": {
       "generateResourceContainerTypes": true,
-      "importBasePath": "github.com/webflow/Webflow/sdk/go/Webflow",
+      "importBasePath": "github.com/jdetmar/pulumi-webflow/sdk/go/webflow",
       "respectSchemaVersion": true
     },
     "nodejs": {

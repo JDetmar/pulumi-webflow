@@ -4,9 +4,9 @@
 package config
 
 import (
+	"github.com/jdetmar/pulumi-webflow/sdk/go/webflow/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
-	"github.com/webflow/Webflow/sdk/go/Webflow/internal"
 )
 
 var _ = internal.GetEnvOrDefault

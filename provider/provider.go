@@ -36,6 +36,7 @@ func Provider() p.Provider {
 		WithDescription("Pulumi provider for managing Webflow site configurations").
 		WithHomepage("https://github.com/jdetmar/pulumi-webflow").
 		WithNamespace("webflow").
+		WithGoImportPath("github.com/jdetmar/pulumi-webflow/sdk/go/webflow").
 		WithResources(
 			infer.Resource(&RobotsTxt{}),
 			infer.Resource(&Redirect{}),

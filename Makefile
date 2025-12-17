@@ -1,26 +1,49 @@
-PROJECT_NAME := Pulumi Webflow Provider
+PROJECT_NAME := Pulumi Provider Boilerplate
 
-PACK             := webflow
+PACK             := provider-boilerplate
 PACKDIR          := sdk
-PROJECT          := github.com/jdetmar/pulumi-webflow
-NODE_MODULE_NAME := pulumi-webflow
-NUGET_PKG_NAME   := Pulumi.Webflow
+PROJECT          := github.com/pulumi/pulumi-provider-boilerplate
+NODE_MODULE_NAME := @pulumi/boilerplate
+NUGET_PKG_NAME   := Pulumi.Boilerplate
 
 PROVIDER        := pulumi-resource-${PACK}
 PROVIDER_PATH   := provider
-VERSION_PATH    := ${PROVIDER_PATH}.Version
+VERSION_PATH    := ${PROVIDER_PATH}/version.Version
 
 PULUMI          := pulumi
 
-SCHEMA_FILE     := provider/cmd/pulumi-resource-webflow/schema.json
+SCHEMA_FILE     := provider/cmd/pulumi-resource-provider-boilerplate/schema.json
 export GOPATH   := $(shell go env GOPATH)
 
 WORKING_DIR     := $(shell pwd)
 TESTPARALLELISM := 4
 
+prepare:
+	@if test -z "${NAME}"; then echo "NAME not set"; exit 1; fi
+	@if test -z "${REPOSITORY}"; then echo "REPOSITORY not set"; exit 1; fi
+	@if test -z "${ORG}"; then echo "ORG not set"; exit 1; fi
+	@if test ! -d "provider/cmd/pulumi-resource-provider-boilerplate"; then "Project already prepared"; exit 1; fi # SED_SKIP
+
+	# SED needs to not fail when encountering unicode characters
+	LC_CTYPE=C 
+	LANG=C
+
+	mv "provider/cmd/pulumi-resource-provider-boilerplate" provider/cmd/pulumi-resource-${NAME} # SED_SKIP
+	
+	# In MacOS the -i parameter needs an empty  to execute in place.
+	if [[ "${OS}" == "Darwin" ]]; then \
+		find . \( -path './.git' -o -path './sdk' \) -prune -o -not -name 'go.sum' -type f -exec sed -i '' '/SED_SKIP/!s,github.com/pulumi/pulumi-[x]yz,${REPOSITORY},g' {} \; ; \
+		find . \( -path './.git' -o -path './sdk' \) -prune -o -not -name 'go.sum' -type f -exec sed -i '' '/SED_SKIP/!s/[xX]yz/${NAME}/g' {} \; ; \
+		find . \( -path './.git' -o -path './sdk' \) -prune -o -not -name 'go.sum' -type f -exec sed -i '' '/SED_SKIP/!s/[aA]bc/${ORG}/g' {} \; ; \
+	else \
+		find . \( -path './.git' -o -path './sdk' \) -prune -o -not -name 'go.sum' -type f -exec sed -i '/SED_SKIP/!s,github.com/pulumi/pulumi-[x]yz,${REPOSITORY},g' {} \; ; \
+		find . \( -path './.git' -o -path './sdk' \) -prune -o -not -name 'go.sum' -type f -exec sed -i '/SED_SKIP/!s/[xX]yz/${NAME}/g' {} \; ; \
+		find . \( -path './.git' -o -path './sdk' \) -prune -o -not -name 'go.sum' -type f -exec sed -i '/SED_SKIP/!s/[aA]bc/${ORG}/g' {} \; ; \
+	fi
+
 # Override during CI using `make [TARGET] PROVIDER_VERSION=""` or by setting a PROVIDER_VERSION environment variable
 # Local & branch builds will just used this fixed default version unless specified
-PROVIDER_VERSION ?= 0.1.0-alpha.0+dev
+PROVIDER_VERSION ?= 1.0.0-alpha.0+dev
 # Use this normalised version everywhere rather than the raw input to ensure consistency.
 VERSION_GENERIC = $(shell pulumictl convert-version --language generic --version "$(PROVIDER_VERSION)")
 
@@ -64,9 +87,9 @@ sdk/dotnet: $(SCHEMA_FILE)
 sdk/go: ${SCHEMA_FILE}
 	rm -rf $@
 	$(PULUMI) package gen-sdk --language go ${SCHEMA_FILE} --version "${VERSION_GENERIC}"
-	cp go.mod ${PACKDIR}/go/${PACK}/go.mod
-	cd ${PACKDIR}/go/${PACK} && \
-		go mod edit -module=github.com/jdetmar/pulumi-${PACK}/${PACKDIR}/go/${PACK} && \
+	cp go.mod ${PACKDIR}/go/pulumi-${PACK}/go.mod
+	cd ${PACKDIR}/go/pulumi-${PACK} && \
+		go mod edit -module=github.com/pulumi/pulumi-${PACK}/${PACKDIR}/go/pulumi-${PACK} && \
 		go mod tidy
 
 .PHONY: provider
@@ -183,7 +206,7 @@ sign-goreleaser-exe-%: bin/jsign-6.0.jar
 			echo "To rebuild with signing delete the unsigned windows exe file and rebuild with the fixed configuration"; \
 			if [[ "${CI}" == "true" ]]; then exit 1; fi; \
 		else \
-			file=dist/build-provider-sign-windows_windows_${GORELEASER_ARCH}/pulumi-resource-webflow.exe; \
+			file=dist/build-provider-sign-windows_windows_${GORELEASER_ARCH}/pulumi-resource-provider-boilerplate.exe; \
 			mv $${file} $${file}.unsigned; \
 			az login --service-principal \
 				--username "${AZURE_SIGNING_CLIENT_ID}" \

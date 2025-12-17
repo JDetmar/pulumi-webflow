@@ -1,1 +1,1 @@
-Pulumi provider for managing Webflow site configurations
+An example built with pulumi-go-provider.

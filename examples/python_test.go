@@ -14,7 +14,7 @@ func TestPython(t *testing.T) {
 	pt := pulumitest.NewPulumiTest(t, "python",
 		opttest.SkipInstall(),
 		opttest.PythonLink("../sdk/python"),
-		opttest.AttachProviderServer("webflow", providerFactory),
+		opttest.AttachProviderServer("provider-boilerplate", providerFactory),
 	)
 
 	pt.Preview(t)

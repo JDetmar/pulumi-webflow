@@ -6,20 +6,12 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
-using Pulumi;
 
-namespace Webflow.Webflow
+namespace Pulumi.ProviderBoilerplate
 {
-    [WebflowResourceType("pulumi:providers:webflow")]
+    [ProviderBoilerplateResourceType("pulumi:providers:provider-boilerplate")]
     public partial class Provider : global::Pulumi.ProviderResource
     {
-        /// <summary>
-        /// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
-        /// </summary>
-        [Output("token")]
-        public Output<string?> Token { get; private set; } = null!;
-
-
         /// <summary>
         /// Create a Provider resource with the given unique name, arguments, and options.
         /// </summary>
@@ -28,7 +20,7 @@ namespace Webflow.Webflow
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
         public Provider(string name, ProviderArgs? args = null, CustomResourceOptions? options = null)
-            : base("webflow", name, args ?? new ProviderArgs(), MakeResourceOptions(options, ""))
+            : base("provider-boilerplate", name, args ?? new ProviderArgs(), MakeResourceOptions(options, ""))
         {
         }
 
@@ -37,10 +29,6 @@ namespace Webflow.Webflow
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
-                AdditionalSecretOutputs =
-                {
-                    "token",
-                },
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
@@ -51,21 +39,8 @@ namespace Webflow.Webflow
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
-        [Input("token")]
-        private Input<string>? _token;
-
-        /// <summary>
-        /// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
-        /// </summary>
-        public Input<string>? Token
-        {
-            get => _token;
-            set
-            {
-                var emptySecret = Output.CreateSecret(0);
-                _token = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
-            }
-        }
+        [Input("itsasecret", json: true)]
+        public Input<bool>? Itsasecret { get; set; }
 
         public ProviderArgs()
         {

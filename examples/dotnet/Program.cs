@@ -1,29 +1,20 @@
 using System.Collections.Generic;
+using System.Linq;
 using Pulumi;
-using Webflow = Pulumi.Webflow;
+using Boilerplate = Pulumi.ProviderBoilerplate;
 
 return await Deployment.RunAsync(() => 
 {
-    // Example: Configure robots.txt for a site
-    var myRobotsTxt = new Webflow.RobotsTxt("myRobotsTxt", new()
+    var myRandomResource = new Boilerplate.Random("myRandomResource", new()
     {
-        SiteId = "your-site-id-here",
-        Content = @"User-agent: *
-Allow: /",
+        Length = 24,
     });
 
-    // Example: Create a redirect
-    var myRedirect = new Webflow.Redirect("myRedirect", new()
+    var myRandomComponent = new Boilerplate.RandomComponent("myRandomComponent", new()
     {
-        SiteId = "your-site-id-here",
-        SourcePath = "/old-page",
-        DestinationPath = "/new-page",
-        StatusCode = 301,
+        Length = 24,
     });
 
-    return new Dictionary<string, object?>
-    {
-        ["robotsTxtId"] = myRobotsTxt.Id,
-        ["redirectId"] = myRedirect.Id,
-    };
+    return new Dictionary<string, object?>{};
 });
+

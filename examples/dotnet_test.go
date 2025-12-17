@@ -12,8 +12,8 @@ import (
 
 func TestDotnet(t *testing.T) {
 	pt := pulumitest.NewPulumiTest(t, "dotnet",
-		opttest.DotNetReference("Pulumi.ProviderWebflow", "../sdk/dotnet"),
-		opttest.AttachProviderServer("webflow", providerFactory),
+		opttest.DotNetReference("Pulumi.ProviderBoilerplate", "../sdk/dotnet"),
+		opttest.AttachProviderServer("provider-boilerplate", providerFactory),
 	)
 
 	pt.Preview(t)

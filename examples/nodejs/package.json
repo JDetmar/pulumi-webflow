@@ -1,11 +1,10 @@
 {
-  "name": "webflow-example",
+  "name": "provider-boilerplate",
   "devDependencies": {
     "@types/node": "^20"
   },
   "dependencies": {
     "typescript": "^4.0.0",
-    "@pulumi/pulumi": "3.212.0",
-    "pulumi-webflow": "latest"
+    "@pulumi/pulumi": "3.212.0"
   }
 }

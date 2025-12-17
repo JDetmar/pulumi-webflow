@@ -1,4 +1,4 @@
-// Copyright 2025, Justin Detmar.
+// Copyright 2025, Pulumi Corporation.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package provider implements the Webflow Pulumi Provider for managing Webflow sites.
+// Package provider implements a simple random resource and component.
 package provider
 
 import (
@@ -27,20 +27,17 @@ import (
 var Version string
 
 // Name controls how this provider is referenced in package names and elsewhere.
-const Name string = "webflow"
+const Name string = "provider-boilerplate"
 
-// Provider creates a new instance of the Webflow provider.
+// Provider creates a new instance of the provider.
 func Provider() p.Provider {
 	p, err := infer.NewProviderBuilder().
-		WithDisplayName("Webflow").
-		WithDescription("Pulumi provider for managing Webflow site configurations").
-		WithHomepage("https://github.com/jdetmar/pulumi-webflow").
-		WithNamespace("webflow").
-		WithResources(
-			infer.Resource(&RobotsTxt{}),
-			infer.Resource(&Redirect{}),
-			infer.Resource(&SiteResource{}),
-		).
+		WithDisplayName("pulumi-provider-boilerplate").
+		WithDescription("An example built with pulumi-go-provider.").
+		WithHomepage("https://www.pulumi.com").
+		WithNamespace("pulumi").
+		WithResources(infer.Resource(Random{})).
+		WithComponents(infer.ComponentF(NewRandomComponent)).
 		WithConfig(infer.Config(&Config{})).
 		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",
@@ -49,4 +46,9 @@ func Provider() p.Provider {
 		panic(fmt.Errorf("unable to build provider: %w", err))
 	}
 	return p
+}
+
+// Config defines provider-level configuration
+type Config struct {
+	Scream *bool `pulumi:"itsasecret,optional"`
 }

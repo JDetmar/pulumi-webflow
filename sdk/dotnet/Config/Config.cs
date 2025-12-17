@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Immutable;
 
-namespace Webflow.Webflow
+namespace Pulumi.ProviderBoilerplate
 {
     public static class Config
     {
@@ -30,16 +30,13 @@ namespace Webflow.Webflow
             }
         }
 
-        private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("webflow");
+        private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("provider-boilerplate");
 
-        private static readonly __Value<string?> _token = new __Value<string?>(() => __config.Get("token"));
-        /// <summary>
-        /// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
-        /// </summary>
-        public static string? Token
+        private static readonly __Value<bool?> _itsasecret = new __Value<bool?>(() => __config.GetBoolean("itsasecret"));
+        public static bool? Itsasecret
         {
-            get => _token.Get();
-            set => _token.Set(value);
+            get => _itsasecret.Get();
+            set => _itsasecret.Set(value);
         }
 
     }

@@ -1,19 +1,16 @@
-name: webflow-example
+name: provider-boilerplate
 runtime: yaml
 
-config:
-  webflow:token:
-    secure: your-webflow-api-token-here
-
 resources:
-  # Example: Configure robots.txt for a site
-  myRobotsTxt:
-    type: webflow:RobotsTxt
+  myRandomResource:
+    type: provider-boilerplate:Random
     properties:
-      siteId: your-site-id-here
-      content: |
-        User-agent: *
-        Allow: /
+      length: 24
+  myRandomComponent:
+    type: provider-boilerplate:RandomComponent
+    properties:
+      length: 24
 
 outputs:
-  robotsTxtId: ${myRobotsTxt.id}
+  output:
+    value: ${myRandomResource.result}

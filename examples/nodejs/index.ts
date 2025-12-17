@@ -1,20 +1,12 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as webflow from "pulumi-webflow";
+import * as boilerplate from "@pulumi/provider-boilerplate";
 
-// Example: Configure robots.txt for a site
-const myRobotsTxt = new webflow.RobotsTxt("myRobotsTxt", {
-    siteId: "your-site-id-here",
-    content: `User-agent: *
-Allow: /`,
+const myRandomResource = new boilerplate.Random("myRandomResource", {
+  length: 24,
 });
-
-// Example: Create a redirect
-const myRedirect = new webflow.Redirect("myRedirect", {
-    siteId: "your-site-id-here",
-    sourcePath: "/old-page",
-    destinationPath: "/new-page",
-    statusCode: 301,
+const myRandomComponent = new boilerplate.RandomComponent("myRandomComponent", {
+  length: 24,
 });
-
-export const robotsTxtId = myRobotsTxt.id;
-export const redirectId = myRedirect.id;
+export const output = {
+  value: myRandomResource.result,
+};

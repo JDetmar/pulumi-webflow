@@ -12,8 +12,8 @@ import (
 
 func TestNodejsExampleLifecycle(t *testing.T) {
 	pt := pulumitest.NewPulumiTest(t, "nodejs",
-		opttest.YarnLink("@pulumi/provider-boilerplate"),
-		opttest.AttachProviderServer("provider-boilerplate", providerFactory),
+		opttest.YarnLink("pulumi-webflow"),
+		opttest.AttachProviderServer("webflow", providerFactory),
 	)
 
 	pt.Preview(t)

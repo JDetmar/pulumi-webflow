@@ -183,8 +183,6 @@ github.com/pulumi/providertest v0.3.2-0.20251024161007-0fa5050ab7c9 h1:MecwPUe14
 github.com/pulumi/providertest v0.3.2-0.20251024161007-0fa5050ab7c9/go.mod h1:OBpIGSQrw1FW9VNaHBtKCRxEoTISvx8JsxECmRqRgRQ=
 github.com/pulumi/pulumi-go-provider v1.1.2 h1:NUQDXaftBDFTPMBPwxo8FhJUX0ymkv6a1XiXTnCDpvg=
 github.com/pulumi/pulumi-go-provider v1.1.2/go.mod h1:3lNIuxT/BArFyiKrVfv+UT7gMMtplss7V69KuBZ4zIk=
-github.com/pulumi/pulumi-random/sdk/v4 v4.18.4 h1:mkZ3nB3xLTFZ8Fbh50bXTxiroGpjSyonTFcKovLxWME=
-github.com/pulumi/pulumi-random/sdk/v4 v4.18.4/go.mod h1:BBVUyqFkhCbwvUSnDjubH5b+SeJeoMQH4COGNKaaoUI=
 github.com/pulumi/pulumi/pkg/v3 v3.212.0 h1:bAfZp6LAkQpVsoSivzGnPjzaTO8HYs1XLmJ0RyZKvUA=
 github.com/pulumi/pulumi/pkg/v3 v3.212.0/go.mod h1:nZ4ErhkPhrs5RKgNljJzipNMlNLcXyDZVjTuPVMabTw=
 github.com/pulumi/pulumi/sdk/v3 v3.212.0 h1:YQKFamkd+3sqcbFUi+sq50DejdymayYbqaz+OQnSvug=

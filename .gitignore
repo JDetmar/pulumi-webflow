@@ -12,8 +12,18 @@ ci-scripts
 /nuget/
 provider/**/schema-embed.json
 
+**/version.txt
+**/nuget
+**/dist
+
 sdk/dotnet/version.txt
-sdk/java/.gradle
-sdk/java/build/
-sdk/java/build.gradle
+
 sdk/python/venv
+
+sdk/java/build
+sdk/java/.gradle
+sdk/java/gradle
+sdk/java/gradlew
+sdk/java/gradlew.bat
+
+.DS_Store

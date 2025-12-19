@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package provider implements a simple random resource and component.
+// Package provider wires up the Webflow Pulumi provider and exposes the Provider constructor.
 package provider
 
 import (
@@ -29,25 +29,30 @@ var Version string
 // Name controls how this provider is referenced in package names and elsewhere.
 const Name string = "webflow"
 
-// Provider creates a new instance of the Webflow provider.
+// Provider creates a new instance of the Webflow provider with all supported resources.
 func Provider() p.Provider {
-	p, err := infer.NewProviderBuilder().
+	// Propagate build version into HTTP client user-agent strings.
+	if Version != "" {
+		SetProviderVersion(Version)
+	}
+
+	prov, err := infer.NewProviderBuilder().
 		WithDisplayName("Webflow").
-		WithDescription("Pulumi provider for managing Webflow site configurations").
+		WithDescription("Pulumi provider for managing Webflow sites, redirects, and robots.txt.").
 		WithHomepage("https://github.com/jdetmar/pulumi-webflow").
-		WithNamespace("webflow").
-		WithGoImportPath("github.com/jdetmar/pulumi-webflow/sdk/go/webflow").
-		WithResources(
-			infer.Resource(&RobotsTxt{}),
-			infer.Resource(&Redirect{}),
-			infer.Resource(&SiteResource{}),
-		).
+		WithNamespace(Name).
 		WithConfig(infer.Config(&Config{})).
+		WithResources(
+			infer.Resource(&SiteResource{}),
+			infer.Resource(&Redirect{}),
+			infer.Resource(&RobotsTxt{}),
+		).
 		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",
-		}).Build()
+		}).
+		Build()
 	if err != nil {
 		panic(fmt.Errorf("unable to build provider: %w", err))
 	}
-	return p
+	return prov
 }

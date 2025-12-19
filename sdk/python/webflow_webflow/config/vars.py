@@ -16,11 +16,14 @@ from .. import _utilities
 
 import types
 
-__config__ = pulumi.Config('provider-boilerplate')
+__config__ = pulumi.Config('webflow')
 
 
 class _ExportableConfig(types.ModuleType):
     @_builtins.property
-    def itsasecret(self) -> Optional[bool]:
-        return __config__.get_bool('itsasecret')
+    def token(self) -> Optional[str]:
+        """
+        Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
+        """
+        return __config__.get('token')
 

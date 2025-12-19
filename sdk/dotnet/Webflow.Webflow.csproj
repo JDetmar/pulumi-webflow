@@ -4,7 +4,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Pulumi Corp.</Authors>
     <Company>Pulumi Corp.</Company>
-    <Description>Pulumi provider for managing Webflow site configurations</Description>
+    <Description>Pulumi provider for managing Webflow sites, redirects, and robots.txt.</Description>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jdetmar/pulumi-webflow</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>

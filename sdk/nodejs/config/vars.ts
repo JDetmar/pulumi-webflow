@@ -5,12 +5,15 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "../utilities";
 
 declare var exports: any;
-const __config = new pulumi.Config("provider-boilerplate");
+const __config = new pulumi.Config("webflow");
 
-export declare const itsasecret: boolean | undefined;
-Object.defineProperty(exports, "itsasecret", {
+/**
+ * Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
+ */
+export declare const token: string | undefined;
+Object.defineProperty(exports, "token", {
     get() {
-        return __config.getObject<boolean>("itsasecret");
+        return __config.get("token");
     },
     enumerable: true,
 });

@@ -1,1 +1,1 @@
-An example built with pulumi-go-provider.
+Pulumi provider for managing Webflow sites, redirects, and robots.txt.

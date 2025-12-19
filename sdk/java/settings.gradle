@@ -10,5 +10,4 @@ pluginManagement {
   }
 }
 
-rootProject.name = "com.pulumi.provider-boilerplate"
-include("lib")
+rootProject.name = "com.webflow.webflow"

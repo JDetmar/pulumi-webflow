@@ -55,7 +55,7 @@ ensure::
 
 $(SCHEMA_FILE): provider
 	$(PULUMI) package get-schema $(WORKING_DIR)/bin/${PROVIDER} | \
-		jq 'del(.version)' > $(SCHEMA_FILE)
+		jq 'del(.version) | (.language.go.importBasePath="github.com/jdetmar/pulumi-webflow/sdk/go/webflow")' > $(SCHEMA_FILE)
 
 # Codegen generates the schema file and *generates* all sdks. This is a local process and
 # does not require the ability to build all SDKs.
@@ -87,9 +87,11 @@ sdk/dotnet: $(SCHEMA_FILE)
 sdk/go: ${SCHEMA_FILE}
 	rm -rf $@
 	$(PULUMI) package gen-sdk --language go ${SCHEMA_FILE} --version "${VERSION_GENERIC}"
-	cp go.mod ${PACKDIR}/go/pulumi-${PACK}/go.mod
-	cd ${PACKDIR}/go/pulumi-${PACK} && \
-		go mod edit -module=github.com/pulumi/pulumi-${PACK}/${PACKDIR}/go/pulumi-${PACK} && \
+	GO_PKG_DIR=${PACKDIR}/go/webflow; \
+	mkdir -p $$GO_PKG_DIR; \
+	cp go.mod $$GO_PKG_DIR/go.mod; \
+	cd $$GO_PKG_DIR && \
+		go mod edit -module=github.com/jdetmar/pulumi-webflow/sdk/go/webflow && \
 		go mod tidy
 
 .PHONY: provider
@@ -129,6 +131,8 @@ python_sdk: sdk/python
 
 java_sdk:: PACKAGE_VERSION := $(VERSION_GENERIC)
 java_sdk:: sdk/java
+	# Generated settings.gradle references a non-existent 'lib' module; drop it for a single-module build.
+	sed -i '' '/^include("lib")/d' sdk/java/settings.gradle
 	cd sdk/java/ && \
 		gradle --console=plain build
 

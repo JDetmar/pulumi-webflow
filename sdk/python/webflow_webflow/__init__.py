@@ -7,26 +7,28 @@ from . import _utilities
 import typing
 # Export this package's modules as members:
 from .provider import *
-from .random import *
-from .random_component import *
+from .redirect import *
+from .robots_txt import *
+from .site import *
 
 # Make subpackages available:
 if typing.TYPE_CHECKING:
-    import pulumi_provider_boilerplate.config as __config
+    import webflow_webflow.config as __config
     config = __config
 else:
-    config = _utilities.lazy_import('pulumi_provider_boilerplate.config')
+    config = _utilities.lazy_import('webflow_webflow.config')
 
 _utilities.register(
     resource_modules="""
 [
  {
-  "pkg": "provider-boilerplate",
+  "pkg": "webflow",
   "mod": "index",
-  "fqn": "pulumi_provider_boilerplate",
+  "fqn": "webflow_webflow",
   "classes": {
-   "provider-boilerplate:index:Random": "Random",
-   "provider-boilerplate:index:RandomComponent": "RandomComponent"
+   "webflow:index:Redirect": "Redirect",
+   "webflow:index:RobotsTxt": "RobotsTxt",
+   "webflow:index:Site": "Site"
   }
  }
 ]
@@ -34,9 +36,9 @@ _utilities.register(
     resource_packages="""
 [
  {
-  "pkg": "provider-boilerplate",
-  "token": "pulumi:providers:provider-boilerplate",
-  "fqn": "pulumi_provider_boilerplate",
+  "pkg": "webflow",
+  "token": "pulumi:providers:webflow",
+  "fqn": "webflow_webflow",
   "class": "Provider"
  }
 ]

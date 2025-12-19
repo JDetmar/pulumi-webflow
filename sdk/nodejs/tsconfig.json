@@ -17,8 +17,9 @@
         "config/vars.ts",
         "index.ts",
         "provider.ts",
-        "random.ts",
-        "randomComponent.ts",
+        "redirect.ts",
+        "robotsTxt.ts",
+        "site.ts",
         "utilities.ts"
     ]
 }

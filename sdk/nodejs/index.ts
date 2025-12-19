@@ -10,15 +10,20 @@ export type Provider = import("./provider").Provider;
 export const Provider: typeof import("./provider").Provider = null as any;
 utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 
-export { RandomArgs } from "./random";
-export type Random = import("./random").Random;
-export const Random: typeof import("./random").Random = null as any;
-utilities.lazyLoad(exports, ["Random"], () => require("./random"));
+export { RedirectArgs } from "./redirect";
+export type Redirect = import("./redirect").Redirect;
+export const Redirect: typeof import("./redirect").Redirect = null as any;
+utilities.lazyLoad(exports, ["Redirect"], () => require("./redirect"));
 
-export { RandomComponentArgs } from "./randomComponent";
-export type RandomComponent = import("./randomComponent").RandomComponent;
-export const RandomComponent: typeof import("./randomComponent").RandomComponent = null as any;
-utilities.lazyLoad(exports, ["RandomComponent"], () => require("./randomComponent"));
+export { RobotsTxtArgs } from "./robotsTxt";
+export type RobotsTxt = import("./robotsTxt").RobotsTxt;
+export const RobotsTxt: typeof import("./robotsTxt").RobotsTxt = null as any;
+utilities.lazyLoad(exports, ["RobotsTxt"], () => require("./robotsTxt"));
+
+export { SiteArgs } from "./site";
+export type Site = import("./site").Site;
+export const Site: typeof import("./site").Site = null as any;
+utilities.lazyLoad(exports, ["Site"], () => require("./site"));
 
 
 // Export sub-modules:
@@ -32,20 +37,22 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
-            case "provider-boilerplate:index:Random":
-                return new Random(name, <any>undefined, { urn })
-            case "provider-boilerplate:index:RandomComponent":
-                return new RandomComponent(name, <any>undefined, { urn })
+            case "webflow:index:Redirect":
+                return new Redirect(name, <any>undefined, { urn })
+            case "webflow:index:RobotsTxt":
+                return new RobotsTxt(name, <any>undefined, { urn })
+            case "webflow:index:Site":
+                return new Site(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }
     },
 };
-pulumi.runtime.registerResourceModule("provider-boilerplate", "index", _module)
-pulumi.runtime.registerResourcePackage("provider-boilerplate", {
+pulumi.runtime.registerResourceModule("webflow", "index", _module)
+pulumi.runtime.registerResourcePackage("webflow", {
     version: utilities.getVersion(),
     constructProvider: (name: string, type: string, urn: string): pulumi.ProviderResource => {
-        if (type !== "pulumi:providers:provider-boilerplate") {
+        if (type !== "pulumi:providers:webflow") {
             throw new Error(`unknown provider type ${type}`);
         }
         return new Provider(name, <any>undefined, { urn });

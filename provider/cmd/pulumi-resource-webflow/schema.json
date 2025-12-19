@@ -1,7 +1,7 @@
 {
   "name": "webflow",
   "displayName": "Webflow",
-  "description": "Pulumi provider for managing Webflow site configurations",
+  "description": "Pulumi provider for managing Webflow sites, redirects, and robots.txt.",
   "homepage": "https://github.com/jdetmar/pulumi-webflow",
   "namespace": "webflow",
   "language": {

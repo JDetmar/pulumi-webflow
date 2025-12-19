@@ -1,27 +1,34 @@
 package main
 
 import (
-	boilerplate "github.com/pulumi/pulumi-provider-boilerplate/sdk/go/pulumi-provider-boilerplate"
+	"github.com/jdetmar/pulumi-webflow/sdk/go/webflow"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		myRandomResource, err := boilerplate.NewRandom(ctx, "myRandomResource", &boilerplate.RandomArgs{
-			Length: pulumi.Int(24),
+		// Example: Configure robots.txt for a site
+		robotsTxt, err := webflow.NewRobotsTxt(ctx, "myRobotsTxt", &webflow.RobotsTxtArgs{
+			SiteId:  pulumi.String("your-site-id-here"),
+			Content: pulumi.String("User-agent: *\nAllow: /"),
 		})
 		if err != nil {
 			return err
 		}
-		_, err = boilerplate.NewRandomComponent(ctx, "myRandomComponent", &boilerplate.RandomComponentArgs{
-			Length: pulumi.Int(24),
+
+		// Example: Create a redirect
+		redirect, err := webflow.NewRedirect(ctx, "myRedirect", &webflow.RedirectArgs{
+			SiteId:          pulumi.String("your-site-id-here"),
+			SourcePath:      pulumi.String("/old-page"),
+			DestinationPath: pulumi.String("/new-page"),
+			StatusCode:      pulumi.Int(301),
 		})
 		if err != nil {
 			return err
 		}
-		ctx.Export("output", pulumi.StringMap{
-			"value": myRandomResource.Result,
-		})
+
+		ctx.Export("robotsTxtId", robotsTxt.ID())
+		ctx.Export("redirectId", redirect.ID())
 		return nil
 	})
 }

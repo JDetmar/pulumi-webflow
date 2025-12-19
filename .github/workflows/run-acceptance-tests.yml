@@ -10,7 +10,7 @@ on:
     - CHANGELOG.md
   workflow_dispatch: {}
 env:
-  PROVIDER: provider-boilerplate
+  PROVIDER: pulumi-webflow
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   TRAVIS_OS_NAME: linux
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
@@ -168,7 +168,7 @@ jobs:
 
         git stash pop
 
-        git add sdk provider/cmd/provider-boilerplate/schema.json
+        git add sdk provider/cmd/pulumi-webflow/schema.json
 
         git reset sdk/python/*/pulumi-plugin.json \
             sdk/python/pyproject.toml \
@@ -322,7 +322,7 @@ jobs:
 
         git stash pop
 
-        git add sdk provider/cmd/provider-boilerplate/schema.json
+        git add sdk provider/cmd/pulumi-webflow/schema.json
 
         git reset sdk/python/*/pulumi-plugin.json \
             sdk/python/pyproject.toml \

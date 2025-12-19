@@ -27,17 +27,21 @@ import (
 var Version string
 
 // Name controls how this provider is referenced in package names and elsewhere.
-const Name string = "provider-boilerplate"
+const Name string = "webflow"
 
-// Provider creates a new instance of the provider.
+// Provider creates a new instance of the Webflow provider.
 func Provider() p.Provider {
 	p, err := infer.NewProviderBuilder().
-		WithDisplayName("pulumi-provider-boilerplate").
-		WithDescription("An example built with pulumi-go-provider.").
-		WithHomepage("https://www.pulumi.com").
-		WithNamespace("pulumi").
-		WithResources(infer.Resource(Random{})).
-		WithComponents(infer.ComponentF(NewRandomComponent)).
+		WithDisplayName("Webflow").
+		WithDescription("Pulumi provider for managing Webflow site configurations").
+		WithHomepage("https://github.com/jdetmar/pulumi-webflow").
+		WithNamespace("webflow").
+		WithGoImportPath("github.com/jdetmar/pulumi-webflow/sdk/go/webflow").
+		WithResources(
+			infer.Resource(&RobotsTxt{}),
+			infer.Resource(&Redirect{}),
+			infer.Resource(&SiteResource{}),
+		).
 		WithConfig(infer.Config(&Config{})).
 		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",
@@ -46,9 +50,4 @@ func Provider() p.Provider {
 		panic(fmt.Errorf("unable to build provider: %w", err))
 	}
 	return p
-}
-
-// Config defines provider-level configuration
-type Config struct {
-	Scream *bool `pulumi:"itsasecret,optional"`
 }

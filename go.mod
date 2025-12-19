@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-provider-boilerplate
+module github.com/jdetmar/pulumi-webflow
 
 go 1.24.7
 

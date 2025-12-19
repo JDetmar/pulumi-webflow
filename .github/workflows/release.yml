@@ -7,7 +7,7 @@ on:
     - v*.*.*
     - "!v*.*.*-**"
 env:
-  PROVIDER: provider-boilerplate
+  PROVIDER: pulumi-webflow
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   TRAVIS_OS_NAME: linux
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
@@ -561,8 +561,8 @@ jobs:
       with:
         repository: ${{ github.repository }}
         base-ref: ${{ github.sha }}
-        source: sdk/go/pulumi-provider-boilerplate
-        path: sdk/go/pulumi-provider-boilerplate
+        source: sdk/go/pulumi-webflow
+        path: sdk/go/pulumi-webflow
         version: ${{ steps.version.outputs.version }}
         additive: false
         files: "**"

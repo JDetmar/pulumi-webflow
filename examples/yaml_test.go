@@ -14,7 +14,7 @@ import (
 
 func TestYAMLExampleLifecycle(t *testing.T) {
 	pt := pulumitest.NewPulumiTest(t, "yaml",
-		opttest.AttachProviderServer("provider-boilerplate", providerFactory),
+		opttest.AttachProviderServer("webflow", providerFactory),
 		opttest.SkipInstall(),
 	)
 
@@ -25,10 +25,10 @@ func TestYAMLExampleLifecycle(t *testing.T) {
 
 func TestYAMLExampleUpgrade(t *testing.T) {
 	pt := pulumitest.NewPulumiTest(t, "yaml",
-		opttest.AttachProviderServer("provider-boilerplate", providerFactory),
+		opttest.AttachProviderServer("webflow", providerFactory),
 		opttest.SkipInstall(),
 	)
-	previewResult := providertest.PreviewProviderUpgrade(t, pt, "provider-boilerplate", "0.0.1")
+	previewResult := providertest.PreviewProviderUpgrade(t, pt, "webflow", "0.0.1")
 
 	assertpreview.HasNoChanges(t, previewResult)
 }

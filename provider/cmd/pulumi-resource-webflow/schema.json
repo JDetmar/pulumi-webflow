@@ -1,0 +1,242 @@
+{
+  "name": "webflow",
+  "displayName": "Webflow",
+  "description": "Pulumi provider for managing Webflow site configurations",
+  "homepage": "https://github.com/jdetmar/pulumi-webflow",
+  "namespace": "webflow",
+  "language": {
+    "csharp": {
+      "respectSchemaVersion": true
+    },
+    "go": {
+      "generateResourceContainerTypes": true,
+      "importBasePath": "github.com/jdetmar/pulumi-webflow/sdk/go/webflow",
+      "respectSchemaVersion": true
+    },
+    "nodejs": {
+      "respectSchemaVersion": true
+    },
+    "python": {
+      "pyproject": {
+        "enabled": true
+      },
+      "respectSchemaVersion": true
+    }
+  },
+  "config": {
+    "variables": {
+      "token": {
+        "type": "string",
+        "description": "Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.",
+        "secret": true
+      }
+    }
+  },
+  "provider": {
+    "properties": {
+      "token": {
+        "type": "string",
+        "description": "Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.",
+        "secret": true
+      }
+    },
+    "inputProperties": {
+      "token": {
+        "type": "string",
+        "description": "Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.",
+        "secret": true
+      }
+    }
+  },
+  "resources": {
+    "webflow:index:Redirect": {
+      "description": "Manages HTTP redirects for a Webflow site. This resource allows you to define redirect rules for old URLs to new locations, supporting both permanent (301) and temporary (302) redirects.",
+      "properties": {
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the redirect was created (RFC3339 format). This is automatically set when the redirect is created and is read-only."
+        },
+        "destinationPath": {
+          "type": "string",
+          "description": "The URL path to redirect to (e.g., '/new-page', '/home'). Must start with '/' and contain only valid URL characters. This is the location where users will be redirected when they visit the source path."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2)."
+        },
+        "sourcePath": {
+          "type": "string",
+          "description": "The URL path to redirect from (e.g., '/old-page', '/blog/2023'). Must start with '/' and contain only valid URL characters (letters, numbers, hyphens, underscores, slashes, dots). Query strings and fragments are not allowed in the source path."
+        },
+        "statusCode": {
+          "type": "integer",
+          "description": "The HTTP status code for the redirect. Must be either 301 or 302. 301 = permanent redirect (use when a page has moved permanently; search engines update their index). 302 = temporary redirect (use for maintenance or temporary page moves)."
+        }
+      },
+      "required": [
+        "siteId",
+        "sourcePath",
+        "destinationPath",
+        "statusCode"
+      ],
+      "inputProperties": {
+        "destinationPath": {
+          "type": "string",
+          "description": "The URL path to redirect to (e.g., '/new-page', '/home'). Must start with '/' and contain only valid URL characters. This is the location where users will be redirected when they visit the source path."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2)."
+        },
+        "sourcePath": {
+          "type": "string",
+          "description": "The URL path to redirect from (e.g., '/old-page', '/blog/2023'). Must start with '/' and contain only valid URL characters (letters, numbers, hyphens, underscores, slashes, dots). Query strings and fragments are not allowed in the source path."
+        },
+        "statusCode": {
+          "type": "integer",
+          "description": "The HTTP status code for the redirect. Must be either 301 or 302. 301 = permanent redirect (use when a page has moved permanently; search engines update their index). 302 = temporary redirect (use for maintenance or temporary page moves)."
+        }
+      },
+      "requiredInputs": [
+        "siteId",
+        "sourcePath",
+        "destinationPath",
+        "statusCode"
+      ]
+    },
+    "webflow:index:RobotsTxt": {
+      "description": "Manages robots.txt configuration for a Webflow site. This resource allows you to define crawler access rules and sitemap references.",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "The robots.txt content in traditional format. Supports User-agent, Allow, Disallow, and Sitemap directives."
+        },
+        "lastModified": {
+          "type": "string",
+          "description": "RFC3339 timestamp of the last modification."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3')."
+        }
+      },
+      "required": [
+        "siteId",
+        "content",
+        "lastModified"
+      ],
+      "inputProperties": {
+        "content": {
+          "type": "string",
+          "description": "The robots.txt content in traditional format. Supports User-agent, Allow, Disallow, and Sitemap directives."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3')."
+        }
+      },
+      "requiredInputs": [
+        "siteId",
+        "content"
+      ]
+    },
+    "webflow:index:Site": {
+      "description": "Manages Webflow sites programmatically. This resource allows you to create, configure, and manage Webflow sites through infrastructure code. Create, Read, Update, and Delete operations are fully supported for complete site lifecycle management.",
+      "properties": {
+        "customDomains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of custom domains attached to the site (read-only in this release). Custom domain management will be available in a future release."
+        },
+        "dataCollectionEnabled": {
+          "type": "boolean",
+          "description": "Indicates whether data collection is enabled for this site (read-only). Controlled by your Webflow workspace settings, not per-site."
+        },
+        "dataCollectionType": {
+          "type": "string",
+          "description": "The type of data collection enabled for the site (read-only). Possible values: 'always' (always collect), 'optOut' (collect by default), 'disabled' (no collection). Controlled by your Webflow workspace settings, not per-site."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The human-readable name of the site as shown in the Webflow dashboard. Required - must be a non-empty string. Examples: 'My Marketing Site', 'Company Blog', 'Product Landing Page'. This is the name users will see when managing the site."
+        },
+        "lastPublished": {
+          "type": "string",
+          "description": "The RFC3339 timestamp of the last time the site was published (read-only). Automatically set by Webflow when changes are published to production."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The RFC3339 timestamp of the last time the site configuration was updated (read-only). Automatically set by Webflow when any site changes occur."
+        },
+        "parentFolderId": {
+          "type": "string",
+          "description": "The folder ID where the site will be organized in the Webflow dashboard. Optional - the site will be placed at the workspace root if not specified. This is useful for organizing multiple sites into logical groups within your workspace."
+        },
+        "previewUrl": {
+          "type": "string",
+          "description": "The URL to a preview image of the site (read-only). Automatically generated by Webflow for site thumbnails in the dashboard."
+        },
+        "publish": {
+          "type": "boolean",
+          "description": "Automatically publish the site after creation or updates. When set to true, the provider will publish the site to production after successfully creating or updating it. Default: false (manual publishing required). Note: Site must have at least one published version before automatic publishing will work. If publishing fails, the entire operation will fail with an error (site may exist but Pulumi will report failure). Recommendation: Set to false for initial site creation, then enable after first manual publish."
+        },
+        "shortName": {
+          "type": "string",
+          "description": "The slugified version of the site name used in URLs and for file organization. Optional - if not provided, Webflow will automatically generate one from the displayName. Must use only lowercase letters (a-z), numbers (0-9), and hyphens (-). No spaces, underscores, or special characters allowed. Must start and end with a letter or number (no leading/trailing hyphens). Examples: 'my-site', 'company-blog-2024', 'product-landing-page'."
+        },
+        "templateName": {
+          "type": "string",
+          "description": "The template to use for site creation. Optional - if not specified, Webflow will create a blank site. **WARNING: This field is IMMUTABLE.** Once set, it cannot be changed. Changing this value will trigger a REPLACE operation, which will: (1) DELETE your existing site and ALL its content (pages, CMS items, assets, etc.), (2) CREATE a new site with the new template, (3) REPLACE all dependent resources (redirects, robots.txt, etc.). This is a DESTRUCTIVE operation that cannot be undone. Use any valid Webflow template identifier (e.g., 'mast-framework', 'blank'). Consider using resource protection (`protect: true`) to prevent accidental replacement."
+        },
+        "timeZone": {
+          "type": "string",
+          "description": "The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features."
+        },
+        "workspaceId": {
+          "type": "string",
+          "description": "The Webflow workspace ID where the site will be created. Required for site creation (Enterprise workspace required by Webflow API). Example: '5f0c8c9e1c9d440000e8d8c3'. You can find your workspace ID in the Webflow dashboard under Account Settings > Workspace."
+        }
+      },
+      "required": [
+        "workspaceId",
+        "displayName"
+      ],
+      "inputProperties": {
+        "displayName": {
+          "type": "string",
+          "description": "The human-readable name of the site as shown in the Webflow dashboard. Required - must be a non-empty string. Examples: 'My Marketing Site', 'Company Blog', 'Product Landing Page'. This is the name users will see when managing the site."
+        },
+        "parentFolderId": {
+          "type": "string",
+          "description": "The folder ID where the site will be organized in the Webflow dashboard. Optional - the site will be placed at the workspace root if not specified. This is useful for organizing multiple sites into logical groups within your workspace."
+        },
+        "publish": {
+          "type": "boolean",
+          "description": "Automatically publish the site after creation or updates. When set to true, the provider will publish the site to production after successfully creating or updating it. Default: false (manual publishing required). Note: Site must have at least one published version before automatic publishing will work. If publishing fails, the entire operation will fail with an error (site may exist but Pulumi will report failure). Recommendation: Set to false for initial site creation, then enable after first manual publish."
+        },
+        "shortName": {
+          "type": "string",
+          "description": "The slugified version of the site name used in URLs and for file organization. Optional - if not provided, Webflow will automatically generate one from the displayName. Must use only lowercase letters (a-z), numbers (0-9), and hyphens (-). No spaces, underscores, or special characters allowed. Must start and end with a letter or number (no leading/trailing hyphens). Examples: 'my-site', 'company-blog-2024', 'product-landing-page'."
+        },
+        "templateName": {
+          "type": "string",
+          "description": "The template to use for site creation. Optional - if not specified, Webflow will create a blank site. **WARNING: This field is IMMUTABLE.** Once set, it cannot be changed. Changing this value will trigger a REPLACE operation, which will: (1) DELETE your existing site and ALL its content (pages, CMS items, assets, etc.), (2) CREATE a new site with the new template, (3) REPLACE all dependent resources (redirects, robots.txt, etc.). This is a DESTRUCTIVE operation that cannot be undone. Use any valid Webflow template identifier (e.g., 'mast-framework', 'blank'). Consider using resource protection (`protect: true`) to prevent accidental replacement."
+        },
+        "timeZone": {
+          "type": "string",
+          "description": "The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features."
+        },
+        "workspaceId": {
+          "type": "string",
+          "description": "The Webflow workspace ID where the site will be created. Required for site creation (Enterprise workspace required by Webflow API). Example: '5f0c8c9e1c9d440000e8d8c3'. You can find your workspace ID in the Webflow dashboard under Account Settings > Workspace."
+        }
+      },
+      "requiredInputs": [
+        "workspaceId",
+        "displayName"
+      ]
+    }
+  }
+}

@@ -4,13 +4,14 @@
 package config
 
 import (
-	"github.com/pulumi/pulumi-provider-boilerplate/sdk/go/pulumi-provider-boilerplate/internal"
+	"github.com/jdetmar/pulumi-webflow/sdk/go/webflow/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 var _ = internal.GetEnvOrDefault
 
-func GetItsasecret(ctx *pulumi.Context) bool {
-	return config.GetBool(ctx, "provider-boilerplate:itsasecret")
+// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
+func GetToken(ctx *pulumi.Context) string {
+	return config.Get(ctx, "webflow:token")
 }

@@ -20,15 +20,15 @@ public class Provider extends com.pulumi.resources.ProviderResource {
      * Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
      * 
      */
-    @Export(name="token", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> token;
+    @Export(name="apiToken", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> apiToken;
 
     /**
      * @return Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
      * 
      */
-    public Output<Optional<String>> token() {
-        return Codegen.optional(this.token);
+    public Output<Optional<String>> apiToken() {
+        return Codegen.optional(this.apiToken);
     }
 
     /**
@@ -67,7 +67,7 @@ public class Provider extends com.pulumi.resources.ProviderResource {
         var defaultOptions = com.pulumi.resources.CustomResourceOptions.builder()
             .version(Utilities.getVersion())
             .additionalSecretOutputs(List.of(
-                "token"
+                "apiToken"
             ))
             .build();
         return com.pulumi.resources.CustomResourceOptions.merge(defaultOptions, options, id);

@@ -25,7 +25,7 @@
   },
   "config": {
     "variables": {
-      "token": {
+      "apiToken": {
         "type": "string",
         "description": "Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.",
         "secret": true
@@ -34,14 +34,14 @@
   },
   "provider": {
     "properties": {
-      "token": {
+      "apiToken": {
         "type": "string",
         "description": "Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.",
         "secret": true
       }
     },
     "inputProperties": {
-      "token": {
+      "apiToken": {
         "type": "string",
         "description": "Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.",
         "secret": true

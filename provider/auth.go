@@ -10,7 +10,7 @@ import (
 )
 
 // ErrTokenNotConfigured is returned when no API token is available.
-var ErrTokenNotConfigured = fmt.Errorf("Webflow API token not configured. Configure using: pulumi config set webflow:token <token> --secret OR set WEBFLOW_API_TOKEN environment variable")
+var ErrTokenNotConfigured = fmt.Errorf("Webflow API token not configured. Configure using: pulumi config set webflow:apiToken <token> --secret OR set WEBFLOW_API_TOKEN environment variable")
 
 // getEnvToken retrieves the Webflow API token from the environment variable.
 func getEnvToken() string {

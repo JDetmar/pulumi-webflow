@@ -2,8 +2,8 @@ name: webflow-example
 runtime: yaml
 
 config:
-  webflow:token:
-    secure: your-webflow-api-token-here
+  webflow:apiToken:
+    value: your-webflow-api-token-here
 
 resources:
   # Example: Configure robots.txt for a site

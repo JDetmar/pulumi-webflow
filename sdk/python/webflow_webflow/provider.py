@@ -19,25 +19,25 @@ __all__ = ['ProviderArgs', 'Provider']
 @pulumi.input_type
 class ProviderArgs:
     def __init__(__self__, *,
-                 token: Optional[pulumi.Input[_builtins.str]] = None):
+                 api_token: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Provider resource.
-        :param pulumi.Input[_builtins.str] token: Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
+        :param pulumi.Input[_builtins.str] api_token: Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
         """
-        if token is not None:
-            pulumi.set(__self__, "token", token)
+        if api_token is not None:
+            pulumi.set(__self__, "api_token", api_token)
 
     @_builtins.property
-    @pulumi.getter
-    def token(self) -> Optional[pulumi.Input[_builtins.str]]:
+    @pulumi.getter(name="apiToken")
+    def api_token(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
         """
-        return pulumi.get(self, "token")
+        return pulumi.get(self, "api_token")
 
-    @token.setter
-    def token(self, value: Optional[pulumi.Input[_builtins.str]]):
-        pulumi.set(self, "token", value)
+    @api_token.setter
+    def api_token(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "api_token", value)
 
 
 @pulumi.type_token("pulumi:providers:webflow")
@@ -46,13 +46,13 @@ class Provider(pulumi.ProviderResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 token: Optional[pulumi.Input[_builtins.str]] = None,
+                 api_token: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Create a Webflow resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param pulumi.Input[_builtins.str] token: Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
+        :param pulumi.Input[_builtins.str] api_token: Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
         """
         ...
     @overload
@@ -77,7 +77,7 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 token: Optional[pulumi.Input[_builtins.str]] = None,
+                 api_token: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -87,8 +87,8 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
-            __props__.__dict__["token"] = None if token is None else pulumi.Output.secret(token)
-        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["token"])
+            __props__.__dict__["api_token"] = None if api_token is None else pulumi.Output.secret(api_token)
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["apiToken"])
         opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Provider, __self__).__init__(
             'webflow',
@@ -97,10 +97,10 @@ class Provider(pulumi.ProviderResource):
             opts)
 
     @_builtins.property
-    @pulumi.getter
-    def token(self) -> pulumi.Output[Optional[_builtins.str]]:
+    @pulumi.getter(name="apiToken")
+    def api_token(self) -> pulumi.Output[Optional[_builtins.str]]:
         """
         Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
         """
-        return pulumi.get(self, "token")
+        return pulumi.get(self, "api_token")
 

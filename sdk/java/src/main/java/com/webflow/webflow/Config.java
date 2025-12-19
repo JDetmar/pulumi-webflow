@@ -14,7 +14,7 @@ public final class Config {
  * Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
  * 
  */
-    public Optional<String> token() {
-        return Codegen.stringProp("token").config(config).get();
+    public Optional<String> apiToken() {
+        return Codegen.stringProp("apiToken").config(config).get();
     }
 }

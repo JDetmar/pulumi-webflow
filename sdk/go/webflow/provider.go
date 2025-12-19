@@ -15,7 +15,7 @@ type Provider struct {
 	pulumi.ProviderResourceState
 
 	// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
-	Token pulumi.StringPtrOutput `pulumi:"token"`
+	ApiToken pulumi.StringPtrOutput `pulumi:"apiToken"`
 }
 
 // NewProvider registers a new resource with the given unique name, arguments, and options.
@@ -25,11 +25,11 @@ func NewProvider(ctx *pulumi.Context,
 		args = &ProviderArgs{}
 	}
 
-	if args.Token != nil {
-		args.Token = pulumi.ToSecret(args.Token).(pulumi.StringPtrInput)
+	if args.ApiToken != nil {
+		args.ApiToken = pulumi.ToSecret(args.ApiToken).(pulumi.StringPtrInput)
 	}
 	secrets := pulumi.AdditionalSecretOutputs([]string{
-		"token",
+		"apiToken",
 	})
 	opts = append(opts, secrets)
 	opts = internal.PkgResourceDefaultOpts(opts)
@@ -43,13 +43,13 @@ func NewProvider(ctx *pulumi.Context,
 
 type providerArgs struct {
 	// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
-	Token *string `pulumi:"token"`
+	ApiToken *string `pulumi:"apiToken"`
 }
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
 	// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
-	Token pulumi.StringPtrInput
+	ApiToken pulumi.StringPtrInput
 }
 
 func (ProviderArgs) ElementType() reflect.Type {
@@ -90,8 +90,8 @@ func (o ProviderOutput) ToProviderOutputWithContext(ctx context.Context) Provide
 }
 
 // Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
-func (o ProviderOutput) Token() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.Token }).(pulumi.StringPtrOutput)
+func (o ProviderOutput) ApiToken() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ApiToken }).(pulumi.StringPtrOutput)
 }
 
 func init() {

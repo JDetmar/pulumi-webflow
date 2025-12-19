@@ -21,9 +21,9 @@ __config__ = pulumi.Config('webflow')
 
 class _ExportableConfig(types.ModuleType):
     @_builtins.property
-    def token(self) -> Optional[str]:
+    def api_token(self) -> Optional[str]:
         """
         Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
         """
-        return __config__.get('token')
+        return __config__.get('apiToken')
 

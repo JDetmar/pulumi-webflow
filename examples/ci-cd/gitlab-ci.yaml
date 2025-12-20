@@ -1,0 +1,118 @@
+stages:
+  - preview
+  - deploy
+  - verify
+
+variables:
+  PULUMI_SKIP_UPDATE_CHECK: "true"
+  PULUMI_SKIP_CONFIRMATIONS: "true"
+  NODE_VERSION: "20"
+
+before_script:
+  - set -e  # Exit on any error
+  - apt-get update -qq && apt-get install -y -qq curl jq
+  - curl -fsSL https://get.pulumi.com | sh
+  - export PATH=$PATH:$HOME/.pulumi/bin
+  - node --version
+  - npm install
+
+preview:
+  stage: preview
+  image: node:20-bullseye
+  script:
+    - cd infrastructure
+    - npm install
+    - pulumi preview --stack dev
+  only:
+    - branches
+  except:
+    - tags
+  artifacts:
+    reports:
+      dotenv: build.env
+  environment:
+    name: preview
+
+deploy_staging:
+  stage: deploy
+  image: node:20-bullseye
+  script:
+    - cd infrastructure
+    - npm install
+    - echo "Deploying to staging environment..."
+    - pulumi up --yes --stack staging
+    - pulumi stack output --stack staging > ../deployment.json
+  only:
+    - develop
+  artifacts:
+    paths:
+      - deployment.json
+    expire_in: 1 day
+  environment:
+    name: staging
+    url: https://staging.example.com
+  variables:
+    WEBFLOW_API_TOKEN: $WEBFLOW_API_TOKEN_STAGING
+
+deploy_production:
+  stage: deploy
+  image: node:20-bullseye
+  script:
+    - cd infrastructure
+    - npm install
+    - echo "Deploying to production environment..."
+    - pulumi up --yes --stack prod
+    - pulumi stack output --stack prod > ../deployment.json
+  only:
+    - main
+  artifacts:
+    paths:
+      - deployment.json
+    expire_in: 1 day
+  environment:
+    name: production
+    url: https://example.com
+  when: manual  # Require manual approval for production
+  variables:
+    WEBFLOW_API_TOKEN: $WEBFLOW_API_TOKEN_PRODUCTION
+
+verify_production:
+  stage: verify
+  image: node:20-bullseye
+  script:
+    - cd infrastructure
+    - npm install
+    - echo "Verifying production deployment..."
+    - pulumi stack select prod
+    - pulumi refresh --stack prod
+    - echo "Deployment verified successfully!"
+  only:
+    - main
+  when: on_success
+  environment:
+    name: production
+  variables:
+    WEBFLOW_API_TOKEN: $WEBFLOW_API_TOKEN_PRODUCTION
+
+# Rollback job (manual trigger)
+# Note: This cancels any in-progress operation. For full rollback to a previous state,
+# use `pulumi stack export` before deployments and `pulumi stack import` to restore.
+rollback_production:
+  stage: deploy
+  image: node:20-bullseye
+  script:
+    - cd infrastructure
+    - npm install
+    - echo "Canceling any in-progress operation..."
+    - pulumi cancel --stack prod --yes || true
+    - echo "Refreshing state from Webflow API..."
+    - pulumi refresh --stack prod --yes
+    - echo "State refreshed. Review and redeploy if needed."
+  only:
+    - main
+  when: manual
+  environment:
+    name: production
+    action: stop
+  variables:
+    WEBFLOW_API_TOKEN: $WEBFLOW_API_TOKEN_PRODUCTION

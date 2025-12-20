@@ -70,22 +70,22 @@ development_status:
   3-4-site-publishing-operations: done
   3-5-site-deletion-operations: done
   3-6-site-state-reading-operations: done
-  3-7-import-existing-sites: review
+  3-7-import-existing-sites: done
   epic-3-retrospective: optional
 
   # Epic 4: Multi-Language SDK Distribution
   epic-4: in-progress
   4-1-sdk-generation-pipeline-setup: done
   4-2-typescript-sdk-distribution: done
-  4-3-python-sdk-distribution: backlog
-  4-4-go-sdk-distribution: backlog
-  4-5-c-sdk-distribution: backlog
-  4-6-java-sdk-distribution: backlog
+  4-3-python-sdk-distribution: done
+  4-4-go-sdk-distribution: done
+  4-5-c-sdk-distribution: done
+  4-6-java-sdk-distribution: done
   epic-4-retrospective: optional
 
   # Epic 5: Enterprise Integration & Workflows
-  epic-5: backlog
-  5-1-ci-cd-pipeline-integration: backlog
+  epic-5: in-progress
+  5-1-ci-cd-pipeline-integration: done
   5-2-multi-site-management: backlog
   5-3-multi-environment-stack-configuration: backlog
   5-4-detailed-logging-for-troubleshooting: backlog

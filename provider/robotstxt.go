@@ -498,7 +498,7 @@ func handleWebflowError(statusCode int, body []byte) error {
 			"Your Webflow API token is invalid or has expired. " +
 			"To fix this: 1) Verify your token in the Webflow dashboard (Settings > Integrations > API Access), " +
 			"2) Ensure the token has 'site_config:read' and 'site_config:write' scopes, " +
-			"3) Update your Pulumi config with: 'pulumi config set webflow:token <your-token> --secret'")
+			"3) Update your Pulumi config with: 'pulumi config set webflow:apiToken <your-token> --secret'")
 	case 403:
 		return fmt.Errorf("forbidden: access denied to this resource. " +
 			"Your API token does not have permission to access this Webflow site. " +

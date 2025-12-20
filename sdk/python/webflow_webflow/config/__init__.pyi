@@ -14,7 +14,7 @@ else:
     from typing_extensions import NotRequired, TypedDict, TypeAlias
 from .. import _utilities
 
-token: Optional[str]
+apiToken: Optional[str]
 """
 Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
 """

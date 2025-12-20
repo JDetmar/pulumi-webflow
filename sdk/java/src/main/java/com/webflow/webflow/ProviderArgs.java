@@ -19,21 +19,21 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
      * Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
      * 
      */
-    @Import(name="token")
-    private @Nullable Output<String> token;
+    @Import(name="apiToken")
+    private @Nullable Output<String> apiToken;
 
     /**
      * @return Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
      * 
      */
-    public Optional<Output<String>> token() {
-        return Optional.ofNullable(this.token);
+    public Optional<Output<String>> apiToken() {
+        return Optional.ofNullable(this.apiToken);
     }
 
     private ProviderArgs() {}
 
     private ProviderArgs(ProviderArgs $) {
-        this.token = $.token;
+        this.apiToken = $.apiToken;
     }
 
     public static Builder builder() {
@@ -55,24 +55,24 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param token Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
+         * @param apiToken Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
          * 
          * @return builder
          * 
          */
-        public Builder token(@Nullable Output<String> token) {
-            $.token = token;
+        public Builder apiToken(@Nullable Output<String> apiToken) {
+            $.apiToken = apiToken;
             return this;
         }
 
         /**
-         * @param token Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
+         * @param apiToken Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
          * 
          * @return builder
          * 
          */
-        public Builder token(String token) {
-            return token(Output.of(token));
+        public Builder apiToken(String apiToken) {
+            return apiToken(Output.of(apiToken));
         }
 
         public ProviderArgs build() {

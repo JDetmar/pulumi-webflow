@@ -32,14 +32,14 @@ namespace Webflow.Webflow
 
         private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("webflow");
 
-        private static readonly __Value<string?> _token = new __Value<string?>(() => __config.Get("token"));
+        private static readonly __Value<string?> _apiToken = new __Value<string?>(() => __config.Get("apiToken"));
         /// <summary>
         /// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
         /// </summary>
-        public static string? Token
+        public static string? ApiToken
         {
-            get => _token.Get();
-            set => _token.Set(value);
+            get => _apiToken.Get();
+            set => _apiToken.Set(value);
         }
 
     }

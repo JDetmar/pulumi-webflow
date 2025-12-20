@@ -16,8 +16,8 @@ namespace Webflow.Webflow
         /// <summary>
         /// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
         /// </summary>
-        [Output("token")]
-        public Output<string?> Token { get; private set; } = null!;
+        [Output("apiToken")]
+        public Output<string?> ApiToken { get; private set; } = null!;
 
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Webflow.Webflow
                 Version = Utilities.Version,
                 AdditionalSecretOutputs =
                 {
-                    "token",
+                    "apiToken",
                 },
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
@@ -51,19 +51,19 @@ namespace Webflow.Webflow
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
-        [Input("token")]
-        private Input<string>? _token;
+        [Input("apiToken")]
+        private Input<string>? _apiToken;
 
         /// <summary>
         /// Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
         /// </summary>
-        public Input<string>? Token
+        public Input<string>? ApiToken
         {
-            get => _token;
+            get => _apiToken;
             set
             {
                 var emptySecret = Output.CreateSecret(0);
-                _token = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
+                _apiToken = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
             }
         }
 

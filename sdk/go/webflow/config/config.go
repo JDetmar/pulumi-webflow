@@ -12,6 +12,6 @@ import (
 var _ = internal.GetEnvOrDefault
 
 // Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
-func GetToken(ctx *pulumi.Context) string {
-	return config.Get(ctx, "webflow:token")
+func GetApiToken(ctx *pulumi.Context) string {
+	return config.Get(ctx, "webflow:apiToken")
 }

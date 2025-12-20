@@ -9,16 +9,16 @@ import (
 )
 
 // Config defines the provider configuration.
-// The token field is marked as a secret and will be automatically handled by Pulumi.
+// The apiToken field is marked as a secret and will be automatically handled by Pulumi.
 type Config struct {
-	// Token is the Webflow API v2 bearer token for authentication.
-	// Can be set via `pulumi config set webflow:token <value> --secret` or WEBFLOW_API_TOKEN env var.
-	Token string `pulumi:"token,optional" provider:"secret"`
+	// ApiToken is the Webflow API v2 bearer token for authentication.
+	// Can be set via `pulumi config set webflow:apiToken <value> --secret` or WEBFLOW_API_TOKEN env var.
+	ApiToken string `pulumi:"apiToken,optional" provider:"secret"`
 }
 
 // Annotate adds descriptions to the Config fields for schema generation.
 func (c *Config) Annotate(a infer.Annotator) {
-	a.Describe(&c.Token, "Webflow API v2 bearer token for authentication. "+
+	a.Describe(&c.ApiToken, "Webflow API v2 bearer token for authentication. "+
 		"Can also be set via WEBFLOW_API_TOKEN environment variable.")
 }
 
@@ -37,8 +37,8 @@ func GetHTTPClient(ctx context.Context, version string) (*http.Client, error) {
 
 	// Try to get token from config, fall back to environment variable
 	token := ""
-	if config != nil && config.Token != "" {
-		token = config.Token
+	if config != nil && config.ApiToken != "" {
+		token = config.ApiToken
 	} else {
 		// Config not available or token empty, try environment variable
 		token = getEnvToken()

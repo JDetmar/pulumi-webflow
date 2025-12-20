@@ -2,7 +2,7 @@ name: webflow-example
 runtime: yaml
 
 config:
-  webflow:token:
+  webflow:apiToken:
     secure: your-webflow-api-token-here
 
 resources:

@@ -1,0 +1,113 @@
+name: Deploy Webflow Sites with Pulumi
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/**'
+  workflow_dispatch:
+    inputs:
+      stack:
+        description: 'Stack to deploy (dev, staging, prod)'
+        required: false
+        default: 'dev'
+
+env:
+  PULUMI_SKIP_UPDATE_CHECK: true
+  PULUMI_SKIP_CONFIRMATIONS: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    name: Preview Changes
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js (or Python/Go as needed)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Pulumi
+        uses: pulumi/action-install-pulumi-cli@v2
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: ./infrastructure
+
+      - name: Run Pulumi Preview
+        run: pulumi preview --stack ${{ github.event.inputs.stack || 'dev' }}
+        working-directory: ./infrastructure
+        env:
+          WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Production
+    needs: preview
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Pulumi
+        uses: pulumi/action-install-pulumi-cli@v2
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: ./infrastructure
+
+      - name: Run Pulumi Up (Deploy)
+        run: pulumi up --yes --stack prod
+        working-directory: ./infrastructure
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
+
+      - name: Verify Deployment
+        run: pulumi stack output --stack prod
+        working-directory: ./infrastructure
+        env:
+          WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
+
+      - name: Create Deployment Annotation
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.ref,
+              environment: 'production',
+              description: 'Webflow sites deployed via Pulumi',
+              auto_merge: false,
+              required_contexts: []
+            });
+
+      - name: Report Deployment Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Webflow deployment failed. Check logs for details.'
+            });

@@ -1,0 +1,8 @@
+name: webflow-multi-site-config-driven
+runtime: nodejs
+description: Multi-Site Management Example - TypeScript (Configuration-Driven)
+
+config:
+  webflow:apiToken:
+    description: Webflow API token (from WEBFLOW_API_TOKEN environment variable)
+    secret: true

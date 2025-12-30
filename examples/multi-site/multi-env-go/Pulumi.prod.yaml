@@ -1,0 +1,4 @@
+# Production stack configuration
+config:
+  sitePrefix: "prod"
+  siteCount: 10

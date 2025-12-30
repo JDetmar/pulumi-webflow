@@ -1,0 +1,23 @@
+{
+  "name": "webflow-multi-site-config-driven",
+  "version": "0.0.1",
+  "description": "Multi-Site Management Example - TypeScript (Configuration-Driven)",
+  "main": "bin/index.js",
+  "typings": "bin/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "preview": "pulumi preview",
+    "up": "pulumi up",
+    "down": "pulumi destroy"
+  },
+  "dependencies": {
+    "@pulumi/pulumi": "^3.0.0",
+    "js-yaml": "^4.1.0",
+    "pulumi-webflow": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,8 @@
+name: webflow-multi-site-basic-python
+runtime: python
+description: Multi-Site Management Example - Python (Basic)
+
+config:
+  webflow:apiToken:
+    description: Webflow API token (from WEBFLOW_API_TOKEN environment variable)
+    secret: true

@@ -1,10 +1,24 @@
-// Package provider implements the Webflow Pulumi Provider.
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -34,43 +48,46 @@ type RobotsTxtRequest struct {
 	Sitemap string          `json:"sitemap,omitempty"` // URL to the sitemap
 }
 
-// siteIdPattern is the regex pattern for validating Webflow site IDs.
+// siteIDPattern is the regex pattern for validating Webflow site IDs.
 // Site IDs are 24-character lowercase hexadecimal strings.
-var siteIdPattern = regexp.MustCompile(`^[a-f0-9]{24}$`)
+var siteIDPattern = regexp.MustCompile(`^[a-f0-9]{24}$`)
 
-// ValidateSiteId validates that a siteId matches the Webflow site ID format.
+// ValidateSiteID validates that a siteID matches the Webflow site ID format.
 // Webflow site IDs are 24-character lowercase hexadecimal strings.
 // Returns actionable error messages that explain what's wrong and how to fix it.
-func ValidateSiteId(siteId string) error {
-	if siteId == "" {
-		return fmt.Errorf("siteId is required but was not provided. " +
-			"Please provide a valid Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). " +
+func ValidateSiteID(siteID string) error {
+	if siteID == "" {
+		return errors.New("siteId is required but was not provided. " +
+			"Please provide a valid Webflow site ID " +
+			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). " +
 			"You can find your site ID in the Webflow dashboard under Site Settings.")
 	}
-	if !siteIdPattern.MatchString(siteId) {
+	if !siteIDPattern.MatchString(siteID) {
 		return fmt.Errorf("siteId has invalid format: got '%s'. "+
-			"Expected a 24-character lowercase hexadecimal string (e.g., '5f0c8c9e1c9d440000e8d8c3'). "+
-			"Please check your site ID in the Webflow dashboard and ensure it contains only lowercase letters (a-f) and digits (0-9).", siteId)
+			"Expected a 24-character lowercase hexadecimal string "+
+			"(e.g., '5f0c8c9e1c9d440000e8d8c3'). "+
+			"Please check your site ID in the Webflow dashboard "+
+			"and ensure it contains only lowercase letters (a-f) and digits (0-9).", siteID)
 	}
 	return nil
 }
 
-// GenerateRobotsTxtResourceId generates a Pulumi resource ID for a RobotsTxt resource.
-// Format: {siteId}/robots.txt
-func GenerateRobotsTxtResourceId(siteId string) string {
-	return fmt.Sprintf("%s/robots.txt", siteId)
+// GenerateRobotsTxtResourceID generates a Pulumi resource ID for a RobotsTxt resource.
+// Format: {siteID}/robots.txt
+func GenerateRobotsTxtResourceID(siteID string) string {
+	return siteID + "/robots.txt"
 }
 
-// ExtractSiteIdFromResourceId extracts the siteId from a RobotsTxt resource ID.
-// Expected format: {siteId}/robots.txt
-func ExtractSiteIdFromResourceId(resourceId string) (string, error) {
-	if resourceId == "" {
-		return "", fmt.Errorf("resourceId cannot be empty")
+// ExtractSiteIDFromResourceID extracts the siteID from a RobotsTxt resource ID.
+// Expected format: {siteID}/robots.txt
+func ExtractSiteIDFromResourceID(resourceID string) (string, error) {
+	if resourceID == "" {
+		return "", errors.New("resourceId cannot be empty")
 	}
 
-	parts := strings.Split(resourceId, "/")
+	parts := strings.Split(resourceID, "/")
 	if len(parts) != 2 || parts[1] != "robots.txt" {
-		return "", fmt.Errorf("invalid resource ID format: expected {siteId}/robots.txt, got: %s", resourceId)
+		return "", fmt.Errorf("invalid resource ID format: expected {siteId}/robots.txt, got: %s", resourceID)
 	}
 
 	return parts[0], nil
@@ -87,13 +104,11 @@ func ExtractSiteIdFromResourceId(resourceId string) (string, error) {
 //	Sitemap: https://example.com/sitemap.xml
 //
 // Returns the parsed rules and sitemap URL.
-func ParseRobotsTxtContent(content string) ([]RobotsTxtRule, string) {
+func ParseRobotsTxtContent(content string) (rules []RobotsTxtRule, sitemap string) {
 	if content == "" {
 		return []RobotsTxtRule{}, ""
 	}
 
-	var rules []RobotsTxtRule
-	var sitemap string
 	var currentRule *RobotsTxtRule
 
 	lines := strings.Split(content, "\n")
@@ -206,17 +221,18 @@ func getRetryAfterDuration(retryAfter string, defaultBackoff time.Duration) time
 // handleNetworkError converts network errors to actionable error messages with recovery guidance.
 // Returns different messages for timeout vs connection failures vs generic network issues.
 func handleNetworkError(err error) error {
-	if strings.Contains(err.Error(), "timeout") || strings.Contains(err.Error(), "deadline exceeded") {
+	switch {
+	case strings.Contains(err.Error(), "timeout") || strings.Contains(err.Error(), "deadline exceeded"):
 		return fmt.Errorf("network timeout: the request to Webflow API timed out after 30 seconds. "+
 			"This may indicate network connectivity issues or Webflow API is slow to respond. "+
 			"To fix this: 1) Check your internet connection, 2) Verify Webflow API status, "+
 			"3) Wait a few minutes and retry, 4) If the problem persists, contact Webflow support: %w", err)
-	} else if strings.Contains(err.Error(), "connection refused") || strings.Contains(err.Error(), "no such host") {
+	case strings.Contains(err.Error(), "connection refused") || strings.Contains(err.Error(), "no such host"):
 		return fmt.Errorf("connection failed: unable to connect to Webflow API. "+
 			"This may indicate network connectivity issues or DNS problems. "+
 			"To fix this: 1) Check your internet connection, 2) Verify DNS resolution (try: nslookup api.webflow.com), "+
 			"3) Check firewall/proxy settings, 4) If using a VPN, try disconnecting: %w", err)
-	} else {
+	default:
 		return fmt.Errorf("network error: request to Webflow API failed. "+
 			"This may indicate network connectivity issues. "+
 			"To fix this: 1) Check your internet connection, 2) Verify Webflow API is accessible, "+
@@ -227,12 +243,12 @@ func handleNetworkError(err error) error {
 // GetRobotsTxt retrieves the robots.txt configuration for a Webflow site.
 // It calls GET /v2/sites/{site_id}/robots_txt endpoint.
 // Returns the parsed response or an error if the request fails.
-func GetRobotsTxt(ctx context.Context, client *http.Client, siteId string) (*RobotsTxtResponse, error) {
+func GetRobotsTxt(ctx context.Context, client *http.Client, siteID string) (*RobotsTxtResponse, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}
 
-	url := fmt.Sprintf("%s/v2/sites/%s/robots_txt", webflowAPIBaseURL, siteId)
+	url := fmt.Sprintf("%s/v2/sites/%s/robots_txt", webflowAPIBaseURL, siteID)
 
 	var lastErr error
 	for attempt := 0; attempt <= maxRetries; attempt++ {
@@ -246,7 +262,7 @@ func GetRobotsTxt(ctx context.Context, client *http.Client, siteId string) (*Rob
 			}
 		}
 
-		req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+		req, err := http.NewRequestWithContext(ctx, "GET", url, http.NoBody)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create request: %w", err)
 		}
@@ -258,7 +274,7 @@ func GetRobotsTxt(ctx context.Context, client *http.Client, siteId string) (*Rob
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -311,12 +327,15 @@ func GetRobotsTxt(ctx context.Context, client *http.Client, siteId string) (*Rob
 // PutRobotsTxt creates or updates the robots.txt configuration for a Webflow site.
 // It calls PUT /v2/sites/{site_id}/robots_txt endpoint.
 // Returns the updated response or an error if the request fails.
-func PutRobotsTxt(ctx context.Context, client *http.Client, siteId string, rules []RobotsTxtRule, sitemap string) (*RobotsTxtResponse, error) {
+func PutRobotsTxt(
+	ctx context.Context, client *http.Client,
+	siteID string, rules []RobotsTxtRule, sitemap string,
+) (*RobotsTxtResponse, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}
 
-	url := fmt.Sprintf("%s/v2/sites/%s/robots_txt", webflowAPIBaseURL, siteId)
+	url := fmt.Sprintf("%s/v2/sites/%s/robots_txt", webflowAPIBaseURL, siteID)
 
 	requestBody := RobotsTxtRequest{
 		Rules:   rules,
@@ -353,7 +372,7 @@ func PutRobotsTxt(ctx context.Context, client *http.Client, siteId string, rules
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -406,12 +425,12 @@ func PutRobotsTxt(ctx context.Context, client *http.Client, siteId string, rules
 // DeleteRobotsTxt removes the robots.txt configuration from a Webflow site.
 // It calls DELETE /v2/sites/{site_id}/robots_txt endpoint.
 // Returns nil on success (including 404 for idempotency) or an error if the request fails.
-func DeleteRobotsTxt(ctx context.Context, client *http.Client, siteId string) error {
+func DeleteRobotsTxt(ctx context.Context, client *http.Client, siteID string) error {
 	if err := ctx.Err(); err != nil {
 		return fmt.Errorf("context cancelled: %w", err)
 	}
 
-	url := fmt.Sprintf("%s/v2/sites/%s/robots_txt", webflowAPIBaseURL, siteId)
+	url := fmt.Sprintf("%s/v2/sites/%s/robots_txt", webflowAPIBaseURL, siteID)
 
 	var lastErr error
 	for attempt := 0; attempt <= maxRetries; attempt++ {
@@ -425,7 +444,7 @@ func DeleteRobotsTxt(ctx context.Context, client *http.Client, siteId string) er
 			}
 		}
 
-		req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
+		req, err := http.NewRequestWithContext(ctx, "DELETE", url, http.NoBody)
 		if err != nil {
 			return fmt.Errorf("failed to create request: %w", err)
 		}
@@ -437,7 +456,7 @@ func DeleteRobotsTxt(ctx context.Context, client *http.Client, siteId string) er
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -494,24 +513,24 @@ func handleWebflowError(statusCode int, body []byte) error {
 			"Please check your resource configuration and ensure all required fields are provided with valid values. "+
 			"If the error persists, verify your robots.txt content follows the correct format.", string(body))
 	case 401:
-		return fmt.Errorf("unauthorized: authentication failed. " +
+		return errors.New("unauthorized: authentication failed. " +
 			"Your Webflow API token is invalid or has expired. " +
 			"To fix this: 1) Verify your token in the Webflow dashboard (Settings > Integrations > API Access), " +
 			"2) Ensure the token has 'site_config:read' and 'site_config:write' scopes, " +
 			"3) Update your Pulumi config with: 'pulumi config set webflow:apiToken <your-token> --secret'")
 	case 403:
-		return fmt.Errorf("forbidden: access denied to this resource. " +
+		return errors.New("forbidden: access denied to this resource. " +
 			"Your API token does not have permission to access this Webflow site. " +
 			"To fix this: 1) Verify the site ID is correct, " +
 			"2) Ensure your API token has 'site_config:read' and 'site_config:write' scopes, " +
 			"3) Check that the site belongs to the Webflow workspace associated with your API token")
 	case 404:
-		return fmt.Errorf("not found: the Webflow site or robots.txt configuration does not exist. " +
+		return errors.New("not found: the Webflow site or robots.txt configuration does not exist. " +
 			"To fix this: 1) Verify the site ID is correct (24-character lowercase hex string), " +
 			"2) Check that the site exists in your Webflow dashboard, " +
 			"3) Ensure you're using the correct site ID for your Webflow workspace")
 	case 429:
-		return fmt.Errorf("rate limited: too many requests to Webflow API. " +
+		return errors.New("rate limited: too many requests to Webflow API. " +
 			"The provider will automatically retry with exponential backoff. " +
 			"If this error persists, please wait a few minutes before trying again. " +
 			"Consider reducing the frequency of operations or contact Webflow support if rate limits are consistently exceeded")

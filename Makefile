@@ -181,6 +181,9 @@ install_nodejs_sdk::
 	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin
 
 test:: test_provider
+
+# Run example integration tests (requires tsc, python venv, API credentials)
+test_examples::
 	cd examples && go test -v -tags=all -timeout 2h
 
 # Set these variables to enable signing of the windows binary

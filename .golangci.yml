@@ -102,3 +102,9 @@ issues:
     # It's fine to ignore these cases.
     - linters: [revive]
       text: "redefines-builtin-id: redefinition of the built-in function new"
+
+    # Exclude paralleltest for test files that use shared global state
+    # (mock URL variables, environment variables) which makes them unsafe
+    # to parallelize without significant refactoring.
+    - linters: [paralleltest]
+      path: "_test\\.go$"

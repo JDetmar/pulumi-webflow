@@ -1,3 +1,17 @@
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
@@ -18,7 +32,7 @@ func containsStr(s, substr string) bool {
 	return bytes.Contains(bytes.ToLower([]byte(s)), bytes.ToLower([]byte(substr)))
 }
 
-const testSiteId = "5f0c8c9e1c9d440000e8d8c3"
+const testSiteID = "5f0c8c9e1c9d440000e8d8c3"
 
 // TestRedirectCreate_ValidationErrors tests input validation in Create
 func TestRedirectCreate_ValidationErrors(t *testing.T) {
@@ -32,7 +46,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "invalid siteId",
 			inputs: RedirectArgs{
-				SiteId:          "invalid", // Too short
+				SiteID:          "invalid", // Too short
 				SourcePath:      "/old",
 				DestinationPath: "/new",
 				StatusCode:      301,
@@ -42,7 +56,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "missing sourcePath",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "",
 				DestinationPath: "/new",
 				StatusCode:      301,
@@ -52,7 +66,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "sourcePath without slash",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "old-page",
 				DestinationPath: "/new",
 				StatusCode:      301,
@@ -62,7 +76,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "missing destinationPath",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old",
 				DestinationPath: "",
 				StatusCode:      301,
@@ -72,7 +86,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "destinationPath without slash",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old",
 				DestinationPath: "new",
 				StatusCode:      301,
@@ -82,7 +96,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "invalid statusCode",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old",
 				DestinationPath: "/new",
 				StatusCode:      400,
@@ -92,7 +106,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "sourcePath with space",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old page",
 				DestinationPath: "/new",
 				StatusCode:      301,
@@ -102,7 +116,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "sourcePath with query string",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/page?query=value",
 				DestinationPath: "/new",
 				StatusCode:      301,
@@ -112,7 +126,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "sourcePath with special char",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/page@name",
 				DestinationPath: "/new",
 				StatusCode:      301,
@@ -122,7 +136,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "destinationPath with space",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old",
 				DestinationPath: "/new page",
 				StatusCode:      301,
@@ -132,7 +146,7 @@ func TestRedirectCreate_ValidationErrors(t *testing.T) {
 		{
 			name: "destinationPath with hash",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old",
 				DestinationPath: "/page#anchor",
 				StatusCode:      301,
@@ -165,7 +179,7 @@ func TestRedirectCreate_DryRun(t *testing.T) {
 
 	req := infer.CreateRequest[RedirectArgs]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/new-page",
 			StatusCode:      301,
@@ -175,7 +189,6 @@ func TestRedirectCreate_DryRun(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Create(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Create (DryRun) failed: %v", err)
@@ -194,14 +207,14 @@ func TestRedirectUpdate_DryRun(t *testing.T) {
 
 	req := infer.UpdateRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/updated-page",
 			StatusCode:      302,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/new-page",
 				StatusCode:      301,
@@ -212,7 +225,6 @@ func TestRedirectUpdate_DryRun(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Update(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Update (DryRun) failed: %v", err)
@@ -237,7 +249,7 @@ func TestRedirectUpdate_ValidationErrors(t *testing.T) {
 		{
 			name: "invalid siteId",
 			inputs: RedirectArgs{
-				SiteId:          "invalid",
+				SiteID:          "invalid",
 				SourcePath:      "/old",
 				DestinationPath: "/new",
 				StatusCode:      301,
@@ -247,7 +259,7 @@ func TestRedirectUpdate_ValidationErrors(t *testing.T) {
 		{
 			name: "missing destinationPath",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old",
 				DestinationPath: "",
 				StatusCode:      301,
@@ -257,7 +269,7 @@ func TestRedirectUpdate_ValidationErrors(t *testing.T) {
 		{
 			name: "invalid statusCode",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old",
 				DestinationPath: "/new",
 				StatusCode:      303,
@@ -267,7 +279,7 @@ func TestRedirectUpdate_ValidationErrors(t *testing.T) {
 		{
 			name: "destinationPath with invalid chars",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old",
 				DestinationPath: "/new page?q=1",
 				StatusCode:      301,
@@ -282,7 +294,7 @@ func TestRedirectUpdate_ValidationErrors(t *testing.T) {
 				Inputs: tt.inputs,
 				State: RedirectState{
 					RedirectArgs: RedirectArgs{
-						SiteId:          testSiteId,
+						SiteID:          testSiteID,
 						SourcePath:      "/old",
 						DestinationPath: "/old-page",
 						StatusCode:      301,
@@ -308,14 +320,14 @@ func TestRedirectDiff_NoChanges(t *testing.T) {
 
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/new-page",
 			StatusCode:      301,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/new-page",
 				StatusCode:      301,
@@ -325,7 +337,6 @@ func TestRedirectDiff_NoChanges(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -335,21 +346,21 @@ func TestRedirectDiff_NoChanges(t *testing.T) {
 	}
 }
 
-// TestRedirectDiff_SiteIdChange tests that siteId change requires replacement
-func TestRedirectDiff_SiteIdChange(t *testing.T) {
+// TestRedirectDiff_SiteIDChange tests that siteId change requires replacement
+func TestRedirectDiff_SiteIDChange(t *testing.T) {
 	redirect := &Redirect{}
-	newSiteId := "6f1d9d0f2d0e551111f9e9d4"
+	newSiteID := "6f1d9d0f2d0e551111f9e9d4"
 
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          newSiteId,
+			SiteID:          newSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/new-page",
 			StatusCode:      301,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/new-page",
 				StatusCode:      301,
@@ -359,7 +370,6 @@ func TestRedirectDiff_SiteIdChange(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -381,14 +391,14 @@ func TestRedirectDiff_SourcePathChange(t *testing.T) {
 
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/new-old-page",
 			DestinationPath: "/new-page",
 			StatusCode:      301,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/new-page",
 				StatusCode:      301,
@@ -398,7 +408,6 @@ func TestRedirectDiff_SourcePathChange(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -418,14 +427,14 @@ func TestRedirectDiff_DestinationPathChange(t *testing.T) {
 
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/updated-page",
 			StatusCode:      301,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/new-page",
 				StatusCode:      301,
@@ -435,7 +444,6 @@ func TestRedirectDiff_DestinationPathChange(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -459,14 +467,14 @@ func TestRedirectDiff_StatusCodeChange(t *testing.T) {
 
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/new-page",
 			StatusCode:      302,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/new-page",
 				StatusCode:      301,
@@ -476,7 +484,6 @@ func TestRedirectDiff_StatusCodeChange(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -500,14 +507,14 @@ func TestRedirectDiff_MultipleFieldsChange(t *testing.T) {
 
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/updated-page",
 			StatusCode:      302,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/new-page",
 				StatusCode:      301,
@@ -517,7 +524,6 @@ func TestRedirectDiff_MultipleFieldsChange(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -547,14 +553,14 @@ func TestDiff_WithDriftedState(t *testing.T) {
 	// Simulate: code defines 301, but API returned 302 (drift detected by Read)
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/new-page",
 			StatusCode:      301,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/new-page",
 				StatusCode:      302, // Drifted value from API
@@ -564,7 +570,6 @@ func TestDiff_WithDriftedState(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -584,14 +589,14 @@ func TestDiff_WithDriftedDestinationPath(t *testing.T) {
 	// Simulate drift where destination was manually changed in Webflow UI
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/products",
 			DestinationPath: "/new-products",
 			StatusCode:      301,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/products",
 				DestinationPath: "/old-location", // Manual change in Webflow UI
 				StatusCode:      301,
@@ -601,7 +606,6 @@ func TestDiff_WithDriftedDestinationPath(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -621,14 +625,14 @@ func TestDiff_WithDriftedStatusCode(t *testing.T) {
 	// Simulate drift where status code was manually changed in Webflow UI
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/blog",
 			DestinationPath: "/news",
 			StatusCode:      301, // Code says permanent
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/blog",
 				DestinationPath: "/news",
 				StatusCode:      302, // But API shows temporary (manual change)
@@ -638,7 +642,6 @@ func TestDiff_WithDriftedStatusCode(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -658,14 +661,14 @@ func TestDiff_WithDeletedResource(t *testing.T) {
 	// When resource is deleted, code still defines it but state is empty
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/new-page",
 			StatusCode:      301,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/new-page",
 				StatusCode:      301,
@@ -676,7 +679,6 @@ func TestDiff_WithDeletedResource(t *testing.T) {
 	// Execute - Note: In real scenario, Pulumi would call Create to recreate
 	// Diff would just compare what's defined vs what was there
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify no changes (Diff only compares present state)
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -696,14 +698,14 @@ func TestDiff_WithBothFieldsDrifted(t *testing.T) {
 	// Simulate drift where both destination and status code were changed in Webflow UI
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-path",
 			DestinationPath: "/desired-dest",
 			StatusCode:      301, // Code says permanent
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-path",
 				DestinationPath: "/manual-dest", // Manual change in Webflow UI
 				StatusCode:      302,            // Also changed in UI
@@ -713,7 +715,6 @@ func TestDiff_WithBothFieldsDrifted(t *testing.T) {
 
 	// Execute
 	resp, err := redirect.Diff(context.Background(), req)
-
 	// Verify
 	if err != nil {
 		t.Fatalf("Diff failed: %v", err)
@@ -738,14 +739,14 @@ func TestDriftPerformance(t *testing.T) {
 	// Create a request with drifted state
 	req := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/new-page",
 			StatusCode:      301,
 		},
 		State: RedirectState{
 			RedirectArgs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/old-page",
 				DestinationPath: "/changed-page",
 				StatusCode:      302,
@@ -780,7 +781,7 @@ func TestDriftWorkflow_DetectAndCorrect(t *testing.T) {
 	// Step 1: Simulate Read detecting drift (API returned different values)
 	readResp := RedirectState{
 		RedirectArgs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/drifted-dest", // Manual change in Webflow
 			StatusCode:      302,             // Manual change in Webflow
@@ -790,7 +791,7 @@ func TestDriftWorkflow_DetectAndCorrect(t *testing.T) {
 	// Step 2: Diff identifies the changes
 	diffReq := infer.DiffRequest[RedirectArgs, RedirectState]{
 		Inputs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/correct-dest", // Code-defined value
 			StatusCode:      301,             // Code-defined value
@@ -816,7 +817,7 @@ func TestDriftWorkflow_DetectAndCorrect(t *testing.T) {
 	// In real Pulumi flow: Update() calls PatchRedirect with code values
 	expectedCorrectedState := RedirectState{
 		RedirectArgs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/correct-dest",
 			StatusCode:      301,
@@ -847,7 +848,7 @@ func TestDriftWorkflow_DetectAndRecreate(t *testing.T) {
 
 	// Step 2: Code still defines the resource
 	codeDefinedInputs := RedirectArgs{
-		SiteId:          testSiteId,
+		SiteID:          testSiteID,
 		SourcePath:      "/old-page",
 		DestinationPath: "/new-page",
 		StatusCode:      301,
@@ -888,7 +889,7 @@ func TestReadDriftDetection(t *testing.T) {
 
 	// Scenario: Code defines one set of values, but API has different values
 	codeInputs := RedirectArgs{
-		SiteId:          testSiteId,
+		SiteID:          testSiteID,
 		SourcePath:      "/products",
 		DestinationPath: "/shop",
 		StatusCode:      301,
@@ -897,7 +898,7 @@ func TestReadDriftDetection(t *testing.T) {
 	// Simulate API response with drifted values (changed in Webflow UI)
 	apiState := RedirectState{
 		RedirectArgs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/products",
 			DestinationPath: "/catalog", // Manual change
 			StatusCode:      302,        // Manual change
@@ -937,7 +938,7 @@ func TestRefresh_UnchangedState_DiffDetectsNoChanges(t *testing.T) {
 
 	// Code-defined values
 	codeInputs := RedirectArgs{
-		SiteId:          testSiteId,
+		SiteID:          testSiteID,
 		SourcePath:      "/about",
 		DestinationPath: "/about-us",
 		StatusCode:      301,
@@ -971,7 +972,7 @@ func TestRefresh_ModifiedState_DiffDetectsChanges(t *testing.T) {
 
 	// Code-defined values
 	codeInputs := RedirectArgs{
-		SiteId:          testSiteId,
+		SiteID:          testSiteID,
 		SourcePath:      "/products",
 		DestinationPath: "/shop",
 		StatusCode:      301,
@@ -980,7 +981,7 @@ func TestRefresh_ModifiedState_DiffDetectsChanges(t *testing.T) {
 	// Refreshed state from Webflow with manual changes
 	refreshedState := RedirectState{
 		RedirectArgs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/products",
 			DestinationPath: "/catalog", // Manual change in Webflow
 			StatusCode:      302,        // Manual change in Webflow
@@ -1009,13 +1010,14 @@ func TestRefresh_ModifiedState_DiffDetectsChanges(t *testing.T) {
 	}
 }
 
-// TestRefresh_StateWithEmptyId_DiffDetectsPropertyChange verifies Diff detects when state with empty ID differs from code
+// TestRefresh_StateWithEmptyId_DiffDetectsPropertyChange verifies Diff detects when
+// state with empty ID differs from code.
 func TestRefresh_StateWithEmptyId_DiffDetectsPropertyChange(t *testing.T) {
 	redirect := &Redirect{}
 
 	// Code-defined values
 	codeInputs := RedirectArgs{
-		SiteId:          testSiteId,
+		SiteID:          testSiteID,
 		SourcePath:      "/old-page",
 		DestinationPath: "/new-page",
 		StatusCode:      301,
@@ -1025,7 +1027,7 @@ func TestRefresh_StateWithEmptyId_DiffDetectsPropertyChange(t *testing.T) {
 	// Empty ID case is handled by Pulumi's state management, not Diff
 	refreshedState := RedirectState{
 		RedirectArgs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/old-page",
 			DestinationPath: "/different-dest", // Different from code
 			StatusCode:      302,               // Different from code
@@ -1055,7 +1057,7 @@ func TestRefreshWorkflow_DeleteAndRecreate(t *testing.T) {
 
 	// Code-defined values (resource exists in code)
 	codeInputs := RedirectArgs{
-		SiteId:          testSiteId,
+		SiteID:          testSiteID,
 		SourcePath:      "/contact",
 		DestinationPath: "/contact-us",
 		StatusCode:      301,
@@ -1065,7 +1067,7 @@ func TestRefreshWorkflow_DeleteAndRecreate(t *testing.T) {
 	// This represents the state after Read() returns empty ID
 	emptyState := RedirectState{
 		RedirectArgs: RedirectArgs{
-			SiteId:          "",
+			SiteID:          "",
 			SourcePath:      "",
 			DestinationPath: "",
 			StatusCode:      0,
@@ -1102,14 +1104,14 @@ func TestRefreshBatch_MultipleRedirectsConsistency(t *testing.T) {
 		{
 			name: "Batch refresh with no changes",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/batch-1",
 				DestinationPath: "/batch-dest-1",
 				StatusCode:      301,
 			},
 			state: RedirectState{
 				RedirectArgs: RedirectArgs{
-					SiteId:          testSiteId,
+					SiteID:          testSiteID,
 					SourcePath:      "/batch-1",
 					DestinationPath: "/batch-dest-1",
 					StatusCode:      301,
@@ -1120,14 +1122,14 @@ func TestRefreshBatch_MultipleRedirectsConsistency(t *testing.T) {
 		{
 			name: "Batch refresh with changes",
 			inputs: RedirectArgs{
-				SiteId:          testSiteId,
+				SiteID:          testSiteID,
 				SourcePath:      "/batch-2",
 				DestinationPath: "/batch-dest-2",
 				StatusCode:      301,
 			},
 			state: RedirectState{
 				RedirectArgs: RedirectArgs{
-					SiteId:          testSiteId,
+					SiteID:          testSiteID,
 					SourcePath:      "/batch-2",
 					DestinationPath: "/batch-dest-changed", // Manual change
 					StatusCode:      302,                   // Manual change
@@ -1154,7 +1156,6 @@ func TestRefreshBatch_MultipleRedirectsConsistency(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 // TestRefreshDetectsStateChanges verifies that Diff shows changes after state refresh
@@ -1163,7 +1164,7 @@ func TestRefreshDetectsStateChanges(t *testing.T) {
 
 	// Code-defined values
 	codeInputs := RedirectArgs{
-		SiteId:          testSiteId,
+		SiteID:          testSiteID,
 		SourcePath:      "/docs",
 		DestinationPath: "/documentation",
 		StatusCode:      301,
@@ -1177,7 +1178,7 @@ func TestRefreshDetectsStateChanges(t *testing.T) {
 	// After refresh, state reflects Webflow changes
 	refreshedState := RedirectState{
 		RedirectArgs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      "/docs",
 			DestinationPath: "/guides", // Changed in Webflow
 			StatusCode:      302,       // Changed in Webflow
@@ -1235,7 +1236,7 @@ func TestRefreshPerformance_100Redirects(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		response := RedirectResponse{Redirects: redirects}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -1251,7 +1252,7 @@ func TestRefreshPerformance_100Redirects(t *testing.T) {
 	start := time.Now()
 
 	// Simulate refresh: GetRedirects (1 API call) + 100 Diff operations
-	response, err := GetRedirects(ctx, client, testSiteId)
+	response, err := GetRedirects(ctx, client, testSiteID)
 	if err != nil {
 		t.Fatalf("GetRedirects failed: %v", err)
 	}
@@ -1264,7 +1265,7 @@ func TestRefreshPerformance_100Redirects(t *testing.T) {
 	redirect := &Redirect{}
 	for i, rule := range response.Redirects {
 		codeInputs := RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      rule.SourcePath,
 			DestinationPath: rule.DestinationPath,
 			StatusCode:      rule.StatusCode,
@@ -1304,7 +1305,7 @@ func TestRefreshPerformance_SingleRedirect(t *testing.T) {
 				{ID: "redirect-1", SourcePath: "/old", DestinationPath: "/new", StatusCode: 301},
 			},
 		}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -1317,7 +1318,7 @@ func TestRefreshPerformance_SingleRedirect(t *testing.T) {
 
 	start := time.Now()
 
-	response, err := GetRedirects(ctx, client, testSiteId)
+	response, err := GetRedirects(ctx, client, testSiteID)
 	if err != nil {
 		t.Fatalf("GetRedirects failed: %v", err)
 	}
@@ -1326,7 +1327,7 @@ func TestRefreshPerformance_SingleRedirect(t *testing.T) {
 	redirect := &Redirect{}
 	rule := response.Redirects[0]
 	codeInputs := RedirectArgs{
-		SiteId:          testSiteId,
+		SiteID:          testSiteID,
 		SourcePath:      rule.SourcePath,
 		DestinationPath: rule.DestinationPath,
 		StatusCode:      rule.StatusCode,
@@ -1372,7 +1373,7 @@ func TestRefreshAPI_GetRedirects_ReturnsCurrentState(t *testing.T) {
 				},
 			},
 		}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -1384,7 +1385,7 @@ func TestRefreshAPI_GetRedirects_ReturnsCurrentState(t *testing.T) {
 	ctx := context.Background()
 
 	// This simulates what Read() does internally: fetch current state from Webflow
-	response, err := GetRedirects(ctx, client, testSiteId)
+	response, err := GetRedirects(ctx, client, testSiteID)
 	if err != nil {
 		t.Fatalf("GetRedirects failed: %v", err)
 	}
@@ -1407,7 +1408,7 @@ func TestRefreshAPI_GetRedirects_ReturnsCurrentState(t *testing.T) {
 	// Now simulate what Pulumi does: compare API state with code-defined inputs
 	redirect := &Redirect{}
 	codeInputs := RedirectArgs{
-		SiteId:          testSiteId,
+		SiteID:          testSiteID,
 		SourcePath:      "/products",
 		DestinationPath: "/shop", // Code says /shop
 		StatusCode:      301,     // Code says 301
@@ -1416,7 +1417,7 @@ func TestRefreshAPI_GetRedirects_ReturnsCurrentState(t *testing.T) {
 	// Build state from API response (what Read() would return)
 	refreshedState := RedirectState{
 		RedirectArgs: RedirectArgs{
-			SiteId:          testSiteId,
+			SiteID:          testSiteID,
 			SourcePath:      apiRedirect.SourcePath,
 			DestinationPath: apiRedirect.DestinationPath, // /catalog-changed from API
 			StatusCode:      apiRedirect.StatusCode,      // 302 from API
@@ -1452,7 +1453,7 @@ func TestRefreshAPI_GetRedirects_ResourceDeleted(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		response := RedirectResponse{Redirects: []RedirectRule{}}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -1463,7 +1464,7 @@ func TestRefreshAPI_GetRedirects_ResourceDeleted(t *testing.T) {
 	client := &http.Client{Timeout: 30 * time.Second}
 	ctx := context.Background()
 
-	response, err := GetRedirects(ctx, client, testSiteId)
+	response, err := GetRedirects(ctx, client, testSiteID)
 	if err != nil {
 		t.Fatalf("GetRedirects failed: %v", err)
 	}
@@ -1474,10 +1475,10 @@ func TestRefreshAPI_GetRedirects_ResourceDeleted(t *testing.T) {
 	}
 
 	// Simulate what Read() does: search for specific redirect ID
-	targetRedirectId := "redirect-abc123"
+	targetRedirectID := "redirect-abc123"
 	var foundRedirect *RedirectRule
 	for _, r := range response.Redirects {
-		if r.ID == targetRedirectId {
+		if r.ID == targetRedirectID {
 			foundRedirect = &r
 			break
 		}

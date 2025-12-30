@@ -1,3 +1,17 @@
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
@@ -45,7 +59,11 @@ func TestValidateDisplayName_Empty(t *testing.T) {
 		t.Error("ValidateDisplayName(\"\") should return error for empty string")
 	}
 	if err != nil {
-		if err.Error() != "displayName is required but was not provided.\nExpected format: A non-empty string representing your site's name.\nFix: Provide a name for your site (e.g., 'My Marketing Site', 'Company Blog', 'Product Landing Page')." {
+		expectedErr := "displayName is required but was not provided.\n" +
+			"Expected format: A non-empty string representing your site's name.\n" +
+			"Fix: Provide a name for your site (e.g., 'My Marketing Site', " +
+			"'Company Blog', 'Product Landing Page')."
+		if err.Error() != expectedErr {
 			t.Errorf("ValidateDisplayName(\"\") returned unexpected error message: %v", err)
 		}
 	}
@@ -283,7 +301,7 @@ func TestPostSite_Success(t *testing.T) {
 		// Parse request body
 		body, _ := io.ReadAll(r.Body)
 		var reqBody SiteCreateRequest
-		json.Unmarshal(body, &reqBody)
+		_ = json.Unmarshal(body, &reqBody)
 
 		// Verify request body mapping (name in request)
 		if reqBody.Name != "My Test Site" {
@@ -302,7 +320,7 @@ func TestPostSite_Success(t *testing.T) {
 			TimeZone:    "America/New_York",
 		}
 		w.WriteHeader(201)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -313,7 +331,6 @@ func TestPostSite_Success(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	site, err := PostSite(context.Background(), client, "workspace456", "My Test Site", "folder123", "")
-
 	// Assertions
 	if err != nil {
 		t.Fatalf("PostSite failed: %v", err)
@@ -334,7 +351,7 @@ func TestPostSite_MinimalFields(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body, _ := io.ReadAll(r.Body)
 		var reqBody SiteCreateRequest
-		json.Unmarshal(body, &reqBody)
+		_ = json.Unmarshal(body, &reqBody)
 
 		// Verify minimal fields
 		if reqBody.Name != "Minimal Site" {
@@ -351,7 +368,7 @@ func TestPostSite_MinimalFields(t *testing.T) {
 			ShortName:   "minimal-site",
 		}
 		w.WriteHeader(201)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -361,7 +378,6 @@ func TestPostSite_MinimalFields(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	site, err := PostSite(context.Background(), client, "workspace123", "Minimal Site", "", "")
-
 	if err != nil {
 		t.Fatalf("PostSite failed: %v", err)
 	}
@@ -378,7 +394,7 @@ func TestPostSite_RateLimiting(t *testing.T) {
 		if attemptCount == 1 {
 			// First request: rate limit
 			w.WriteHeader(429)
-			w.Write([]byte(`{"message": "Rate limit exceeded"}`))
+			_, _ = w.Write([]byte(`{"message": "Rate limit exceeded"}`))
 		} else {
 			// Second request: success
 			response := Site{
@@ -387,7 +403,7 @@ func TestPostSite_RateLimiting(t *testing.T) {
 				WorkspaceID: "workspace456",
 			}
 			w.WriteHeader(201)
-			json.NewEncoder(w).Encode(response)
+			_ = json.NewEncoder(w).Encode(response)
 		}
 	}))
 	defer server.Close()
@@ -398,7 +414,6 @@ func TestPostSite_RateLimiting(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	site, err := PostSite(context.Background(), client, "workspace456", "My Test Site", "", "")
-
 	if err != nil {
 		t.Fatalf("PostSite should succeed after retry, got error: %v", err)
 	}
@@ -414,7 +429,7 @@ func TestPostSite_RateLimiting(t *testing.T) {
 func TestPostSite_InvalidWorkspace(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(403)
-		w.Write([]byte("Forbidden: Enterprise workspace required"))
+		_, _ = w.Write([]byte("Forbidden: Enterprise workspace required"))
 	}))
 	defer server.Close()
 
@@ -469,7 +484,7 @@ func TestPostSite_EmptySiteID(t *testing.T) {
 			WorkspaceID: "workspace456",
 		}
 		w.WriteHeader(201)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -479,7 +494,6 @@ func TestPostSite_EmptySiteID(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	site, err := PostSite(context.Background(), client, "workspace456", "My Site", "", "")
-
 	// Should succeed - defensive check is in Create method, not PostSite
 	if err != nil {
 		t.Errorf("PostSite should succeed even with empty ID, got error: %v", err)
@@ -493,7 +507,7 @@ func TestPostSite_EmptySiteID(t *testing.T) {
 func TestPostSite_InvalidJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(201)
-		w.Write([]byte("invalid json {{{"))
+		_, _ = w.Write([]byte("invalid json {{{"))
 	}))
 	defer server.Close()
 
@@ -545,31 +559,31 @@ func TestSiteCreate_ValidationErrors(t *testing.T) {
 	}{
 		{
 			name:      "empty workspaceId",
-			args:      SiteArgs{WorkspaceId: "", DisplayName: "Site"},
+			args:      SiteArgs{WorkspaceID: "", DisplayName: "Site"},
 			wantErr:   true,
 			errSubstr: "workspaceId is required",
 		},
 		{
 			name:      "empty displayName",
-			args:      SiteArgs{WorkspaceId: "ws123", DisplayName: ""},
+			args:      SiteArgs{WorkspaceID: "ws123", DisplayName: ""},
 			wantErr:   true,
 			errSubstr: "displayName is required",
 		},
 		{
 			name:      "invalid shortName - uppercase",
-			args:      SiteArgs{WorkspaceId: "ws123", DisplayName: "Site", ShortName: "INVALID"},
+			args:      SiteArgs{WorkspaceID: "ws123", DisplayName: "Site", ShortName: "INVALID"},
 			wantErr:   true,
 			errSubstr: "lowercase",
 		},
 		{
 			name:      "invalid shortName - spaces",
-			args:      SiteArgs{WorkspaceId: "ws123", DisplayName: "Site", ShortName: "my site"},
+			args:      SiteArgs{WorkspaceID: "ws123", DisplayName: "Site", ShortName: "my site"},
 			wantErr:   true,
 			errSubstr: "invalid characters",
 		},
 		{
 			name:      "invalid timeZone",
-			args:      SiteArgs{WorkspaceId: "ws123", DisplayName: "Site", TimeZone: "EST"},
+			args:      SiteArgs{WorkspaceID: "ws123", DisplayName: "Site", TimeZone: "EST"},
 			wantErr:   true,
 			errSubstr: "invalid timezone",
 		},
@@ -597,7 +611,7 @@ func TestSiteCreate_ValidationErrors(t *testing.T) {
 func TestSiteCreate_DryRun(t *testing.T) {
 	resource := &SiteResource{}
 	args := SiteArgs{
-		WorkspaceId: "workspace456",
+		WorkspaceID: "workspace456",
 		DisplayName: "Preview Site",
 		ShortName:   "preview-site",
 	}
@@ -642,7 +656,7 @@ func TestPatchSite_Success(t *testing.T) {
 			TimeZone:    "America/New_York",
 		}
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -651,8 +665,10 @@ func TestPatchSite_Success(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	site, err := PatchSite(context.Background(), client, "site123", "Updated Site Name", "updated-slug", "America/New_York")
-
+	site, err := PatchSite(
+		context.Background(), client, "site123",
+		"Updated Site Name", "updated-slug", "America/New_York",
+	)
 	if err != nil {
 		t.Fatalf("PatchSite failed: %v", err)
 	}
@@ -671,7 +687,7 @@ func TestPatchSite_SingleFieldChange(t *testing.T) {
 			TimeZone:    "UTC",
 		}
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -681,7 +697,6 @@ func TestPatchSite_SingleFieldChange(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	site, err := PatchSite(context.Background(), client, "site123", "New Name", "", "")
-
 	if err != nil {
 		t.Fatalf("PatchSite failed: %v", err)
 	}
@@ -700,7 +715,7 @@ func TestPatchSite_NoChanges(t *testing.T) {
 			TimeZone:    "America/New_York",
 		}
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -710,7 +725,6 @@ func TestPatchSite_NoChanges(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	site, err := PatchSite(context.Background(), client, "site123", "My Site", "my-site", "America/New_York")
-
 	if err != nil {
 		t.Fatalf("PatchSite failed: %v", err)
 	}
@@ -729,7 +743,7 @@ func TestPatchSite_RateLimiting(t *testing.T) {
 		} else {
 			response := Site{ID: "site123", DisplayName: "Updated Name"}
 			w.WriteHeader(200)
-			json.NewEncoder(w).Encode(response)
+			_ = json.NewEncoder(w).Encode(response)
 		}
 	}))
 	defer server.Close()
@@ -740,7 +754,6 @@ func TestPatchSite_RateLimiting(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	_, err := PatchSite(context.Background(), client, "site123", "Updated Name", "", "")
-
 	if err != nil {
 		t.Fatalf("PatchSite should succeed after retry: %v", err)
 	}
@@ -753,7 +766,7 @@ func TestPatchSite_RateLimiting(t *testing.T) {
 func TestPatchSite_InvalidSiteID(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(404)
-		w.Write([]byte("Not found"))
+		_, _ = w.Write([]byte("Not found"))
 	}))
 	defer server.Close()
 
@@ -802,7 +815,7 @@ func TestSiteUpdate_ValidationError(t *testing.T) {
 	req := infer.UpdateRequest[SiteArgs, SiteState]{
 		ID: "workspace456/sites/site123",
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "", // Invalid
 		},
 	}
@@ -819,7 +832,7 @@ func TestSiteUpdate_DryRun(t *testing.T) {
 	req := infer.UpdateRequest[SiteArgs, SiteState]{
 		ID: "workspace456/sites/site123",
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "Updated Site",
 		},
 		State: SiteState{
@@ -849,13 +862,13 @@ func TestSiteDiff_NoChanges(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "My Site",
 			ShortName:   "my-site",
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId: "workspace456",
+				WorkspaceID: "workspace456",
 				DisplayName: "My Site",
 				ShortName:   "my-site",
 			},
@@ -877,12 +890,12 @@ func TestSiteDiff_DisplayNameChanged(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "New Name",
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId: "workspace456",
+				WorkspaceID: "workspace456",
 				DisplayName: "Old Name",
 			},
 		},
@@ -906,14 +919,14 @@ func TestSiteDiff_MultipleFieldsChanged(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "New Name",
 			ShortName:   "new-slug",
 			TimeZone:    "America/Chicago",
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId: "workspace456",
+				WorkspaceID: "workspace456",
 				DisplayName: "Old Name",
 				ShortName:   "old-slug",
 				TimeZone:    "UTC",
@@ -943,12 +956,12 @@ func TestSiteDiff_ImmutableFieldChanged(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId: "new-workspace",
+			WorkspaceID: "new-workspace",
 			DisplayName: "Site",
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId: "old-workspace",
+				WorkspaceID: "old-workspace",
 				DisplayName: "Site",
 			},
 		},
@@ -974,13 +987,13 @@ func TestSiteDiff_ShortNameChanged(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "My Site",
 			ShortName:   "new-slug",
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId: "workspace456",
+				WorkspaceID: "workspace456",
 				DisplayName: "My Site",
 				ShortName:   "old-slug",
 			},
@@ -1008,13 +1021,13 @@ func TestSiteDiff_TimeZoneChanged(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "My Site",
 			TimeZone:    "America/Chicago",
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId: "workspace456",
+				WorkspaceID: "workspace456",
 				DisplayName: "My Site",
 				TimeZone:    "UTC",
 			},
@@ -1037,20 +1050,20 @@ func TestSiteDiff_TimeZoneChanged(t *testing.T) {
 	}
 }
 
-// TestSiteDiff_ParentFolderIdChanged tests parentFolderId change alone
-func TestSiteDiff_ParentFolderIdChanged(t *testing.T) {
+// TestSiteDiff_ParentFolderIDChanged tests parentFolderId change alone
+func TestSiteDiff_ParentFolderIDChanged(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId:    "workspace456",
+			WorkspaceID:    "workspace456",
 			DisplayName:    "My Site",
-			ParentFolderId: "folder-new",
+			ParentFolderID: "folder-new",
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId:    "workspace456",
+				WorkspaceID:    "workspace456",
 				DisplayName:    "My Site",
-				ParentFolderId: "folder-old",
+				ParentFolderID: "folder-old",
 			},
 		},
 	}
@@ -1093,7 +1106,7 @@ func TestPatchSite_NetworkError(t *testing.T) {
 func TestPatchSite_InvalidJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		w.Write([]byte("invalid json {{{"))
+		_, _ = w.Write([]byte("invalid json {{{"))
 	}))
 	defer server.Close()
 
@@ -1114,7 +1127,8 @@ func TestPatchSite_InvalidJSON(t *testing.T) {
 
 // Note: TestSiteUpdate_Success with real API call requires provider context infrastructure.
 // The PatchSite API function is tested directly via TestPatchSite_* tests.
-// The Update method's validation and DryRun logic is tested via TestSiteUpdate_ValidationError and TestSiteUpdate_DryRun.
+// The Update method's validation and DryRun logic is tested via TestSiteUpdate_ValidationError
+// and TestSiteUpdate_DryRun.
 // Full integration testing is done via manual testing with `pulumi up`.
 
 // ============================================================================
@@ -1135,7 +1149,7 @@ func TestPublishSite_Success(t *testing.T) {
 		// Parse request body
 		body, _ := io.ReadAll(r.Body)
 		var reqBody SitePublishRequest
-		json.Unmarshal(body, &reqBody)
+		_ = json.Unmarshal(body, &reqBody)
 
 		// Return mock publish response (202 Accepted for async operation)
 		response := SitePublishResponse{
@@ -1144,7 +1158,7 @@ func TestPublishSite_Success(t *testing.T) {
 			Message:   "Site published successfully",
 		}
 		w.WriteHeader(202)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -1154,7 +1168,6 @@ func TestPublishSite_Success(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	resp, err := PublishSite(context.Background(), client, "site123", nil)
-
 	if err != nil {
 		t.Fatalf("PublishSite failed: %v", err)
 	}
@@ -1171,7 +1184,7 @@ func TestPublishSite_SuccessWith200(t *testing.T) {
 			Queued:    false,
 		}
 		w.WriteHeader(200) // 200 OK instead of 202
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -1181,7 +1194,6 @@ func TestPublishSite_SuccessWith200(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	resp, err := PublishSite(context.Background(), client, "site123", nil)
-
 	if err != nil {
 		t.Fatalf("PublishSite failed with 200 response: %v", err)
 	}
@@ -1196,7 +1208,7 @@ func TestPublishSite_WithSpecificDomains(t *testing.T) {
 		// Parse request body to verify domains
 		body, _ := io.ReadAll(r.Body)
 		var reqBody SitePublishRequest
-		json.Unmarshal(body, &reqBody)
+		_ = json.Unmarshal(body, &reqBody)
 
 		if len(reqBody.Domains) != 2 {
 			t.Errorf("Expected 2 domains, got %d", len(reqBody.Domains))
@@ -1210,7 +1222,7 @@ func TestPublishSite_WithSpecificDomains(t *testing.T) {
 			Queued:    false,
 		}
 		w.WriteHeader(202)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -1220,7 +1232,6 @@ func TestPublishSite_WithSpecificDomains(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	resp, err := PublishSite(context.Background(), client, "site123", []string{"example.com", "www.example.com"})
-
 	if err != nil {
 		t.Fatalf("PublishSite failed: %v", err)
 	}
@@ -1236,14 +1247,14 @@ func TestPublishSite_RateLimiting(t *testing.T) {
 		attemptCount++
 		if attemptCount == 1 {
 			w.WriteHeader(429)
-			w.Write([]byte(`{"message": "Rate limit exceeded"}`))
+			_, _ = w.Write([]byte(`{"message": "Rate limit exceeded"}`))
 		} else {
 			response := SitePublishResponse{
 				Published: true,
 				Queued:    false,
 			}
 			w.WriteHeader(202)
-			json.NewEncoder(w).Encode(response)
+			_ = json.NewEncoder(w).Encode(response)
 		}
 	}))
 	defer server.Close()
@@ -1254,7 +1265,6 @@ func TestPublishSite_RateLimiting(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	resp, err := PublishSite(context.Background(), client, "site123", nil)
-
 	if err != nil {
 		t.Fatalf("PublishSite should succeed after retry: %v", err)
 	}
@@ -1287,7 +1297,7 @@ func TestPublishSite_NetworkError(t *testing.T) {
 func TestPublishSite_InvalidSiteID(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(404)
-		w.Write([]byte("Site not found"))
+		_, _ = w.Write([]byte("Site not found"))
 	}))
 	defer server.Close()
 
@@ -1310,7 +1320,7 @@ func TestPublishSite_InvalidSiteID(t *testing.T) {
 func TestPublishSite_SiteNotReady(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
-		w.Write([]byte("Bad request: site has no published version"))
+		_, _ = w.Write([]byte("Bad request: site has no published version"))
 	}))
 	defer server.Close()
 
@@ -1359,7 +1369,7 @@ func TestPublishSite_ContextCancellation(t *testing.T) {
 func TestPublishSite_InvalidJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(202)
-		w.Write([]byte("invalid json {{{"))
+		_, _ = w.Write([]byte("invalid json {{{"))
 	}))
 	defer server.Close()
 
@@ -1387,13 +1397,13 @@ func TestSiteDiff_PublishChanged(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "My Site",
 			Publish:     true, // Changed to true
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId: "workspace456",
+				WorkspaceID: "workspace456",
 				DisplayName: "My Site",
 				Publish:     false, // Was false
 			},
@@ -1448,7 +1458,7 @@ func TestSiteCreate_DryRunWithPublish(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.CreateRequest[SiteArgs]{
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "Test Site",
 			Publish:     true,
 		},
@@ -1480,13 +1490,13 @@ func TestSiteDiff_PublishIdempotency(t *testing.T) {
 	// Test publish=true to publish=true (no change)
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "My Site",
 			Publish:     true,
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId: "workspace456",
+				WorkspaceID: "workspace456",
 				DisplayName: "My Site",
 				Publish:     true, // Same value
 			},
@@ -1511,14 +1521,14 @@ func TestSiteDiff_PublishAndOtherFieldsChanged(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
-			WorkspaceId: "workspace456",
+			WorkspaceID: "workspace456",
 			DisplayName: "New Name",
 			TimeZone:    "America/Chicago",
 			Publish:     true,
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
-				WorkspaceId: "workspace456",
+				WorkspaceID: "workspace456",
 				DisplayName: "Old Name",
 				TimeZone:    "UTC",
 				Publish:     false,
@@ -1565,7 +1575,6 @@ func TestDeleteSite_Success(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	err := DeleteSite(context.Background(), client, "site123")
-
 	if err != nil {
 		t.Fatalf("DeleteSite failed: %v", err)
 	}
@@ -1581,7 +1590,7 @@ func TestDeleteSite_AlreadyDeleted404(t *testing.T) {
 
 		// Return 404 Not Found (site already deleted - treat as success)
 		w.WriteHeader(404)
-		w.Write([]byte(`{"error": "Site not found"}`))
+		_, _ = w.Write([]byte(`{"error": "Site not found"}`))
 	}))
 	defer server.Close()
 
@@ -1591,7 +1600,6 @@ func TestDeleteSite_AlreadyDeleted404(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	err := DeleteSite(context.Background(), client, "site456")
-
 	if err != nil {
 		t.Fatalf("DeleteSite should treat 404 as success (idempotent), got error: %v", err)
 	}
@@ -1607,7 +1615,7 @@ func TestDeleteSite_RateLimiting(t *testing.T) {
 			// Note: Headers must be set BEFORE WriteHeader() in Go
 			w.Header().Set("Retry-After", "1")
 			w.WriteHeader(429)
-			w.Write([]byte(`{"error": "rate limited"}`))
+			_, _ = w.Write([]byte(`{"error": "rate limited"}`))
 		} else {
 			// Second attempt: success
 			w.WriteHeader(204)
@@ -1621,7 +1629,6 @@ func TestDeleteSite_RateLimiting(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	err := DeleteSite(context.Background(), client, "site789")
-
 	if err != nil {
 		t.Fatalf("DeleteSite should retry on 429, got error: %v", err)
 	}
@@ -1634,7 +1641,7 @@ func TestDeleteSite_RateLimiting(t *testing.T) {
 func TestDeleteSite_PermissionError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(403)
-		w.Write([]byte(`{"error": "Insufficient permissions to delete site"}`))
+		_, _ = w.Write([]byte(`{"error": "Insufficient permissions to delete site"}`))
 	}))
 	defer server.Close()
 
@@ -1702,7 +1709,7 @@ func TestDeleteSite_ContextCancellation(t *testing.T) {
 func TestDeleteSite_ServerError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
-		w.Write([]byte(`{"error": "Internal server error"}`))
+		_, _ = w.Write([]byte(`{"error": "Internal server error"}`))
 	}))
 	defer server.Close()
 
@@ -1755,7 +1762,7 @@ func TestGetSite_Success(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -1765,7 +1772,6 @@ func TestGetSite_Success(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	siteData, err := GetSite(context.Background(), client, "site123")
-
 	if err != nil {
 		t.Fatalf("GetSite failed: %v", err)
 	}
@@ -1788,7 +1794,7 @@ func TestGetSite_NotFound404(t *testing.T) {
 		}
 		// Return 404 Not Found (site doesn't exist - treat as nil, nil signal)
 		w.WriteHeader(404)
-		w.Write([]byte(`{"error": "Site not found"}`))
+		_, _ = w.Write([]byte(`{"error": "Site not found"}`))
 	}))
 	defer server.Close()
 
@@ -1798,7 +1804,6 @@ func TestGetSite_NotFound404(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	siteData, err := GetSite(context.Background(), client, "nonexistent")
-
 	if err != nil {
 		t.Fatalf("GetSite should return nil, nil for 404, got error: %v", err)
 	}
@@ -1816,7 +1821,7 @@ func TestGetSite_RateLimiting(t *testing.T) {
 			// First attempt: return 429 with Retry-After
 			w.Header().Set("Retry-After", "1")
 			w.WriteHeader(429)
-			w.Write([]byte(`{"error": "Rate limited"}`))
+			_, _ = w.Write([]byte(`{"error": "Rate limited"}`))
 			return
 		}
 		// Second attempt: return 200 OK
@@ -1829,7 +1834,7 @@ func TestGetSite_RateLimiting(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -1839,7 +1844,6 @@ func TestGetSite_RateLimiting(t *testing.T) {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	siteData, err := GetSite(context.Background(), client, "site123")
-
 	if err != nil {
 		t.Fatalf("GetSite should retry on 429 and succeed, got error: %v", err)
 	}
@@ -1856,7 +1860,7 @@ func TestGetSite_MalformedJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		w.Write([]byte(`{invalid json`)) // Malformed JSON
+		_, _ = w.Write([]byte(`{invalid json`)) // Malformed JSON
 	}))
 	defer server.Close()
 
@@ -1882,7 +1886,7 @@ func TestGetSite_MalformedJSON(t *testing.T) {
 func TestGetSite_PermissionError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(403)
-		w.Write([]byte(`{"error": "Forbidden"}`))
+		_, _ = w.Write([]byte(`{"error": "Forbidden"}`))
 	}))
 	defer server.Close()
 
@@ -1925,7 +1929,7 @@ func TestGetSite_ContextCancellation(t *testing.T) {
 		// Simulate slow response
 		time.Sleep(100 * time.Millisecond)
 		w.WriteHeader(200)
-		w.Write([]byte(`{}`))
+		_, _ = w.Write([]byte(`{}`))
 	}))
 	defer server.Close()
 
@@ -1954,7 +1958,7 @@ func TestGetSite_ContextCancellation(t *testing.T) {
 func TestGetSite_ServerError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
-		w.Write([]byte(`{"error": "Internal server error"}`))
+		_, _ = w.Write([]byte(`{"error": "Internal server error"}`))
 	}))
 	defer server.Close()
 
@@ -1982,11 +1986,11 @@ func TestGetSite_ServerError(t *testing.T) {
 // GetSite API Function Tests - Additional Coverage
 // =============================================================================
 
-// TestGetSite_WithParentFolderId tests that parentFolderId is correctly parsed from API response
-func TestGetSite_WithParentFolderId(t *testing.T) {
+// TestGetSite_WithParentFolderID tests that parentFolderId is correctly parsed from API response
+func TestGetSite_WithParentFolderID(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		w.Write([]byte(`{
+		_, _ = w.Write([]byte(`{
 			"id": "site123",
 			"workspaceId": "workspace456",
 			"displayName": "Test Site",
@@ -2003,7 +2007,6 @@ func TestGetSite_WithParentFolderId(t *testing.T) {
 	ctx := context.Background()
 	client := &http.Client{Timeout: 30 * time.Second}
 	siteData, err := GetSite(ctx, client, "site123")
-
 	if err != nil {
 		t.Fatalf("GetSite() returned unexpected error: %v", err)
 	}
@@ -2019,7 +2022,7 @@ func TestGetSite_WithParentFolderId(t *testing.T) {
 func TestGetSite_AllFields(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		w.Write([]byte(`{
+		_, _ = w.Write([]byte(`{
 			"id": "site123",
 			"workspaceId": "workspace456",
 			"displayName": "My Test Site",
@@ -2043,7 +2046,6 @@ func TestGetSite_AllFields(t *testing.T) {
 	ctx := context.Background()
 	client := &http.Client{Timeout: 30 * time.Second}
 	siteData, err := GetSite(ctx, client, "site123")
-
 	if err != nil {
 		t.Fatalf("GetSite() returned unexpected error: %v", err)
 	}
@@ -2076,8 +2078,8 @@ func TestGetSite_AllFields(t *testing.T) {
 	if siteData.LastUpdated != "2024-01-15T12:00:00Z" {
 		t.Errorf("Expected LastUpdated '2024-01-15T12:00:00Z', got '%s'", siteData.LastUpdated)
 	}
-	if siteData.PreviewUrl != "https://preview.webflow.com/site123" {
-		t.Errorf("Expected PreviewUrl 'https://preview.webflow.com/site123', got '%s'", siteData.PreviewUrl)
+	if siteData.PreviewURL != "https://preview.webflow.com/site123" {
+		t.Errorf("Expected PreviewURL 'https://preview.webflow.com/site123', got '%s'", siteData.PreviewURL)
 	}
 	if len(siteData.CustomDomains) != 2 {
 		t.Errorf("Expected 2 custom domains, got %d", len(siteData.CustomDomains))

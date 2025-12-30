@@ -1,10 +1,22 @@
-// Package provider implements the Webflow Pulumi Provider using the modern pulumi-go-provider SDK.
-// This file defines the Redirect resource schema and stubs for CRUD operations.
-// Full CRUD implementation is provided in Story 2.2: Redirect CRUD Operations Implementation.
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -19,9 +31,9 @@ type Redirect struct{}
 
 // RedirectArgs defines the input properties for the Redirect resource.
 type RedirectArgs struct {
-	// SiteId is the Webflow site ID (24-character lowercase hexadecimal string).
+	// SiteID is the Webflow site ID (24-character lowercase hexadecimal string).
 	// Example: "5f0c8c9e1c9d440000e8d8c3"
-	SiteId string `pulumi:"siteId"`
+	SiteID string `pulumi:"siteId"`
 	// SourcePath is the URL path to redirect from (e.g., "/old-page").
 	// Must start with "/" and contain only valid URL characters.
 	// Examples: "/old-page", "/blog/2023", "/products/item-1"
@@ -54,14 +66,16 @@ func (r *Redirect) Annotate(a infer.Annotator) {
 
 // Annotate adds descriptions to the RedirectArgs fields.
 func (args *RedirectArgs) Annotate(a infer.Annotator) {
-	a.Describe(&args.SiteId,
-		"The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). "+
+	a.Describe(&args.SiteID,
+		"The Webflow site ID (24-character lowercase hexadecimal string, "+
+			"e.g., '5f0c8c9e1c9d440000e8d8c3'). "+
 			"You can find your site ID in the Webflow dashboard under Site Settings. "+
-			"This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).")
+			"This field will be validated before making any API calls.")
 
 	a.Describe(&args.SourcePath,
 		"The URL path to redirect from (e.g., '/old-page', '/blog/2023'). "+
-			"Must start with '/' and contain only valid URL characters (letters, numbers, hyphens, underscores, slashes, dots). "+
+			"Must start with '/' and contain only valid URL characters "+
+			"(letters, numbers, hyphens, underscores, slashes, dots). "+
 			"Query strings and fragments are not allowed in the source path.")
 
 	a.Describe(&args.DestinationPath,
@@ -85,11 +99,13 @@ func (state *RedirectState) Annotate(a infer.Annotator) {
 // Diff determines what changes need to be made to the redirect resource.
 // siteId and sourcePath changes trigger replacement (primary key).
 // destinationPath and statusCode changes trigger in-place update.
-func (r *Redirect) Diff(ctx context.Context, req infer.DiffRequest[RedirectArgs, RedirectState]) (infer.DiffResponse, error) {
+func (r *Redirect) Diff(
+	ctx context.Context, req infer.DiffRequest[RedirectArgs, RedirectState],
+) (infer.DiffResponse, error) {
 	diff := infer.DiffResponse{}
 
 	// Check for siteId change (requires replacement)
-	if req.State.SiteId != req.Inputs.SiteId {
+	if req.State.SiteID != req.Inputs.SiteID {
 		diff.DeleteBeforeReplace = true
 		diff.HasChanges = true
 		diff.DetailedDiff = map[string]p.PropertyDiff{
@@ -137,9 +153,11 @@ func (r *Redirect) Diff(ctx context.Context, req infer.DiffRequest[RedirectArgs,
 }
 
 // Create creates a new redirect on the Webflow site.
-func (r *Redirect) Create(ctx context.Context, req infer.CreateRequest[RedirectArgs]) (infer.CreateResponse[RedirectState], error) {
+func (r *Redirect) Create(
+	ctx context.Context, req infer.CreateRequest[RedirectArgs],
+) (infer.CreateResponse[RedirectState], error) {
 	// Validate inputs BEFORE generating resource ID
-	if err := ValidateSiteId(req.Inputs.SiteId); err != nil {
+	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
 		return infer.CreateResponse[RedirectState]{}, fmt.Errorf("validation failed for Redirect resource: %w", err)
 	}
 	if err := ValidateSourcePath(req.Inputs.SourcePath); err != nil {
@@ -162,9 +180,9 @@ func (r *Redirect) Create(ctx context.Context, req infer.CreateRequest[RedirectA
 		// Set a preview timestamp
 		state.CreatedOn = time.Now().Format(time.RFC3339)
 		// Generate a predictable ID for dry-run
-		previewId := fmt.Sprintf("preview-%d", time.Now().Unix())
+		previewID := fmt.Sprintf("preview-%d", time.Now().Unix())
 		return infer.CreateResponse[RedirectState]{
-			ID:     GenerateRedirectResourceId(req.Inputs.SiteId, previewId),
+			ID:     GenerateRedirectResourceID(req.Inputs.SiteID, previewID),
 			Output: state,
 		}, nil
 	}
@@ -176,32 +194,39 @@ func (r *Redirect) Create(ctx context.Context, req infer.CreateRequest[RedirectA
 	}
 
 	// Call Webflow API
-	response, err := PostRedirect(ctx, client, req.Inputs.SiteId, req.Inputs.SourcePath, req.Inputs.DestinationPath, req.Inputs.StatusCode)
+	response, err := PostRedirect(
+		ctx, client, req.Inputs.SiteID,
+		req.Inputs.SourcePath, req.Inputs.DestinationPath, req.Inputs.StatusCode,
+	)
 	if err != nil {
 		return infer.CreateResponse[RedirectState]{}, fmt.Errorf("failed to create redirect: %w", err)
 	}
 
 	// Defensive check: Ensure Webflow API returned a valid redirect ID
 	if response.ID == "" {
-		return infer.CreateResponse[RedirectState]{}, fmt.Errorf("Webflow API returned empty redirect ID - this is unexpected and may indicate an API issue")
+		return infer.CreateResponse[RedirectState]{}, errors.New(
+			"Webflow API returned empty redirect ID - " +
+				"this is unexpected and may indicate an API issue")
 	}
 
 	// Set creation timestamp
 	state.CreatedOn = time.Now().Format(time.RFC3339)
 
-	resourceId := GenerateRedirectResourceId(req.Inputs.SiteId, response.ID)
+	resourceID := GenerateRedirectResourceID(req.Inputs.SiteID, response.ID)
 
 	return infer.CreateResponse[RedirectState]{
-		ID:     resourceId,
+		ID:     resourceID,
 		Output: state,
 	}, nil
 }
 
 // Read retrieves the current state of a redirect from Webflow.
 // Used for drift detection and import operations.
-func (r *Redirect) Read(ctx context.Context, req infer.ReadRequest[RedirectArgs, RedirectState]) (infer.ReadResponse[RedirectArgs, RedirectState], error) {
-	// Extract siteId and redirectId from resource ID
-	siteId, redirectId, err := ExtractIdsFromRedirectResourceId(req.ID)
+func (r *Redirect) Read(
+	ctx context.Context, req infer.ReadRequest[RedirectArgs, RedirectState],
+) (infer.ReadResponse[RedirectArgs, RedirectState], error) {
+	// Extract siteID and redirectID from resource ID
+	siteID, redirectID, err := ExtractIDsFromRedirectResourceID(req.ID)
 	if err != nil {
 		return infer.ReadResponse[RedirectArgs, RedirectState]{}, fmt.Errorf("invalid resource ID: %w", err)
 	}
@@ -213,7 +238,7 @@ func (r *Redirect) Read(ctx context.Context, req infer.ReadRequest[RedirectArgs,
 	}
 
 	// Call Webflow API to get all redirects for this site
-	response, err := GetRedirects(ctx, client, siteId)
+	response, err := GetRedirects(ctx, client, siteID)
 	if err != nil {
 		// Resource not found - return empty ID to signal deletion
 		if strings.Contains(err.Error(), "not found") {
@@ -227,7 +252,7 @@ func (r *Redirect) Read(ctx context.Context, req infer.ReadRequest[RedirectArgs,
 	// Find the specific redirect in the list
 	var foundRedirect *RedirectRule
 	for _, redirect := range response.Redirects {
-		if redirect.ID == redirectId {
+		if redirect.ID == redirectID {
 			foundRedirect = &redirect
 			break
 		}
@@ -242,7 +267,7 @@ func (r *Redirect) Read(ctx context.Context, req infer.ReadRequest[RedirectArgs,
 
 	// Build current state from API response
 	currentInputs := RedirectArgs{
-		SiteId:          siteId,
+		SiteID:          siteID,
 		SourcePath:      foundRedirect.SourcePath,
 		DestinationPath: foundRedirect.DestinationPath,
 		StatusCode:      foundRedirect.StatusCode,
@@ -260,9 +285,11 @@ func (r *Redirect) Read(ctx context.Context, req infer.ReadRequest[RedirectArgs,
 }
 
 // Update modifies an existing redirect.
-func (r *Redirect) Update(ctx context.Context, req infer.UpdateRequest[RedirectArgs, RedirectState]) (infer.UpdateResponse[RedirectState], error) {
+func (r *Redirect) Update(
+	ctx context.Context, req infer.UpdateRequest[RedirectArgs, RedirectState],
+) (infer.UpdateResponse[RedirectState], error) {
 	// Validate inputs BEFORE making API calls
-	if err := ValidateSiteId(req.Inputs.SiteId); err != nil {
+	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
 		return infer.UpdateResponse[RedirectState]{}, fmt.Errorf("validation failed for Redirect resource: %w", err)
 	}
 	if err := ValidateDestinationPath(req.Inputs.DestinationPath); err != nil {
@@ -285,7 +312,7 @@ func (r *Redirect) Update(ctx context.Context, req infer.UpdateRequest[RedirectA
 	}
 
 	// Extract the Webflow redirect ID from the Pulumi resource ID
-	_, redirectId, err := ExtractIdsFromRedirectResourceId(req.ID)
+	_, redirectID, err := ExtractIDsFromRedirectResourceID(req.ID)
 	if err != nil {
 		return infer.UpdateResponse[RedirectState]{}, fmt.Errorf("invalid resource ID: %w", err)
 	}
@@ -297,7 +324,10 @@ func (r *Redirect) Update(ctx context.Context, req infer.UpdateRequest[RedirectA
 	}
 
 	// Call Webflow API
-	_, err = PatchRedirect(ctx, client, req.Inputs.SiteId, redirectId, req.Inputs.SourcePath, req.Inputs.DestinationPath, req.Inputs.StatusCode)
+	_, err = PatchRedirect(
+		ctx, client, req.Inputs.SiteID, redirectID,
+		req.Inputs.SourcePath, req.Inputs.DestinationPath, req.Inputs.StatusCode,
+	)
 	if err != nil {
 		return infer.UpdateResponse[RedirectState]{}, fmt.Errorf("failed to update redirect: %w", err)
 	}
@@ -309,8 +339,8 @@ func (r *Redirect) Update(ctx context.Context, req infer.UpdateRequest[RedirectA
 
 // Delete removes a redirect from the Webflow site.
 func (r *Redirect) Delete(ctx context.Context, req infer.DeleteRequest[RedirectState]) (infer.DeleteResponse, error) {
-	// Extract siteId and redirectId from resource ID
-	siteId, redirectId, err := ExtractIdsFromRedirectResourceId(req.ID)
+	// Extract siteID and redirectID from resource ID
+	siteID, redirectID, err := ExtractIDsFromRedirectResourceID(req.ID)
 	if err != nil {
 		return infer.DeleteResponse{}, fmt.Errorf("invalid resource ID: %w", err)
 	}
@@ -322,7 +352,7 @@ func (r *Redirect) Delete(ctx context.Context, req infer.DeleteRequest[RedirectS
 	}
 
 	// Call Webflow API (handles 404 gracefully for idempotency)
-	if err := DeleteRedirect(ctx, client, siteId, redirectId); err != nil {
+	if err := DeleteRedirect(ctx, client, siteID, redirectID); err != nil {
 		return infer.DeleteResponse{}, fmt.Errorf("failed to delete redirect: %w", err)
 	}
 

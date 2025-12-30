@@ -1,9 +1,23 @@
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
 	"bytes"
 	"context"
-	"fmt"
+	"errors"
 	"io"
 	"net/http"
 	"reflect"
@@ -137,55 +151,55 @@ func TestRobotsTxtRule_Struct(t *testing.T) {
 	}
 }
 
-// TestValidateSiteId tests siteId validation.
-func TestValidateSiteId(t *testing.T) {
+// TestValidateSiteID tests siteID validation.
+func TestValidateSiteID(t *testing.T) {
 	tests := []struct {
 		name    string
-		siteId  string
+		siteID  string
 		wantErr bool
 	}{
 		{
 			name:    "valid 24-char hex",
-			siteId:  "5f0c8c9e1c9d440000e8d8c3",
+			siteID:  "5f0c8c9e1c9d440000e8d8c3",
 			wantErr: false,
 		},
 		{
 			name:    "valid all lowercase",
-			siteId:  "abcdef0123456789abcdef01",
+			siteID:  "abcdef0123456789abcdef01",
 			wantErr: false,
 		},
 		{
 			name:    "too short",
-			siteId:  "5f0c8c9e1c9d44",
+			siteID:  "5f0c8c9e1c9d44",
 			wantErr: true,
 		},
 		{
 			name:    "too long",
-			siteId:  "5f0c8c9e1c9d440000e8d8c3abc",
+			siteID:  "5f0c8c9e1c9d440000e8d8c3abc",
 			wantErr: true,
 		},
 		{
 			name:    "invalid characters",
-			siteId:  "5f0c8c9e1c9d440000e8d8XY",
+			siteID:  "5f0c8c9e1c9d440000e8d8XY",
 			wantErr: true,
 		},
 		{
 			name:    "empty",
-			siteId:  "",
+			siteID:  "",
 			wantErr: true,
 		},
 		{
 			name:    "uppercase hex",
-			siteId:  "5F0C8C9E1C9D440000E8D8C3",
+			siteID:  "5F0C8C9E1C9D440000E8D8C3",
 			wantErr: true, // Schema specifies lowercase only
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := ValidateSiteId(tt.siteId)
+			err := ValidateSiteID(tt.siteID)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ValidateSiteId(%s) error = %v, wantErr %v", tt.siteId, err, tt.wantErr)
+				t.Errorf("ValidateSiteID(%s) error = %v, wantErr %v", tt.siteID, err, tt.wantErr)
 			}
 		})
 	}
@@ -193,38 +207,38 @@ func TestValidateSiteId(t *testing.T) {
 
 // TestGenerateResourceId tests resource ID generation.
 func TestGenerateResourceId(t *testing.T) {
-	siteId := "5f0c8c9e1c9d440000e8d8c3"
+	siteID := "5f0c8c9e1c9d440000e8d8c3"
 	expected := "5f0c8c9e1c9d440000e8d8c3/robots.txt"
 
-	result := GenerateRobotsTxtResourceId(siteId)
+	result := GenerateRobotsTxtResourceID(siteID)
 	if result != expected {
 		t.Errorf("expected '%s', got '%s'", expected, result)
 	}
 }
 
-// TestExtractSiteIdFromResourceId tests extracting siteId from resource ID.
-func TestExtractSiteIdFromResourceId(t *testing.T) {
+// TestExtractSiteIDFromResourceID tests extracting siteID from resource ID.
+func TestExtractSiteIDFromResourceID(t *testing.T) {
 	tests := []struct {
 		name       string
-		resourceId string
+		resourceID string
 		expected   string
 		wantErr    bool
 	}{
 		{
 			name:       "valid resource id",
-			resourceId: "5f0c8c9e1c9d440000e8d8c3/robots.txt",
+			resourceID: "5f0c8c9e1c9d440000e8d8c3/robots.txt",
 			expected:   "5f0c8c9e1c9d440000e8d8c3",
 			wantErr:    false,
 		},
 		{
 			name:       "invalid format",
-			resourceId: "invalid",
+			resourceID: "invalid",
 			expected:   "",
 			wantErr:    true,
 		},
 		{
 			name:       "empty",
-			resourceId: "",
+			resourceID: "",
 			expected:   "",
 			wantErr:    true,
 		},
@@ -232,9 +246,9 @@ func TestExtractSiteIdFromResourceId(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := ExtractSiteIdFromResourceId(tt.resourceId)
+			result, err := ExtractSiteIDFromResourceID(tt.resourceID)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ExtractSiteIdFromResourceId(%s) error = %v, wantErr %v", tt.resourceId, err, tt.wantErr)
+				t.Errorf("ExtractSiteIDFromResourceID(%s) error = %v, wantErr %v", tt.resourceID, err, tt.wantErr)
 			}
 			if result != tt.expected {
 				t.Errorf("expected '%s', got '%s'", tt.expected, result)
@@ -259,7 +273,8 @@ func TestGetRobotsTxt_Success(t *testing.T) {
 				}
 
 				// Return mock response
-				body := `{"rules":[{"userAgent":"*","allows":["/"],"disallows":["/admin/"]}],"sitemap":"https://example.com/sitemap.xml"}`
+				body := `{"rules":[{"userAgent":"*","allows":["/"],` +
+					`"disallows":["/admin/"]}],"sitemap":"https://example.com/sitemap.xml"}`
 				return &http.Response{
 					StatusCode: 200,
 					Body:       io.NopCloser(bytes.NewBufferString(body)),
@@ -271,7 +286,6 @@ func TestGetRobotsTxt_Success(t *testing.T) {
 
 	ctx := context.Background()
 	response, err := GetRobotsTxt(ctx, mockClient, "5f0c8c9e1c9d440000e8d8c3")
-
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -335,7 +349,6 @@ func TestPutRobotsTxt_Success(t *testing.T) {
 	ctx := context.Background()
 	rules := []RobotsTxtRule{{UserAgent: "*", Allows: []string{"/"}}}
 	response, err := PutRobotsTxt(ctx, mockClient, "5f0c8c9e1c9d440000e8d8c3", rules, "")
-
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -365,7 +378,6 @@ func TestDeleteRobotsTxt_Success(t *testing.T) {
 
 	ctx := context.Background()
 	err := DeleteRobotsTxt(ctx, mockClient, "5f0c8c9e1c9d440000e8d8c3")
-
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -387,7 +399,6 @@ func TestDeleteRobotsTxt_AlreadyDeleted(t *testing.T) {
 
 	ctx := context.Background()
 	err := DeleteRobotsTxt(ctx, mockClient, "5f0c8c9e1c9d440000e8d8c3")
-
 	// 404 on delete should NOT be an error (idempotent)
 	if err != nil {
 		t.Fatalf("delete should be idempotent, got error: %v", err)
@@ -422,7 +433,6 @@ func TestRobotsTxt_RateLimitRetry(t *testing.T) {
 
 	ctx := context.Background()
 	_, err := GetRobotsTxt(ctx, mockClient, "5f0c8c9e1c9d440000e8d8c3")
-
 	if err != nil {
 		t.Fatalf("expected retry to succeed, got error: %v", err)
 	}
@@ -508,7 +518,7 @@ func TestSetProviderVersion(t *testing.T) {
 func TestRobotsTxt_Create_DryRun(t *testing.T) {
 	resource := &RobotsTxt{}
 	args := RobotsTxtArgs{
-		SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+		SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 		Content: "User-agent: *\nAllow: /",
 	}
 
@@ -527,11 +537,11 @@ func TestRobotsTxt_Create_DryRun(t *testing.T) {
 	}
 }
 
-// TestRobotsTxt_Create_InvalidSiteId tests Create with invalid siteId.
-func TestRobotsTxt_Create_InvalidSiteId(t *testing.T) {
+// TestRobotsTxt_Create_InvalidSiteID tests Create with invalid siteID.
+func TestRobotsTxt_Create_InvalidSiteID(t *testing.T) {
 	resource := &RobotsTxt{}
 	args := RobotsTxtArgs{
-		SiteId:  "invalid",
+		SiteID:  "invalid",
 		Content: "User-agent: *\nAllow: /",
 	}
 
@@ -542,7 +552,7 @@ func TestRobotsTxt_Create_InvalidSiteId(t *testing.T) {
 
 	_, err := resource.Create(context.Background(), req)
 	if err == nil {
-		t.Fatal("expected error for invalid siteId")
+		t.Fatal("expected error for invalid siteID")
 	}
 }
 
@@ -550,7 +560,7 @@ func TestRobotsTxt_Create_InvalidSiteId(t *testing.T) {
 func TestRobotsTxt_Create_EmptyContent(t *testing.T) {
 	resource := &RobotsTxt{}
 	args := RobotsTxtArgs{
-		SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+		SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 		Content: "",
 	}
 
@@ -573,10 +583,10 @@ func TestRobotsTxt_Create_EmptyContent(t *testing.T) {
 func TestValidation_ActionableErrorMessages(t *testing.T) {
 	resource := &RobotsTxt{}
 
-	// Test case 1: Empty siteId should explain what's required
+	// Test case 1: Empty siteID should explain what's required
 	req1 := infer.CreateRequest[RobotsTxtArgs]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "",
+			SiteID:  "",
 			Content: "User-agent: *\nAllow: /",
 		},
 		DryRun: true, // Preview mode - validation should happen before API calls
@@ -584,7 +594,7 @@ func TestValidation_ActionableErrorMessages(t *testing.T) {
 
 	_, err1 := resource.Create(context.Background(), req1)
 	if err1 == nil {
-		t.Fatal("expected error for empty siteId")
+		t.Fatal("expected error for empty siteID")
 	}
 
 	// Error message should explain what's wrong and how to fix it
@@ -596,10 +606,10 @@ func TestValidation_ActionableErrorMessages(t *testing.T) {
 		t.Errorf("error message should indicate siteId is required/empty, got: %s", errorMsg)
 	}
 
-	// Test case 2: Invalid siteId format should explain the correct format
+	// Test case 2: Invalid siteID format should explain the correct format
 	req2 := infer.CreateRequest[RobotsTxtArgs]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "invalid-format",
+			SiteID:  "invalid-format",
 			Content: "User-agent: *\nAllow: /",
 		},
 		DryRun: true,
@@ -607,7 +617,7 @@ func TestValidation_ActionableErrorMessages(t *testing.T) {
 
 	_, err2 := resource.Create(context.Background(), req2)
 	if err2 == nil {
-		t.Fatal("expected error for invalid siteId format")
+		t.Fatal("expected error for invalid siteID format")
 	}
 
 	errorMsg2 := err2.Error()
@@ -618,7 +628,7 @@ func TestValidation_ActionableErrorMessages(t *testing.T) {
 	// Test case 3: Empty content should explain what's required
 	req3 := infer.CreateRequest[RobotsTxtArgs]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "",
 		},
 		DryRun: true,
@@ -633,7 +643,8 @@ func TestValidation_ActionableErrorMessages(t *testing.T) {
 	if !strings.Contains(errorMsg3, "content") {
 		t.Errorf("error message should mention 'content', got: %s", errorMsg3)
 	}
-	if !strings.Contains(strings.ToLower(errorMsg3), "required") && !strings.Contains(strings.ToLower(errorMsg3), "empty") {
+	lowerMsg := strings.ToLower(errorMsg3)
+	if !strings.Contains(lowerMsg, "required") && !strings.Contains(lowerMsg, "empty") {
 		t.Errorf("error message should indicate content is required/empty, got: %s", errorMsg3)
 	}
 }
@@ -646,7 +657,7 @@ func TestValidation_ErrorsBeforeAPICalls(t *testing.T) {
 	// Test that validation happens in DryRun mode (preview) without making API calls
 	req := infer.CreateRequest[RobotsTxtArgs]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "invalid-site-id",
+			SiteID:  "invalid-site-id",
 			Content: "User-agent: *\nAllow: /",
 		},
 		DryRun: true, // Preview mode - should validate without API calls
@@ -659,8 +670,11 @@ func TestValidation_ErrorsBeforeAPICalls(t *testing.T) {
 
 	// Error should be a validation error, not an API error
 	errorMsg := err.Error()
-	if strings.Contains(errorMsg, "API") || strings.Contains(errorMsg, "HTTP") || strings.Contains(errorMsg, "request") {
-		t.Errorf("validation error should not mention API/HTTP/request (validation happens before API calls), got: %s", errorMsg)
+	hasAPI := strings.Contains(errorMsg, "API")
+	hasHTTP := strings.Contains(errorMsg, "HTTP")
+	hasRequest := strings.Contains(errorMsg, "request")
+	if hasAPI || hasHTTP || hasRequest {
+		t.Errorf("validation error should not mention API/HTTP/request, got: %s", errorMsg)
 	}
 }
 
@@ -668,7 +682,7 @@ func TestValidation_ErrorsBeforeAPICalls(t *testing.T) {
 func TestRobotsTxt_Update_DryRun(t *testing.T) {
 	resource := &RobotsTxt{}
 	args := RobotsTxtArgs{
-		SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+		SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 		Content: "User-agent: *\nAllow: /\nDisallow: /new/",
 	}
 
@@ -695,12 +709,12 @@ func TestRobotsTxt_Diff_ContentChange(t *testing.T) {
 
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: newContent,
 		},
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: oldContent,
 			},
 		},
@@ -716,18 +730,18 @@ func TestRobotsTxt_Diff_ContentChange(t *testing.T) {
 	}
 }
 
-// TestRobotsTxt_Diff_SiteIdChange tests that siteId changes trigger replacement.
-func TestRobotsTxt_Diff_SiteIdChange(t *testing.T) {
+// TestRobotsTxt_Diff_SiteIDChange tests that siteID changes trigger replacement.
+func TestRobotsTxt_Diff_SiteIDChange(t *testing.T) {
 	resource := &RobotsTxt{}
 
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "ffffffffffffffffffffffff",
+			SiteID:  "ffffffffffffffffffffffff",
 			Content: "User-agent: *\nAllow: /",
 		},
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
@@ -739,10 +753,10 @@ func TestRobotsTxt_Diff_SiteIdChange(t *testing.T) {
 	}
 
 	if !resp.HasChanges {
-		t.Error("expected Diff to detect siteId change")
+		t.Error("expected Diff to detect siteID change")
 	}
 	if !resp.DeleteBeforeReplace {
-		t.Error("expected DeleteBeforeReplace=true for siteId change")
+		t.Error("expected DeleteBeforeReplace=true for siteID change")
 	}
 }
 
@@ -760,12 +774,12 @@ func TestIdempotency_Diff(t *testing.T) {
 		{
 			name: "identical state - no changes",
 			inputs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 			state: RobotsTxtState{
 				RobotsTxtArgs: RobotsTxtArgs{
-					SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+					SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 					Content: "User-agent: *\nAllow: /",
 				},
 				LastModified: "2025-12-10T12:00:00Z",
@@ -776,12 +790,12 @@ func TestIdempotency_Diff(t *testing.T) {
 		{
 			name: "content change - needs update",
 			inputs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /\nDisallow: /admin/",
 			},
 			state: RobotsTxtState{
 				RobotsTxtArgs: RobotsTxtArgs{
-					SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+					SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 					Content: "User-agent: *\nAllow: /",
 				},
 				LastModified: "2025-12-10T12:00:00Z",
@@ -790,20 +804,20 @@ func TestIdempotency_Diff(t *testing.T) {
 			desc:       "Diff returns HasChanges=true when content differs",
 		},
 		{
-			name: "siteId change - needs replacement",
+			name: "siteID change - needs replacement",
 			inputs: RobotsTxtArgs{
-				SiteId:  "ffffffffffffffffffffffff",
+				SiteID:  "ffffffffffffffffffffffff",
 				Content: "User-agent: *\nAllow: /",
 			},
 			state: RobotsTxtState{
 				RobotsTxtArgs: RobotsTxtArgs{
-					SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+					SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 					Content: "User-agent: *\nAllow: /",
 				},
 				LastModified: "2025-12-10T12:00:00Z",
 			},
 			wantChange: true,
-			desc:       "Diff returns HasChanges=true when siteId differs (replacement needed)",
+			desc:       "Diff returns HasChanges=true when siteID differs (replacement needed)",
 		},
 	}
 
@@ -827,23 +841,23 @@ func TestIdempotency_Diff(t *testing.T) {
 	}
 }
 
-// TestStateConsistency_Read_ReturnsCurrentState tests that Read properly extracts siteId from resource ID.
+// TestStateConsistency_Read_ReturnsCurrentState tests that Read properly extracts siteID from resource ID.
 func TestStateConsistency_Read_ReturnsCurrentState(t *testing.T) {
 	// This test validates that Read properly handles resource ID format
-	// Resource ID format is {siteId}/robots.txt
-	// Read method should extract siteId and call API
+	// Resource ID format is {siteID}/robots.txt
+	// Read method should extract siteID and call API
 
-	siteId := "5f0c8c9e1c9d440000e8d8c3"
-	resourceID := siteId + "/robots.txt"
+	siteID := "5f0c8c9e1c9d440000e8d8c3"
+	resourceID := siteID + "/robots.txt"
 
 	// Validate ID parsing logic
-	extractedSiteId, err := ExtractSiteIdFromResourceId(resourceID)
+	extractedSiteID, err := ExtractSiteIDFromResourceID(resourceID)
 	if err != nil {
-		t.Fatalf("failed to extract siteId: %v", err)
+		t.Fatalf("failed to extract siteID: %v", err)
 	}
 
-	if extractedSiteId != siteId {
-		t.Errorf("expected siteId '%s', got '%s'", siteId, extractedSiteId)
+	if extractedSiteID != siteID {
+		t.Errorf("expected siteID '%s', got '%s'", siteID, extractedSiteID)
 	}
 }
 
@@ -851,7 +865,7 @@ func TestStateConsistency_Read_ReturnsCurrentState(t *testing.T) {
 func TestCreate_StateIncludesAllProperties(t *testing.T) {
 	resource := &RobotsTxt{}
 	args := RobotsTxtArgs{
-		SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+		SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 		Content: "User-agent: *\nAllow: /",
 	}
 
@@ -870,12 +884,12 @@ func TestCreate_StateIncludesAllProperties(t *testing.T) {
 		t.Error("expected non-empty ID in Create response")
 	}
 	if resp.ID != "5f0c8c9e1c9d440000e8d8c3/robots.txt" {
-		t.Errorf("expected ID format '{siteId}/robots.txt', got '%s'", resp.ID)
+		t.Errorf("expected ID format '{siteID}/robots.txt', got '%s'", resp.ID)
 	}
 
 	// Verify output includes all properties
-	if resp.Output.SiteId != args.SiteId {
-		t.Error("expected siteId in output state")
+	if resp.Output.SiteID != args.SiteID {
+		t.Error("expected siteID in output state")
 	}
 	if resp.Output.Content != args.Content {
 		t.Error("expected content in output state")
@@ -889,7 +903,7 @@ func TestCreate_StateIncludesAllProperties(t *testing.T) {
 func TestUpdate_StateIncludesAllProperties(t *testing.T) {
 	resource := &RobotsTxt{}
 	newArgs := RobotsTxtArgs{
-		SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+		SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 		Content: "User-agent: *\nAllow: /\nDisallow: /admin/",
 	}
 
@@ -904,8 +918,8 @@ func TestUpdate_StateIncludesAllProperties(t *testing.T) {
 	}
 
 	// Verify output includes all properties
-	if resp.Output.SiteId != newArgs.SiteId {
-		t.Error("expected siteId in updated state")
+	if resp.Output.SiteID != newArgs.SiteID {
+		t.Error("expected siteID in updated state")
 	}
 	if resp.Output.Content != newArgs.Content {
 		t.Error("expected new content in updated state")
@@ -915,12 +929,12 @@ func TestUpdate_StateIncludesAllProperties(t *testing.T) {
 	}
 }
 
-// TestResourceID_Format tests that resource IDs follow {siteId}/robots.txt format.
+// TestResourceID_Format tests that resource IDs follow {siteID}/robots.txt format.
 func TestResourceID_Format(t *testing.T) {
-	siteId := "5f0c8c9e1c9d440000e8d8c3"
+	siteID := "5f0c8c9e1c9d440000e8d8c3"
 	expectedID := "5f0c8c9e1c9d440000e8d8c3/robots.txt"
 
-	generatedID := GenerateRobotsTxtResourceId(siteId)
+	generatedID := GenerateRobotsTxtResourceID(siteID)
 	if generatedID != expectedID {
 		t.Errorf("expected ID format '%s', got '%s'", expectedID, generatedID)
 	}
@@ -931,7 +945,7 @@ func TestRead_HandlesNotFound_ReturnsEmptyID(t *testing.T) {
 	// Test the Read method's drift detection: when API returns 404, Read should
 	// return empty ID so SDK knows resource was deleted out-of-band.
 
-	siteId := "5f0c8c9e1c9d440000e8d8c3"
+	siteID := "5f0c8c9e1c9d440000e8d8c3"
 
 	// Mock HTTP client that returns 404
 	mockClient := &http.Client{
@@ -952,7 +966,7 @@ func TestRead_HandlesNotFound_ReturnsEmptyID(t *testing.T) {
 	// This signals to SDK that resource was deleted
 
 	ctx := context.Background()
-	_, err := GetRobotsTxt(ctx, mockClient, siteId)
+	_, err := GetRobotsTxt(ctx, mockClient, siteID)
 	if err == nil {
 		t.Fatal("expected error for 404 response")
 	}
@@ -974,14 +988,14 @@ func TestSecret_TokenMarkedAsSecret(t *testing.T) {
 
 	// Verify Token field has provider:"secret" tag using reflection
 	configType := reflect.TypeOf(Config{})
-	tokenField, exists := configType.FieldByName("Token")
+	tokenField, exists := configType.FieldByName("APIToken")
 	if !exists {
-		t.Fatal("Config struct missing Token field")
+		t.Fatal("Config struct missing APIToken field")
 	}
 
 	providerTag := tokenField.Tag.Get("provider")
 	if providerTag != "secret" {
-		t.Errorf("Token field missing provider:\"secret\" tag - got provider:%q", providerTag)
+		t.Errorf("APIToken field missing provider:\"secret\" tag - got provider:%q", providerTag)
 	}
 
 	// Also verify pulumi tag exists
@@ -1012,13 +1026,13 @@ func TestPreviewWorkflow_DiffCalledForPreview(t *testing.T) {
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 			LastModified: "2025-12-10T12:00:00Z",
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /\nDisallow: /admin/",
 		},
 	}
@@ -1060,7 +1074,7 @@ func TestPreviewWorkflow_CreateOperationDetected(t *testing.T) {
 	req1 := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{}, // Zero/empty state = new resource
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /",
 		},
 	}
@@ -1076,19 +1090,19 @@ func TestPreviewWorkflow_CreateOperationDetected(t *testing.T) {
 		t.Error("Diff should detect changes for new resource (empty state)")
 	}
 
-	// Test case 2: State with empty SiteId vs new SiteId
-	// Note: When state has empty SiteId and inputs have SiteId, Diff() sees this as siteId change
+	// Test case 2: State with empty SiteID vs new SiteID
+	// Note: When state has empty SiteID and inputs have SiteID, Diff() sees this as siteID change
 	// which triggers replacement. This is correct behavior - empty to non-empty is a replacement.
 	// For true "create" operations, the SDK typically passes zero/empty state.
 	req2 := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "", // Empty siteId in state
+				SiteID:  "", // Empty siteID in state
 				Content: "",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /",
 		},
 	}
@@ -1098,15 +1112,15 @@ func TestPreviewWorkflow_CreateOperationDetected(t *testing.T) {
 		t.Fatalf("Diff failed: %v", err)
 	}
 
-	// Should detect changes (siteId change from empty to non-empty)
+	// Should detect changes (siteID change from empty to non-empty)
 	if !resp2.HasChanges {
-		t.Error("Diff should detect changes when siteId changes from empty to non-empty")
+		t.Error("Diff should detect changes when siteID changes from empty to non-empty")
 	}
 
-	// SiteId change (even from empty) triggers replacement - this is correct behavior
+	// SiteID change (even from empty) triggers replacement - this is correct behavior
 	// The SDK handles this appropriately for create operations
 	if !resp2.DeleteBeforeReplace {
-		t.Log("Note: Empty siteId to non-empty triggers replacement, which is correct for Diff()")
+		t.Log("Note: Empty siteID to non-empty triggers replacement, which is correct for Diff()")
 	}
 }
 
@@ -1119,12 +1133,12 @@ func TestPreviewWorkflow_UpdateOperationDetected(t *testing.T) {
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /\nDisallow: /admin/",
 		},
 	}
@@ -1149,16 +1163,16 @@ func TestPreviewWorkflow_UpdateOperationDetected(t *testing.T) {
 func TestPreviewWorkflow_ReplaceOperationDetected(t *testing.T) {
 	resource := &RobotsTxt{}
 
-	// Scenario: SiteId change (replace operation)
+	// Scenario: SiteID change (replace operation)
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "6a1d9e2f3b4c5d6e7f8a9b0c1",
+			SiteID:  "6a1d9e2f3b4c5d6e7f8a9b0c1",
 			Content: "User-agent: *\nAllow: /",
 		},
 	}
@@ -1169,24 +1183,24 @@ func TestPreviewWorkflow_ReplaceOperationDetected(t *testing.T) {
 	}
 
 	if !resp.HasChanges {
-		t.Error("Diff should detect siteId change")
+		t.Error("Diff should detect siteID change")
 	}
 
-	// SiteId change requires replacement
+	// SiteID change requires replacement
 	if !resp.DeleteBeforeReplace {
-		t.Error("SiteId change should require replacement")
+		t.Error("SiteID change should require replacement")
 	}
 
 	// DetailedDiff should indicate UpdateReplace
 	if resp.DetailedDiff == nil {
 		t.Error("Diff should return DetailedDiff")
 	}
-	siteIdDiff, exists := resp.DetailedDiff["siteId"]
+	siteIDDiff, exists := resp.DetailedDiff["siteId"]
 	if !exists {
 		t.Error("Diff should include siteId in DetailedDiff")
 	}
-	if siteIdDiff.Kind != p.UpdateReplace {
-		t.Errorf("siteId change should be UpdateReplace, got %v", siteIdDiff.Kind)
+	if siteIDDiff.Kind != p.UpdateReplace {
+		t.Errorf("siteId change should be UpdateReplace, got %v", siteIDDiff.Kind)
 	}
 }
 
@@ -1199,7 +1213,7 @@ func TestPreviewWorkflow_DryRunNoAPICalls(t *testing.T) {
 	// DryRun mode should return early before calling GetHTTPClient, so no API calls are made
 	createReq := infer.CreateRequest[RobotsTxtArgs]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /",
 		},
 		DryRun: true, // Preview mode - should return early without API calls
@@ -1218,7 +1232,7 @@ func TestPreviewWorkflow_DryRunNoAPICalls(t *testing.T) {
 	if resp.ID != "5f0c8c9e1c9d440000e8d8c3/robots.txt" {
 		t.Errorf("DryRun should return correct ID format, got %q", resp.ID)
 	}
-	if resp.Output.SiteId != createReq.Inputs.SiteId {
+	if resp.Output.SiteID != createReq.Inputs.SiteID {
 		t.Error("DryRun should return expected state")
 	}
 	if resp.Output.Content != createReq.Inputs.Content {
@@ -1231,7 +1245,7 @@ func TestPreviewWorkflow_DryRunNoAPICalls(t *testing.T) {
 	// Test Update with DryRun
 	updateReq := infer.UpdateRequest[RobotsTxtArgs, RobotsTxtState]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /\nDisallow: /admin/",
 		},
 		DryRun: true, // Preview mode - should return early without API calls
@@ -1246,8 +1260,8 @@ func TestPreviewWorkflow_DryRunNoAPICalls(t *testing.T) {
 	if updateResp.Output.Content != updateReq.Inputs.Content {
 		t.Error("DryRun should return expected state")
 	}
-	if updateResp.Output.SiteId != updateReq.Inputs.SiteId {
-		t.Error("DryRun should return expected siteId")
+	if updateResp.Output.SiteID != updateReq.Inputs.SiteID {
+		t.Error("DryRun should return expected siteID")
 	}
 	if updateResp.Output.LastModified == "" {
 		t.Error("DryRun should return expected lastModified timestamp")
@@ -1265,12 +1279,12 @@ func TestPreviewWorkflow_PreviewPerformance(t *testing.T) {
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /\nDisallow: /admin/",
 		},
 	}
@@ -1291,7 +1305,7 @@ func TestPreviewWorkflow_PreviewPerformance(t *testing.T) {
 	start = time.Now()
 	createReq := infer.CreateRequest[RobotsTxtArgs]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /",
 		},
 		DryRun: true,
@@ -1325,12 +1339,12 @@ func TestPreviewWorkflow_FullPreviewWorkflowPerformance(t *testing.T) {
 	diffReq := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /\nDisallow: /admin/",
 		},
 	}
@@ -1364,12 +1378,12 @@ func TestPreviewWorkflow_NoChangesDetected(t *testing.T) {
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /",
 		},
 	}
@@ -1414,7 +1428,7 @@ func TestPreviewWorkflow_DeleteOperationDetected(t *testing.T) {
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
@@ -1432,8 +1446,8 @@ func TestPreviewWorkflow_DeleteOperationDetected(t *testing.T) {
 		t.Error("Diff should detect changes when resource is removed (empty inputs with existing state)")
 	}
 
-	// SiteId change should trigger replacement (which becomes delete)
-	if req.State.SiteId != req.Inputs.SiteId {
+	// SiteID change should trigger replacement (which becomes delete)
+	if req.State.SiteID != req.Inputs.SiteID {
 		if !resp.DeleteBeforeReplace {
 			t.Error("Empty inputs with existing state should indicate deletion")
 		}
@@ -1452,12 +1466,12 @@ func TestPreviewWorkflow_MultipleResources(t *testing.T) {
 	req1 := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /\nDisallow: /admin/",
 		},
 	}
@@ -1475,7 +1489,7 @@ func TestPreviewWorkflow_MultipleResources(t *testing.T) {
 	req2 := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{}, // Empty state = new resource
 		Inputs: RobotsTxtArgs{
-			SiteId:  "6a1d9e2f3b4c5d6e7f8a9b0c1",
+			SiteID:  "6a1d9e2f3b4c5d6e7f8a9b0c1",
 			Content: "User-agent: *\nAllow: /",
 		},
 	}
@@ -1493,12 +1507,12 @@ func TestPreviewWorkflow_MultipleResources(t *testing.T) {
 	req3 := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "7b2e0f3g4c5d6e7f8a9b0c1d2",
+				SiteID:  "7b2e0f3g4c5d6e7f8a9b0c1d2",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "7b2e0f3g4c5d6e7f8a9b0c1d2",
+			SiteID:  "7b2e0f3g4c5d6e7f8a9b0c1d2",
 			Content: "User-agent: *\nAllow: /",
 		},
 	}
@@ -1539,12 +1553,12 @@ func TestPreviewOutputFormat_ChangeDetails(t *testing.T) {
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "User-agent: *\nAllow: /\nDisallow: /admin/",
 		},
 	}
@@ -1578,9 +1592,9 @@ func TestPreviewOutputFormat_SensitiveDataRedaction(t *testing.T) {
 	// This test validates the Config struct has proper secret tagging
 
 	configType := reflect.TypeOf(Config{})
-	tokenField, exists := configType.FieldByName("Token")
+	tokenField, exists := configType.FieldByName("APIToken")
 	if !exists {
-		t.Fatal("Config struct missing Token field")
+		t.Fatal("Config struct missing APIToken field")
 	}
 
 	// Verify provider:"secret" tag exists
@@ -1607,12 +1621,12 @@ func TestPreviewAccuracy_PreviewMatchesActual(t *testing.T) {
 	diffReq := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: originalContent,
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: newContent,
 		},
 	}
@@ -1630,7 +1644,7 @@ func TestPreviewAccuracy_PreviewMatchesActual(t *testing.T) {
 	// Step 2: DryRun Update to see expected state
 	updateReq := infer.UpdateRequest[RobotsTxtArgs, RobotsTxtState]{
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: newContent,
 		},
 		DryRun: true, // Preview mode
@@ -1655,16 +1669,16 @@ func TestPreviewAccuracy_PreviewMatchesActual(t *testing.T) {
 func TestPreviewWorkflow_EdgeCase_InvalidInputs(t *testing.T) {
 	resource := &RobotsTxt{}
 
-	// Test case 1: Invalid siteId format
+	// Test case 1: Invalid siteID format
 	req1 := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "invalid-site-id", // Invalid format
+			SiteID:  "invalid-site-id", // Invalid format
 			Content: "User-agent: *\nAllow: /",
 		},
 	}
@@ -1672,24 +1686,24 @@ func TestPreviewWorkflow_EdgeCase_InvalidInputs(t *testing.T) {
 	// Diff() should still work (validation happens in Create/Update, not Diff)
 	resp1, err := resource.Diff(context.Background(), req1)
 	if err != nil {
-		t.Fatalf("Diff should handle invalid siteId gracefully, got error: %v", err)
+		t.Fatalf("Diff should handle invalid siteID gracefully, got error: %v", err)
 	}
 
-	// Should detect siteId change (even if invalid)
+	// Should detect siteID change (even if invalid)
 	if !resp1.HasChanges {
-		t.Error("Diff should detect siteId change even if invalid format")
+		t.Error("Diff should detect siteID change even if invalid format")
 	}
 
 	// Test case 2: Empty content
 	req2 := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: "", // Empty content
 		},
 	}
@@ -1719,12 +1733,12 @@ func TestPreviewWorkflow_EdgeCase_LargeContent(t *testing.T) {
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 			Content: largeContent,
 		},
 	}
@@ -1752,16 +1766,16 @@ func TestPreviewWorkflow_EdgeCase_LargeContent(t *testing.T) {
 func TestPreviewAccuracy_NoUnexpectedChanges(t *testing.T) {
 	resource := &RobotsTxt{}
 
-	// Scenario: Only content should change, siteId should remain unchanged
+	// Scenario: Only content should change, siteID should remain unchanged
 	diffReq := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{
 			RobotsTxtArgs: RobotsTxtArgs{
-				SiteId:  "5f0c8c9e1c9d440000e8d8c3",
+				SiteID:  "5f0c8c9e1c9d440000e8d8c3",
 				Content: "User-agent: *\nAllow: /",
 			},
 		},
 		Inputs: RobotsTxtArgs{
-			SiteId:  "5f0c8c9e1c9d440000e8d8c3",                   // Same siteId
+			SiteID:  "5f0c8c9e1c9d440000e8d8c3",                   // Same siteID
 			Content: "User-agent: *\nAllow: /\nDisallow: /admin/", // Only content changes
 		},
 	}
@@ -1771,14 +1785,14 @@ func TestPreviewAccuracy_NoUnexpectedChanges(t *testing.T) {
 		t.Fatalf("Diff failed: %v", err)
 	}
 
-	// Only content should be in DetailedDiff, not siteId
+	// Only content should be in DetailedDiff, not siteID
 	if resp.DetailedDiff == nil {
 		t.Fatal("Diff should return DetailedDiff")
 	}
 
-	// siteId should NOT be in DetailedDiff (no change)
-	if _, exists := resp.DetailedDiff["siteId"]; exists {
-		t.Error("siteId should not be in DetailedDiff when unchanged")
+	// siteID should NOT be in DetailedDiff (no change)
+	if _, exists := resp.DetailedDiff["siteID"]; exists {
+		t.Error("siteID should not be in DetailedDiff when unchanged")
 	}
 
 	// content SHOULD be in DetailedDiff (changed)
@@ -1803,7 +1817,7 @@ func TestNetworkError_TimeoutMessage(t *testing.T) {
 		Transport: &mockRoundTripper{
 			handler: func(req *http.Request) (*http.Response, error) {
 				// Simulate timeout error
-				return nil, fmt.Errorf("context deadline exceeded")
+				return nil, errors.New("context deadline exceeded")
 			},
 		},
 	}
@@ -1831,7 +1845,7 @@ func TestNetworkError_ConnectionRefusedMessage(t *testing.T) {
 		Transport: &mockRoundTripper{
 			handler: func(req *http.Request) (*http.Response, error) {
 				// Simulate connection refused error
-				return nil, fmt.Errorf("connection refused")
+				return nil, errors.New("connection refused")
 			},
 		},
 	}
@@ -1859,7 +1873,7 @@ func TestNetworkError_DNSFailureMessage(t *testing.T) {
 		Transport: &mockRoundTripper{
 			handler: func(req *http.Request) (*http.Response, error) {
 				// Simulate DNS failure (no such host)
-				return nil, fmt.Errorf("no such host")
+				return nil, errors.New("no such host")
 			},
 		},
 	}
@@ -1887,7 +1901,7 @@ func TestNetworkError_GenericNetworkFailure(t *testing.T) {
 		Transport: &mockRoundTripper{
 			handler: func(req *http.Request) (*http.Response, error) {
 				// Simulate generic network error
-				return nil, fmt.Errorf("network unreachable")
+				return nil, errors.New("network unreachable")
 			},
 		},
 	}
@@ -1975,7 +1989,6 @@ func TestRateLimitError_RetryAttemptInfo(t *testing.T) {
 
 	ctx := context.Background()
 	_, err := GetRobotsTxt(ctx, mockClient, "5f0c8c9e1c9d440000e8d8c3")
-
 	// Should succeed after retries
 	if err != nil {
 		t.Errorf("expected success after retries, got error: %v", err)
@@ -2015,7 +2028,6 @@ func TestRateLimitError_PUTOperation(t *testing.T) {
 	ctx := context.Background()
 	rules := []RobotsTxtRule{{UserAgent: "*", Allows: []string{"/"}}}
 	_, err := PutRobotsTxt(ctx, mockClient, "5f0c8c9e1c9d440000e8d8c3", rules, "")
-
 	if err != nil {
 		t.Errorf("PUT should retry on 429, got error: %v", err)
 	}
@@ -2049,7 +2061,6 @@ func TestRateLimitError_DELETEOperation(t *testing.T) {
 
 	ctx := context.Background()
 	err := DeleteRobotsTxt(ctx, mockClient, "5f0c8c9e1c9d440000e8d8c3")
-
 	if err != nil {
 		t.Errorf("DELETE should retry on 429, got error: %v", err)
 	}

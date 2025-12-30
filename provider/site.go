@@ -1,10 +1,24 @@
-// Package provider implements the Webflow Pulumi Provider using the modern pulumi-go-provider SDK.
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -29,8 +43,8 @@ type Site struct {
 	LastPublished string `json:"lastPublished,omitempty"`
 	// LastUpdated is the timestamp of the last site update (read-only).
 	LastUpdated string `json:"lastUpdated,omitempty"`
-	// PreviewUrl is the URL to a preview image of the site (read-only).
-	PreviewUrl string `json:"previewUrl,omitempty"`
+	// PreviewURL is the URL to a preview image of the site (read-only).
+	PreviewURL string `json:"previewUrl,omitempty"`
 	// ParentFolderID is the folder where the site is organized (optional).
 	ParentFolderID string `json:"parentFolderId,omitempty"`
 	// CustomDomains is the list of custom domains attached to the site (read-only for now).
@@ -82,7 +96,7 @@ type SitePublishResponse struct {
 // Actionable error messages explain: what's wrong, expected format, and how to fix it.
 func ValidateDisplayName(displayName string) error {
 	if displayName == "" {
-		return fmt.Errorf("displayName is required but was not provided.\n" +
+		return errors.New("displayName is required but was not provided.\n" +
 			"Expected format: A non-empty string representing your site's name.\n" +
 			"Fix: Provide a name for your site (e.g., 'My Marketing Site', 'Company Blog', 'Product Landing Page').")
 	}
@@ -138,9 +152,12 @@ func ValidateTimeZone(timeZone string) error {
 	// - Etc/GMT variants: Etc/GMT+5, Etc/GMT-10 (note: Etc requires capital E)
 	timeZoneRegex := regexp.MustCompile(`^([A-Za-z_]+/[A-Za-z_]+|UTC|Etc/GMT[+-]\d+)$`)
 	if !timeZoneRegex.MatchString(timeZone) {
-		return fmt.Errorf("invalid timezone format: '%s' is not a recognized IANA timezone identifier.\n"+
-			"Expected format: IANA timezone identifiers like 'America/New_York', 'Europe/London', 'Asia/Tokyo', or 'UTC'.\n"+
-			"Fix: Use a valid IANA timezone. Examples: 'America/Los_Angeles', 'Europe/Paris', 'Asia/Singapore', 'Australia/Sydney', 'UTC', 'Etc/GMT+5'.", timeZone)
+		return fmt.Errorf("invalid timezone format: '%s' is not a recognized IANA "+
+			"timezone identifier.\n"+
+			"Expected format: IANA timezone identifiers like 'America/New_York', "+
+			"'Europe/London', 'Asia/Tokyo', or 'UTC'.\n"+
+			"Fix: Use a valid IANA timezone. Examples: 'America/Los_Angeles', "+
+			"'Europe/Paris', 'Asia/Singapore', 'Australia/Sydney', 'UTC', 'Etc/GMT+5'.", timeZone)
 	}
 
 	return nil
@@ -151,7 +168,7 @@ func ValidateTimeZone(timeZone string) error {
 // Actionable error messages explain: what's wrong, expected format, and how to fix it.
 func ValidateWorkspaceID(workspaceID string) error {
 	if workspaceID == "" {
-		return fmt.Errorf("workspaceId is required but was not provided.\n" +
+		return errors.New("workspaceId is required but was not provided.\n" +
 			"Expected format: Your Webflow workspace ID (a 24-character hexadecimal string).\n" +
 			"Fix: Provide your workspace ID. You can find it in your Webflow dashboard under Account Settings > Workspace. " +
 			"Note: Creating sites via API requires an Enterprise workspace.")
@@ -179,7 +196,10 @@ var getSiteBaseURL = ""
 // Enterprise workspace is required for site creation via API.
 // Note: API request uses "name" but response returns "displayName".
 // Returns the created Site or an error if the request fails.
-func PostSite(ctx context.Context, client *http.Client, workspaceID, displayName, parentFolderID, templateName string) (*Site, error) {
+func PostSite(
+	ctx context.Context, client *http.Client,
+	workspaceID, displayName, parentFolderID, templateName string,
+) (*Site, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}
@@ -228,7 +248,7 @@ func PostSite(ctx context.Context, client *http.Client, workspaceID, displayName
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -281,7 +301,10 @@ func PostSite(ctx context.Context, client *http.Client, workspaceID, displayName
 // PatchSite updates an existing site's configuration.
 // Only changed fields should be sent in the request to minimize API payload.
 // Returns the updated Site or an error if the request fails.
-func PatchSite(ctx context.Context, client *http.Client, siteID, displayName, shortName, timeZone string) (*Site, error) {
+func PatchSite(
+	ctx context.Context, client *http.Client,
+	siteID, displayName, shortName, timeZone string,
+) (*Site, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}
@@ -330,7 +353,7 @@ func PatchSite(ctx context.Context, client *http.Client, siteID, displayName, sh
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -383,7 +406,9 @@ func PatchSite(ctx context.Context, client *http.Client, siteID, displayName, sh
 // The actual publish completion happens asynchronously and can be monitored via
 // subsequent Read operations that check the lastPublished timestamp.
 // Returns publish status or an error if the request fails.
-func PublishSite(ctx context.Context, client *http.Client, siteID string, domains []string) (*SitePublishResponse, error) {
+func PublishSite(
+	ctx context.Context, client *http.Client, siteID string, domains []string,
+) (*SitePublishResponse, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}
@@ -430,7 +455,7 @@ func PublishSite(ctx context.Context, client *http.Client, siteID string, domain
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -507,7 +532,7 @@ func DeleteSite(ctx context.Context, client *http.Client, siteID string) error {
 			}
 		}
 
-		req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
+		req, err := http.NewRequestWithContext(ctx, "DELETE", url, http.NoBody)
 		if err != nil {
 			return fmt.Errorf("failed to create request: %w", err)
 		}
@@ -519,7 +544,7 @@ func DeleteSite(ctx context.Context, client *http.Client, siteID string) error {
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -597,7 +622,7 @@ func GetSite(ctx context.Context, client *http.Client, siteID string) (*Site, er
 			}
 		}
 
-		req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+		req, err := http.NewRequestWithContext(ctx, "GET", url, http.NoBody)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create request: %w", err)
 		}
@@ -609,7 +634,7 @@ func GetSite(ctx context.Context, client *http.Client, siteID string) (*Site, er
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -670,32 +695,41 @@ func GetSite(ctx context.Context, client *http.Client, siteID string) (*Site, er
 func handleSiteError(statusCode int, body []byte) error {
 	switch statusCode {
 	case 400:
-		return fmt.Errorf("bad request: the site creation/update request was incorrectly formatted. "+
-			"Details: %s. "+
-			"Please check your site configuration and ensure all required fields (workspaceId, displayName) are provided with valid values. "+
-			"Verify that optional fields (shortName, timeZone, templateName) follow the correct format.", string(body))
+		return fmt.Errorf("bad request: the site creation/update request was "+
+			"incorrectly formatted. Details: %s. "+
+			"Please check your site configuration and ensure all required fields "+
+			"(workspaceId, displayName) are provided with valid values. "+
+			"Verify that optional fields (shortName, timeZone, templateName) "+
+			"follow the correct format.", string(body))
 	case 401:
-		return fmt.Errorf("unauthorized: authentication failed. "+
-			"Your Webflow API token is invalid or has expired. "+
-			"To fix this: 1) Verify your token in the Webflow dashboard (Settings > Integrations > API Access), "+
-			"2) Ensure the token has the required scopes for site management, "+
-			"3) Update your Pulumi config with: 'pulumi config set webflow:apiToken <your-token> --secret'")
+		return errors.New("unauthorized: authentication failed. " +
+			"Your Webflow API token is invalid or has expired. " +
+			"To fix this: 1) Verify your token in the Webflow dashboard " +
+			"(Settings > Integrations > API Access), " +
+			"2) Ensure the token has the required scopes for site management, " +
+			"3) Update your Pulumi config with: " +
+			"'pulumi config set webflow:apiToken <your-token> --secret'")
 	case 403:
-		return fmt.Errorf("forbidden: access denied. "+
-			"Your API token does not have permission to create/manage sites, OR your workspace is not an Enterprise workspace. "+
-			"To fix this: 1) Verify you have an Enterprise Webflow workspace (site creation via API requires Enterprise), "+
-			"2) Ensure your API token has the required scopes for site management, "+
+		return errors.New("forbidden: access denied. " +
+			"Your API token does not have permission to create/manage sites, " +
+			"OR your workspace is not an Enterprise workspace. " +
+			"To fix this: 1) Verify you have an Enterprise Webflow workspace " +
+			"(site creation via API requires Enterprise), " +
+			"2) Ensure your API token has the required scopes for site management, " +
 			"3) Check that the workspace ID is correct and belongs to your account")
 	case 404:
-		return fmt.Errorf("not found: the Webflow site, workspace, or template does not exist. "+
-			"To fix this: 1) Verify the workspace ID is correct (24-character lowercase hex string), "+
-			"2) If using templateName, verify the template name is valid in your Webflow account (check available templates in Webflow dashboard), "+
-			"3) Check that the workspace exists in your Webflow dashboard, "+
+		return errors.New("not found: the Webflow site, workspace, or template " +
+			"does not exist. " +
+			"To fix this: 1) Verify the workspace ID is correct " +
+			"(24-character lowercase hex string), " +
+			"2) If using templateName, verify the template name is valid in your " +
+			"Webflow account (check available templates in Webflow dashboard), " +
+			"3) Check that the workspace exists in your Webflow dashboard, " +
 			"4) Try creating without templateName to isolate the issue")
 	case 429:
-		return fmt.Errorf("rate limited: too many requests to Webflow API. "+
-			"The provider will automatically retry with exponential backoff. "+
-			"If this error persists, please wait a few minutes before trying again. "+
+		return errors.New("rate limited: too many requests to Webflow API. " +
+			"The provider will automatically retry with exponential backoff. " +
+			"If this error persists, please wait a few minutes before trying again. " +
 			"Consider reducing the frequency of operations or contact Webflow support if rate limits are consistently exceeded")
 	case 500:
 		return fmt.Errorf("server error: Webflow API encountered an internal error. "+

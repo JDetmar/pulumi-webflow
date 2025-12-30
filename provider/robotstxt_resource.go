@@ -1,8 +1,22 @@
-// Package provider implements the Webflow Pulumi Provider using the modern pulumi-go-provider SDK.
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -17,8 +31,8 @@ type RobotsTxt struct{}
 
 // RobotsTxtArgs defines the input properties for the RobotsTxt resource.
 type RobotsTxtArgs struct {
-	// SiteId is the Webflow site ID (24-character lowercase hexadecimal string).
-	SiteId string `pulumi:"siteId"`
+	// SiteID is the Webflow site ID (24-character lowercase hexadecimal string).
+	SiteID string `pulumi:"siteId"`
 	// Content is the robots.txt content in traditional format.
 	Content string `pulumi:"content"`
 }
@@ -40,7 +54,9 @@ func (r *RobotsTxt) Annotate(a infer.Annotator) {
 
 // Annotate adds descriptions to the RobotsTxtArgs fields.
 func (args *RobotsTxtArgs) Annotate(a infer.Annotator) {
-	a.Describe(&args.SiteId, "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3').")
+	a.Describe(&args.SiteID,
+		"The Webflow site ID (24-character lowercase hexadecimal string, "+
+			"e.g., '5f0c8c9e1c9d440000e8d8c3').")
 	a.Describe(&args.Content, "The robots.txt content in traditional format. "+
 		"Supports User-agent, Allow, Disallow, and Sitemap directives.")
 }
@@ -52,11 +68,13 @@ func (state *RobotsTxtState) Annotate(a infer.Annotator) {
 
 // Diff determines what changes need to be made to the resource.
 // siteId changes trigger replacement; content changes trigger update.
-func (r *RobotsTxt) Diff(ctx context.Context, req infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]) (infer.DiffResponse, error) {
+func (r *RobotsTxt) Diff(
+	ctx context.Context, req infer.DiffRequest[RobotsTxtArgs, RobotsTxtState],
+) (infer.DiffResponse, error) {
 	diff := infer.DiffResponse{}
 
 	// Check for siteId change (requires replacement)
-	if req.State.SiteId != req.Inputs.SiteId {
+	if req.State.SiteID != req.Inputs.SiteID {
 		diff.DeleteBeforeReplace = true
 		diff.HasChanges = true
 		diff.DetailedDiff = map[string]p.PropertyDiff{
@@ -77,28 +95,34 @@ func (r *RobotsTxt) Diff(ctx context.Context, req infer.DiffRequest[RobotsTxtArg
 }
 
 // Create creates a new robots.txt configuration on the Webflow site.
-func (r *RobotsTxt) Create(ctx context.Context, req infer.CreateRequest[RobotsTxtArgs]) (infer.CreateResponse[RobotsTxtState], error) {
+func (r *RobotsTxt) Create(
+	ctx context.Context, req infer.CreateRequest[RobotsTxtArgs],
+) (infer.CreateResponse[RobotsTxtState], error) {
 	// Validate inputs BEFORE generating resource ID (validation happens before API calls)
-	if err := ValidateSiteId(req.Inputs.SiteId); err != nil {
-		return infer.CreateResponse[RobotsTxtState]{}, fmt.Errorf("validation failed for RobotsTxt resource: %w", err)
+	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
+		return infer.CreateResponse[RobotsTxtState]{},
+			fmt.Errorf("validation failed for RobotsTxt resource: %w", err)
 	}
 	if req.Inputs.Content == "" {
-		return infer.CreateResponse[RobotsTxtState]{}, fmt.Errorf("validation failed for RobotsTxt resource: " +
-			"content is required but was not provided. " +
-			"Please provide robots.txt content with at least one directive (e.g., 'User-agent: *\\nAllow: /'). " +
-			"The content should follow the traditional robots.txt format with User-agent, Allow, Disallow, and Sitemap directives.")
+		return infer.CreateResponse[RobotsTxtState]{}, errors.New(
+			"validation failed for RobotsTxt resource: " +
+				"content is required but was not provided. " +
+				"Please provide robots.txt content with at least one directive " +
+				"(e.g., 'User-agent: *\\nAllow: /'). " +
+				"The content should follow the traditional robots.txt format " +
+				"with User-agent, Allow, Disallow, and Sitemap directives.")
 	}
 
 	state := RobotsTxtState{
 		RobotsTxtArgs: req.Inputs,
 		LastModified:  time.Now().UTC().Format(time.RFC3339),
 	}
-	resourceId := GenerateRobotsTxtResourceId(req.Inputs.SiteId)
+	resourceID := GenerateRobotsTxtResourceID(req.Inputs.SiteID)
 
 	// During preview, return expected state without making API calls
 	if req.DryRun {
 		return infer.CreateResponse[RobotsTxtState]{
-			ID:     resourceId,
+			ID:     resourceID,
 			Output: state,
 		}, nil
 	}
@@ -113,7 +137,7 @@ func (r *RobotsTxt) Create(ctx context.Context, req infer.CreateRequest[RobotsTx
 	rules, sitemap := ParseRobotsTxtContent(req.Inputs.Content)
 
 	// Call Webflow API
-	response, err := PutRobotsTxt(ctx, client, req.Inputs.SiteId, rules, sitemap)
+	response, err := PutRobotsTxt(ctx, client, req.Inputs.SiteID, rules, sitemap)
 	if err != nil {
 		return infer.CreateResponse[RobotsTxtState]{}, fmt.Errorf("failed to create robots.txt: %w", err)
 	}
@@ -123,16 +147,18 @@ func (r *RobotsTxt) Create(ctx context.Context, req infer.CreateRequest[RobotsTx
 	state.LastModified = time.Now().UTC().Format(time.RFC3339)
 
 	return infer.CreateResponse[RobotsTxtState]{
-		ID:     resourceId,
+		ID:     resourceID,
 		Output: state,
 	}, nil
 }
 
 // Read retrieves the current state of the robots.txt from Webflow.
 // Used for drift detection and import operations.
-func (r *RobotsTxt) Read(ctx context.Context, req infer.ReadRequest[RobotsTxtArgs, RobotsTxtState]) (infer.ReadResponse[RobotsTxtArgs, RobotsTxtState], error) {
-	// Extract siteId from resource ID
-	siteId, err := ExtractSiteIdFromResourceId(req.ID)
+func (r *RobotsTxt) Read(
+	ctx context.Context, req infer.ReadRequest[RobotsTxtArgs, RobotsTxtState],
+) (infer.ReadResponse[RobotsTxtArgs, RobotsTxtState], error) {
+	// Extract siteID from resource ID
+	siteID, err := ExtractSiteIDFromResourceID(req.ID)
 	if err != nil {
 		return infer.ReadResponse[RobotsTxtArgs, RobotsTxtState]{}, fmt.Errorf("invalid resource ID: %w", err)
 	}
@@ -144,7 +170,7 @@ func (r *RobotsTxt) Read(ctx context.Context, req infer.ReadRequest[RobotsTxtArg
 	}
 
 	// Call Webflow API
-	response, err := GetRobotsTxt(ctx, client, siteId)
+	response, err := GetRobotsTxt(ctx, client, siteID)
 	if err != nil {
 		// Resource not found - return empty ID to signal deletion
 		if strings.Contains(err.Error(), "not found") {
@@ -158,7 +184,7 @@ func (r *RobotsTxt) Read(ctx context.Context, req infer.ReadRequest[RobotsTxtArg
 	// Build current state from API response
 	content := FormatRobotsTxtContent(response.Rules, response.Sitemap)
 	currentInputs := RobotsTxtArgs{
-		SiteId:  siteId,
+		SiteID:  siteID,
 		Content: content,
 	}
 	currentState := RobotsTxtState{
@@ -177,16 +203,22 @@ func (r *RobotsTxt) Read(ctx context.Context, req infer.ReadRequest[RobotsTxtArg
 }
 
 // Update modifies an existing robots.txt configuration.
-func (r *RobotsTxt) Update(ctx context.Context, req infer.UpdateRequest[RobotsTxtArgs, RobotsTxtState]) (infer.UpdateResponse[RobotsTxtState], error) {
+func (r *RobotsTxt) Update(
+	ctx context.Context, req infer.UpdateRequest[RobotsTxtArgs, RobotsTxtState],
+) (infer.UpdateResponse[RobotsTxtState], error) {
 	// Validate inputs BEFORE making API calls
-	if err := ValidateSiteId(req.Inputs.SiteId); err != nil {
-		return infer.UpdateResponse[RobotsTxtState]{}, fmt.Errorf("validation failed for RobotsTxt resource: %w", err)
+	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
+		return infer.UpdateResponse[RobotsTxtState]{},
+			fmt.Errorf("validation failed for RobotsTxt resource: %w", err)
 	}
 	if req.Inputs.Content == "" {
-		return infer.UpdateResponse[RobotsTxtState]{}, fmt.Errorf("validation failed for RobotsTxt resource: " +
-			"content is required but was not provided. " +
-			"Please provide robots.txt content with at least one directive (e.g., 'User-agent: *\\nAllow: /'). " +
-			"The content should follow the traditional robots.txt format with User-agent, Allow, Disallow, and Sitemap directives.")
+		return infer.UpdateResponse[RobotsTxtState]{}, errors.New(
+			"validation failed for RobotsTxt resource: " +
+				"content is required but was not provided. " +
+				"Please provide robots.txt content with at least one directive " +
+				"(e.g., 'User-agent: *\\nAllow: /'). " +
+				"The content should follow the traditional robots.txt format " +
+				"with User-agent, Allow, Disallow, and Sitemap directives.")
 	}
 
 	state := RobotsTxtState{
@@ -211,7 +243,7 @@ func (r *RobotsTxt) Update(ctx context.Context, req infer.UpdateRequest[RobotsTx
 	rules, sitemap := ParseRobotsTxtContent(req.Inputs.Content)
 
 	// Call Webflow API
-	response, err := PutRobotsTxt(ctx, client, req.Inputs.SiteId, rules, sitemap)
+	response, err := PutRobotsTxt(ctx, client, req.Inputs.SiteID, rules, sitemap)
 	if err != nil {
 		return infer.UpdateResponse[RobotsTxtState]{}, fmt.Errorf("failed to update robots.txt: %w", err)
 	}
@@ -227,8 +259,8 @@ func (r *RobotsTxt) Update(ctx context.Context, req infer.UpdateRequest[RobotsTx
 
 // Delete removes the robots.txt configuration from the Webflow site.
 func (r *RobotsTxt) Delete(ctx context.Context, req infer.DeleteRequest[RobotsTxtState]) (infer.DeleteResponse, error) {
-	// Extract siteId from resource ID
-	siteId, err := ExtractSiteIdFromResourceId(req.ID)
+	// Extract siteID from resource ID
+	siteID, err := ExtractSiteIDFromResourceID(req.ID)
 	if err != nil {
 		return infer.DeleteResponse{}, fmt.Errorf("invalid resource ID: %w", err)
 	}
@@ -240,7 +272,7 @@ func (r *RobotsTxt) Delete(ctx context.Context, req infer.DeleteRequest[RobotsTx
 	}
 
 	// Call Webflow API (handles 404 gracefully for idempotency)
-	if err := DeleteRobotsTxt(ctx, client, siteId); err != nil {
+	if err := DeleteRobotsTxt(ctx, client, siteID); err != nil {
 		return infer.DeleteResponse{}, fmt.Errorf("failed to delete robots.txt: %w", err)
 	}
 

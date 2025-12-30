@@ -1,0 +1,7 @@
+name: webflow-multi-environment-python
+runtime: python
+description: Multi-environment Webflow site deployment with stack-specific configuration (Python)
+
+config:
+  webflow:
+    description: Webflow provider configuration

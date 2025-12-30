@@ -101,7 +101,7 @@ func BenchmarkMultiSiteCreation(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for j := 0; j < 50; j++ {
 			_, _ = http.Post(
-				fmt.Sprintf("%s/api/v2/sites", server.URL),
+				server.URL+"/api/v2/sites",
 				"application/json",
 				nil,
 			)

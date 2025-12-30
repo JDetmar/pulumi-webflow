@@ -1,10 +1,24 @@
-// Package provider implements the Webflow Pulumi Provider.
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -43,7 +57,7 @@ var pathPattern = regexp.MustCompile(`^/[a-zA-Z0-9\-_/.]*$`)
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateSourcePath(path string) error {
 	if path == "" {
-		return fmt.Errorf("sourcePath is required but was not provided. " +
+		return errors.New("sourcePath is required but was not provided. " +
 			"Please provide a valid URL path starting with '/' (e.g., '/old-page', '/blog/2023'). " +
 			"Example valid paths: '/about-us', '/products/item-1', '/news/2024'.")
 	}
@@ -65,7 +79,7 @@ func ValidateSourcePath(path string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateDestinationPath(path string) error {
 	if path == "" {
-		return fmt.Errorf("destinationPath is required but was not provided. " +
+		return errors.New("destinationPath is required but was not provided. " +
 			"Please provide a valid URL path starting with '/' (e.g., '/new-page', '/home'). " +
 			"Example valid paths: '/about-us', '/products/item-1', '/news/2024'.")
 	}
@@ -96,28 +110,28 @@ func ValidateStatusCode(statusCode int) error {
 	return nil
 }
 
-// GenerateRedirectResourceId generates a Pulumi resource ID for a Redirect resource.
-// Format: {siteId}/redirects/{redirectId}
-func GenerateRedirectResourceId(siteId string, redirectId string) string {
-	return fmt.Sprintf("%s/redirects/%s", siteId, redirectId)
+// GenerateRedirectResourceID generates a Pulumi resource ID for a Redirect resource.
+// Format: {siteID}/redirects/{redirectID}
+func GenerateRedirectResourceID(siteID, redirectID string) string {
+	return fmt.Sprintf("%s/redirects/%s", siteID, redirectID)
 }
 
-// ExtractIdsFromRedirectResourceId extracts the siteId and redirectId from a Redirect resource ID.
-// Expected format: {siteId}/redirects/{redirectId}
-func ExtractIdsFromRedirectResourceId(resourceId string) (siteId string, redirectId string, err error) {
-	if resourceId == "" {
-		return "", "", fmt.Errorf("resourceId cannot be empty")
+// ExtractIDsFromRedirectResourceID extracts the siteID and redirectID from a Redirect resource ID.
+// Expected format: {siteID}/redirects/{redirectID}
+func ExtractIDsFromRedirectResourceID(resourceID string) (siteID, redirectID string, err error) {
+	if resourceID == "" {
+		return "", "", errors.New("resourceId cannot be empty")
 	}
 
-	parts := strings.Split(resourceId, "/")
+	parts := strings.Split(resourceID, "/")
 	if len(parts) < 3 || parts[1] != "redirects" {
-		return "", "", fmt.Errorf("invalid resource ID format: expected {siteId}/redirects/{redirectId}, got: %s", resourceId)
+		return "", "", fmt.Errorf("invalid resource ID format: expected {siteId}/redirects/{redirectId}, got: %s", resourceID)
 	}
 
-	siteId = parts[0]
-	redirectId = strings.Join(parts[2:], "/") // Handle redirectId that might contain slashes
+	siteID = parts[0]
+	redirectID = strings.Join(parts[2:], "/") // Handle redirectID that might contain slashes
 
-	return siteId, redirectId, nil
+	return siteID, redirectID, nil
 }
 
 // getRedirectsBaseURL is used internally for testing to override the API base URL.
@@ -126,7 +140,7 @@ var getRedirectsBaseURL = ""
 // GetRedirects retrieves all redirects for a Webflow site.
 // It calls GET /v2/sites/{site_id}/redirects endpoint.
 // Returns the parsed response or an error if the request fails.
-func GetRedirects(ctx context.Context, client *http.Client, siteId string) (*RedirectResponse, error) {
+func GetRedirects(ctx context.Context, client *http.Client, siteID string) (*RedirectResponse, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}
@@ -136,7 +150,7 @@ func GetRedirects(ctx context.Context, client *http.Client, siteId string) (*Red
 		baseURL = getRedirectsBaseURL
 	}
 
-	url := fmt.Sprintf("%s/v2/sites/%s/redirects", baseURL, siteId)
+	url := fmt.Sprintf("%s/v2/sites/%s/redirects", baseURL, siteID)
 
 	var lastErr error
 	for attempt := 0; attempt <= maxRetries; attempt++ {
@@ -150,7 +164,7 @@ func GetRedirects(ctx context.Context, client *http.Client, siteId string) (*Red
 			}
 		}
 
-		req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+		req, err := http.NewRequestWithContext(ctx, "GET", url, http.NoBody)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create request: %w", err)
 		}
@@ -162,7 +176,7 @@ func GetRedirects(ctx context.Context, client *http.Client, siteId string) (*Red
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -218,7 +232,10 @@ var postRedirectBaseURL = ""
 // PostRedirect creates a new redirect for a Webflow site.
 // It calls POST /v2/sites/{site_id}/redirects endpoint.
 // Returns the created redirect or an error if the request fails.
-func PostRedirect(ctx context.Context, client *http.Client, siteId, sourcePath, destinationPath string, statusCode int) (*RedirectRule, error) {
+func PostRedirect(
+	ctx context.Context, client *http.Client,
+	siteID, sourcePath, destinationPath string, statusCode int,
+) (*RedirectRule, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}
@@ -228,7 +245,7 @@ func PostRedirect(ctx context.Context, client *http.Client, siteId, sourcePath, 
 		baseURL = postRedirectBaseURL
 	}
 
-	url := fmt.Sprintf("%s/v2/sites/%s/redirects", baseURL, siteId)
+	url := fmt.Sprintf("%s/v2/sites/%s/redirects", baseURL, siteID)
 
 	requestBody := RedirectRequest{
 		SourcePath:      sourcePath,
@@ -266,7 +283,7 @@ func PostRedirect(ctx context.Context, client *http.Client, siteId, sourcePath, 
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -322,7 +339,10 @@ var patchRedirectBaseURL = ""
 // PatchRedirect updates an existing redirect for a Webflow site.
 // It calls PATCH /v2/sites/{site_id}/redirects/{redirect_id} endpoint.
 // Returns the updated redirect or an error if the request fails.
-func PatchRedirect(ctx context.Context, client *http.Client, siteId, redirectId, sourcePath, destinationPath string, statusCode int) (*RedirectRule, error) {
+func PatchRedirect(
+	ctx context.Context, client *http.Client,
+	siteID, redirectID, sourcePath, destinationPath string, statusCode int,
+) (*RedirectRule, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}
@@ -332,7 +352,7 @@ func PatchRedirect(ctx context.Context, client *http.Client, siteId, redirectId,
 		baseURL = patchRedirectBaseURL
 	}
 
-	url := fmt.Sprintf("%s/v2/sites/%s/redirects/%s", baseURL, siteId, redirectId)
+	url := fmt.Sprintf("%s/v2/sites/%s/redirects/%s", baseURL, siteID, redirectID)
 
 	// Note: According to Webflow API, PATCH does NOT accept sourcePath (fromUrl)
 	// The source path is immutable - if you need to change it, delete and recreate
@@ -371,7 +391,7 @@ func PatchRedirect(ctx context.Context, client *http.Client, siteId, redirectId,
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue
@@ -427,7 +447,7 @@ var deleteRedirectBaseURL = ""
 // DeleteRedirect removes a redirect from a Webflow site.
 // It calls DELETE /v2/sites/{site_id}/redirects/{redirect_id} endpoint.
 // Returns nil on success (including 404 for idempotency) or an error if the request fails.
-func DeleteRedirect(ctx context.Context, client *http.Client, siteId, redirectId string) error {
+func DeleteRedirect(ctx context.Context, client *http.Client, siteID, redirectID string) error {
 	if err := ctx.Err(); err != nil {
 		return fmt.Errorf("context cancelled: %w", err)
 	}
@@ -437,7 +457,7 @@ func DeleteRedirect(ctx context.Context, client *http.Client, siteId, redirectId
 		baseURL = deleteRedirectBaseURL
 	}
 
-	url := fmt.Sprintf("%s/v2/sites/%s/redirects/%s", baseURL, siteId, redirectId)
+	url := fmt.Sprintf("%s/v2/sites/%s/redirects/%s", baseURL, siteID, redirectID)
 
 	var lastErr error
 	for attempt := 0; attempt <= maxRetries; attempt++ {
@@ -451,7 +471,7 @@ func DeleteRedirect(ctx context.Context, client *http.Client, siteId, redirectId
 			}
 		}
 
-		req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
+		req, err := http.NewRequestWithContext(ctx, "DELETE", url, http.NoBody)
 		if err != nil {
 			return fmt.Errorf("failed to create request: %w", err)
 		}
@@ -463,7 +483,7 @@ func DeleteRedirect(ctx context.Context, client *http.Client, siteId, redirectId
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close() // Close immediately after reading
+		_ = resp.Body.Close() // Close immediately after reading
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response body: %w", err)
 			continue

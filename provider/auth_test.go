@@ -1,3 +1,17 @@
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
@@ -11,8 +25,8 @@ import (
 // TestGetEnvToken tests retrieving token from environment variable.
 func TestGetEnvToken(t *testing.T) {
 	// Test when env var is set
-	os.Setenv("WEBFLOW_API_TOKEN", "test-token-from-env")
-	defer os.Unsetenv("WEBFLOW_API_TOKEN")
+	_ = os.Setenv("WEBFLOW_API_TOKEN", "test-token-from-env")
+	defer func() { _ = os.Unsetenv("WEBFLOW_API_TOKEN") }()
 
 	token := getEnvToken()
 	if token != "test-token-from-env" {
@@ -22,7 +36,7 @@ func TestGetEnvToken(t *testing.T) {
 
 // TestGetEnvToken_NotSet tests when environment variable is not set.
 func TestGetEnvToken_NotSet(t *testing.T) {
-	os.Unsetenv("WEBFLOW_API_TOKEN")
+	_ = os.Unsetenv("WEBFLOW_API_TOKEN")
 
 	token := getEnvToken()
 	if token != "" {
@@ -207,7 +221,7 @@ func TestAuthenticatedTransport_RoundTrip(t *testing.T) {
 	}
 
 	// Create a test request
-	req, err := http.NewRequest("GET", "https://api.webflow.com/v2/sites", nil)
+	req, err := http.NewRequest("GET", "https://api.webflow.com/v2/sites", http.NoBody)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -227,7 +241,7 @@ func TestCreateHTTPClient_ErrorHandling(t *testing.T) {
 	}
 
 	// Attempt to connect to invalid host to verify error handling
-	req, err := http.NewRequest("GET", "https://invalid-webflow-host-that-does-not-exist.com/v2/sites", nil)
+	req, err := http.NewRequest("GET", "https://invalid-webflow-host-that-does-not-exist.com/v2/sites", http.NoBody)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -236,7 +250,7 @@ func TestCreateHTTPClient_ErrorHandling(t *testing.T) {
 	if err == nil {
 		t.Error("Expected error when connecting to invalid host, got nil")
 		if resp != nil {
-			resp.Body.Close()
+			_ = resp.Body.Close()
 		}
 	}
 

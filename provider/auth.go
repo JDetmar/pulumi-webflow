@@ -1,16 +1,31 @@
-// Package provider implements the Webflow Pulumi Provider.
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
 	"crypto/tls"
-	"fmt"
+	"errors"
 	"net/http"
 	"os"
 	"time"
 )
 
 // ErrTokenNotConfigured is returned when no API token is available.
-var ErrTokenNotConfigured = fmt.Errorf("Webflow API token not configured. Configure using: pulumi config set webflow:apiToken <token> --secret OR set WEBFLOW_API_TOKEN environment variable")
+var ErrTokenNotConfigured = errors.New("Webflow API token not configured. " +
+	"Configure using: pulumi config set webflow:apiToken <token> --secret " +
+	"OR set WEBFLOW_API_TOKEN environment variable")
 
 // getEnvToken retrieves the Webflow API token from the environment variable.
 func getEnvToken() string {
@@ -21,12 +36,12 @@ func getEnvToken() string {
 // Checks that the token is non-empty and has reasonable length.
 func ValidateToken(token string) error {
 	if token == "" {
-		return fmt.Errorf("API token cannot be empty")
+		return errors.New("API token cannot be empty")
 	}
 
 	// Basic sanity check - Webflow tokens should be reasonably long
 	if len(token) < 10 {
-		return fmt.Errorf("API token appears invalid (too short)")
+		return errors.New("API token appears invalid (too short)")
 	}
 
 	return nil
@@ -54,11 +69,11 @@ func (t *authenticatedTransport) RoundTrip(req *http.Request) (*http.Response, e
 	clonedReq := req.Clone(req.Context())
 
 	// Add authentication header
-	authHeader := fmt.Sprintf("Bearer %s", t.token)
+	authHeader := "Bearer " + t.token
 	clonedReq.Header.Set("Authorization", authHeader)
 
 	// Add user agent
-	clonedReq.Header.Set("User-Agent", fmt.Sprintf("pulumi-webflow/%s", t.version))
+	clonedReq.Header.Set("User-Agent", "pulumi-webflow/"+t.version)
 
 	// Add API version header for Webflow API v2
 	clonedReq.Header.Set("Accept-Version", "2.0.0")
@@ -75,7 +90,7 @@ func (t *authenticatedTransport) RoundTrip(req *http.Request) (*http.Response, e
 // when making requests using this client.
 func CreateHTTPClient(token, version string) (*http.Client, error) {
 	if token == "" {
-		return nil, fmt.Errorf("cannot create HTTP client with empty token")
+		return nil, errors.New("cannot create HTTP client with empty token")
 	}
 
 	// Create TLS config with secure defaults

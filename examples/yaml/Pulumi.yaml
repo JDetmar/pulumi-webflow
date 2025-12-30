@@ -3,14 +3,16 @@ runtime: yaml
 
 config:
   webflow:apiToken:
-    secure: your-webflow-api-token-here
+    value: your-webflow-api-token-here
+    secret: true
 
 resources:
   # Example: Configure robots.txt for a site
   myRobotsTxt:
     type: webflow:RobotsTxt
     properties:
-      siteId: your-site-id-here
+      # Replace with your actual Webflow site ID (24-character hex string)
+      siteId: 5f0c8c9e1c9d440000e8d8c3  # Example format
       content: |
         User-agent: *
         Allow: /

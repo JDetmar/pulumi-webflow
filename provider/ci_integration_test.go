@@ -19,7 +19,7 @@ import (
 	"testing"
 )
 
-// nolint:paralleltest // Environment variable tests cannot run in parallel
+//nolint:paralleltest // Environment variable tests cannot run in parallel
 
 // TestCIEnvironmentVariableLoading verifies that CI/CD environment variables are properly loaded
 // for non-interactive execution.
@@ -110,11 +110,11 @@ func TestCredentialNotLogged(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			// Create a config with sensitive token
 			config := &Config{
-				ApiToken: tc.apiToken,
+				APIToken: tc.apiToken,
 			}
 
 			// Verify credentials are available internally
-			if config.ApiToken != tc.apiToken {
+			if config.APIToken != tc.apiToken {
 				t.Errorf("Config should store token internally")
 			}
 
@@ -130,7 +130,7 @@ func TestCredentialNotLogged(t *testing.T) {
 			}
 
 			// Verify fmt.Sprintf patterns don't expose token via RedactToken
-			logMessage := "Using token: " + RedactToken(config.ApiToken)
+			logMessage := "Using token: " + RedactToken(config.APIToken)
 			if logMessage != "Using token: [REDACTED]" {
 				t.Errorf("Log message pattern incorrect: %s", logMessage)
 			}
@@ -315,8 +315,8 @@ func TestCIEnvironmentSetupPatterns(t *testing.T) {
 		{
 			name: "GitHubActionsEnvironment",
 			envVars: map[string]string{
-				"GITHUB_ACTIONS":          "true",
-				"WEBFLOW_API_TOKEN":       "github-token",
+				"GITHUB_ACTIONS":            "true",
+				"WEBFLOW_API_TOKEN":         "github-token",
 				"PULUMI_SKIP_CONFIRMATIONS": "true",
 			},
 			expected: true,
@@ -324,8 +324,8 @@ func TestCIEnvironmentSetupPatterns(t *testing.T) {
 		{
 			name: "GitLabCIEnvironment",
 			envVars: map[string]string{
-				"GITLAB_CI":              "true",
-				"WEBFLOW_API_TOKEN":      "gitlab-token",
+				"GITLAB_CI":                 "true",
+				"WEBFLOW_API_TOKEN":         "gitlab-token",
 				"PULUMI_SKIP_CONFIRMATIONS": "true",
 			},
 			expected: true,
@@ -333,8 +333,8 @@ func TestCIEnvironmentSetupPatterns(t *testing.T) {
 		{
 			name: "GenericCIEnvironment",
 			envVars: map[string]string{
-				"CI":                     "true",
-				"WEBFLOW_API_TOKEN":      "ci-token",
+				"CI":                        "true",
+				"WEBFLOW_API_TOKEN":         "ci-token",
 				"PULUMI_SKIP_CONFIRMATIONS": "true",
 			},
 			expected: true,

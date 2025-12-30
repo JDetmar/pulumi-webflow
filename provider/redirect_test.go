@@ -1,3 +1,17 @@
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
@@ -207,49 +221,48 @@ func TestValidateStatusCode_Invalid(t *testing.T) {
 	}
 }
 
-// TestGenerateRedirectResourceId tests resource ID generation
-func TestGenerateRedirectResourceId(t *testing.T) {
-	siteId := "5f0c8c9e1c9d440000e8d8c3"
-	redirectId := "redir_12345"
+// TestGenerateRedirectResourceID tests resource ID generation
+func TestGenerateRedirectResourceID(t *testing.T) {
+	siteID := "5f0c8c9e1c9d440000e8d8c3"
+	redirectID := "redir_12345"
 
-	resourceId := GenerateRedirectResourceId(siteId, redirectId)
+	resourceID := GenerateRedirectResourceID(siteID, redirectID)
 	expected := "5f0c8c9e1c9d440000e8d8c3/redirects/redir_12345"
 
-	if resourceId != expected {
-		t.Errorf("GenerateRedirectResourceId() = %q, want %q", resourceId, expected)
+	if resourceID != expected {
+		t.Errorf("GenerateRedirectResourceID() = %q, want %q", resourceID, expected)
 	}
 }
 
-// TestExtractIdsFromRedirectResourceId_Valid tests extracting IDs from valid resource ID
-func TestExtractIdsFromRedirectResourceId_Valid(t *testing.T) {
-	resourceId := "5f0c8c9e1c9d440000e8d8c3/redirects/redir_12345"
+// TestExtractIDsFromRedirectResourceID_Valid tests extracting IDs from valid resource ID
+func TestExtractIDsFromRedirectResourceID_Valid(t *testing.T) {
+	resourceID := "5f0c8c9e1c9d440000e8d8c3/redirects/redir_12345"
 
-	siteId, redirectId, err := ExtractIdsFromRedirectResourceId(resourceId)
-
+	siteID, redirectID, err := ExtractIDsFromRedirectResourceID(resourceID)
 	if err != nil {
-		t.Errorf("ExtractIdsFromRedirectResourceId() error = %v, want nil", err)
+		t.Errorf("ExtractIDsFromRedirectResourceID() error = %v, want nil", err)
 	}
-	if siteId != "5f0c8c9e1c9d440000e8d8c3" {
-		t.Errorf("ExtractIdsFromRedirectResourceId() siteId = %q, want %q", siteId, "5f0c8c9e1c9d440000e8d8c3")
+	if siteID != "5f0c8c9e1c9d440000e8d8c3" {
+		t.Errorf("ExtractIDsFromRedirectResourceID() siteID = %q, want %q", siteID, "5f0c8c9e1c9d440000e8d8c3")
 	}
-	if redirectId != "redir_12345" {
-		t.Errorf("ExtractIdsFromRedirectResourceId() redirectId = %q, want %q", redirectId, "redir_12345")
+	if redirectID != "redir_12345" {
+		t.Errorf("ExtractIDsFromRedirectResourceID() redirectID = %q, want %q", redirectID, "redir_12345")
 	}
 }
 
-// TestExtractIdsFromRedirectResourceId_Empty tests empty resource ID
-func TestExtractIdsFromRedirectResourceId_Empty(t *testing.T) {
-	_, _, err := ExtractIdsFromRedirectResourceId("")
+// TestExtractIDsFromRedirectResourceID_Empty tests empty resource ID
+func TestExtractIDsFromRedirectResourceID_Empty(t *testing.T) {
+	_, _, err := ExtractIDsFromRedirectResourceID("")
 	if err == nil {
-		t.Error("ExtractIdsFromRedirectResourceId(\"\") error = nil, want error")
+		t.Error("ExtractIDsFromRedirectResourceID(\"\") error = nil, want error")
 	}
 }
 
-// TestExtractIdsFromRedirectResourceId_InvalidFormat tests invalid format
-func TestExtractIdsFromRedirectResourceId_InvalidFormat(t *testing.T) {
+// TestExtractIDsFromRedirectResourceID_InvalidFormat tests invalid format
+func TestExtractIDsFromRedirectResourceID_InvalidFormat(t *testing.T) {
 	tests := []struct {
 		name       string
-		resourceId string
+		resourceID string
 	}{
 		{"missing redirects part", "5f0c8c9e1c9d440000e8d8c3/redir_12345"},
 		{"wrong middle part", "5f0c8c9e1c9d440000e8d8c3/robots/redir_12345"},
@@ -258,9 +271,9 @@ func TestExtractIdsFromRedirectResourceId_InvalidFormat(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, err := ExtractIdsFromRedirectResourceId(tt.resourceId)
+			_, _, err := ExtractIDsFromRedirectResourceID(tt.resourceID)
 			if err == nil {
-				t.Errorf("ExtractIdsFromRedirectResourceId(%q) error = nil, want error", tt.resourceId)
+				t.Errorf("ExtractIDsFromRedirectResourceID(%q) error = nil, want error", tt.resourceID)
 			}
 		})
 	}
@@ -326,7 +339,7 @@ func TestGetRedirects_Valid(t *testing.T) {
 				{ID: "redirect2", SourcePath: "/about", DestinationPath: "/team", StatusCode: 302},
 			},
 		}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -355,7 +368,7 @@ func TestGetRedirects_Valid(t *testing.T) {
 func TestGetRedirects_NotFound(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("site not found"))
+		_, _ = w.Write([]byte("site not found"))
 	}))
 	defer server.Close()
 
@@ -384,7 +397,7 @@ func TestPostRedirect_Valid(t *testing.T) {
 
 		body, _ := io.ReadAll(r.Body)
 		var req RedirectRequest
-		json.Unmarshal(body, &req)
+		_ = json.Unmarshal(body, &req)
 
 		if req.SourcePath != "/old" {
 			t.Errorf("Expected sourcePath /old, got %s", req.SourcePath)
@@ -399,7 +412,7 @@ func TestPostRedirect_Valid(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		response := RedirectRule{ID: "new-redirect-1", SourcePath: "/old", DestinationPath: "/new", StatusCode: 301}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -427,7 +440,7 @@ func TestPostRedirect_Valid(t *testing.T) {
 func TestPostRedirect_ValidationError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("invalid redirect configuration"))
+		_, _ = w.Write([]byte("invalid redirect configuration"))
 	}))
 	defer server.Close()
 
@@ -456,7 +469,7 @@ func TestPatchRedirect_Valid(t *testing.T) {
 
 		body, _ := io.ReadAll(r.Body)
 		var req RedirectRequest
-		json.Unmarshal(body, &req)
+		_ = json.Unmarshal(body, &req)
 
 		if req.DestinationPath != "/updated" {
 			t.Errorf("Expected destinationPath /updated, got %s", req.DestinationPath)
@@ -468,7 +481,7 @@ func TestPatchRedirect_Valid(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		response := RedirectRule{ID: "redirect1", SourcePath: "/old", DestinationPath: "/updated", StatusCode: 302}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -496,7 +509,7 @@ func TestPatchRedirect_Valid(t *testing.T) {
 func TestPatchRedirect_NotFound(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("redirect not found"))
+		_, _ = w.Write([]byte("redirect not found"))
 	}))
 	defer server.Close()
 
@@ -543,7 +556,7 @@ func TestDeleteRedirect_Valid(t *testing.T) {
 func TestDeleteRedirect_NotFound_Idempotent(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("redirect not found"))
+		_, _ = w.Write([]byte("redirect not found"))
 	}))
 	defer server.Close()
 
@@ -564,7 +577,7 @@ func TestDeleteRedirect_NotFound_Idempotent(t *testing.T) {
 func TestDeleteRedirect_ServerError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("server error"))
+		_, _ = w.Write([]byte("server error"))
 	}))
 	defer server.Close()
 

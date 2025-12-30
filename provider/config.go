@@ -1,4 +1,17 @@
-// Package provider implements the Webflow Pulumi Provider using the modern pulumi-go-provider SDK.
+// Copyright 2025, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package provider
 
 import (
@@ -11,14 +24,14 @@ import (
 // Config defines the provider configuration.
 // The apiToken field is marked as a secret and will be automatically handled by Pulumi.
 type Config struct {
-	// ApiToken is the Webflow API v2 bearer token for authentication.
+	// APIToken is the Webflow API v2 bearer token for authentication.
 	// Can be set via `pulumi config set webflow:apiToken <value> --secret` or WEBFLOW_API_TOKEN env var.
-	ApiToken string `pulumi:"apiToken,optional" provider:"secret"`
+	APIToken string `pulumi:"apiToken,optional" provider:"secret"`
 }
 
 // Annotate adds descriptions to the Config fields for schema generation.
 func (c *Config) Annotate(a infer.Annotator) {
-	a.Describe(&c.ApiToken, "Webflow API v2 bearer token for authentication. "+
+	a.Describe(&c.APIToken, "Webflow API v2 bearer token for authentication. "+
 		"Can also be set via WEBFLOW_API_TOKEN environment variable.")
 }
 
@@ -37,8 +50,8 @@ func GetHTTPClient(ctx context.Context, version string) (*http.Client, error) {
 
 	// Try to get token from config, fall back to environment variable
 	token := ""
-	if config != nil && config.ApiToken != "" {
-		token = config.ApiToken
+	if config != nil && config.APIToken != "" {
+		token = config.APIToken
 	} else {
 		// Config not available or token empty, try environment variable
 		token = getEnvToken()

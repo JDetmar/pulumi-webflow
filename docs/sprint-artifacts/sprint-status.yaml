@@ -88,7 +88,7 @@ development_status:
   5-1-ci-cd-pipeline-integration: done
   5-1-1-lint-compliance-cleanup: done
   5-2-multi-site-management: review
-  5-3-multi-environment-stack-configuration: backlog
+  5-3-multi-environment-stack-configuration: done
   5-4-detailed-logging-for-troubleshooting: backlog
   epic-5-retrospective: optional
 

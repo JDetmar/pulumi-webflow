@@ -1,0 +1,7 @@
+name: webflow-multi-environment-go
+runtime: go
+description: Multi-environment Webflow site deployment with stack-specific configuration (Go)
+
+config:
+  webflow:
+    description: Webflow provider configuration

@@ -1,0 +1,29 @@
+# Development stack configuration
+# To set up this stack:
+#   pulumi stack init dev
+#   pulumi config set webflow:apiToken <your-dev-token> --secret
+
+config:
+  webflow:apiToken:
+    secure: # Run: pulumi config set webflow:apiToken <token> --secret
+  environmentName: dev
+
+  # Each site is a distinct entity - dev versions block indexing
+  sites:
+    marketing:
+      displayName: "Marketing Site (Dev)"
+      shortName: "marketing-dev"
+      timeZone: "America/New_York"
+      allowIndexing: false
+
+    docs:
+      displayName: "Documentation (Dev)"
+      shortName: "docs-dev"
+      timeZone: "America/New_York"
+      allowIndexing: false
+
+    blog:
+      displayName: "Engineering Blog (Dev)"
+      shortName: "blog-dev"
+      timeZone: "America/Los_Angeles"
+      allowIndexing: false

@@ -1,0 +1,22 @@
+{
+  "name": "webflow-multi-environment",
+  "version": "1.0.0",
+  "description": "Multi-environment Webflow site deployment with stack-specific configuration",
+  "main": "bin/index.js",
+  "typings": "bin/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "preview": "pulumi preview",
+    "up": "pulumi up",
+    "destroy": "pulumi destroy",
+    "refresh": "pulumi refresh"
+  },
+  "dependencies": {
+    "@pulumi/pulumi": "^3",
+    "@webflow/webflow": "^1.0.0-alpha.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}

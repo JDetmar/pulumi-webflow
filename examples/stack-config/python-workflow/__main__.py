@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import pulumi
-import pulumi_webflow as webflow
+import webflow_webflow as webflow
 
 # Load configuration from current stack
 config = pulumi.Config()

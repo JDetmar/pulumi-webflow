@@ -125,14 +125,17 @@ examples/stack-config/typescript-complete/
      webflow:apiToken:
        secure: AAABAPxyz...  # Encrypted API token
      environmentName: dev
-     siteCount: 3
+     sites:
+       marketing:
+         displayName: "Marketing Site"
+         shortName: "marketing-dev"
    ```
 
 3. **Code Logic** - Same infrastructure code adapts based on stack config
    ```typescript
    const config = new pulumi.Config();
-   const environmentName = config.require("environmentName");  // "dev" or "prod"
-   const siteCount = config.requireNumber("siteCount");        // 3, 5, or 10
+   const environmentName = config.require("environmentName");  // "dev", "staging", or "prod"
+   const sites = config.requireObject("sites");                // Named site configurations
    ```
 
 ### Stack Switching
@@ -253,8 +256,7 @@ cd typescript-complete
 npm install
 pulumi stack init dev
 pulumi config set webflow:apiToken <token> --secret
-pulumi config set environmentName dev
-pulumi config set siteCount 3
+# Sites are pre-configured in Pulumi.dev.yaml
 pulumi up
 ```
 
@@ -265,7 +267,7 @@ Best for: Teams using Python
 **Features:**
 - Pythonic configuration loading
 - Configuration validation with clear error messages
-- Time zone mapping based on region
+- Production safety checks
 - Clean, readable infrastructure code
 
 **Key concepts:**
@@ -275,12 +277,8 @@ valid_environments = ["dev", "staging", "prod"]
 if environment_name not in valid_environments:
     raise ValueError(f"Invalid environment '{environment_name}'")
 
-# Time zone mapping
-timezone_map = {
-    "us-west-2": "America/Los_Angeles",
-    "us-east-1": "America/New_York",
-}
-timezone = timezone_map.get(deployment_region)
+# Load sites from stack configuration
+sites_config = config.require_object("sites")
 ```
 
 **Run the example:**
@@ -289,8 +287,7 @@ cd python-workflow
 pip install -r requirements.txt
 pulumi stack init dev
 pulumi config set webflow:apiToken <token> --secret
-pulumi config set environmentName dev
-pulumi config set siteCount 3
+# Sites are pre-configured in Pulumi.dev.yaml
 pulumi up
 ```
 
@@ -312,11 +309,9 @@ if !slices.Contains(validEnvironments, environmentName) {
     return fmt.Errorf("invalid environment '%s'", environmentName)
 }
 
-// Timezone map
-timezoneMap := map[string]string{
-    "us-west-2": "America/Los_Angeles",
-    "us-east-1": "America/New_York",
-}
+// Load sites from stack configuration
+var sitesConfig map[string]SiteConfig
+cfg.RequireObject("sites", &sitesConfig)
 ```
 
 **Run the example:**
@@ -325,8 +320,7 @@ cd go-advanced
 go mod download
 pulumi stack init dev
 pulumi config set webflow:apiToken <token> --secret
-pulumi config set environmentName dev
-pulumi config set siteCount 3
+# Sites are pre-configured in Pulumi.dev.yaml
 pulumi up
 ```
 

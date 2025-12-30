@@ -19,7 +19,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/pulumi/pulumi-webflow/sdk/go/webflow"
+	"github.com/jdetmar/pulumi-webflow/sdk/go/webflow"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )

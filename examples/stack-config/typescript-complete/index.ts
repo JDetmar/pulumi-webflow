@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as pulumi from "@pulumi/pulumi";
-import * as webflow from "@pulumi/webflow";
+import * as webflow from "@webflow/webflow";
 
 // Load configuration from current stack
 const config = new pulumi.Config();

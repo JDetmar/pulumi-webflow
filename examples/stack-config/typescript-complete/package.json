@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@pulumi/pulumi": "^3",
-    "@pulumi/webflow": "^1"
+    "@webflow/webflow": "^1.0.0-alpha.0"
   },
   "devDependencies": {
     "@types/node": "^20",

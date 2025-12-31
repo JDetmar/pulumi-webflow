@@ -1,0 +1,16 @@
+{
+  "name": "webflow-logging-troubleshooting",
+  "version": "1.0.0",
+  "description": "Troubleshooting example with detailed logging to diagnose Webflow provider issues",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@pulumi/pulumi": "^3.0.0",
+    "pulumi-webflow": "^0.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

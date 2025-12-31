@@ -1,0 +1,3 @@
+name: webflow-logging-cicd
+runtime: python
+description: CI/CD logging configuration example for production-grade deployments

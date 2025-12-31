@@ -305,4 +305,4 @@ The destination can be a relative path (same domain) or absolute URL (different 
 - [Site Resource](./site.md) - Create and manage Webflow sites
 - [Quickstart Guide](../README.md#quick-start) - Get started quickly
 - [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) - Learn more about status codes
-- [SEO Best Practices](https://www.google.com/url?safe=off&q=https://support.google.com/webmasters/answer/7440203) - Google's redirect guidance
+- [SEO Best Practices](https://support.google.com/webmasters/answer/7440203) - Google's redirect guidance

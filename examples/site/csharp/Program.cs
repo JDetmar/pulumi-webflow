@@ -16,7 +16,6 @@ class Program
         var shortName = config.Require("shortName");
         var customDomain = config.Get("customDomain");
         var timezone = config.Get("timezone") ?? "America/New_York";
-        var environment = config.Get("environment") ?? "development";
 
         // Example 1: Basic Site Creation
         // Create a simple site with required properties

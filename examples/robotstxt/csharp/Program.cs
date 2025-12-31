@@ -13,7 +13,6 @@ class Program
 
         // Get configuration values
         var siteId = config.RequireSecret("siteId");
-        var environment = config.Get("environment") ?? "development";
 
         // Example 1: Allow All Crawlers (most common for public sites)
         var allowAllRobots = new RobotsTxt("allow-all-robots", new RobotsTxtArgs

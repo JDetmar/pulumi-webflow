@@ -9,7 +9,6 @@ display_name = config.require("displayName")
 short_name = config.require("shortName")
 custom_domain = config.get("customDomain")
 timezone = config.get("timezone") or "America/New_York"
-environment = config.get("environment") or "development"
 
 """
 Site Example - Creating and Managing Webflow Sites
@@ -56,5 +55,5 @@ pulumi.export("environment_site_ids", [s.id for s in environment_sites])
 pulumi.export("configured_site_id", configured_site.id)
 
 # Print success message
-message = pulumi.interpolate(f"✅ Successfully created {len(environment_sites) + 1} sites")
-message.apply(lambda m: print(m))
+site_count = len(environment_sites) + 1
+print(f"✅ Successfully created {site_count} sites")

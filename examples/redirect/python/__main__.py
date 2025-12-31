@@ -6,7 +6,6 @@ config = pulumi.Config()
 
 # Get configuration values
 site_id = config.require_secret("siteId")
-environment = config.get("environment") or "development"
 
 """
 Redirect Example - Creating and Managing URL Redirects
@@ -60,4 +59,4 @@ pulumi.export("bulk_redirect_ids", [r.id for r in bulk_redirects])
 
 # Print success message
 redirect_count = len(bulk_redirects) + 3
-site_id.apply(lambda s: print(f"✅ Successfully deployed {redirect_count} redirects to site {s}"))
+site_id.apply(lambda s: print(f"✅ Deployed {redirect_count} redirects to site {s}"))

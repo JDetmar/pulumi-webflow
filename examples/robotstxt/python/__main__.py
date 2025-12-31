@@ -6,7 +6,6 @@ config = pulumi.Config()
 
 # Get configuration values
 site_id = config.require_secret("siteId")
-environment = config.get("environment") or "development"
 
 """
 RobotsTxt Example - Creating and Managing robots.txt Files
@@ -70,5 +69,4 @@ pulumi.export("selective_block_robots_id", selective_block_robots.id)
 pulumi.export("restrict_directories_robots_id", restrict_directories_robots.id)
 
 # Print deployment success message
-message = pulumi.interpolate(f"✅ Successfully deployed RobotsTxt resources to site {site_id}")
-message.apply(lambda m: print(m))
+site_id.apply(print)

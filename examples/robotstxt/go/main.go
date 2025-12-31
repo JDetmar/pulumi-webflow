@@ -85,7 +85,7 @@ Sitemap: https://example.com/sitemap.xml`),
 
 		// Print success message
 		ctx.Log.Info(
-			fmt.Sprintf("✅ Successfully deployed RobotsTxt resources to site %s", environment),
+			fmt.Sprintf("✅ Successfully deployed RobotsTxt resources in %s environment", environment),
 			&pulumi.LogOptions{},
 		)
 

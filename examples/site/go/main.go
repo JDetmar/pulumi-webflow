@@ -17,10 +17,6 @@ func main() {
 		if timezone == "" {
 			timezone = "America/New_York"
 		}
-		environment := cfg.Get("environment")
-		if environment == "" {
-			environment = "development"
-		}
 
 		// Example 1: Basic Site Creation
 		basicSite, err := webflow.NewSite(ctx, "basic-site", &webflow.SiteArgs{

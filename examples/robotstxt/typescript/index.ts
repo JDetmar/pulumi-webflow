@@ -6,7 +6,6 @@ const config = new pulumi.Config();
 
 // Get configuration values
 const siteId = config.requireSecret("siteId");
-const environment = config.get("environment") || "development";
 
 /**
  * RobotsTxt Example - Creating and Managing robots.txt Files

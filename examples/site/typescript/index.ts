@@ -9,7 +9,6 @@ const displayName = config.require("displayName");
 const shortName = config.require("shortName");
 const customDomain = config.get("customDomain");
 const timezone = config.get("timezone") || "America/New_York";
-const environment = config.get("environment") || "development";
 
 /**
  * Site Example - Creating and Managing Webflow Sites

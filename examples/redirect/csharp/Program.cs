@@ -13,7 +13,6 @@ class Program
 
         // Get configuration values
         var siteId = config.RequireSecret("siteId");
-        var environment = config.Get("environment") ?? "development";
 
         // Example 1: Permanent Redirect (301) - Best for content moves
         // Use 301 redirects when content has permanently moved to preserve SEO value

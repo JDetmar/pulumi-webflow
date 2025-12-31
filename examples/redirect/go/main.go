@@ -81,7 +81,7 @@ func main() {
 		ctx.Export("bulkRedirectIds", pulumi.StringArray(bulkRedirectIds))
 
 		ctx.Log.Info(
-			fmt.Sprintf("✅ Successfully deployed %d redirects to site %s", len(redirectMappings)+3, environment),
+			fmt.Sprintf("✅ Successfully deployed %d redirects in %s environment", len(redirectMappings)+3, environment),
 			&pulumi.LogOptions{},
 		)
 

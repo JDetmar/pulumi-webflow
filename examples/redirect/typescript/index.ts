@@ -6,7 +6,6 @@ const config = new pulumi.Config();
 
 // Get configuration values
 const siteId = config.requireSecret("siteId");
-const environment = config.get("environment") || "development";
 
 /**
  * Redirect Example - Creating and Managing URL Redirects

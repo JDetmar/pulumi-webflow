@@ -1,0 +1,11 @@
+name: webflow-quickstart-go
+runtime: go
+description: Webflow Pulumi Provider quickstart - Deploy a RobotsTxt resource in Go
+
+config:
+  webflow:apiToken:
+    description: Webflow API Token (create at https://webflow.com Account Settings > API Tokens)
+    secret: true
+  siteId:
+    description: Webflow Site ID (find in Webflow Designer > Project Settings > API & Webhooks)
+    secret: true

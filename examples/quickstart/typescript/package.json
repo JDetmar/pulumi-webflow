@@ -1,0 +1,20 @@
+{
+  "name": "webflow-quickstart-typescript",
+  "version": "1.0.0",
+  "description": "Webflow Pulumi Provider quickstart in TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": ["pulumi", "webflow", "quickstart"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@pulumi/pulumi": "^3.0.0",
+    "pulumi-webflow": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,6 +1,6 @@
 # Story 3.7: Import Existing Sites
 
-Status: review
+Status: done
 
 ## Story
 

@@ -1,6 +1,6 @@
 # Story 5.2: Multi-Site Management
 
-Status: review
+Status: done
 
 ## Story
 

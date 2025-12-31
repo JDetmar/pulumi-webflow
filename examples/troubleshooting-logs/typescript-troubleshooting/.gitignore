@@ -1,0 +1,20 @@
+# Pulumi files
+/Pulumi.*.yaml.backup
+*.backup
+
+# Node.js
+node_modules/
+dist/
+bin/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db

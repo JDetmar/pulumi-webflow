@@ -74,7 +74,7 @@ class Program
             ["permanentRedirectId"] = permanentRedirect.Id,
             ["temporaryRedirectId"] = temporaryRedirect.Id,
             ["externalRedirectId"] = externalRedirect.Id,
-            ["bulkRedirectCount"] = bulkRedirects.Count,
+            ["bulkRedirectIds"] = Output.All(bulkRedirects.Select(r => r.Id).ToArray()),
         };
     });
 }

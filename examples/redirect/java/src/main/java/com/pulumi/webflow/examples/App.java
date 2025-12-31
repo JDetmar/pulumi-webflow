@@ -7,6 +7,7 @@ import com.pulumi.webflow.RedirectArgs;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class App {
     public static void main(String[] args) {
@@ -71,7 +72,9 @@ public class App {
             ctx.export("permanentRedirectId", permanentRedirect.id());
             ctx.export("temporaryRedirectId", temporaryRedirect.id());
             ctx.export("externalRedirectId", externalRedirect.id());
-            ctx.export("bulkRedirectCount", Output.of(bulkRedirects.size()));
+            ctx.export("bulkRedirectIds", Output.all(bulkRedirects.stream()
+                .map(Redirect::id)
+                .collect(Collectors.toList())));
         });
     }
 }

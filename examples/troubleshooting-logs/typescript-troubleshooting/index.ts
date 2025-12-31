@@ -15,13 +15,11 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as webflow from "pulumi-webflow";
 
-const config = new pulumi.Config();
-
 // Log configuration loading (INFO level - always shown)
 pulumi.log.info("🔍 Loading configuration for troubleshooting example");
 
 // Log detailed config (DEBUG level - only with --verbose)
-pulumi.log.debug("Configuration loaded from Pulumi config");
+pulumi.log.debug("Pulumi context initialized for troubleshooting");
 
 // Example: Troubleshooting authentication
 pulumi.log.info("🔐 Verifying Webflow API authentication");

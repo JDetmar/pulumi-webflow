@@ -143,20 +143,23 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Common Patterns
 
-### Pattern 1: Create Production Site with Custom Domain
+### Pattern 1: Create Production Site
 
-Create a production site with your own custom domain:
+Create a production site with proper configuration:
 
 ```typescript
+const config = new pulumi.Config();
+const workspaceId = config.requireSecret("workspaceId");
+
 const productionSite = new webflow.Site("prod-site", {
+  workspaceId: workspaceId,
   displayName: "My Company - Production",
   shortName: "company-prod",
-  timezone: "America/Los_Angeles",
-  customDomain: "mycompany.com",
+  timeZone: "America/Los_Angeles",
 });
 
 export const productionSiteId = productionSite.id;
-export const productionDomain = productionSite.defaultDomain;
+export const productionDomains = productionSite.customDomains;
 ```
 
 ### Pattern 2: Multi-Environment Deployment
@@ -164,13 +167,16 @@ export const productionDomain = productionSite.defaultDomain;
 Deploy the same site structure to dev, staging, and production:
 
 ```typescript
+const config = new pulumi.Config();
+const workspaceId = config.requireSecret("workspaceId");
+
 const environments = ["dev", "staging", "production"];
 const sites = environments.map((env) =>
   new webflow.Site(`site-${env}`, {
+    workspaceId: workspaceId,
     displayName: `Company Site - ${env.toUpperCase()}`,
     shortName: `company-${env}`,
-    timezone: "America/New_York",
-    customDomain: env === "production" ? "mycompany.com" : undefined,
+    timeZone: "America/New_York",
   })
 );
 
@@ -183,35 +189,42 @@ export const siteIds = sites.map((s) => s.id);
 Set appropriate timezone for international sites:
 
 ```typescript
+const config = new pulumi.Config();
+const workspaceId = config.requireSecret("workspaceId");
+
 const usaSite = new webflow.Site("us-site", {
+  workspaceId: workspaceId,
   displayName: "US Operations",
   shortName: "us-ops",
-  timezone: "America/Chicago",
-  customDomain: "us.company.com",
+  timeZone: "America/Chicago",
 });
 
 const euroSite = new webflow.Site("euro-site", {
+  workspaceId: workspaceId,
   displayName: "European Operations",
   shortName: "euro-ops",
-  timezone: "Europe/London",
-  customDomain: "eu.company.com",
+  timeZone: "Europe/London",
 });
 ```
 
-### Pattern 4: Conditional Domain Assignment
+### Pattern 4: Environment-Specific Configuration
 
-Use environment config to determine domain:
+Use environment config to customize site properties:
 
 ```typescript
 const config = new pulumi.Config();
-const customDomainConfig = config.get("customDomain");
+const workspaceId = config.requireSecret("workspaceId");
+const environment = config.require("environment");
 
 const site = new webflow.Site("managed-site", {
-  displayName: "Managed Site",
-  shortName: "managed",
-  timezone: "UTC",
-  customDomain: customDomainConfig, // Only set if provided in config
+  workspaceId: workspaceId,
+  displayName: `Managed Site - ${environment}`,
+  shortName: `managed-${environment}`,
+  timeZone: "UTC",
 });
+
+// Export site info for downstream resources
+export const siteId = site.id;
 ```
 
 ### Pattern 5: Site with Descriptive Naming
@@ -219,10 +232,14 @@ const site = new webflow.Site("managed-site", {
 Use consistent naming conventions across multiple sites:
 
 ```typescript
+const config = new pulumi.Config();
+const workspaceId = config.requireSecret("workspaceId");
+
 const siteConfig = {
+  workspaceId: workspaceId,
   displayName: "E-commerce Platform",
   shortName: "ecommerce-platform",
-  timezone: "America/New_York",
+  timeZone: "America/New_York",
 };
 
 const site = new webflow.Site("ecommerce", siteConfig);
@@ -256,10 +273,14 @@ Use the [IANA Timezone Database](https://en.wikipedia.org/wiki/List_of_tz_databa
 ### Creating a Site
 
 ```typescript
+const config = new pulumi.Config();
+const workspaceId = config.requireSecret("workspaceId");
+
 const newSite = new webflow.Site("new", {
+  workspaceId: workspaceId,
   displayName: "New Site",
   shortName: "newsite",
-  timezone: "UTC",
+  timeZone: "UTC",
 });
 ```
 
@@ -279,14 +300,18 @@ To publish a site (make it live), use the Site resource with publish operations:
 Modify site properties in-place:
 
 ```typescript
+const config = new pulumi.Config();
+const workspaceId = config.requireSecret("workspaceId");
+
 const site = new webflow.Site("updatable", {
+  workspaceId: workspaceId,
   displayName: "Original Name",
   shortName: "original",
-  timezone: "America/New_York",
+  timeZone: "America/New_York",
 });
 
-// To update, create new resource with modified properties
-// or use `pulumi up` with changes in config
+// To update, modify properties and run `pulumi up`
+// displayName, shortName, and timeZone can be updated in-place
 ```
 
 ### Importing Existing Sites

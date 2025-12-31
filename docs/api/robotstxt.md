@@ -92,7 +92,7 @@ Sitemap: https://example.com/sitemap.xml`),
 		}
 
 		// Export the resource ID for reference
-		ctx.Export("robotsTxtId", robotsTxt.Id)
+		ctx.Export("robotsTxtId", robotsTxt.ID())
 		ctx.Export("lastModified", robotsTxt.LastModified)
 		return nil
 	})

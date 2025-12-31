@@ -31,4 +31,4 @@ export const robotsTxtId = robotsTxt.id;
 
 // Print a success message
 const message = pulumi.interpolate`✅ Successfully deployed robots.txt to site ${siteId}`;
-console.log(message.apply((m) => m));
+message.apply((m) => console.log(m));

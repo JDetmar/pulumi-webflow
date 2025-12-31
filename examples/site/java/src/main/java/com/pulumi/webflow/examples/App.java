@@ -7,6 +7,7 @@ import com.pulumi.webflow.SiteArgs;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class App {
     public static void main(String[] args) {
@@ -71,7 +72,7 @@ public class App {
                 siteWithDomain != null ? siteWithDomain.id() : Output.of("not-created"));
             ctx.export("environmentSiteIds", Output.all(environmentSites.stream()
                 .map(Site::id)
-                .toList()));
+                .collect(Collectors.toList())));
             ctx.export("configuredSiteId", configuredSite.id());
         });
     }

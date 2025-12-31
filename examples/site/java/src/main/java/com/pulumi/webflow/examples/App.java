@@ -69,7 +69,9 @@ public class App {
             ctx.export("basicSiteName", basicSite.displayName());
             ctx.export("customDomainSiteId",
                 siteWithDomain != null ? siteWithDomain.id() : Output.of("not-created"));
-            ctx.export("environmentSiteCount", Output.of(environmentSites.size()));
+            ctx.export("environmentSiteIds", Output.all(environmentSites.stream()
+                .map(Site::id)
+                .toList()));
             ctx.export("configuredSiteId", configuredSite.id());
         });
     }

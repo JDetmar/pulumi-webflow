@@ -71,7 +71,9 @@ public class App {
             ctx.export("permanentRedirectId", permanentRedirect.id());
             ctx.export("temporaryRedirectId", temporaryRedirect.id());
             ctx.export("externalRedirectId", externalRedirect.id());
-            ctx.export("bulkRedirectCount", Output.of(bulkRedirects.size()));
+            ctx.export("bulkRedirectIds", Output.all(bulkRedirects.stream()
+                .map(Redirect::id)
+                .toList()));
         });
     }
 }

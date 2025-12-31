@@ -71,7 +71,7 @@ class Program
             ["basicSiteId"] = basicSite.Id,
             ["basicSiteName"] = basicSite.DisplayName,
             ["customDomainSiteId"] = siteWithDomain?.Id ?? Output.Create("not-created"),
-            ["environmentSiteCount"] = environmentSites.Count,
+            ["environmentSiteIds"] = Output.All(environmentSites.Select(s => s.Id).ToArray()),
             ["configuredSiteId"] = configuredSite.Id,
         };
     });

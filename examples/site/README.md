@@ -145,8 +145,8 @@ Outputs:
     basicSiteId           : "abc123..."
     basicSiteName         : "My Site"
     customDomainSiteId    : "def456..." (or "not-created")
-    environmentSiteCount  : 3
-    configuredSiteId      : "ghi789..."
+    environmentSiteIds    : ["ghi789...", "jkl012...", "mno345..."]
+    configuredSiteId      : "pqr678..."
 ```
 
 ## Cleanup

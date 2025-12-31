@@ -3,7 +3,7 @@ runtime: java
 description: Example of creating and managing RobotsTxt resources with Pulumi and Webflow
 
 config:
-  webflow:siteId:
+  siteId:
     description: The Webflow site ID
     secret: true
   environment:

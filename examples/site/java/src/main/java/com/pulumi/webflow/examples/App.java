@@ -17,7 +17,6 @@ public class App {
             var shortName = config.require("shortName");
             var customDomain = config.get("customDomain");
             var timezone = config.get("timezone").orElse("America/New_York");
-            var environment = config.get("environment").orElse("development");
 
             // Example 1: Basic Site Creation
             // Create a simple site with required properties

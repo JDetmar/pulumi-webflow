@@ -14,7 +14,6 @@ public class App {
             // Get configuration values
             var config = ctx.config();
             var siteId = config.requireSecret("siteId");
-            var environment = config.get("environment").orElse("development");
 
             // Example 1: Permanent Redirect (301) - Best for content moves
             // Use 301 redirects when content has permanently moved to preserve SEO value

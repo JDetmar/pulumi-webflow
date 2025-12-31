@@ -25,7 +25,7 @@ const basicSite = new webflow.Site("basic-site", {
 });
 
 // Example 2: Site with Custom Domain
-let siteWithDomain: webflow.Site;
+let siteWithDomain: webflow.Site | undefined;
 if (customDomain) {
   siteWithDomain = new webflow.Site("site-with-domain", {
     displayName: `${displayName}-domain`,

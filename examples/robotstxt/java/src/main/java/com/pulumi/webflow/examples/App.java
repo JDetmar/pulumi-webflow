@@ -11,7 +11,6 @@ public class App {
             // Get configuration values
             var config = ctx.config();
             var siteId = config.requireSecret("siteId");
-            var environment = config.get("environment").orElse("development");
 
             // Example 1: Allow All Crawlers (most common for public sites)
             var allowAllRobots = new RobotsTxt("allow-all-robots",

@@ -96,7 +96,7 @@ development_status:
   epic-6: in-progress
   6-1-quickstart-guide: done
   6-2-comprehensive-api-documentation: done
-  6-3-multi-language-code-examples: backlog
+  6-3-multi-language-code-examples: done
   6-4-troubleshooting-faq-documentation: backlog
   epic-6-retrospective: optional
 

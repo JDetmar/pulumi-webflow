@@ -1,0 +1,19 @@
+name: webflow-site-example
+runtime: nodejs
+description: Example of creating and managing Site resources with Pulumi and Webflow
+
+config:
+  displayName:
+    description: Display name for the site
+    required: true
+  shortName:
+    description: Short name for the site
+    required: true
+  customDomain:
+    description: Optional custom domain for the site
+  timezone:
+    description: Site timezone
+    default: America/New_York
+  environment:
+    description: Deployment environment
+    default: development

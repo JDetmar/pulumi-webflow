@@ -28,7 +28,7 @@ jobs:
         id: vars
         run: echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
       - name: Update with Result
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -61,7 +61,7 @@ jobs:
 
       - if: github.event_name == 'pull_request'
         name: Install Schema Tools
-        uses: jaxxstorm/action-install-gh-release@v2.1.0
+        uses: jaxxstorm/action-install-gh-release@6096f2a2bbfee498ced520b6922ac2c06e990ed2 # v2.1.0
         with:
           repo: pulumi/schema-tools
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -283,7 +283,7 @@ jobs:
         run: git grep -l 'go:embed' -- provider | xargs --no-run-if-empty sed -i 's/go:embed/ goembed/g'
 
       - name: golangci-lint provider pkg
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@55c2c1448f86e01eaae002a5a3a9624417608d84 # v6.5.2
         with:
           working-directory: .
           install-mode: none
@@ -297,7 +297,7 @@ jobs:
       - lint
     steps:
       - name: Mark workflow as successful
-        uses: guibranco/github-status-action-v2@v1
+        uses: guibranco/github-status-action-v2@631f55ea0251f0fb284525ad86c30e9f7a8dd284 # v1.1.14
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           context: Sentinel

@@ -20,7 +20,7 @@ type Redirect struct {
 	CreatedOn pulumi.StringPtrOutput `pulumi:"createdOn"`
 	// The URL path to redirect to (e.g., '/new-page', '/home'). Must start with '/' and contain only valid URL characters. This is the location where users will be redirected when they visit the source path.
 	DestinationPath pulumi.StringOutput `pulumi:"destinationPath"`
-	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringOutput `pulumi:"siteId"`
 	// The URL path to redirect from (e.g., '/old-page', '/blog/2023'). Must start with '/' and contain only valid URL characters (letters, numbers, hyphens, underscores, slashes, dots). Query strings and fragments are not allowed in the source path.
 	SourcePath pulumi.StringOutput `pulumi:"sourcePath"`
@@ -82,7 +82,7 @@ func (RedirectState) ElementType() reflect.Type {
 type redirectArgs struct {
 	// The URL path to redirect to (e.g., '/new-page', '/home'). Must start with '/' and contain only valid URL characters. This is the location where users will be redirected when they visit the source path.
 	DestinationPath string `pulumi:"destinationPath"`
-	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId string `pulumi:"siteId"`
 	// The URL path to redirect from (e.g., '/old-page', '/blog/2023'). Must start with '/' and contain only valid URL characters (letters, numbers, hyphens, underscores, slashes, dots). Query strings and fragments are not allowed in the source path.
 	SourcePath string `pulumi:"sourcePath"`
@@ -94,7 +94,7 @@ type redirectArgs struct {
 type RedirectArgs struct {
 	// The URL path to redirect to (e.g., '/new-page', '/home'). Must start with '/' and contain only valid URL characters. This is the location where users will be redirected when they visit the source path.
 	DestinationPath pulumi.StringInput
-	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringInput
 	// The URL path to redirect from (e.g., '/old-page', '/blog/2023'). Must start with '/' and contain only valid URL characters (letters, numbers, hyphens, underscores, slashes, dots). Query strings and fragments are not allowed in the source path.
 	SourcePath pulumi.StringInput
@@ -199,7 +199,7 @@ func (o RedirectOutput) DestinationPath() pulumi.StringOutput {
 	return o.ApplyT(func(v *Redirect) pulumi.StringOutput { return v.DestinationPath }).(pulumi.StringOutput)
 }
 
-// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 func (o RedirectOutput) SiteId() pulumi.StringOutput {
 	return o.ApplyT(func(v *Redirect) pulumi.StringOutput { return v.SiteId }).(pulumi.StringOutput)
 }

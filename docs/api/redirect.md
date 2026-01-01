@@ -298,8 +298,14 @@ The destination can be a relative path (same domain) or absolute URL (different 
 - Or modify the source path to be unique
 - Check Webflow admin for existing redirects
 
-## Related Resources
+## See Also
 
+**Troubleshooting:**
+- [Troubleshooting Guide](../troubleshooting.md) - Comprehensive error reference and solutions
+- [FAQ](../faq.md) - Frequently asked questions
+- Look for "Redirect" section in troubleshooting guide for resource-specific issues
+
+**Related Resources:**
 - [Provider Configuration](./provider-configuration.md) - Set up API authentication
 - [RobotsTxt Resource](./robotstxt.md) - Manage robots.txt
 - [Site Resource](./site.md) - Create and manage Webflow sites

@@ -284,8 +284,14 @@ Sitemap: https://example.com/sitemap.xml
 - Verify the update succeeded: `pulumi stack output` to see lastModified timestamp
 - Check Webflow project for the updated file
 
-## Related Resources
+## See Also
 
+**Troubleshooting:**
+- [Troubleshooting Guide](../troubleshooting.md) - Comprehensive error reference and solutions
+- [FAQ](../faq.md) - Frequently asked questions
+- Look for "RobotsTxt" section in troubleshooting guide for resource-specific issues
+
+**Related Resources:**
 - [Provider Configuration](./provider-configuration.md) - Set up API authentication
 - [Redirect Resource](./redirect.md) - Manage URL redirects
 - [Site Resource](./site.md) - Create and manage Webflow sites

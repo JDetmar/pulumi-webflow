@@ -245,6 +245,8 @@ pulumi up
 ## Related Documentation
 
 - [Quick Start Guide](../README.md#quick-start) - Get started in 20 minutes
+- [Troubleshooting Guide](../troubleshooting.md) - Comprehensive authentication troubleshooting
+- [FAQ](../faq.md) - Authentication and configuration FAQs
 - [RobotsTxt Resource](./robotstxt.md) - Manage robots.txt configurations
 - [Redirect Resource](./redirect.md) - Create and manage redirects
 - [Site Resource](./site.md) - Manage Webflow sites

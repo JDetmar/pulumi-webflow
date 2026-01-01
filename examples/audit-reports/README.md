@@ -131,10 +131,10 @@ DETAILED CHANGES
 **CSV format:**
 
 ```csv
-Date,Time,Author,CommitHash,Type,Description,Stack
-2025-12-15,14:28:00,Alice Johnson,abc1234,feat,Add GDPR redirects,production
-2025-12-14,09:15:00,Bob Smith,def5678,feat,Update search crawler rules,production
-2025-12-13,16:45:00,Alice Johnson,ghi9012,fix,Correct token handling,production
+Date,Time,Author,CommitHash,ChangeType,Description,Stack,ChangeUrl
+2025-12-15,14:28:00,Alice Johnson,abc1234,feat,Add GDPR redirects,production,https://github.com/JDetmar/pulumi-webflow/commit/abc1234
+2025-12-14,09:15:00,Bob Smith,def5678,feat,Update search crawler rules,production,https://github.com/JDetmar/pulumi-webflow/commit/def5678
+2025-12-13,16:45:00,Alice Johnson,ghi9012,fix,Correct token handling,production,https://github.com/JDetmar/pulumi-webflow/commit/ghi9012
 ```
 
 ### Example 3: Find Specific Changes

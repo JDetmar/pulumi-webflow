@@ -179,6 +179,13 @@ dotnet add package Pulumi.Webflow
 
 **Prevention:** Never commit tokens to version control. Use `--secret` flag when setting tokens.
 
+#### Authentication error codes
+
+When authentication fails, you may see structured error codes in addition to the human‑readable messages documented in this section:
+
+- `WEBFLOW_AUTH_001`: No credentials provided (for example, `WEBFLOW_API_TOKEN` not set or `webflow:apiToken` not configured). See [API Token Not Configured](#api-token-not-configured).
+- `WEBFLOW_AUTH_002`: Credentials were provided but were rejected by the Webflow API (for example, invalid, revoked, or expired token). See [Invalid or Expired Token](#invalid-or-expired-token).
+- `WEBFLOW_AUTH_003`: Other authentication or authorization issues (for example, token with insufficient permissions or account-level restrictions). Review the full error message and verify token scope and account access.
 ---
 
 ### Authentication Error Codes

@@ -131,6 +131,18 @@ get_commit_type() {
     fi
 }
 
+# Function to sanitize CSV values to prevent formula injection
+# Prefixes cells starting with =, +, -, or @ with a single quote
+sanitize_csv_value() {
+    local value="$1"
+    # Check if value starts with a dangerous character
+    if [[ $value =~ ^[=+\-@] ]]; then
+        echo "'$value"
+    else
+        echo "$value"
+    fi
+}
+
 # Function to generate compliance report
 generate_compliance_report() {
     echo "=================================="
@@ -211,13 +223,17 @@ generate_csv_report() {
 
             change_type=$(get_commit_type "$subject")
 
+            # Sanitize author and subject to prevent CSV formula injection
+            author_safe=$(sanitize_csv_value "$author")
+            subject_safe=$(sanitize_csv_value "$subject")
+
             # Escape quotes in subject for CSV
-            subject_escaped="${subject//\"/\"\"}"
+            subject_escaped="${subject_safe//\"/\"\"}"
 
             if [ -n "$REPO_URL" ]; then
-                echo "$date_part,$time_part,$author,$hash,$change_type,\"$subject_escaped\",$STACK,$REPO_URL/commit/$hash"
+                echo "$date_part,$time_part,$author_safe,$hash,$change_type,\"$subject_escaped\",$STACK,$REPO_URL/commit/$hash"
             else
-                echo "$date_part,$time_part,$author,$hash,$change_type,\"$subject_escaped\",$STACK,"
+                echo "$date_part,$time_part,$author_safe,$hash,$change_type,\"$subject_escaped\",$STACK,"
             fi
         done || true
 }

@@ -642,8 +642,20 @@ git log --grep="^fix" --oneline
 # Simple text report
 git log --format="%h %ai %an %s" -- Pulumi.*.yaml > report.txt
 
-# CSV format for Excel/Sheets
-git log --format="%h,%ai,%an,%s" -- Pulumi.*.yaml > report.csv
+# CSV format for Excel/Sheets (SECURE - prevents formula injection)
+# Use the provided script which sanitizes output:
+./examples/audit-reports/generate-audit-log.sh production --csv > report.csv
+
+# Alternative: Manual CSV with formula injection protection
+git log --format="%h|%ai|%an|%s" -- Pulumi.*.yaml | \
+  awk -F'|' '{
+    # Sanitize author (field 3) and subject (field 4)
+    gsub(/^[=+\-@]/, "'"'&'"'", $3);
+    gsub(/^[=+\-@]/, "'"'&'"'", $4);
+    # Escape quotes for CSV
+    gsub(/"/, "\"\"", $4);
+    print $1","$2","$3",\""$4"\"";
+  }' > report.csv
 
 # Detailed report with changes
 git log -p --format="%h %ai %an %s" -- Pulumi.*.yaml > report-detailed.txt

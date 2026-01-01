@@ -23,9 +23,10 @@ The Webflow Pulumi Provider lets you programmatically manage Webflow resources (
 4. [Authentication](#authentication)
 5. [Verification](#verification)
 6. [Troubleshooting](#troubleshooting)
-7. [Multi-Language Examples](#multi-language-examples)
-8. [Next Steps](#next-steps)
-9. [Contributing](#contributing)
+7. [Version Control & Audit Trail](#version-control--audit-trail)
+8. [Multi-Language Examples](#multi-language-examples)
+9. [Next Steps](#next-steps)
+10. [Contributing](#contributing)
 
 ---
 
@@ -430,6 +431,67 @@ Error: Invalid or malformed siteId. Must be a 24-character hex string.
 - 🔧 **Examples**: Check [examples/](./examples/) for comprehensive examples
 - 🐛 **Report Bugs**: [GitHub Issues](https://github.com/jdetmar/pulumi-webflow/issues)
 - 💬 **Ask Questions**: [GitHub Discussions](https://github.com/jdetmar/pulumi-webflow/discussions)
+
+---
+
+## Version Control & Audit Trail
+
+All infrastructure changes can be tracked in Git to create an immutable audit trail for compliance.
+
+### Key Features
+
+- ✅ **Automatic Audit Trail** - Every change tracked with author, timestamp, and reason
+- ✅ **Code Review Process** - Pull requests enable peer review before deployment
+- ✅ **Compliance Ready** - Generate audit reports for SOC 2, HIPAA, GDPR compliance
+- ✅ **CI/CD Integration** - GitHub Actions validates changes before merge
+- ✅ **Multi-Environment** - Separate tracking for dev, staging, production
+
+### Quick Example
+
+```bash
+# Create a feature branch for your change
+git checkout -b feat/add-redirects
+
+# Make infrastructure changes
+# ... update your Pulumi code ...
+
+# Preview the changes
+pulumi preview
+
+# Commit with a clear message
+git commit -m "feat(redirects): add GDPR-compliant redirect rules
+
+- Redirect /privacy to privacy-policy.webflow.io
+- Redirect /terms to terms-of-service.webflow.io
+- Requires approval before deployment
+
+Story: 2.2 - Redirect CRUD Operations"
+
+# Push and create a Pull Request for code review
+git push origin feat/add-redirects
+```
+
+### Compliance Documentation
+
+- 📖 **[Version Control Integration Guide](./docs/version-control.md)** - Complete Git workflow guide with best practices
+- 🔍 **[Audit Trail Documentation](./docs/audit-trail.md)** - Audit reports, compliance templates, and reviewer guidelines
+
+### Generating Audit Reports
+
+```bash
+# View recent changes
+git log --oneline -- Pulumi.*.yaml
+
+# Generate detailed audit report for a time period
+git log --since="2025-12-01" --until="2025-12-31" \
+  --format="%ai | %an | %s" \
+  -- Pulumi.*.yaml
+
+# Export audit trail for compliance review
+git log -p -- Pulumi.*.yaml > audit-report.txt
+```
+
+See the [Version Control guide](./docs/version-control.md) for complete instructions on setting up Git workflows and the [Audit Trail documentation](./docs/audit-trail.md) for compliance reporting.
 
 ---
 

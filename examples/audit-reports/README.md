@@ -11,7 +11,7 @@ Scripts and examples for generating compliance-ready audit reports from Git hist
 ./generate-audit-log.sh production
 
 # View changes for a specific date range
-./generate-audit-log.sh production 2025-12-01 2025-12-31
+./generate-audit-log.sh production --from 2025-12-01 --to 2025-12-31
 ```
 
 ### Generate a CSV Report for Spreadsheets
@@ -162,8 +162,16 @@ git log --since="2025-12-01" --until="2025-12-31" \
 
 ```bash
 # Generate complete audit trail for SOC 2 review
+
+# Linux (GNU date):
 ./generate-audit-log.sh production \
   --from "$(date -d 'first day of this year' +%Y-%m-%d)" \
+  --to "$(date +%Y-%m-%d)" \
+  --compliance > soc2-audit-trail.txt
+
+# macOS (BSD date):
+./generate-audit-log.sh production \
+  --from "$(date -j -f "%Y-%m-%d" "$(date +%Y)-01-01" +%Y-%m-%d)" \
   --to "$(date +%Y-%m-%d)" \
   --compliance > soc2-audit-trail.txt
 

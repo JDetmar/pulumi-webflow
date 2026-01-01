@@ -492,10 +492,24 @@ Configuration change adds new redirect:
 ```bash
 # Run monthly audit check
 cd my-webflow-infrastructure
+
+# Linux (GNU date):
 ./examples/audit-reports/generate-audit-log.sh production \
   --from "$(date -d 'first day of last month' +%Y-%m-%d)" \
   --to "$(date -d 'last day of last month' +%Y-%m-%d)" \
   --csv > "audit-report-$(date +%Y-%m).csv"
+
+# macOS (BSD date) - specify dates manually or use this script:
+YEAR=$(date +%Y)
+MONTH=$(date +%m)
+LAST_MONTH=$((MONTH - 1))
+[ $LAST_MONTH -eq 0 ] && { LAST_MONTH=12; YEAR=$((YEAR - 1)); }
+FIRST_DAY=$(printf "%04d-%02d-01" $YEAR $LAST_MONTH)
+LAST_DAY=$(date -j -f "%Y-%m-%d" "$FIRST_DAY" -v+1m -v-1d +%Y-%m-%d)
+./examples/audit-reports/generate-audit-log.sh production \
+  --from "$FIRST_DAY" \
+  --to "$LAST_DAY" \
+  --csv > "audit-report-$(printf '%04d-%02d' $YEAR $LAST_MONTH).csv"
 
 # Review the report for:
 # - Unusual changes

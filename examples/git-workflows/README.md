@@ -349,7 +349,7 @@ docs(version-control): add audit trail guide
 - Include compliance templates for auditors
 
 Story: 7.1 - Version Control Integration for Audit
-See-Also: docs/audit-trail.md, docs/version-control.md
+See-Also: docs/version-control.md
 ```
 
 ### Example 5: Refactoring
@@ -501,6 +501,5 @@ git push origin $(git describe --tags)
 ## Additional Resources
 
 - [Version Control Integration Guide](../../docs/version-control.md) - Complete guide
-- [Audit Trail Documentation](../../docs/audit-trail.md) - Compliance reporting
 - [Git Documentation](https://git-scm.com/docs) - Official Git reference
 - [Conventional Commits](https://www.conventionalcommits.org/) - Standard commit format

@@ -727,8 +727,7 @@ Resolves: FR40 - Enhanced redirect management"
 git commit -m "feat(compliance): add audit log export
 
 Related Story: 7.1 - Version Control Integration
-Resolves: FR37 - Track configuration changes
-See also: docs/audit-trail.md"
+Resolves: FR37 - Track configuration changes"
 ```
 
 ---
@@ -759,4 +758,4 @@ Git integration provides:
 ✅ **Rollback Capability** - Easy revert if changes cause issues
 ✅ **Multi-Environment Support** - Separate tracking for dev/staging/production
 
-For more details on auditing and generating compliance reports, see [Audit Trail Documentation](./audit-trail.md).
+This documentation provides a complete guide to using version control for auditing and compliance reporting with Pulumi infrastructure-as-code.

@@ -22,10 +22,22 @@ import (
 	"time"
 )
 
+// Error codes for programmatic error handling.
+// Use these codes to identify specific error types in automation and scripts.
+const (
+	// ErrCodeTokenNotConfigured indicates the API token is missing.
+	ErrCodeTokenNotConfigured = "WEBFLOW_AUTH_001"
+	// ErrCodeTokenEmpty indicates an empty API token was provided.
+	ErrCodeTokenEmpty = "WEBFLOW_AUTH_002"
+	// ErrCodeTokenInvalid indicates the API token format is invalid.
+	ErrCodeTokenInvalid = "WEBFLOW_AUTH_003"
+)
+
 // ErrTokenNotConfigured is returned when no API token is available.
-var ErrTokenNotConfigured = errors.New("Webflow API token not configured. " +
+var ErrTokenNotConfigured = errors.New("[" + ErrCodeTokenNotConfigured + "] Webflow API token not configured. " +
 	"Configure using: pulumi config set webflow:apiToken <token> --secret " +
-	"OR set WEBFLOW_API_TOKEN environment variable")
+	"OR set WEBFLOW_API_TOKEN environment variable. " +
+	"See: https://github.com/jdetmar/pulumi-webflow/blob/main/docs/troubleshooting.md#api-token-not-configured")
 
 // getEnvToken retrieves the Webflow API token from the environment variable.
 func getEnvToken() string {
@@ -36,12 +48,16 @@ func getEnvToken() string {
 // Checks that the token is non-empty and has reasonable length.
 func ValidateToken(token string) error {
 	if token == "" {
-		return errors.New("API token cannot be empty")
+		return errors.New("[" + ErrCodeTokenEmpty + "] API token cannot be empty. " +
+			"Provide a valid Webflow API token via config or environment variable. " +
+			"See: https://github.com/jdetmar/pulumi-webflow/blob/main/docs/troubleshooting.md#api-token-not-configured")
 	}
 
 	// Basic sanity check - Webflow tokens should be reasonably long
 	if len(token) < 10 {
-		return errors.New("API token appears invalid (too short)")
+		return errors.New("[" + ErrCodeTokenInvalid + "] API token appears invalid (too short). " +
+			"Webflow API tokens are typically 40+ characters. " +
+			"See: https://github.com/jdetmar/pulumi-webflow/blob/main/docs/troubleshooting.md#invalid-or-expired-token")
 	}
 
 	return nil
@@ -90,7 +106,8 @@ func (t *authenticatedTransport) RoundTrip(req *http.Request) (*http.Response, e
 // when making requests using this client.
 func CreateHTTPClient(token, version string) (*http.Client, error) {
 	if token == "" {
-		return nil, errors.New("cannot create HTTP client with empty token")
+		return nil, errors.New("[" + ErrCodeTokenEmpty + "] cannot create HTTP client with empty token. " +
+			"See: https://github.com/jdetmar/pulumi-webflow/blob/main/docs/troubleshooting.md#api-token-not-configured")
 	}
 
 	// Create TLS config with secure defaults

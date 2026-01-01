@@ -424,7 +424,9 @@ Error: Invalid or malformed siteId. Must be a 24-character hex string.
 
 ### Get Help
 
-- 📖 **Full Documentation**: [docs/](./docs/)
+- 📖 **Full Troubleshooting Guide**: [docs/troubleshooting.md](./docs/troubleshooting.md) - Comprehensive error reference and diagnostic procedures
+- ❓ **FAQ**: [docs/faq.md](./docs/faq.md) - Answers to common questions
+- 📚 **Full Documentation**: [docs/](./docs/)
 - 🔧 **Examples**: Check [examples/](./examples/) for comprehensive examples
 - 🐛 **Report Bugs**: [GitHub Issues](https://github.com/jdetmar/pulumi-webflow/issues)
 - 💬 **Ask Questions**: [GitHub Discussions](https://github.com/jdetmar/pulumi-webflow/discussions)

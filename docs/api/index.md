@@ -50,7 +50,9 @@ All resources are available in multiple languages. Examples are provided for the
 
 - [Quickstart Guide](../README.md#quick-start) - Get started in under 20 minutes
 - [Examples](../examples/) - Ready-to-run example programs
-- [Troubleshooting](../examples/troubleshooting-logs/README.md) - Common issues and solutions
+- [Troubleshooting Guide](../troubleshooting.md) - Comprehensive error reference and solutions
+- [FAQ](../faq.md) - Answers to frequently asked questions
+- [Logging & Debugging Examples](../examples/troubleshooting-logs/README.md) - Debug your deployments
 
 ## Documentation Format
 

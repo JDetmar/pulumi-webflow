@@ -84,12 +84,12 @@ jobs:
 
       - if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
         name: Comment on PR with Details of Schema Check
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
             ${{ env.SCHEMA_CHANGES }}
-          comment_tag: schemaCheck
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          comment-tag: schemaCheck
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Provider
         run: make provider

@@ -181,6 +181,18 @@ dotnet add package Pulumi.Webflow
 
 ---
 
+### Authentication Error Codes
+
+When authentication fails, you may see structured error codes in addition to the human-readable messages documented in this section:
+
+- `WEBFLOW_AUTH_001`: No credentials provided (for example, `WEBFLOW_API_TOKEN` not set or `webflow:apiToken` not configured). See [API Token Not Configured](#api-token-not-configured).
+- `WEBFLOW_AUTH_002`: Credentials were provided but are empty or invalid format. See [Invalid or Expired Token](#invalid-or-expired-token).
+- `WEBFLOW_AUTH_003`: Token format is invalid (for example, too short). Review the full error message and verify your token.
+
+These error codes are designed for programmatic error handling in CI/CD pipelines and automation scripts.
+
+---
+
 ### Invalid or Expired Token
 
 **Error:** `Unauthorized` or `Invalid token` (401 error)
@@ -253,7 +265,7 @@ dotnet add package Pulumi.Webflow
 
 3. Check Pulumi logs are clean:
    ```bash
-   pulumi stack export --show-secrets | grep -v "apiToken"
+   pulumi stack export | grep -v "apiToken"
    ```
 
 4. If credentials were exposed:

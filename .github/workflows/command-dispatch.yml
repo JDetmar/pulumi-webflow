@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - uses: peter-evans/slash-command-dispatch@v4
+      - uses: peter-evans/slash-command-dispatch@v5
         with:
           commands: |
             run-acceptance-tests

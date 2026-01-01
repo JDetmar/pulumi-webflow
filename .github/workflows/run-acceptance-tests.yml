@@ -61,7 +61,7 @@ jobs:
 
       - if: github.event_name == 'pull_request'
         name: Install Schema Tools
-        uses: jaxxstorm/action-install-gh-release@v1
+        uses: jaxxstorm/action-install-gh-release@v2.1.0
         with:
           repo: pulumi/schema-tools
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -283,9 +283,10 @@ jobs:
         run: git grep -l 'go:embed' -- provider | xargs --no-run-if-empty sed -i 's/go:embed/ goembed/g'
 
       - name: golangci-lint provider pkg
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@v6
         with:
           working-directory: .
+          install-mode: none
 
   sentinel:
     runs-on: ubuntu-latest

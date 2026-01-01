@@ -166,7 +166,7 @@ jobs:
           GORELEASER_CURRENT_TAG: v${{ steps.version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: release --clean --timeout 60m0s
+          args: -p 3 release --clean --timeout 60m0s
           version: latest
 
   publish_sdks:
@@ -220,6 +220,11 @@ jobs:
         run: tar -zxf ${{ github.workspace }}/sdk/nodejs.tar.gz -C ${{ github.workspace }}/sdk/nodejs
 
       # Publish Node.js SDK to npm
+      - name: Setup Node for npm publishing
+        uses: actions/setup-node@v4
+        with:
+          registry-url: https://registry.npmjs.org
+
       - name: Publish Node.js SDK
         run: |
           cd sdk/nodejs/bin
@@ -287,7 +292,7 @@ jobs:
         run: tar -zxf ${{ github.workspace }}/sdk/java.tar.gz -C ${{ github.workspace }}/sdk/java
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "7.6"
 

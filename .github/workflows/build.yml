@@ -240,6 +240,7 @@ jobs:
         run: git grep -l 'go:embed' -- provider | xargs --no-run-if-empty sed -i 's/go:embed/ goembed/g'
 
       - name: golangci-lint provider pkg
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@v6
         with:
           working-directory: .
+          install-mode: none

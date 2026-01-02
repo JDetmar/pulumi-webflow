@@ -31,14 +31,14 @@ public final class RedirectArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      * 
      */
     @Import(name="siteId", required=true)
     private Output<String> siteId;
 
     /**
-     * @return The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+     * @return The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      * 
      */
     public Output<String> siteId() {
@@ -124,7 +124,7 @@ public final class RedirectArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param siteId The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+         * @param siteId The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
          * 
          * @return builder
          * 
@@ -135,7 +135,7 @@ public final class RedirectArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param siteId The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+         * @param siteId The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
          * 
          * @return builder
          * 

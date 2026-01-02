@@ -1,0 +1,102 @@
+# Claude Code Instructions
+
+This file provides guidance for Claude Code when working on this repository.
+
+## Project Overview
+
+This is a Pulumi native provider for Webflow, allowing users to manage Webflow resources (sites, redirects, robots.txt) as infrastructure-as-code.
+
+## Guiding Principle
+
+**Follow the Pulumi provider boilerplate patterns wherever possible.**
+
+This project is based on the [Pulumi provider boilerplate](https://github.com/pulumi/pulumi-provider-boilerplate). When making changes to workflows, Makefile targets, project structure, or build processes, check how the boilerplate handles it first and maintain consistency. This ensures:
+
+- Easier upgrades when the boilerplate improves
+- Familiarity for contributors who know Pulumi providers
+- Proven patterns that work with Pulumi's tooling
+
+## Development Workflow
+
+### Provider Code Changes
+
+**IMPORTANT:** After modifying any Go code in `provider/`, you MUST run `make codegen` before committing.
+
+```bash
+# 1. Make changes to provider Go code
+#    Edit files in provider/*.go
+
+# 2. Regenerate schema and SDKs
+make codegen
+
+# 3. Commit everything together
+git add .
+git commit -m "your message"
+```
+
+**Why?** CI runs `make codegen` and checks if the working tree is clean ("Check worktree clean" step). If you forget to regenerate, CI will fail because the regenerated files differ from what you committed.
+
+### What `make codegen` does
+
+1. Builds the provider binary (`bin/pulumi-resource-webflow`)
+2. Extracts `schema.json` from the provider binary
+3. Generates SDK source files for all languages:
+   - `sdk/go/` - Go SDK
+   - `sdk/nodejs/` - TypeScript/JavaScript SDK
+   - `sdk/python/` - Python SDK
+   - `sdk/dotnet/` - .NET SDK
+   - `sdk/java/` - Java SDK
+
+### Key Make Targets
+
+| Command | Description |
+|---------|-------------|
+| `make codegen` | Regenerate schema + all SDK source files (run after provider changes) |
+| `make build` | Build provider + compile all SDKs |
+| `make provider` | Build only the provider binary |
+| `make test_provider` | Run provider unit tests |
+| `make lint` | Run golangci-lint on provider code |
+
+### Testing
+
+```bash
+# Run provider tests
+make test_provider
+
+# Run example integration tests (requires WEBFLOW_API_TOKEN)
+make test_examples
+```
+
+## Project Structure
+
+```
+provider/           # Go provider implementation
+  ├── provider.go   # Main provider setup
+  ├── *_resource.go # Resource implementations (redirect, robotstxt, site)
+  └── cmd/          # Provider binary entry point + schema.json
+
+sdk/                # Generated SDK code (DO NOT edit manually)
+  ├── go/
+  ├── nodejs/
+  ├── python/
+  ├── dotnet/
+  └── java/
+
+examples/           # Example Pulumi programs for each language
+```
+
+## CI/CD
+
+- **build.yml**: Runs on pushes to main - builds provider, generates SDKs, runs tests
+- **run-acceptance-tests.yml**: Runs on PRs - full test suite
+- **release.yml**: Runs on tags - publishes to npm, PyPI, NuGet, Maven, GitHub Releases
+
+## Environment
+
+Tools are managed via [mise](https://mise.jdx.dev/). Key versions in `.config/mise.toml`:
+- Go (latest)
+- Node.js 20.x
+- Python 3.11
+- .NET 8.0
+- Java 11 (Corretto)
+- Gradle 7.6.6

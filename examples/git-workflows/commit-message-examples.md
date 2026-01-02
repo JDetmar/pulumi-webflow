@@ -165,10 +165,8 @@ Contents:
 
 File Changes:
 - docs/version-control.md (NEW - 800+ lines)
-- docs/audit-trail.md (NEW - 600+ lines)
 - README.md (UPDATED - added version control section)
 - examples/git-workflows/ (NEW - workflow examples)
-- examples/audit-reports/ (NEW - audit scripts)
 
 Story: 7.1 - Version Control Integration for Audit
 ```

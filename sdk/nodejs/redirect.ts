@@ -43,7 +43,7 @@ export class Redirect extends pulumi.CustomResource {
      */
     declare public readonly destinationPath: pulumi.Output<string>;
     /**
-     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
     declare public readonly siteId: pulumi.Output<string>;
     /**
@@ -104,7 +104,7 @@ export interface RedirectArgs {
      */
     destinationPath: pulumi.Input<string>;
     /**
-     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls (siteId validation is performed during CRUD operations in Story 2.2).
+     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
     siteId: pulumi.Input<string>;
     /**

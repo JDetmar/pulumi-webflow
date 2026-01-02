@@ -132,7 +132,11 @@ python_sdk: sdk/python
 java_sdk:: PACKAGE_VERSION := $(VERSION_GENERIC)
 java_sdk:: sdk/java
 	# Generated settings.gradle references a non-existent 'lib' module; drop it for a single-module build.
-	sed -i '' '/^include("lib")/d' sdk/java/settings.gradle
+	@if [ "$$(uname)" = "Darwin" ]; then \
+		sed -i '' '/^include("lib")/d' sdk/java/settings.gradle; \
+	else \
+		sed -i '/^include("lib")/d' sdk/java/settings.gradle; \
+	fi
 	cd sdk/java/ && \
 		gradle --console=plain build
 
@@ -245,7 +249,7 @@ ci-mgmt: .ci-mgmt.yaml
 local_generate: # Required by CI
 
 .PHONY: generate_schema
-generate_schema: ${SCHEMA_PATH} # Required by CI
+generate_schema: ${SCHEMA_FILE} # Required by CI
 
 .PHONY: build_go install_go_sdk
 generate_go: sdk/go # Required by CI

@@ -13,7 +13,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  PROVIDER: pulumi-webflow
+  PROVIDER: webflow
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   GOVERSION: "1.21.x"
   NODEVERSION: "20.x"

@@ -474,7 +474,6 @@ git push origin feat/add-redirects
 ### Compliance Documentation
 
 - 📖 **[Version Control Integration Guide](./docs/version-control.md)** - Complete Git workflow guide with best practices
-- 🔍 **[Audit Trail Documentation](./docs/audit-trail.md)** - Audit reports, compliance templates, and reviewer guidelines
 
 ### Generating Audit Reports
 
@@ -491,7 +490,7 @@ git log --since="2025-12-01" --until="2025-12-31" \
 git log -p -- Pulumi.*.yaml > audit-report.txt
 ```
 
-See the [Version Control guide](./docs/version-control.md) for complete instructions on setting up Git workflows and the [Audit Trail documentation](./docs/audit-trail.md) for compliance reporting.
+See the [Version Control guide](./docs/version-control.md) for complete instructions on setting up Git workflows and compliance reporting.
 
 ---
 

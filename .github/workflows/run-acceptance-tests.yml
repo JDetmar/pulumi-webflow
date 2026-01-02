@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  PROVIDER: pulumi-webflow
+  PROVIDER: webflow
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   GOVERSION: "1.21.x"
   NODEVERSION: "20.x"
@@ -38,6 +38,9 @@ jobs:
   prerequisites:
     runs-on: ubuntu-latest
     name: prerequisites
+    permissions:
+      id-token: write # For ESC secrets.
+      pull-requests: write # For schema check comment.
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4

@@ -15,7 +15,7 @@ import (
 func TestTypeScriptRedirectExample(t *testing.T) {
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "typescript"),
-		opttest.YarnLink("pulumi-webflow"),
+		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
 

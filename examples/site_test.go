@@ -15,7 +15,7 @@ import (
 func TestTypeScriptSiteExample(t *testing.T) {
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("site", "typescript"),
-		opttest.YarnLink("pulumi-webflow"),
+		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
 

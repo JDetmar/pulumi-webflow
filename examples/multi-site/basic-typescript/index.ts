@@ -1,5 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as webflow from "pulumi-webflow";
+import * as webflow from "@jdetmar/pulumi-webflow";
 
 // Example: Create multiple Webflow sites in a single Pulumi program
 // This demonstrates the basic pattern for managing multiple sites programmatically

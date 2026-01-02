@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as pulumi from "@pulumi/pulumi";
-import * as webflow from "pulumi-webflow";
+import * as webflow from "@jdetmar/pulumi-webflow";
 
 // Log configuration loading (INFO level - always shown)
 pulumi.log.info("🔍 Loading configuration for troubleshooting example");

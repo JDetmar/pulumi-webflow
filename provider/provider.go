@@ -46,6 +46,10 @@ func Provider() p.Provider {
 			"csharp": map[string]any{
 				"rootNamespace": "Pulumi",
 			},
+			"nodejs": map[string]any{
+				"packageName":        "@jdetmar/pulumi-webflow",
+				"packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",
+			},
 		}).
 		Build()
 	if err != nil {

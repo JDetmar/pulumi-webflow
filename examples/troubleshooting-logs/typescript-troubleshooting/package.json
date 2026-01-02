@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@pulumi/pulumi": "^3.0.0",
-    "pulumi-webflow": "^0.0.1"
+    "@jdetmar/pulumi-webflow": "^0.0.1"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

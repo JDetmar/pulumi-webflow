@@ -1,5 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as webflow from "pulumi-webflow";
+import * as webflow from "@jdetmar/pulumi-webflow";
 
 // Example: Configure robots.txt for a site
 const myRobotsTxt = new webflow.RobotsTxt("myRobotsTxt", {

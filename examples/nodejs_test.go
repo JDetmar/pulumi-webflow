@@ -12,7 +12,7 @@ import (
 
 func TestNodejsExampleLifecycle(t *testing.T) {
 	pt := pulumitest.NewPulumiTest(t, "nodejs",
-		opttest.YarnLink("pulumi-webflow"),
+		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
 

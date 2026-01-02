@@ -15,7 +15,7 @@ import (
 func TestTypeScriptRobotsTxtExample(t *testing.T) {
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("robotstxt", "typescript"),
-		opttest.YarnLink("pulumi-webflow"),
+		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
 

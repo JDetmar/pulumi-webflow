@@ -147,56 +147,6 @@ func (i *Site) ToSiteOutputWithContext(ctx context.Context) SiteOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(SiteOutput)
 }
 
-// SiteArrayInput is an input type that accepts SiteArray and SiteArrayOutput values.
-// You can construct a concrete instance of `SiteArrayInput` via:
-//
-//	SiteArray{ SiteArgs{...} }
-type SiteArrayInput interface {
-	pulumi.Input
-
-	ToSiteArrayOutput() SiteArrayOutput
-	ToSiteArrayOutputWithContext(context.Context) SiteArrayOutput
-}
-
-type SiteArray []SiteInput
-
-func (SiteArray) ElementType() reflect.Type {
-	return reflect.TypeOf((*[]*Site)(nil)).Elem()
-}
-
-func (i SiteArray) ToSiteArrayOutput() SiteArrayOutput {
-	return i.ToSiteArrayOutputWithContext(context.Background())
-}
-
-func (i SiteArray) ToSiteArrayOutputWithContext(ctx context.Context) SiteArrayOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(SiteArrayOutput)
-}
-
-// SiteMapInput is an input type that accepts SiteMap and SiteMapOutput values.
-// You can construct a concrete instance of `SiteMapInput` via:
-//
-//	SiteMap{ "key": SiteArgs{...} }
-type SiteMapInput interface {
-	pulumi.Input
-
-	ToSiteMapOutput() SiteMapOutput
-	ToSiteMapOutputWithContext(context.Context) SiteMapOutput
-}
-
-type SiteMap map[string]SiteInput
-
-func (SiteMap) ElementType() reflect.Type {
-	return reflect.TypeOf((*map[string]*Site)(nil)).Elem()
-}
-
-func (i SiteMap) ToSiteMapOutput() SiteMapOutput {
-	return i.ToSiteMapOutputWithContext(context.Background())
-}
-
-func (i SiteMap) ToSiteMapOutputWithContext(ctx context.Context) SiteMapOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(SiteMapOutput)
-}
-
 type SiteOutput struct{ *pulumi.OutputState }
 
 func (SiteOutput) ElementType() reflect.Type {
@@ -276,51 +226,7 @@ func (o SiteOutput) WorkspaceId() pulumi.StringOutput {
 	return o.ApplyT(func(v *Site) pulumi.StringOutput { return v.WorkspaceId }).(pulumi.StringOutput)
 }
 
-type SiteArrayOutput struct{ *pulumi.OutputState }
-
-func (SiteArrayOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((*[]*Site)(nil)).Elem()
-}
-
-func (o SiteArrayOutput) ToSiteArrayOutput() SiteArrayOutput {
-	return o
-}
-
-func (o SiteArrayOutput) ToSiteArrayOutputWithContext(ctx context.Context) SiteArrayOutput {
-	return o
-}
-
-func (o SiteArrayOutput) Index(i pulumi.IntInput) SiteOutput {
-	return pulumi.All(o, i).ApplyT(func(vs []interface{}) *Site {
-		return vs[0].([]*Site)[vs[1].(int)]
-	}).(SiteOutput)
-}
-
-type SiteMapOutput struct{ *pulumi.OutputState }
-
-func (SiteMapOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((*map[string]*Site)(nil)).Elem()
-}
-
-func (o SiteMapOutput) ToSiteMapOutput() SiteMapOutput {
-	return o
-}
-
-func (o SiteMapOutput) ToSiteMapOutputWithContext(ctx context.Context) SiteMapOutput {
-	return o
-}
-
-func (o SiteMapOutput) MapIndex(k pulumi.StringInput) SiteOutput {
-	return pulumi.All(o, k).ApplyT(func(vs []interface{}) *Site {
-		return vs[0].(map[string]*Site)[vs[1].(string)]
-	}).(SiteOutput)
-}
-
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*SiteInput)(nil)).Elem(), &Site{})
-	pulumi.RegisterInputType(reflect.TypeOf((*SiteArrayInput)(nil)).Elem(), SiteArray{})
-	pulumi.RegisterInputType(reflect.TypeOf((*SiteMapInput)(nil)).Elem(), SiteMap{})
 	pulumi.RegisterOutputType(SiteOutput{})
-	pulumi.RegisterOutputType(SiteArrayOutput{})
-	pulumi.RegisterOutputType(SiteMapOutput{})
 }

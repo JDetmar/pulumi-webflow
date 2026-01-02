@@ -125,56 +125,6 @@ func (i *Redirect) ToRedirectOutputWithContext(ctx context.Context) RedirectOutp
 	return pulumi.ToOutputWithContext(ctx, i).(RedirectOutput)
 }
 
-// RedirectArrayInput is an input type that accepts RedirectArray and RedirectArrayOutput values.
-// You can construct a concrete instance of `RedirectArrayInput` via:
-//
-//	RedirectArray{ RedirectArgs{...} }
-type RedirectArrayInput interface {
-	pulumi.Input
-
-	ToRedirectArrayOutput() RedirectArrayOutput
-	ToRedirectArrayOutputWithContext(context.Context) RedirectArrayOutput
-}
-
-type RedirectArray []RedirectInput
-
-func (RedirectArray) ElementType() reflect.Type {
-	return reflect.TypeOf((*[]*Redirect)(nil)).Elem()
-}
-
-func (i RedirectArray) ToRedirectArrayOutput() RedirectArrayOutput {
-	return i.ToRedirectArrayOutputWithContext(context.Background())
-}
-
-func (i RedirectArray) ToRedirectArrayOutputWithContext(ctx context.Context) RedirectArrayOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(RedirectArrayOutput)
-}
-
-// RedirectMapInput is an input type that accepts RedirectMap and RedirectMapOutput values.
-// You can construct a concrete instance of `RedirectMapInput` via:
-//
-//	RedirectMap{ "key": RedirectArgs{...} }
-type RedirectMapInput interface {
-	pulumi.Input
-
-	ToRedirectMapOutput() RedirectMapOutput
-	ToRedirectMapOutputWithContext(context.Context) RedirectMapOutput
-}
-
-type RedirectMap map[string]RedirectInput
-
-func (RedirectMap) ElementType() reflect.Type {
-	return reflect.TypeOf((*map[string]*Redirect)(nil)).Elem()
-}
-
-func (i RedirectMap) ToRedirectMapOutput() RedirectMapOutput {
-	return i.ToRedirectMapOutputWithContext(context.Background())
-}
-
-func (i RedirectMap) ToRedirectMapOutputWithContext(ctx context.Context) RedirectMapOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(RedirectMapOutput)
-}
-
 type RedirectOutput struct{ *pulumi.OutputState }
 
 func (RedirectOutput) ElementType() reflect.Type {
@@ -214,51 +164,7 @@ func (o RedirectOutput) StatusCode() pulumi.IntOutput {
 	return o.ApplyT(func(v *Redirect) pulumi.IntOutput { return v.StatusCode }).(pulumi.IntOutput)
 }
 
-type RedirectArrayOutput struct{ *pulumi.OutputState }
-
-func (RedirectArrayOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((*[]*Redirect)(nil)).Elem()
-}
-
-func (o RedirectArrayOutput) ToRedirectArrayOutput() RedirectArrayOutput {
-	return o
-}
-
-func (o RedirectArrayOutput) ToRedirectArrayOutputWithContext(ctx context.Context) RedirectArrayOutput {
-	return o
-}
-
-func (o RedirectArrayOutput) Index(i pulumi.IntInput) RedirectOutput {
-	return pulumi.All(o, i).ApplyT(func(vs []interface{}) *Redirect {
-		return vs[0].([]*Redirect)[vs[1].(int)]
-	}).(RedirectOutput)
-}
-
-type RedirectMapOutput struct{ *pulumi.OutputState }
-
-func (RedirectMapOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((*map[string]*Redirect)(nil)).Elem()
-}
-
-func (o RedirectMapOutput) ToRedirectMapOutput() RedirectMapOutput {
-	return o
-}
-
-func (o RedirectMapOutput) ToRedirectMapOutputWithContext(ctx context.Context) RedirectMapOutput {
-	return o
-}
-
-func (o RedirectMapOutput) MapIndex(k pulumi.StringInput) RedirectOutput {
-	return pulumi.All(o, k).ApplyT(func(vs []interface{}) *Redirect {
-		return vs[0].(map[string]*Redirect)[vs[1].(string)]
-	}).(RedirectOutput)
-}
-
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*RedirectInput)(nil)).Elem(), &Redirect{})
-	pulumi.RegisterInputType(reflect.TypeOf((*RedirectArrayInput)(nil)).Elem(), RedirectArray{})
-	pulumi.RegisterInputType(reflect.TypeOf((*RedirectMapInput)(nil)).Elem(), RedirectMap{})
 	pulumi.RegisterOutputType(RedirectOutput{})
-	pulumi.RegisterOutputType(RedirectArrayOutput{})
-	pulumi.RegisterOutputType(RedirectMapOutput{})
 }

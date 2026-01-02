@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Immutable;
 
-namespace Webflow.Webflow
+namespace Pulumi.Webflow
 {
     public static class Config
     {

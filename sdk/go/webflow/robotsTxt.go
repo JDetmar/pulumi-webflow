@@ -107,56 +107,6 @@ func (i *RobotsTxt) ToRobotsTxtOutputWithContext(ctx context.Context) RobotsTxtO
 	return pulumi.ToOutputWithContext(ctx, i).(RobotsTxtOutput)
 }
 
-// RobotsTxtArrayInput is an input type that accepts RobotsTxtArray and RobotsTxtArrayOutput values.
-// You can construct a concrete instance of `RobotsTxtArrayInput` via:
-//
-//	RobotsTxtArray{ RobotsTxtArgs{...} }
-type RobotsTxtArrayInput interface {
-	pulumi.Input
-
-	ToRobotsTxtArrayOutput() RobotsTxtArrayOutput
-	ToRobotsTxtArrayOutputWithContext(context.Context) RobotsTxtArrayOutput
-}
-
-type RobotsTxtArray []RobotsTxtInput
-
-func (RobotsTxtArray) ElementType() reflect.Type {
-	return reflect.TypeOf((*[]*RobotsTxt)(nil)).Elem()
-}
-
-func (i RobotsTxtArray) ToRobotsTxtArrayOutput() RobotsTxtArrayOutput {
-	return i.ToRobotsTxtArrayOutputWithContext(context.Background())
-}
-
-func (i RobotsTxtArray) ToRobotsTxtArrayOutputWithContext(ctx context.Context) RobotsTxtArrayOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(RobotsTxtArrayOutput)
-}
-
-// RobotsTxtMapInput is an input type that accepts RobotsTxtMap and RobotsTxtMapOutput values.
-// You can construct a concrete instance of `RobotsTxtMapInput` via:
-//
-//	RobotsTxtMap{ "key": RobotsTxtArgs{...} }
-type RobotsTxtMapInput interface {
-	pulumi.Input
-
-	ToRobotsTxtMapOutput() RobotsTxtMapOutput
-	ToRobotsTxtMapOutputWithContext(context.Context) RobotsTxtMapOutput
-}
-
-type RobotsTxtMap map[string]RobotsTxtInput
-
-func (RobotsTxtMap) ElementType() reflect.Type {
-	return reflect.TypeOf((*map[string]*RobotsTxt)(nil)).Elem()
-}
-
-func (i RobotsTxtMap) ToRobotsTxtMapOutput() RobotsTxtMapOutput {
-	return i.ToRobotsTxtMapOutputWithContext(context.Background())
-}
-
-func (i RobotsTxtMap) ToRobotsTxtMapOutputWithContext(ctx context.Context) RobotsTxtMapOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(RobotsTxtMapOutput)
-}
-
 type RobotsTxtOutput struct{ *pulumi.OutputState }
 
 func (RobotsTxtOutput) ElementType() reflect.Type {
@@ -186,51 +136,7 @@ func (o RobotsTxtOutput) SiteId() pulumi.StringOutput {
 	return o.ApplyT(func(v *RobotsTxt) pulumi.StringOutput { return v.SiteId }).(pulumi.StringOutput)
 }
 
-type RobotsTxtArrayOutput struct{ *pulumi.OutputState }
-
-func (RobotsTxtArrayOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((*[]*RobotsTxt)(nil)).Elem()
-}
-
-func (o RobotsTxtArrayOutput) ToRobotsTxtArrayOutput() RobotsTxtArrayOutput {
-	return o
-}
-
-func (o RobotsTxtArrayOutput) ToRobotsTxtArrayOutputWithContext(ctx context.Context) RobotsTxtArrayOutput {
-	return o
-}
-
-func (o RobotsTxtArrayOutput) Index(i pulumi.IntInput) RobotsTxtOutput {
-	return pulumi.All(o, i).ApplyT(func(vs []interface{}) *RobotsTxt {
-		return vs[0].([]*RobotsTxt)[vs[1].(int)]
-	}).(RobotsTxtOutput)
-}
-
-type RobotsTxtMapOutput struct{ *pulumi.OutputState }
-
-func (RobotsTxtMapOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((*map[string]*RobotsTxt)(nil)).Elem()
-}
-
-func (o RobotsTxtMapOutput) ToRobotsTxtMapOutput() RobotsTxtMapOutput {
-	return o
-}
-
-func (o RobotsTxtMapOutput) ToRobotsTxtMapOutputWithContext(ctx context.Context) RobotsTxtMapOutput {
-	return o
-}
-
-func (o RobotsTxtMapOutput) MapIndex(k pulumi.StringInput) RobotsTxtOutput {
-	return pulumi.All(o, k).ApplyT(func(vs []interface{}) *RobotsTxt {
-		return vs[0].(map[string]*RobotsTxt)[vs[1].(string)]
-	}).(RobotsTxtOutput)
-}
-
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*RobotsTxtInput)(nil)).Elem(), &RobotsTxt{})
-	pulumi.RegisterInputType(reflect.TypeOf((*RobotsTxtArrayInput)(nil)).Elem(), RobotsTxtArray{})
-	pulumi.RegisterInputType(reflect.TypeOf((*RobotsTxtMapInput)(nil)).Elem(), RobotsTxtMap{})
 	pulumi.RegisterOutputType(RobotsTxtOutput{})
-	pulumi.RegisterOutputType(RobotsTxtArrayOutput{})
-	pulumi.RegisterOutputType(RobotsTxtMapOutput{})
 }

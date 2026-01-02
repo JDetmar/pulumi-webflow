@@ -50,6 +50,11 @@ func Provider() p.Provider {
 		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",
 		}).
+		WithLanguageMap(map[string]any{
+			"csharp": map[string]any{
+				"rootNamespace": "Pulumi",
+			},
+		}).
 		Build()
 	if err != nil {
 		panic(fmt.Errorf("unable to build provider: %w", err))

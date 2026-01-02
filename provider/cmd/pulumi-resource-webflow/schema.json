@@ -6,21 +6,10 @@
   "namespace": "webflow",
   "language": {
     "csharp": {
-      "respectSchemaVersion": true
+      "rootNamespace": "Pulumi"
     },
     "go": {
-      "generateResourceContainerTypes": true,
-      "importBasePath": "github.com/jdetmar/pulumi-webflow/sdk/go/webflow",
-      "respectSchemaVersion": true
-    },
-    "nodejs": {
-      "respectSchemaVersion": true
-    },
-    "python": {
-      "pyproject": {
-        "enabled": true
-      },
-      "respectSchemaVersion": true
+      "importBasePath": "github.com/jdetmar/pulumi-webflow/sdk/go/webflow"
     }
   },
   "config": {

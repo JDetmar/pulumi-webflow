@@ -18,47 +18,43 @@ func TestTypeScriptRobotsTxtExample(t *testing.T) {
 		opttest.YarnLink("pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Preview
 	test.Preview(t)
 
 	// Deploy
-	test.Up(t)
+
 
 	// Verify outputs
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployedSiteId"] == nil {
+	result := test.Up(t)
+	if result.Outputs["deployedSiteId"].Value == nil {
 		t.Error("Expected deployedSiteId output")
 	}
 
 	// Cleanup
-	test.Destroy(t)
 }
 
 // TestPythonRobotsTxtExample tests the Python RobotsTxt example
 func TestPythonRobotsTxtExample(t *testing.T) {
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("robotstxt", "python"),
-		opttest.Pip("pulumi-webflow"),
+		opttest.PythonLink("../sdk/python"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Preview
 	test.Preview(t)
 
 	// Deploy
-	test.Up(t)
+
 
 	// Verify outputs
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployed_site_id"] == nil {
+	result := test.Up(t)
+	if result.Outputs["deployed_site_id"].Value == nil {
 		t.Error("Expected deployed_site_id output")
 	}
 
 	// Cleanup
-	test.Destroy(t)
 }
 
 // TestGoRobotsTxtExample tests the Go RobotsTxt example
@@ -67,22 +63,20 @@ func TestGoRobotsTxtExample(t *testing.T) {
 		filepath.Join("robotstxt", "go"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Preview
 	test.Preview(t)
 
 	// Deploy
-	test.Up(t)
+
 
 	// Verify outputs
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployedSiteId"] == nil {
+	result := test.Up(t)
+	if result.Outputs["deployedSiteId"].Value == nil {
 		t.Error("Expected deployedSiteId output")
 	}
 
 	// Cleanup
-	test.Destroy(t)
 }
 
 // TestCSharpRobotsTxtExample tests the C# RobotsTxt example
@@ -91,22 +85,20 @@ func TestCSharpRobotsTxtExample(t *testing.T) {
 		filepath.Join("robotstxt", "csharp"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Preview
 	test.Preview(t)
 
 	// Deploy
-	test.Up(t)
+
 
 	// Verify outputs
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployedSiteId"] == nil {
+	result := test.Up(t)
+	if result.Outputs["deployedSiteId"].Value == nil {
 		t.Error("Expected deployedSiteId output")
 	}
 
 	// Cleanup
-	test.Destroy(t)
 }
 
 // TestJavaRobotsTxtExample tests the Java RobotsTxt example
@@ -115,20 +107,18 @@ func TestJavaRobotsTxtExample(t *testing.T) {
 		filepath.Join("robotstxt", "java"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Preview
 	test.Preview(t)
 
 	// Deploy
-	test.Up(t)
+
 
 	// Verify outputs
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployedSiteId"] == nil {
+	result := test.Up(t)
+	if result.Outputs["deployedSiteId"].Value == nil {
 		t.Error("Expected deployedSiteId output")
 	}
 
 	// Cleanup
-	test.Destroy(t)
 }

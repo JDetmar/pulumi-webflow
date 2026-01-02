@@ -18,45 +18,41 @@ func TestTypeScriptSiteExample(t *testing.T) {
 		opttest.YarnLink("pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Set required config
 	test.SetConfig(t, "displayName", "Test Site")
 	test.SetConfig(t, "shortName", "test-site")
 
 	test.Preview(t)
-	test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["basicSiteId"] == nil {
+
+	result := test.Up(t)
+	if result.Outputs["basicSiteId"].Value == nil {
 		t.Error("Expected basicSiteId output")
 	}
 
-	test.Destroy(t)
 }
 
 // TestPythonSiteExample tests the Python Site example
 func TestPythonSiteExample(t *testing.T) {
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("site", "python"),
-		opttest.Pip("pulumi-webflow"),
+		opttest.PythonLink("../sdk/python"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Set required config
 	test.SetConfig(t, "displayName", "Test Site")
 	test.SetConfig(t, "shortName", "test-site")
 
 	test.Preview(t)
-	test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["basic_site_id"] == nil {
+
+	result := test.Up(t)
+	if result.Outputs["basic_site_id"].Value == nil {
 		t.Error("Expected basic_site_id output")
 	}
 
-	test.Destroy(t)
 }
 
 // TestGoSiteExample tests the Go Site example
@@ -65,21 +61,19 @@ func TestGoSiteExample(t *testing.T) {
 		filepath.Join("site", "go"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Set required config
 	test.SetConfig(t, "displayName", "Test Site")
 	test.SetConfig(t, "shortName", "test-site")
 
 	test.Preview(t)
-	test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["basicSiteId"] == nil {
+
+	result := test.Up(t)
+	if result.Outputs["basicSiteId"].Value == nil {
 		t.Error("Expected basicSiteId output")
 	}
 
-	test.Destroy(t)
 }
 
 // TestCSharpSiteExample tests the C# Site example
@@ -88,21 +82,19 @@ func TestCSharpSiteExample(t *testing.T) {
 		filepath.Join("site", "csharp"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Set required config
 	test.SetConfig(t, "displayName", "Test Site")
 	test.SetConfig(t, "shortName", "test-site")
 
 	test.Preview(t)
-	test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["basicSiteId"] == nil {
+
+	result := test.Up(t)
+	if result.Outputs["basicSiteId"].Value == nil {
 		t.Error("Expected basicSiteId output")
 	}
 
-	test.Destroy(t)
 }
 
 // TestJavaSiteExample tests the Java Site example
@@ -111,19 +103,17 @@ func TestJavaSiteExample(t *testing.T) {
 		filepath.Join("site", "java"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	// Set required config
 	test.SetConfig(t, "displayName", "Test Site")
 	test.SetConfig(t, "shortName", "test-site")
 
 	test.Preview(t)
-	test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["basicSiteId"] == nil {
+
+	result := test.Up(t)
+	if result.Outputs["basicSiteId"].Value == nil {
 		t.Error("Expected basicSiteId output")
 	}
 
-	test.Destroy(t)
 }

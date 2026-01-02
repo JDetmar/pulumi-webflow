@@ -12,8 +12,8 @@
       "importBasePath": "github.com/jdetmar/pulumi-webflow/sdk/go/webflow"
     },
     "nodejs": {
-      "packageName": "@jdetmar/pulumi-webflow",
-      "packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc."
+      "packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",
+      "packageName": "@jdetmar/pulumi-webflow"
     }
   },
   "config": {

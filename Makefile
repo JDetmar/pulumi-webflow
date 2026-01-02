@@ -55,7 +55,7 @@ ensure::
 
 $(SCHEMA_FILE): provider
 	$(PULUMI) package get-schema $(WORKING_DIR)/bin/${PROVIDER} | \
-		jq 'del(.version) | (.language.go.importBasePath="github.com/jdetmar/pulumi-webflow/sdk/go/webflow") | (.language.nodejs.packageName="${NODE_MODULE_NAME}") | (.language.nodejs.packageDescription="Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.")' > $(SCHEMA_FILE)
+		jq 'del(.version) | (.language.go.importBasePath="github.com/jdetmar/pulumi-webflow/sdk/go/webflow")' > $(SCHEMA_FILE)
 
 # Codegen generates the schema file and *generates* all sdks. This is a local process and
 # does not require the ability to build all SDKs.

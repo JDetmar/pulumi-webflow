@@ -30,7 +30,10 @@ func Provider() p.Provider {
 
 	prov, err := infer.NewProviderBuilder().
 		WithDisplayName("Webflow (Unofficial)").
-		WithDescription("Unofficial community-maintained Pulumi provider for managing Webflow sites, redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.").
+		WithDescription(
+			"Unofficial community-maintained Pulumi provider for managing Webflow sites, "+
+				"redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.",
+		).
 		WithHomepage("https://github.com/jdetmar/pulumi-webflow").
 		WithNamespace(Name).
 		WithConfig(infer.Config(&Config{})).
@@ -47,8 +50,9 @@ func Provider() p.Provider {
 				"rootNamespace": "Pulumi",
 			},
 			"nodejs": map[string]any{
-				"packageName":        "@jdetmar/pulumi-webflow",
-				"packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",
+				"packageName": "@jdetmar/pulumi-webflow",
+				"packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. " +
+					"Not affiliated with Pulumi Corporation or Webflow, Inc.",
 			},
 		}).
 		Build()

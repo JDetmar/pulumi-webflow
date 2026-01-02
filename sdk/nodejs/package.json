@@ -1,6 +1,7 @@
 {
     "name": "@webflow/webflow",
     "version": "${VERSION}",
+    "description": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",
     "homepage": "https://github.com/jdetmar/pulumi-webflow",
     "scripts": {
         "build": "tsc"

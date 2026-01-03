@@ -41,6 +41,8 @@ func Provider() p.Provider {
 			infer.Resource(&SiteResource{}),
 			infer.Resource(&Redirect{}),
 			infer.Resource(&RobotsTxt{}),
+			infer.Resource(&CollectionResource{}),
+			infer.Resource(&PageData{}),
 		).
 		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",

@@ -13,6 +13,8 @@ import (
 
 // TestTypeScriptSiteExample tests the TypeScript Site example
 func TestTypeScriptSiteExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("site", "typescript"),
 		opttest.YarnLink("@jdetmar/pulumi-webflow"),
@@ -36,6 +38,8 @@ func TestTypeScriptSiteExample(t *testing.T) {
 
 // TestPythonSiteExample tests the Python Site example
 func TestPythonSiteExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("site", "python"),
 		opttest.PythonLink("../sdk/python"),
@@ -58,6 +62,8 @@ func TestPythonSiteExample(t *testing.T) {
 
 // TestGoSiteExample tests the Go Site example
 func TestGoSiteExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("site", "go"),
 		opttest.AttachProviderServer("webflow", providerFactory),
@@ -79,6 +85,8 @@ func TestGoSiteExample(t *testing.T) {
 
 // TestCSharpSiteExample tests the C# Site example
 func TestCSharpSiteExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("site", "csharp"),
 		opttest.AttachProviderServer("webflow", providerFactory),
@@ -100,6 +108,8 @@ func TestCSharpSiteExample(t *testing.T) {
 
 // TestJavaSiteExample tests the Java Site example
 func TestJavaSiteExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("site", "java"),
 		opttest.AttachProviderServer("webflow", providerFactory),

@@ -13,6 +13,8 @@ import (
 
 // TestTypeScriptRedirectExample tests the TypeScript Redirect example
 func TestTypeScriptRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "typescript"),
 		opttest.YarnLink("@jdetmar/pulumi-webflow"),
@@ -30,6 +32,8 @@ func TestTypeScriptRedirectExample(t *testing.T) {
 
 // TestPythonRedirectExample tests the Python Redirect example
 func TestPythonRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "python"),
 		opttest.PythonLink("../sdk/python"),
@@ -46,6 +50,8 @@ func TestPythonRedirectExample(t *testing.T) {
 
 // TestGoRedirectExample tests the Go Redirect example
 func TestGoRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "go"),
 		opttest.AttachProviderServer("webflow", providerFactory),
@@ -61,6 +67,8 @@ func TestGoRedirectExample(t *testing.T) {
 
 // TestCSharpRedirectExample tests the C# Redirect example
 func TestCSharpRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "csharp"),
 		opttest.AttachProviderServer("webflow", providerFactory),
@@ -76,6 +84,8 @@ func TestCSharpRedirectExample(t *testing.T) {
 
 // TestJavaRedirectExample tests the Java Redirect example
 func TestJavaRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "java"),
 		opttest.AttachProviderServer("webflow", providerFactory),

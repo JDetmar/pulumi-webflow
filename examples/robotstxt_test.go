@@ -13,6 +13,8 @@ import (
 
 // TestTypeScriptRobotsTxtExample tests the TypeScript RobotsTxt example
 func TestTypeScriptRobotsTxtExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("robotstxt", "typescript"),
 		opttest.YarnLink("@jdetmar/pulumi-webflow"),
@@ -37,6 +39,8 @@ func TestTypeScriptRobotsTxtExample(t *testing.T) {
 
 // TestPythonRobotsTxtExample tests the Python RobotsTxt example
 func TestPythonRobotsTxtExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("robotstxt", "python"),
 		opttest.PythonLink("../sdk/python"),
@@ -60,6 +64,8 @@ func TestPythonRobotsTxtExample(t *testing.T) {
 
 // TestGoRobotsTxtExample tests the Go RobotsTxt example
 func TestGoRobotsTxtExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("robotstxt", "go"),
 		opttest.AttachProviderServer("webflow", providerFactory),
@@ -82,6 +88,8 @@ func TestGoRobotsTxtExample(t *testing.T) {
 
 // TestCSharpRobotsTxtExample tests the C# RobotsTxt example
 func TestCSharpRobotsTxtExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("robotstxt", "csharp"),
 		opttest.AttachProviderServer("webflow", providerFactory),
@@ -104,6 +112,8 @@ func TestCSharpRobotsTxtExample(t *testing.T) {
 
 // TestJavaRobotsTxtExample tests the Java RobotsTxt example
 func TestJavaRobotsTxtExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("robotstxt", "java"),
 		opttest.AttachProviderServer("webflow", providerFactory),

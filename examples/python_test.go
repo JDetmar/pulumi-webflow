@@ -11,6 +11,8 @@ import (
 )
 
 func TestPython(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	pt := pulumitest.NewPulumiTest(t, "python",
 		opttest.SkipInstall(),
 		opttest.PythonLink("../sdk/python"),

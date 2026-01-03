@@ -14,6 +14,8 @@ import (
 )
 
 func TestGoExampleLifecycle(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	cwd, err := os.Getwd()
 	require.NoError(t, err)
 

@@ -11,6 +11,8 @@ import (
 )
 
 func TestNodejsExampleLifecycle(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	pt := pulumitest.NewPulumiTest(t, "nodejs",
 		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),

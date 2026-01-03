@@ -34,8 +34,8 @@ type PageDataArgs struct {
 // PageDataState defines the output properties for the Page data source.
 type PageDataState struct {
 	PageDataArgs
-	// ID is the Webflow page ID (read-only, only populated when PageID is specified).
-	ID string `pulumi:"id,optional"`
+	// WebflowPageID is the Webflow page ID (read-only, only populated when PageID is specified).
+	WebflowPageID string `pulumi:"webflowPageId,optional"`
 	// Title is the page title (read-only).
 	Title string `pulumi:"title,optional"`
 	// Slug is the URL slug for the page (read-only).
@@ -59,8 +59,8 @@ type PageDataState struct {
 
 // PageInfo represents a single page's information in the Pages list.
 type PageInfo struct {
-	// ID is the Webflow page ID.
-	ID string `pulumi:"id"`
+	// PageID is the Webflow page ID.
+	PageID string `pulumi:"pageId"`
 	// SiteID is the Webflow site ID this page belongs to.
 	SiteID string `pulumi:"siteId"`
 	// Title is the page title.
@@ -107,7 +107,7 @@ func (args *PageDataArgs) Annotate(a infer.Annotator) {
 
 // Annotate adds descriptions to the PageDataState fields.
 func (state *PageDataState) Annotate(a infer.Annotator) {
-	a.Describe(&state.ID,
+	a.Describe(&state.WebflowPageID,
 		"The Webflow page ID (read-only). "+
 			"Only populated when pageId input is specified.")
 
@@ -194,9 +194,9 @@ func (r *PageData) Read(
 			PageID: req.State.PageID,
 		}
 		currentState := PageDataState{
-			PageDataArgs: currentInputs,
-			ID:           page.ID,
-			Title:        page.Title,
+			PageDataArgs:  currentInputs,
+			WebflowPageID: page.ID,
+			Title:         page.Title,
 			Slug:         page.Slug,
 			ParentID:     page.ParentID,
 			CollectionID: page.CollectionID,
@@ -223,7 +223,7 @@ func (r *PageData) Read(
 	pages := make([]PageInfo, len(response.Pages))
 	for i, p := range response.Pages {
 		pages[i] = PageInfo{
-			ID:           p.ID,
+			PageID:       p.ID,
 			SiteID:       p.SiteID,
 			Title:        p.Title,
 			Slug:         p.Slug,

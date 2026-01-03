@@ -13,6 +13,8 @@ import (
 )
 
 func TestYAMLExampleLifecycle(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	pt := pulumitest.NewPulumiTest(t, "yaml",
 		opttest.AttachProviderServer("webflow", providerFactory),
 		opttest.SkipInstall(),
@@ -24,6 +26,8 @@ func TestYAMLExampleLifecycle(t *testing.T) {
 }
 
 func TestYAMLExampleUpgrade(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	pt := pulumitest.NewPulumiTest(t, "yaml",
 		opttest.AttachProviderServer("webflow", providerFactory),
 		opttest.SkipInstall(),

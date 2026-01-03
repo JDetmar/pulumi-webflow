@@ -73,6 +73,12 @@ sdk/%: $(SCHEMA_FILE)
 sdk/java: $(SCHEMA_FILE)
 	rm -rf $@
 	$(PULUMI) package gen-sdk --language java $(SCHEMA_FILE)
+	# Generated settings.gradle references a non-existent 'lib' module; drop it for a single-module build.
+	@if [ "$$(uname)" = "Darwin" ]; then \
+		sed -i '' '/^include("lib")/d' sdk/java/settings.gradle; \
+	else \
+		sed -i '/^include("lib")/d' sdk/java/settings.gradle; \
+	fi
 
 sdk/python: $(SCHEMA_FILE)
 	rm -rf $@
@@ -131,12 +137,6 @@ python_sdk: sdk/python
 
 java_sdk:: PACKAGE_VERSION := $(VERSION_GENERIC)
 java_sdk:: sdk/java
-	# Generated settings.gradle references a non-existent 'lib' module; drop it for a single-module build.
-	@if [ "$$(uname)" = "Darwin" ]; then \
-		sed -i '' '/^include("lib")/d' sdk/java/settings.gradle; \
-	else \
-		sed -i '/^include("lib")/d' sdk/java/settings.gradle; \
-	fi
 	cd sdk/java/ && \
 		gradle --console=plain build
 

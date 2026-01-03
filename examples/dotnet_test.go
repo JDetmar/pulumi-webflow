@@ -11,8 +11,10 @@ import (
 )
 
 func TestDotnet(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	pt := pulumitest.NewPulumiTest(t, "dotnet",
-		opttest.DotNetReference("Pulumi.ProviderWebflow", "../sdk/dotnet"),
+		opttest.DotNetReference("Pulumi.Webflow", "../sdk/dotnet"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
 

@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
-using Pulumi;
 
-namespace Webflow.Webflow
+namespace Pulumi.Webflow
 {
     [WebflowResourceType("pulumi:providers:webflow")]
     public partial class Provider : global::Pulumi.ProviderResource

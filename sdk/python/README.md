@@ -3,6 +3,14 @@
 [![Build Status](https://img.shields.io/github/actions/workflow/status/jdetmar/pulumi-webflow/ci.yml?branch=main)](https://github.com/jdetmar/pulumi-webflow/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+> **⚠️ Unofficial Community Provider**
+>
+> This is an **unofficial, community-maintained** Pulumi provider for Webflow. It is **not affiliated with, endorsed by, or supported by Pulumi Corporation or Webflow, Inc.** This project is an independent effort to bring infrastructure-as-code capabilities to Webflow using Pulumi.
+>
+> - **Not an official product** - Created and maintained by the community
+> - **No warranties** - Provided "as-is" under the MIT License
+> - **Community support only** - Issues and questions via [GitHub](https://github.com/jdetmar/pulumi-webflow/issues)
+
 **Manage your Webflow sites and resources as code using Pulumi**
 
 The Webflow Pulumi Provider lets you programmatically manage Webflow resources (sites, redirects, robots.txt, and more) using the same Pulumi infrastructure-as-code approach you use for cloud resources. Deploy, preview, and destroy Webflow infrastructure alongside your other cloud deployments.

@@ -1,5 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as webflow from "pulumi-webflow";
+import * as webflow from "@jdetmar/pulumi-webflow";
 
 // Create a Pulumi config object
 const config = new pulumi.Config();

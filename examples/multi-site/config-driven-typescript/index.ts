@@ -1,5 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as webflow from "pulumi-webflow";
+import * as webflow from "@jdetmar/pulumi-webflow";
 import * as fs from "fs";
 import * as yaml from "js-yaml";
 

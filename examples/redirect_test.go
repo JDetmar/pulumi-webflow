@@ -13,97 +13,88 @@ import (
 
 // TestTypeScriptRedirectExample tests the TypeScript Redirect example
 func TestTypeScriptRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "typescript"),
-		opttest.YarnLink("pulumi-webflow"),
+		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
+		opttest.Env("PULUMI_PREFER_YARN", "true"),
 	)
-	defer test.Cleanup(t)
 
 	test.Preview(t)
-	test.Up(t)
+	result := test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployedSiteId"] == nil {
+	if result.Outputs["deployedSiteId"].Value == nil {
 		t.Error("Expected deployedSiteId output")
 	}
-
-	test.Destroy(t)
 }
 
 // TestPythonRedirectExample tests the Python Redirect example
 func TestPythonRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "python"),
-		opttest.Pip("pulumi-webflow"),
+		opttest.PythonLink("../sdk/python"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	test.Preview(t)
-	test.Up(t)
+	result := test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployed_site_id"] == nil {
+	if result.Outputs["deployed_site_id"].Value == nil {
 		t.Error("Expected deployed_site_id output")
 	}
-
-	test.Destroy(t)
 }
 
 // TestGoRedirectExample tests the Go Redirect example
 func TestGoRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "go"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	test.Preview(t)
-	test.Up(t)
+	result := test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployedSiteId"] == nil {
+	if result.Outputs["deployedSiteId"].Value == nil {
 		t.Error("Expected deployedSiteId output")
 	}
-
-	test.Destroy(t)
 }
 
 // TestCSharpRedirectExample tests the C# Redirect example
 func TestCSharpRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "csharp"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	test.Preview(t)
-	test.Up(t)
+	result := test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployedSiteId"] == nil {
+	if result.Outputs["deployedSiteId"].Value == nil {
 		t.Error("Expected deployedSiteId output")
 	}
-
-	test.Destroy(t)
 }
 
 // TestJavaRedirectExample tests the Java Redirect example
 func TestJavaRedirectExample(t *testing.T) {
+	skipIfNoAPIToken(t)
+
 	test := pulumitest.NewPulumiTest(t,
 		filepath.Join("redirect", "java"),
 		opttest.AttachProviderServer("webflow", providerFactory),
 	)
-	defer test.Cleanup(t)
 
 	test.Preview(t)
-	test.Up(t)
+	result := test.Up(t)
 
-	outputs := test.GetStackOutputs(t)
-	if outputs["deployedSiteId"] == nil {
+	if result.Outputs["deployedSiteId"].Value == nil {
 		t.Error("Expected deployedSiteId output")
 	}
-
-	test.Destroy(t)
 }

@@ -14,6 +14,7 @@ func TestNodejsExampleLifecycle(t *testing.T) {
 	pt := pulumitest.NewPulumiTest(t, "nodejs",
 		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
+		opttest.Env("PULUMI_PREFER_YARN", "true"),
 	)
 
 	pt.Preview(t)

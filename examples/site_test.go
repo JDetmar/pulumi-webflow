@@ -17,6 +17,7 @@ func TestTypeScriptSiteExample(t *testing.T) {
 		filepath.Join("site", "typescript"),
 		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
+		opttest.Env("PULUMI_PREFER_YARN", "true"),
 	)
 
 	// Set required config

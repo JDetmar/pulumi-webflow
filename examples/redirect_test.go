@@ -17,6 +17,7 @@ func TestTypeScriptRedirectExample(t *testing.T) {
 		filepath.Join("redirect", "typescript"),
 		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
+		opttest.Env("PULUMI_PREFER_YARN", "true"),
 	)
 
 	test.Preview(t)

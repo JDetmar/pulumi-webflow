@@ -17,6 +17,7 @@ func TestTypeScriptRobotsTxtExample(t *testing.T) {
 		filepath.Join("robotstxt", "typescript"),
 		opttest.YarnLink("@jdetmar/pulumi-webflow"),
 		opttest.AttachProviderServer("webflow", providerFactory),
+		opttest.Env("PULUMI_PREFER_YARN", "true"),
 	)
 
 	// Preview

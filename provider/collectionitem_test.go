@@ -89,25 +89,25 @@ func TestGenerateCollectionItemResourceID(t *testing.T) {
 // TestExtractIDsFromCollectionItemResourceID tests the ExtractIDsFromCollectionItemResourceID function.
 func TestExtractIDsFromCollectionItemResourceID(t *testing.T) {
 	tests := []struct {
-		name              string
-		resourceID        string
-		wantCollectionID  string
-		wantItemID        string
-		wantErr           bool
+		name             string
+		resourceID       string
+		wantCollectionID string
+		wantItemID       string
+		wantErr          bool
 	}{
 		{
-			name:              "valid resource ID",
-			resourceID:        "5f0c8c9e1c9d440000e8d8c3/items/6f1d9d0f2d0e550111f9e9d4",
-			wantCollectionID:  "5f0c8c9e1c9d440000e8d8c3",
-			wantItemID:        "6f1d9d0f2d0e550111f9e9d4",
-			wantErr:           false,
+			name:             "valid resource ID",
+			resourceID:       "5f0c8c9e1c9d440000e8d8c3/items/6f1d9d0f2d0e550111f9e9d4",
+			wantCollectionID: "5f0c8c9e1c9d440000e8d8c3",
+			wantItemID:       "6f1d9d0f2d0e550111f9e9d4",
+			wantErr:          false,
 		},
 		{
-			name:              "itemID with slashes",
-			resourceID:        "5f0c8c9e1c9d440000e8d8c3/items/6f1d9d0f/special/item",
-			wantCollectionID:  "5f0c8c9e1c9d440000e8d8c3",
-			wantItemID:        "6f1d9d0f/special/item",
-			wantErr:           false,
+			name:             "itemID with slashes",
+			resourceID:       "5f0c8c9e1c9d440000e8d8c3/items/6f1d9d0f/special/item",
+			wantCollectionID: "5f0c8c9e1c9d440000e8d8c3",
+			wantItemID:       "6f1d9d0f/special/item",
+			wantErr:          false,
 		},
 		{
 			name:       "empty resource ID",

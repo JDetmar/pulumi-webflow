@@ -301,10 +301,12 @@ func (f *CollectionField) Update(
 ) (infer.UpdateResponse[CollectionFieldState], error) {
 	// Validate inputs BEFORE making API calls
 	if err := ValidateCollectionID(req.Inputs.CollectionID); err != nil {
-		return infer.UpdateResponse[CollectionFieldState]{}, fmt.Errorf("validation failed for CollectionField resource: %w", err)
+		return infer.UpdateResponse[CollectionFieldState]{}, fmt.Errorf(
+			"validation failed for CollectionField resource: %w", err)
 	}
 	if err := ValidateFieldDisplayName(req.Inputs.DisplayName); err != nil {
-		return infer.UpdateResponse[CollectionFieldState]{}, fmt.Errorf("validation failed for CollectionField resource: %w", err)
+		return infer.UpdateResponse[CollectionFieldState]{}, fmt.Errorf(
+			"validation failed for CollectionField resource: %w", err)
 	}
 
 	state := CollectionFieldState{

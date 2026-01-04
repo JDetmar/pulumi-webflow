@@ -158,11 +158,11 @@ func TestGenerateAssetResourceID(t *testing.T) {
 // TestExtractIDsFromAssetResourceID tests the ExtractIDsFromAssetResourceID function.
 func TestExtractIDsFromAssetResourceID(t *testing.T) {
 	tests := []struct {
-		name       string
-		resourceID string
-		wantSiteID string
+		name        string
+		resourceID  string
+		wantSiteID  string
 		wantAssetID string
-		wantErr    bool
+		wantErr     bool
 	}{
 		{
 			name:        "valid resource ID",
@@ -404,9 +404,9 @@ func TestPostAssetUploadURL(t *testing.T) {
 // TestDeleteAsset tests the DeleteAsset function with a mock server.
 func TestDeleteAsset(t *testing.T) {
 	tests := []struct {
-		name           string
-		statusCode     int
-		wantErr        bool
+		name       string
+		statusCode int
+		wantErr    bool
 	}{
 		{
 			name:       "successful delete - 204",
@@ -495,7 +495,7 @@ func TestGetAssetRateLimited(t *testing.T) {
 			w.Header().Set("Retry-After", "1")
 			w.WriteHeader(http.StatusTooManyRequests)
 			_, _ = w.Write([]byte(`{"message": "Rate limit exceeded"}`))
-		} else{
+		} else {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
 			response := AssetResponse{

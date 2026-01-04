@@ -16,6 +16,17 @@ You are the **orchestrator**. You will:
 3. Coordinate code reviews
 4. Manage the merge process
 
+## Token Optimization Strategy
+
+To prevent "Prompt is too long" errors:
+
+1. **Use specialized agents** (`api-implementer`, `api-reviewer`) instead of generic subagents with long prompts
+2. **Use haiku model** for all subagents - implementation and review tasks are straightforward
+3. **Limit parallelism** to 2-3 resources at a time (not 4+)
+4. **Monitor token usage** - if approaching 100k tokens, complete current batch before continuing
+
+**Why this matters:** Each subagent accumulates context (file reads, code generation, test output). With 4 subagents on sonnet model using long embedded prompts, you can hit 200k token limit. With 2-3 subagents on haiku model using specialized agents, you stay well under limits.
+
 ## Pre-Flight Checks
 
 Before starting, verify:
@@ -43,117 +54,50 @@ git worktree add ../pulumi-webflow-${RESOURCE_LOWER} -b feat/${RESOURCE_LOWER}-r
 
 ### Phase 2: Spawn Implementation Subagents
 
-For each resource, spawn a subagent using the Task tool with this prompt:
+For each resource, spawn the **api-implementer** subagent using the Task tool:
 
 ```
-Implement the {RESOURCE} resource for the Webflow Pulumi provider.
+Use Task tool with:
+  subagent_type: "api-implementer"
+  model: "haiku"  # Use haiku for efficiency - implementation is straightforward
+  prompt: "Implement the {RESOURCE} resource for the Pulumi Webflow provider in the worktree at ../pulumi-webflow-{resource_lower}. When complete, commit your changes with an appropriate commit message and report status."
 
-Working Directory: ../pulumi-webflow-{resource_lower}
-
-## Reference Files (READ THESE FIRST)
-1. provider/redirect_resource.go - Reference implementation for resource structure
-2. provider/redirect.go - Reference implementation for API client
-3. provider/redirect_test.go - Reference implementation for tests
-4. API_IMPLEMENTATION_MANIFEST.md - Implementation pattern guide
-
-## Webflow API Documentation
-Endpoint: https://developers.webflow.com/data/reference/{resource-path}
-
-## Files to Create
-
-### 1. provider/{resource_lower}.go
-Create the API client with:
-- Request/Response structs matching Webflow API JSON
-- Validation functions (ValidateSiteID already exists in redirect.go)
-- Helper functions for resource ID generation/extraction
-- GET, POST, PATCH, DELETE functions with:
-  - Context cancellation support
-  - Rate limit handling (429) with exponential backoff
-  - Proper error handling using handleWebflowError()
-  - HTTP client from GetHTTPClient()
-
-### 2. provider/{resource_lower}_resource.go  
-Create the Pulumi resource with:
-- {Resource} struct (empty, controller)
-- {Resource}Args struct with pulumi tags
-- {Resource}State struct embedding Args
-- Annotate() methods for all structs
-- Create() - validate inputs, call API, return state
-- Read() - fetch current state from API
-- Update() - handle changes (or replace if needed)
-- Delete() - remove resource, handle 404 gracefully
-- Diff() - determine what changes require replacement
-
-### 3. provider/{resource_lower}_test.go
-Create tests for:
-- All validation functions
-- Each API function with mock HTTP server
-- Error scenarios (400, 401, 403, 404, 429, 500)
-
-### 4. Update provider/provider.go
-Add: infer.Resource(&{Resource}{})
-
-## Implementation Checklist
-- [ ] All inputs validated before API calls
-- [ ] Error messages are actionable (explain what's wrong, how to fix)
-- [ ] Rate limiting handled with exponential backoff
-- [ ] Delete is idempotent (404 = success)
-- [ ] DryRun checks in Create/Update return early
-- [ ] Resource ID format: {siteId}/{resource_type}/{resourceId}
-- [ ] Tests pass: go test -v ./provider/... -run {Resource}
-- [ ] Linting passes: golangci-lint run ./provider/...
-
-## When Complete
-```bash
-git add -A
-git commit -m "feat({resource_lower}): implement {Resource} resource
-
-- Add {Resource} Pulumi resource with CRUD support
-- Add API client for Webflow {Resource} endpoints  
-- Add validation and error handling
-- Add test coverage"
+The api-implementer agent already knows:
+- Pulumi provider patterns and boilerplate
+- Webflow API conventions and error handling
+- Testing patterns with mock HTTP servers
+- How to structure the three-file pattern (API client, resource, tests)
+- How to update provider.go registration
 ```
 
-Report: "IMPLEMENTATION COMPLETE" or "BLOCKED: [reason]"
-```
+**Why use api-implementer instead of generic subagent?**
+- ✅ Reduces token usage (no need to repeat instructions)
+- ✅ Uses specialized agent's built-in knowledge
+- ✅ Easier to maintain (update api-implementer once, benefits everywhere)
+- ✅ Consistent implementation patterns across all resources
 
 ### Phase 3: Code Review
 
-After each implementation subagent completes, spawn a review subagent:
+After each implementation subagent completes, spawn the **api-reviewer** subagent:
 
 ```
-Review the {RESOURCE} implementation in ../pulumi-webflow-{resource_lower}
+Use Task tool with:
+  subagent_type: "api-reviewer"
+  model: "haiku"  # Use haiku for efficiency - reviews are focused
+  prompt: "Review the {RESOURCE} implementation in ../pulumi-webflow-{resource_lower}. Verify correctness, consistency with existing patterns, run tests, and report APPROVED or CHANGES_REQUESTED with specific issues."
 
-## Review Checklist
-
-### Code Quality
-- [ ] Follows patterns from redirect_resource.go
-- [ ] Proper error handling with actionable messages
-- [ ] Input validation before API calls
-- [ ] No sensitive data in logs/errors
-
-### Correctness
-- [ ] CRUD operations are idempotent
-- [ ] Diff() correctly identifies replacement vs update
-- [ ] Delete handles 404 gracefully
-- [ ] Rate limiting with exponential backoff
-
-### Testing
-- [ ] All validation functions tested
-- [ ] Happy path tests for each API function
-- [ ] Error scenario tests (400, 401, 404, 429, 500)
-- [ ] Mock server used (no real API calls in tests)
-
-### Build Verification
-```bash
-cd ../pulumi-webflow-{resource_lower}
-go build ./provider/...
-go test -v ./provider/... -run {Resource}
-golangci-lint run ./provider/...
+The api-reviewer agent already knows:
+- Pulumi provider best practices and patterns
+- Webflow API implementation requirements
+- Testing standards and coverage expectations
+- How to run builds, tests, and linting
+- What to look for in code quality and correctness
 ```
 
-Report: "APPROVED" or "CHANGES_REQUESTED: [specific issues]"
-```
+**Why use api-reviewer instead of generic subagent?**
+- ✅ Consistent review standards across all resources
+- ✅ Reduced token usage (review checklist is built-in)
+- ✅ Specialized knowledge of what good implementations look like
 
 ### Phase 4: Merge Coordination
 

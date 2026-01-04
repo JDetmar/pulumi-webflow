@@ -574,6 +574,83 @@
         "statusCode"
       ]
     },
+    "webflow:index:RegisteredScript": {
+      "description": "Manages custom code scripts in the Webflow script registry. This resource allows you to register and manage externally hosted scripts that can be deployed across your Webflow site with version control and integrity verification.",
+      "properties": {
+        "canCopy": {
+          "type": "boolean",
+          "description": "Indicates whether the script can be copied when the site is duplicated. Default: false. When true, the script will be included when creating a copy of the site."
+        },
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the script was created (RFC3339 format). This is automatically set by Webflow when the script is created and is read-only."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user-facing name for the script (1-50 alphanumeric characters). This name is used to identify the script in the Webflow interface. Only letters (A-Z, a-z) and numbers (0-9) are allowed. Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'."
+        },
+        "hostedLocation": {
+          "type": "string",
+          "description": "The URI for the externally hosted script (e.g., 'https://cdn.example.com/my-script.js'). Must be a valid HTTP or HTTPS URL. The script should be publicly accessible and properly configured for cross-origin requests."
+        },
+        "integrityHash": {
+          "type": "string",
+          "description": "The Sub-Resource Integrity (SRI) hash for the script. Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The timestamp when the script was last updated (RFC3339 format). This is automatically updated by Webflow when the script is modified and is read-only."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        },
+        "version": {
+          "type": "string",
+          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
+        }
+      },
+      "required": [
+        "siteId",
+        "displayName",
+        "hostedLocation",
+        "integrityHash",
+        "version"
+      ],
+      "inputProperties": {
+        "canCopy": {
+          "type": "boolean",
+          "description": "Indicates whether the script can be copied when the site is duplicated. Default: false. When true, the script will be included when creating a copy of the site."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user-facing name for the script (1-50 alphanumeric characters). This name is used to identify the script in the Webflow interface. Only letters (A-Z, a-z) and numbers (0-9) are allowed. Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'."
+        },
+        "hostedLocation": {
+          "type": "string",
+          "description": "The URI for the externally hosted script (e.g., 'https://cdn.example.com/my-script.js'). Must be a valid HTTP or HTTPS URL. The script should be publicly accessible and properly configured for cross-origin requests."
+        },
+        "integrityHash": {
+          "type": "string",
+          "description": "The Sub-Resource Integrity (SRI) hash for the script. Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/"
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        },
+        "version": {
+          "type": "string",
+          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
+        }
+      },
+      "requiredInputs": [
+        "siteId",
+        "displayName",
+        "hostedLocation",
+        "integrityHash",
+        "version"
+      ]
+    },
     "webflow:index:RobotsTxt": {
       "description": "Manages robots.txt configuration for a Webflow site. This resource allows you to define crawler access rules and sitemap references.",
       "properties": {

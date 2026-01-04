@@ -45,6 +45,11 @@ export type Redirect = import("./redirect").Redirect;
 export const Redirect: typeof import("./redirect").Redirect = null as any;
 utilities.lazyLoad(exports, ["Redirect"], () => require("./redirect"));
 
+export { RegisteredScriptArgs } from "./registeredScript";
+export type RegisteredScript = import("./registeredScript").RegisteredScript;
+export const RegisteredScript: typeof import("./registeredScript").RegisteredScript = null as any;
+utilities.lazyLoad(exports, ["RegisteredScript"], () => require("./registeredScript"));
+
 export { RobotsTxtArgs } from "./robotsTxt";
 export type RobotsTxt = import("./robotsTxt").RobotsTxt;
 export const RobotsTxt: typeof import("./robotsTxt").RobotsTxt = null as any;
@@ -88,6 +93,8 @@ const _module = {
                 return new PageData(name, <any>undefined, { urn })
             case "webflow:index:Redirect":
                 return new Redirect(name, <any>undefined, { urn })
+            case "webflow:index:RegisteredScript":
+                return new RegisteredScript(name, <any>undefined, { urn })
             case "webflow:index:RobotsTxt":
                 return new RobotsTxt(name, <any>undefined, { urn })
             case "webflow:index:Site":

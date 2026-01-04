@@ -5,6 +5,17 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
+export interface NodeContentUpdate {
+    /**
+     * The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
+     */
+    nodeId: string;
+    /**
+     * The new text content for the node. This will replace the existing text content in the specified node. Only applicable to text nodes or elements containing text.
+     */
+    text: string;
+}
+
 export interface PageInfo {
     archived: boolean;
     collectionId?: string;

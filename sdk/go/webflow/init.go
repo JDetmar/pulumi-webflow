@@ -21,8 +21,16 @@ func (m *module) Version() semver.Version {
 
 func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi.Resource, err error) {
 	switch typ {
+	case "webflow:index:Asset":
+		r = &Asset{}
 	case "webflow:index:Collection":
 		r = &Collection{}
+	case "webflow:index:CollectionField":
+		r = &CollectionField{}
+	case "webflow:index:CollectionItem":
+		r = &CollectionItem{}
+	case "webflow:index:PageContent":
+		r = &PageContent{}
 	case "webflow:index:PageData":
 		r = &PageData{}
 	case "webflow:index:Redirect":

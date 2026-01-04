@@ -5,10 +5,30 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 // Export members:
+export { AssetArgs } from "./asset";
+export type Asset = import("./asset").Asset;
+export const Asset: typeof import("./asset").Asset = null as any;
+utilities.lazyLoad(exports, ["Asset"], () => require("./asset"));
+
 export { CollectionArgs } from "./collection";
 export type Collection = import("./collection").Collection;
 export const Collection: typeof import("./collection").Collection = null as any;
 utilities.lazyLoad(exports, ["Collection"], () => require("./collection"));
+
+export { CollectionFieldArgs } from "./collectionField";
+export type CollectionField = import("./collectionField").CollectionField;
+export const CollectionField: typeof import("./collectionField").CollectionField = null as any;
+utilities.lazyLoad(exports, ["CollectionField"], () => require("./collectionField"));
+
+export { CollectionItemArgs } from "./collectionItem";
+export type CollectionItem = import("./collectionItem").CollectionItem;
+export const CollectionItem: typeof import("./collectionItem").CollectionItem = null as any;
+utilities.lazyLoad(exports, ["CollectionItem"], () => require("./collectionItem"));
+
+export { PageContentArgs } from "./pageContent";
+export type PageContent = import("./pageContent").PageContent;
+export const PageContent: typeof import("./pageContent").PageContent = null as any;
+utilities.lazyLoad(exports, ["PageContent"], () => require("./pageContent"));
 
 export { PageDataArgs } from "./pageData";
 export type PageData = import("./pageData").PageData;
@@ -54,8 +74,16 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
+            case "webflow:index:Asset":
+                return new Asset(name, <any>undefined, { urn })
             case "webflow:index:Collection":
                 return new Collection(name, <any>undefined, { urn })
+            case "webflow:index:CollectionField":
+                return new CollectionField(name, <any>undefined, { urn })
+            case "webflow:index:CollectionItem":
+                return new CollectionItem(name, <any>undefined, { urn })
+            case "webflow:index:PageContent":
+                return new PageContent(name, <any>undefined, { urn })
             case "webflow:index:PageData":
                 return new PageData(name, <any>undefined, { urn })
             case "webflow:index:Redirect":

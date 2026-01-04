@@ -15,8 +15,55 @@ else:
 from . import _utilities
 
 __all__ = [
+    'NodeContentUpdate',
     'PageInfo',
 ]
+
+@pulumi.output_type
+class NodeContentUpdate(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "nodeId":
+            suggest = "node_id"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in NodeContentUpdate. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        NodeContentUpdate.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        NodeContentUpdate.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 node_id: _builtins.str,
+                 text: _builtins.str):
+        """
+        :param _builtins.str node_id: The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
+        :param _builtins.str text: The new text content for the node. This will replace the existing text content in the specified node. Only applicable to text nodes or elements containing text.
+        """
+        pulumi.set(__self__, "node_id", node_id)
+        pulumi.set(__self__, "text", text)
+
+    @_builtins.property
+    @pulumi.getter(name="nodeId")
+    def node_id(self) -> _builtins.str:
+        """
+        The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
+        """
+        return pulumi.get(self, "node_id")
+
+    @_builtins.property
+    @pulumi.getter
+    def text(self) -> _builtins.str:
+        """
+        The new text content for the node. This will replace the existing text content in the specified node. Only applicable to text nodes or elements containing text.
+        """
+        return pulumi.get(self, "text")
+
 
 @pulumi.output_type
 class PageInfo(dict):

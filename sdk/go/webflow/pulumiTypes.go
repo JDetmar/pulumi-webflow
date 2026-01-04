@@ -13,6 +13,112 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
+type NodeContentUpdate struct {
+	// The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
+	NodeId string `pulumi:"nodeId"`
+	// The new text content for the node. This will replace the existing text content in the specified node. Only applicable to text nodes or elements containing text.
+	Text string `pulumi:"text"`
+}
+
+// NodeContentUpdateInput is an input type that accepts NodeContentUpdateArgs and NodeContentUpdateOutput values.
+// You can construct a concrete instance of `NodeContentUpdateInput` via:
+//
+//	NodeContentUpdateArgs{...}
+type NodeContentUpdateInput interface {
+	pulumi.Input
+
+	ToNodeContentUpdateOutput() NodeContentUpdateOutput
+	ToNodeContentUpdateOutputWithContext(context.Context) NodeContentUpdateOutput
+}
+
+type NodeContentUpdateArgs struct {
+	// The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
+	NodeId pulumi.StringInput `pulumi:"nodeId"`
+	// The new text content for the node. This will replace the existing text content in the specified node. Only applicable to text nodes or elements containing text.
+	Text pulumi.StringInput `pulumi:"text"`
+}
+
+func (NodeContentUpdateArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*NodeContentUpdate)(nil)).Elem()
+}
+
+func (i NodeContentUpdateArgs) ToNodeContentUpdateOutput() NodeContentUpdateOutput {
+	return i.ToNodeContentUpdateOutputWithContext(context.Background())
+}
+
+func (i NodeContentUpdateArgs) ToNodeContentUpdateOutputWithContext(ctx context.Context) NodeContentUpdateOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(NodeContentUpdateOutput)
+}
+
+// NodeContentUpdateArrayInput is an input type that accepts NodeContentUpdateArray and NodeContentUpdateArrayOutput values.
+// You can construct a concrete instance of `NodeContentUpdateArrayInput` via:
+//
+//	NodeContentUpdateArray{ NodeContentUpdateArgs{...} }
+type NodeContentUpdateArrayInput interface {
+	pulumi.Input
+
+	ToNodeContentUpdateArrayOutput() NodeContentUpdateArrayOutput
+	ToNodeContentUpdateArrayOutputWithContext(context.Context) NodeContentUpdateArrayOutput
+}
+
+type NodeContentUpdateArray []NodeContentUpdateInput
+
+func (NodeContentUpdateArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]NodeContentUpdate)(nil)).Elem()
+}
+
+func (i NodeContentUpdateArray) ToNodeContentUpdateArrayOutput() NodeContentUpdateArrayOutput {
+	return i.ToNodeContentUpdateArrayOutputWithContext(context.Background())
+}
+
+func (i NodeContentUpdateArray) ToNodeContentUpdateArrayOutputWithContext(ctx context.Context) NodeContentUpdateArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(NodeContentUpdateArrayOutput)
+}
+
+type NodeContentUpdateOutput struct{ *pulumi.OutputState }
+
+func (NodeContentUpdateOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*NodeContentUpdate)(nil)).Elem()
+}
+
+func (o NodeContentUpdateOutput) ToNodeContentUpdateOutput() NodeContentUpdateOutput {
+	return o
+}
+
+func (o NodeContentUpdateOutput) ToNodeContentUpdateOutputWithContext(ctx context.Context) NodeContentUpdateOutput {
+	return o
+}
+
+// The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
+func (o NodeContentUpdateOutput) NodeId() pulumi.StringOutput {
+	return o.ApplyT(func(v NodeContentUpdate) string { return v.NodeId }).(pulumi.StringOutput)
+}
+
+// The new text content for the node. This will replace the existing text content in the specified node. Only applicable to text nodes or elements containing text.
+func (o NodeContentUpdateOutput) Text() pulumi.StringOutput {
+	return o.ApplyT(func(v NodeContentUpdate) string { return v.Text }).(pulumi.StringOutput)
+}
+
+type NodeContentUpdateArrayOutput struct{ *pulumi.OutputState }
+
+func (NodeContentUpdateArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]NodeContentUpdate)(nil)).Elem()
+}
+
+func (o NodeContentUpdateArrayOutput) ToNodeContentUpdateArrayOutput() NodeContentUpdateArrayOutput {
+	return o
+}
+
+func (o NodeContentUpdateArrayOutput) ToNodeContentUpdateArrayOutputWithContext(ctx context.Context) NodeContentUpdateArrayOutput {
+	return o
+}
+
+func (o NodeContentUpdateArrayOutput) Index(i pulumi.IntInput) NodeContentUpdateOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) NodeContentUpdate {
+		return vs[0].([]NodeContentUpdate)[vs[1].(int)]
+	}).(NodeContentUpdateOutput)
+}
+
 type PageInfo struct {
 	Archived     bool    `pulumi:"archived"`
 	CollectionId *string `pulumi:"collectionId"`
@@ -101,6 +207,10 @@ func (o PageInfoArrayOutput) Index(i pulumi.IntInput) PageInfoOutput {
 }
 
 func init() {
+	pulumi.RegisterInputType(reflect.TypeOf((*NodeContentUpdateInput)(nil)).Elem(), NodeContentUpdateArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*NodeContentUpdateArrayInput)(nil)).Elem(), NodeContentUpdateArray{})
+	pulumi.RegisterOutputType(NodeContentUpdateOutput{})
+	pulumi.RegisterOutputType(NodeContentUpdateArrayOutput{})
 	pulumi.RegisterOutputType(PageInfoOutput{})
 	pulumi.RegisterOutputType(PageInfoArrayOutput{})
 }

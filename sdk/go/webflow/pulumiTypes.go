@@ -13,6 +13,130 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
+type CustomScriptArgs struct {
+	// Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
+	Attributes map[string]string `pulumi:"attributes"`
+	// The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
+	Id string `pulumi:"id"`
+	// The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
+	Location string `pulumi:"location"`
+	// The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
+	Version string `pulumi:"version"`
+}
+
+// CustomScriptArgsInput is an input type that accepts CustomScriptArgsArgs and CustomScriptArgsOutput values.
+// You can construct a concrete instance of `CustomScriptArgsInput` via:
+//
+//	CustomScriptArgsArgs{...}
+type CustomScriptArgsInput interface {
+	pulumi.Input
+
+	ToCustomScriptArgsOutput() CustomScriptArgsOutput
+	ToCustomScriptArgsOutputWithContext(context.Context) CustomScriptArgsOutput
+}
+
+type CustomScriptArgsArgs struct {
+	// Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
+	Attributes pulumi.StringMapInput `pulumi:"attributes"`
+	// The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
+	Id pulumi.StringInput `pulumi:"id"`
+	// The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
+	Location pulumi.StringInput `pulumi:"location"`
+	// The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
+	Version pulumi.StringInput `pulumi:"version"`
+}
+
+func (CustomScriptArgsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*CustomScriptArgs)(nil)).Elem()
+}
+
+func (i CustomScriptArgsArgs) ToCustomScriptArgsOutput() CustomScriptArgsOutput {
+	return i.ToCustomScriptArgsOutputWithContext(context.Background())
+}
+
+func (i CustomScriptArgsArgs) ToCustomScriptArgsOutputWithContext(ctx context.Context) CustomScriptArgsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(CustomScriptArgsOutput)
+}
+
+// CustomScriptArgsArrayInput is an input type that accepts CustomScriptArgsArray and CustomScriptArgsArrayOutput values.
+// You can construct a concrete instance of `CustomScriptArgsArrayInput` via:
+//
+//	CustomScriptArgsArray{ CustomScriptArgsArgs{...} }
+type CustomScriptArgsArrayInput interface {
+	pulumi.Input
+
+	ToCustomScriptArgsArrayOutput() CustomScriptArgsArrayOutput
+	ToCustomScriptArgsArrayOutputWithContext(context.Context) CustomScriptArgsArrayOutput
+}
+
+type CustomScriptArgsArray []CustomScriptArgsInput
+
+func (CustomScriptArgsArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]CustomScriptArgs)(nil)).Elem()
+}
+
+func (i CustomScriptArgsArray) ToCustomScriptArgsArrayOutput() CustomScriptArgsArrayOutput {
+	return i.ToCustomScriptArgsArrayOutputWithContext(context.Background())
+}
+
+func (i CustomScriptArgsArray) ToCustomScriptArgsArrayOutputWithContext(ctx context.Context) CustomScriptArgsArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(CustomScriptArgsArrayOutput)
+}
+
+type CustomScriptArgsOutput struct{ *pulumi.OutputState }
+
+func (CustomScriptArgsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*CustomScriptArgs)(nil)).Elem()
+}
+
+func (o CustomScriptArgsOutput) ToCustomScriptArgsOutput() CustomScriptArgsOutput {
+	return o
+}
+
+func (o CustomScriptArgsOutput) ToCustomScriptArgsOutputWithContext(ctx context.Context) CustomScriptArgsOutput {
+	return o
+}
+
+// Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
+func (o CustomScriptArgsOutput) Attributes() pulumi.StringMapOutput {
+	return o.ApplyT(func(v CustomScriptArgs) map[string]string { return v.Attributes }).(pulumi.StringMapOutput)
+}
+
+// The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
+func (o CustomScriptArgsOutput) Id() pulumi.StringOutput {
+	return o.ApplyT(func(v CustomScriptArgs) string { return v.Id }).(pulumi.StringOutput)
+}
+
+// The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
+func (o CustomScriptArgsOutput) Location() pulumi.StringOutput {
+	return o.ApplyT(func(v CustomScriptArgs) string { return v.Location }).(pulumi.StringOutput)
+}
+
+// The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
+func (o CustomScriptArgsOutput) Version() pulumi.StringOutput {
+	return o.ApplyT(func(v CustomScriptArgs) string { return v.Version }).(pulumi.StringOutput)
+}
+
+type CustomScriptArgsArrayOutput struct{ *pulumi.OutputState }
+
+func (CustomScriptArgsArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]CustomScriptArgs)(nil)).Elem()
+}
+
+func (o CustomScriptArgsArrayOutput) ToCustomScriptArgsArrayOutput() CustomScriptArgsArrayOutput {
+	return o
+}
+
+func (o CustomScriptArgsArrayOutput) ToCustomScriptArgsArrayOutputWithContext(ctx context.Context) CustomScriptArgsArrayOutput {
+	return o
+}
+
+func (o CustomScriptArgsArrayOutput) Index(i pulumi.IntInput) CustomScriptArgsOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) CustomScriptArgs {
+		return vs[0].([]CustomScriptArgs)[vs[1].(int)]
+	}).(CustomScriptArgsOutput)
+}
+
 type NodeContentUpdate struct {
 	// The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
 	NodeId string `pulumi:"nodeId"`
@@ -207,8 +331,12 @@ func (o PageInfoArrayOutput) Index(i pulumi.IntInput) PageInfoOutput {
 }
 
 func init() {
+	pulumi.RegisterInputType(reflect.TypeOf((*CustomScriptArgsInput)(nil)).Elem(), CustomScriptArgsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*CustomScriptArgsArrayInput)(nil)).Elem(), CustomScriptArgsArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*NodeContentUpdateInput)(nil)).Elem(), NodeContentUpdateArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*NodeContentUpdateArrayInput)(nil)).Elem(), NodeContentUpdateArray{})
+	pulumi.RegisterOutputType(CustomScriptArgsOutput{})
+	pulumi.RegisterOutputType(CustomScriptArgsArrayOutput{})
 	pulumi.RegisterOutputType(NodeContentUpdateOutput{})
 	pulumi.RegisterOutputType(NodeContentUpdateArrayOutput{})
 	pulumi.RegisterOutputType(PageInfoOutput{})

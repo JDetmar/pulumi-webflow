@@ -39,6 +39,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &RobotsTxt{}
 	case "webflow:index:Site":
 		r = &Site{}
+	case "webflow:index:SiteCustomCode":
+		r = &SiteCustomCode{}
 	case "webflow:index:Webhook":
 		r = &Webhook{}
 	default:

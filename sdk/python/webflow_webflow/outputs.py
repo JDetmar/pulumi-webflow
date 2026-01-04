@@ -15,9 +15,62 @@ else:
 from . import _utilities
 
 __all__ = [
+    'CustomScriptArgs',
     'NodeContentUpdate',
     'PageInfo',
 ]
+
+@pulumi.output_type
+class CustomScriptArgs(dict):
+    def __init__(__self__, *,
+                 id: _builtins.str,
+                 location: _builtins.str,
+                 version: _builtins.str,
+                 attributes: Optional[Mapping[str, _builtins.str]] = None):
+        """
+        :param _builtins.str id: The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
+        :param _builtins.str location: The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
+        :param _builtins.str version: The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
+        :param Mapping[str, _builtins.str] attributes: Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
+        """
+        pulumi.set(__self__, "id", id)
+        pulumi.set(__self__, "location", location)
+        pulumi.set(__self__, "version", version)
+        if attributes is not None:
+            pulumi.set(__self__, "attributes", attributes)
+
+    @_builtins.property
+    @pulumi.getter
+    def id(self) -> _builtins.str:
+        """
+        The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
+        """
+        return pulumi.get(self, "id")
+
+    @_builtins.property
+    @pulumi.getter
+    def location(self) -> _builtins.str:
+        """
+        The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
+        """
+        return pulumi.get(self, "location")
+
+    @_builtins.property
+    @pulumi.getter
+    def version(self) -> _builtins.str:
+        """
+        The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
+        """
+        return pulumi.get(self, "version")
+
+    @_builtins.property
+    @pulumi.getter
+    def attributes(self) -> Optional[Mapping[str, _builtins.str]]:
+        """
+        Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
+        """
+        return pulumi.get(self, "attributes")
+
 
 @pulumi.output_type
 class NodeContentUpdate(dict):

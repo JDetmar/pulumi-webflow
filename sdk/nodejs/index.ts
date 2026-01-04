@@ -55,6 +55,11 @@ export type Site = import("./site").Site;
 export const Site: typeof import("./site").Site = null as any;
 utilities.lazyLoad(exports, ["Site"], () => require("./site"));
 
+export { SiteCustomCodeArgs } from "./siteCustomCode";
+export type SiteCustomCode = import("./siteCustomCode").SiteCustomCode;
+export const SiteCustomCode: typeof import("./siteCustomCode").SiteCustomCode = null as any;
+utilities.lazyLoad(exports, ["SiteCustomCode"], () => require("./siteCustomCode"));
+
 export { WebhookArgs } from "./webhook";
 export type Webhook = import("./webhook").Webhook;
 export const Webhook: typeof import("./webhook").Webhook = null as any;
@@ -92,6 +97,8 @@ const _module = {
                 return new RobotsTxt(name, <any>undefined, { urn })
             case "webflow:index:Site":
                 return new Site(name, <any>undefined, { urn })
+            case "webflow:index:SiteCustomCode":
+                return new SiteCustomCode(name, <any>undefined, { urn })
             case "webflow:index:Webhook":
                 return new Webhook(name, <any>undefined, { urn })
             default:

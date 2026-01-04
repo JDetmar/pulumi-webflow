@@ -26,6 +26,35 @@
     }
   },
   "types": {
+    "webflow:index:CustomScriptArgs": {
+      "properties": {
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag."
+        },
+        "id": {
+          "type": "string",
+          "description": "The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'"
+        },
+        "location": {
+          "type": "string",
+          "description": "The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded."
+        },
+        "version": {
+          "type": "string",
+          "description": "The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied."
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "location"
+      ]
+    },
     "webflow:index:NodeContentUpdate": {
       "properties": {
         "nodeId": {
@@ -706,6 +735,51 @@
       "requiredInputs": [
         "workspaceId",
         "displayName"
+      ]
+    },
+    "webflow:index:SiteCustomCode": {
+      "description": "Manages custom JavaScript code applied to a Webflow site. This resource allows you to apply registered custom scripts to a site and control where they are placed (header or footer). Custom scripts must be registered to the site first via the RegisterScript resource.",
+      "properties": {
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the site's custom code was first created (RFC3339 format). This is automatically set when custom code is first applied and is read-only."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The timestamp when the site's custom code was last updated (RFC3339 format). This is automatically set and is read-only."
+        },
+        "scripts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/webflow:index:CustomScriptArgs"
+          },
+          "description": "A list of custom scripts to apply to the site. Each script must be registered to the site first. To remove individual scripts, simply exclude them from this list on the next update. If you have multiple scripts your app manages, ensure they are always included in this list."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        }
+      },
+      "required": [
+        "siteId",
+        "scripts"
+      ],
+      "inputProperties": {
+        "scripts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/webflow:index:CustomScriptArgs"
+          },
+          "description": "A list of custom scripts to apply to the site. Each script must be registered to the site first. To remove individual scripts, simply exclude them from this list on the next update. If you have multiple scripts your app manages, ensure they are always included in this list."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        }
+      },
+      "requiredInputs": [
+        "siteId",
+        "scripts"
       ]
     },
     "webflow:index:Webhook": {

@@ -16,6 +16,7 @@ from .provider import *
 from .redirect import *
 from .robots_txt import *
 from .site import *
+from .site_custom_code import *
 from .webhook import *
 from ._inputs import *
 from . import outputs
@@ -44,6 +45,7 @@ _utilities.register(
    "webflow:index:Redirect": "Redirect",
    "webflow:index:RobotsTxt": "RobotsTxt",
    "webflow:index:Site": "Site",
+   "webflow:index:SiteCustomCode": "SiteCustomCode",
    "webflow:index:Webhook": "Webhook"
   }
  }

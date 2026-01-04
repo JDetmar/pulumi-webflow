@@ -26,6 +26,7 @@
         "redirect.ts",
         "robotsTxt.ts",
         "site.ts",
+        "siteCustomCode.ts",
         "types/index.ts",
         "types/input.ts",
         "types/output.ts",

@@ -98,7 +98,9 @@ var getCollectionItemsBaseURL = ""
 // GetCollectionItems retrieves all items for a Webflow collection.
 // It calls GET /v2/collections/{collection_id}/items endpoint.
 // Returns the parsed response or an error if the request fails.
-func GetCollectionItems(ctx context.Context, client *http.Client, collectionID string) (*CollectionItemListResponse, error) {
+func GetCollectionItems(
+	ctx context.Context, client *http.Client, collectionID string,
+) (*CollectionItemListResponse, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}

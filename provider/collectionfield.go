@@ -147,7 +147,9 @@ var getCollectionFieldBaseURL = ""
 // GetCollectionField retrieves a single collection field by ID.
 // Note: Webflow doesn't have a direct GET endpoint for individual fields.
 // We fetch the entire collection and filter for the specific field.
-func GetCollectionField(ctx context.Context, client *http.Client, collectionID, fieldID string) (*CollectionFieldResponse, error) {
+func GetCollectionField(
+	ctx context.Context, client *http.Client, collectionID, fieldID string,
+) (*CollectionFieldResponse, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
 	}

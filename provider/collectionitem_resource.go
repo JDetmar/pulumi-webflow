@@ -174,10 +174,12 @@ func (c *CollectionItemResource) Create(
 ) (infer.CreateResponse[CollectionItemState], error) {
 	// Validate inputs BEFORE generating resource ID
 	if err := ValidateCollectionID(req.Inputs.CollectionID); err != nil {
-		return infer.CreateResponse[CollectionItemState]{}, fmt.Errorf("validation failed for CollectionItem resource: %w", err)
+		return infer.CreateResponse[CollectionItemState]{}, fmt.Errorf(
+			"validation failed for CollectionItem resource: %w", err)
 	}
 	if err := ValidateFieldData(req.Inputs.FieldData); err != nil {
-		return infer.CreateResponse[CollectionItemState]{}, fmt.Errorf("validation failed for CollectionItem resource: %w", err)
+		return infer.CreateResponse[CollectionItemState]{}, fmt.Errorf(
+			"validation failed for CollectionItem resource: %w", err)
 	}
 
 	state := CollectionItemState{
@@ -253,7 +255,8 @@ func (c *CollectionItemResource) Read(
 	// Get HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
-		return infer.ReadResponse[CollectionItemArgs, CollectionItemState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
+		return infer.ReadResponse[CollectionItemArgs, CollectionItemState]{}, fmt.Errorf(
+			"failed to create HTTP client: %w", err)
 	}
 
 	// Call Webflow API to get collection item details
@@ -265,7 +268,8 @@ func (c *CollectionItemResource) Read(
 				ID: "",
 			}, nil
 		}
-		return infer.ReadResponse[CollectionItemArgs, CollectionItemState]{}, fmt.Errorf("failed to read collection item: %w", err)
+		return infer.ReadResponse[CollectionItemArgs, CollectionItemState]{}, fmt.Errorf(
+			"failed to read collection item: %w", err)
 	}
 
 	// Build current state from API response
@@ -302,10 +306,12 @@ func (c *CollectionItemResource) Update(
 ) (infer.UpdateResponse[CollectionItemState], error) {
 	// Validate inputs BEFORE making API calls
 	if err := ValidateCollectionID(req.Inputs.CollectionID); err != nil {
-		return infer.UpdateResponse[CollectionItemState]{}, fmt.Errorf("validation failed for CollectionItem resource: %w", err)
+		return infer.UpdateResponse[CollectionItemState]{}, fmt.Errorf(
+			"validation failed for CollectionItem resource: %w", err)
 	}
 	if err := ValidateFieldData(req.Inputs.FieldData); err != nil {
-		return infer.UpdateResponse[CollectionItemState]{}, fmt.Errorf("validation failed for CollectionItem resource: %w", err)
+		return infer.UpdateResponse[CollectionItemState]{}, fmt.Errorf(
+			"validation failed for CollectionItem resource: %w", err)
 	}
 
 	state := CollectionItemState{

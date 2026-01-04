@@ -178,13 +178,16 @@ func (f *CollectionField) Create(
 ) (infer.CreateResponse[CollectionFieldState], error) {
 	// Validate inputs BEFORE generating resource ID
 	if err := ValidateCollectionID(req.Inputs.CollectionID); err != nil {
-		return infer.CreateResponse[CollectionFieldState]{}, fmt.Errorf("validation failed for CollectionField resource: %w", err)
+		return infer.CreateResponse[CollectionFieldState]{}, fmt.Errorf(
+			"validation failed for CollectionField resource: %w", err)
 	}
 	if err := ValidateFieldType(req.Inputs.Type); err != nil {
-		return infer.CreateResponse[CollectionFieldState]{}, fmt.Errorf("validation failed for CollectionField resource: %w", err)
+		return infer.CreateResponse[CollectionFieldState]{}, fmt.Errorf(
+			"validation failed for CollectionField resource: %w", err)
 	}
 	if err := ValidateFieldDisplayName(req.Inputs.DisplayName); err != nil {
-		return infer.CreateResponse[CollectionFieldState]{}, fmt.Errorf("validation failed for CollectionField resource: %w", err)
+		return infer.CreateResponse[CollectionFieldState]{}, fmt.Errorf(
+			"validation failed for CollectionField resource: %w", err)
 	}
 
 	state := CollectionFieldState{
@@ -252,7 +255,8 @@ func (f *CollectionField) Read(
 	// Get HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
-		return infer.ReadResponse[CollectionFieldArgs, CollectionFieldState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
+		return infer.ReadResponse[CollectionFieldArgs, CollectionFieldState]{}, fmt.Errorf(
+			"failed to create HTTP client: %w", err)
 	}
 
 	// Call Webflow API to get field details
@@ -264,7 +268,8 @@ func (f *CollectionField) Read(
 				ID: "",
 			}, nil
 		}
-		return infer.ReadResponse[CollectionFieldArgs, CollectionFieldState]{}, fmt.Errorf("failed to read collection field: %w", err)
+		return infer.ReadResponse[CollectionFieldArgs, CollectionFieldState]{}, fmt.Errorf(
+			"failed to read collection field: %w", err)
 	}
 
 	// Build current state from API response

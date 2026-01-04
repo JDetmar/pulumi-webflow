@@ -172,15 +172,17 @@ func (r *PageContent) Create(
 
 	// Validate nodes
 	if len(req.Inputs.Nodes) == 0 {
-		return infer.CreateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource: "+
-			"at least one node update is required. "+
-			"Please provide a list of nodes with nodeId and text fields. "+
-			"Node IDs can be retrieved using GET /pages/{page_id}/dom endpoint.")
+		return infer.CreateResponse[PageContentState]{}, fmt.Errorf(
+			"validation failed for PageContent resource: " +
+				"at least one node update is required. " +
+				"Please provide a list of nodes with nodeId and text fields. " +
+				"Node IDs can be retrieved using GET /pages/{page_id}/dom endpoint.")
 	}
 
 	for i, node := range req.Inputs.Nodes {
 		if err := ValidateNodeID(node.NodeID); err != nil {
-			return infer.CreateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource, node[%d]: %w", i, err)
+			return infer.CreateResponse[PageContentState]{}, fmt.Errorf(
+				"validation failed for PageContent resource, node[%d]: %w", i, err)
 		}
 		if node.Text == "" {
 			return infer.CreateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource, node[%d]: "+
@@ -316,7 +318,8 @@ func (r *PageContent) Update(
 
 	for i, node := range req.Inputs.Nodes {
 		if err := ValidateNodeID(node.NodeID); err != nil {
-			return infer.UpdateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource, node[%d]: %w", i, err)
+			return infer.UpdateResponse[PageContentState]{}, fmt.Errorf(
+				"validation failed for PageContent resource, node[%d]: %w", i, err)
 		}
 		if node.Text == "" {
 			return infer.UpdateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource, node[%d]: "+

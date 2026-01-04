@@ -6,10 +6,14 @@ import builtins as _builtins
 from . import _utilities
 import typing
 # Export this package's modules as members:
+from .collection import *
+from .page_data import *
 from .provider import *
 from .redirect import *
 from .robots_txt import *
 from .site import *
+from .webhook import *
+from . import outputs
 
 # Make subpackages available:
 if typing.TYPE_CHECKING:
@@ -26,9 +30,12 @@ _utilities.register(
   "mod": "index",
   "fqn": "webflow_webflow",
   "classes": {
+   "webflow:index:Collection": "Collection",
+   "webflow:index:PageData": "PageData",
    "webflow:index:Redirect": "Redirect",
    "webflow:index:RobotsTxt": "RobotsTxt",
-   "webflow:index:Site": "Site"
+   "webflow:index:Site": "Site",
+   "webflow:index:Webhook": "Webhook"
   }
  }
 ]

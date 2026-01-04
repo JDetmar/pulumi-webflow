@@ -95,12 +95,6 @@
 | AuthorizedUser | GET | `/token/authorized_by` | authorized_user:read |
 | TokenInfo | GET | `/token/introspect` | - |
 
-### Enterprise
-| Resource | Methods | Endpoints | Scope |
-|----------|---------|-----------|-------|
-| WorkspaceAuditLog | GET | `/workspaces/{id}/audit_logs` | workspace_activity:read |
-| SiteActivityLog | GET | `/sites/{id}/activity_logs` | site_activity:read |
-
 ---
 
 ## Recommended Implementation Batches

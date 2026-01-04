@@ -316,9 +316,9 @@ func (c *CollectionItemResource) Update(
 
 	state := CollectionItemState{
 		CollectionItemArgs: req.Inputs,
-		ItemID:             req.State.ItemID,       // Preserve from current state
-		CreatedOn:          req.State.CreatedOn,    // Preserve from current state
-		LastUpdated:        "",                     // Will be updated by API
+		ItemID:             req.State.ItemID,        // Preserve from current state
+		CreatedOn:          req.State.CreatedOn,     // Preserve from current state
+		LastUpdated:        "",                      // Will be updated by API
 		LastPublished:      req.State.LastPublished, // Preserve from current state
 	}
 

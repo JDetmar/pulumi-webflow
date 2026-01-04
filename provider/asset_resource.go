@@ -300,13 +300,13 @@ func (r *Asset) Read(
 		FileSource:   req.State.FileSource,
 	}
 	currentState := AssetState{
-		AssetArgs:    currentInputs,
-		AssetID:      asset.ID,
-		HostedURL:    asset.HostedURL,
-		ContentType:  asset.ContentType,
-		Size:         asset.Size,
-		CreatedOn:    asset.CreatedOn,
-		LastUpdated:  asset.LastUpdated,
+		AssetArgs:   currentInputs,
+		AssetID:     asset.ID,
+		HostedURL:   asset.HostedURL,
+		ContentType: asset.ContentType,
+		Size:        asset.Size,
+		CreatedOn:   asset.CreatedOn,
+		LastUpdated: asset.LastUpdated,
 	}
 
 	return infer.ReadResponse[AssetArgs, AssetState]{

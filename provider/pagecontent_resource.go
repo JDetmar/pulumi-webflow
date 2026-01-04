@@ -311,8 +311,8 @@ func (r *PageContent) Update(
 
 	// Validate nodes
 	if len(req.Inputs.Nodes) == 0 {
-		return infer.UpdateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource: "+
-			"at least one node update is required. "+
+		return infer.UpdateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource: " +
+			"at least one node update is required. " +
 			"Please provide a list of nodes with nodeId and text fields.")
 	}
 

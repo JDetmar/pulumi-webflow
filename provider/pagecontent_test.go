@@ -13,6 +13,9 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	p "github.com/pulumi/pulumi-go-provider"
+	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
 func TestValidateNodeID(t *testing.T) {
@@ -468,6 +471,145 @@ func TestPutPageContent_RateLimited_429(t *testing.T) {
 	}
 	if attemptCount != 2 {
 		t.Errorf("Expected 2 attempts (1 retry), got %d", attemptCount)
+	}
+}
+
+// TestPageContentDiff_PageIDChange tests that pageId changes trigger replacement
+func TestPageContentDiff_PageIDChange(t *testing.T) {
+	resource := &PageContent{}
+
+	state := PageContentState{
+		PageContentArgs: PageContentArgs{
+			PageID: "old-page-id",
+			Nodes: []NodeContentUpdate{
+				{NodeID: "node-1", Text: "Old text"},
+			},
+		},
+	}
+
+	inputs := PageContentArgs{
+		PageID: "new-page-id",
+		Nodes: []NodeContentUpdate{
+			{NodeID: "node-1", Text: "Old text"},
+		},
+	}
+
+	req := infer.DiffRequest[PageContentArgs, PageContentState]{
+		State:  state,
+		Inputs: inputs,
+	}
+
+	diff, err := resource.Diff(context.Background(), req)
+	if err != nil {
+		t.Fatalf("Diff() error = %v", err)
+	}
+
+	if !diff.HasChanges {
+		t.Error("Diff() should detect changes when pageId changes")
+	}
+
+	if !diff.DeleteBeforeReplace {
+		t.Error("Diff() should require DeleteBeforeReplace when pageId changes")
+	}
+
+	if diff.DetailedDiff == nil {
+		t.Fatal("Diff() should have DetailedDiff")
+	}
+
+	pageDiff, ok := diff.DetailedDiff["pageId"]
+	if !ok {
+		t.Error("Diff() should include pageId in DetailedDiff")
+	}
+
+	if pageDiff.Kind != p.UpdateReplace {
+		t.Errorf("Diff() pageId should be UpdateReplace, got %v", pageDiff.Kind)
+	}
+}
+
+// TestPageContentDiff_NodesChange tests that nodes changes trigger update (not replacement)
+func TestPageContentDiff_NodesChange(t *testing.T) {
+	resource := &PageContent{}
+
+	state := PageContentState{
+		PageContentArgs: PageContentArgs{
+			PageID: "same-page-id",
+			Nodes: []NodeContentUpdate{
+				{NodeID: "node-1", Text: "Old text"},
+			},
+		},
+	}
+
+	inputs := PageContentArgs{
+		PageID: "same-page-id",
+		Nodes: []NodeContentUpdate{
+			{NodeID: "node-1", Text: "New text"},
+		},
+	}
+
+	req := infer.DiffRequest[PageContentArgs, PageContentState]{
+		State:  state,
+		Inputs: inputs,
+	}
+
+	diff, err := resource.Diff(context.Background(), req)
+	if err != nil {
+		t.Fatalf("Diff() error = %v", err)
+	}
+
+	if !diff.HasChanges {
+		t.Error("Diff() should detect changes when nodes change")
+	}
+
+	if diff.DeleteBeforeReplace {
+		t.Error("Diff() should NOT require DeleteBeforeReplace for nodes changes")
+	}
+
+	if diff.DetailedDiff == nil {
+		t.Fatal("Diff() should have DetailedDiff")
+	}
+
+	nodesDiff, ok := diff.DetailedDiff["nodes"]
+	if !ok {
+		t.Error("Diff() should include nodes in DetailedDiff")
+	}
+
+	if nodesDiff.Kind != p.Update {
+		t.Errorf("Diff() nodes should be Update, got %v", nodesDiff.Kind)
+	}
+}
+
+// TestPageContentDiff_NoChanges tests that no changes result in no diff
+func TestPageContentDiff_NoChanges(t *testing.T) {
+	resource := &PageContent{}
+
+	state := PageContentState{
+		PageContentArgs: PageContentArgs{
+			PageID: "same-page-id",
+			Nodes: []NodeContentUpdate{
+				{NodeID: "node-1", Text: "Same text"},
+			},
+		},
+	}
+
+	inputs := PageContentArgs{
+		PageID: "same-page-id",
+		Nodes: []NodeContentUpdate{
+			{NodeID: "node-1", Text: "Same text"},
+		},
+	}
+
+	req := infer.DiffRequest[PageContentArgs, PageContentState]{
+		State:  state,
+		Inputs: inputs,
+	}
+
+	diff, err := resource.Diff(context.Background(), req)
+	if err != nil {
+		t.Fatalf("Diff() error = %v", err)
+	}
+
+	if diff.HasChanges {
+		t.Error("Diff() should not detect changes when inputs are identical")
 	}
 }
 

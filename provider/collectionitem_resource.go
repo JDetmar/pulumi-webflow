@@ -275,15 +275,11 @@ func (c *CollectionItemResource) Read(
 		CmsLocaleID:  response.CmsLocaleID,
 	}
 
-	// Handle pointer fields
-	if response.IsArchived {
-		isArchived := response.IsArchived
-		currentInputs.IsArchived = &isArchived
-	}
-	if response.IsDraft {
-		isDraft := response.IsDraft
-		currentInputs.IsDraft = &isDraft
-	}
+	// Handle pointer fields - always create pointers for optional fields
+	isArchived := response.IsArchived
+	currentInputs.IsArchived = &isArchived
+	isDraft := response.IsDraft
+	currentInputs.IsDraft = &isDraft
 
 	currentState := CollectionItemState{
 		CollectionItemArgs: currentInputs,

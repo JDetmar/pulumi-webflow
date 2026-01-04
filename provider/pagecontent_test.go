@@ -390,6 +390,87 @@ func TestPutPageContent(t *testing.T) {
 	}
 }
 
+// TestGetPageContent_RateLimited_429 tests rate limiting with automatic retry
+func TestGetPageContent_RateLimited_429(t *testing.T) {
+	attemptCount := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attemptCount++
+
+		// First attempt returns 429, second attempt succeeds
+		if attemptCount == 1 {
+			w.Header().Set("Retry-After", "1")
+			w.WriteHeader(429)
+			_, _ = w.Write([]byte(`{"message": "rate limited"}`))
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(200)
+			_ = json.NewEncoder(w).Encode(PageContentResponse{
+				PageID: "test-page-id",
+				Nodes:  []DOMNode{},
+			})
+		}
+	}))
+	defer server.Close()
+
+	// Override base URL for testing
+	getPageContentBaseURL = server.URL
+	defer func() { getPageContentBaseURL = "" }()
+
+	client := &http.Client{}
+	response, err := GetPageContent(context.Background(), client, "test-page-id")
+
+	if err != nil {
+		t.Errorf("GetPageContent() should succeed after retry, got error: %v", err)
+	}
+	if response == nil {
+		t.Fatal("GetPageContent() returned nil response")
+	}
+	if attemptCount != 2 {
+		t.Errorf("Expected 2 attempts (1 retry), got %d", attemptCount)
+	}
+}
+
+// TestPutPageContent_RateLimited_429 tests rate limiting with automatic retry
+func TestPutPageContent_RateLimited_429(t *testing.T) {
+	attemptCount := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attemptCount++
+
+		// First attempt returns 429, second attempt succeeds
+		if attemptCount == 1 {
+			w.Header().Set("Retry-After", "1")
+			w.WriteHeader(429)
+			_, _ = w.Write([]byte(`{"message": "rate limited"}`))
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(200)
+			_ = json.NewEncoder(w).Encode(PageContentResponse{
+				PageID: "test-page-id",
+				Nodes:  []DOMNode{},
+			})
+		}
+	}))
+	defer server.Close()
+
+	// Override base URL for testing
+	putPageContentBaseURL = server.URL
+	defer func() { putPageContentBaseURL = "" }()
+
+	client := &http.Client{}
+	nodes := []DOMNodeUpdate{{NodeID: "node-1", Text: stringPtr("test")}}
+	response, err := PutPageContent(context.Background(), client, "test-page-id", nodes)
+
+	if err != nil {
+		t.Errorf("PutPageContent() should succeed after retry, got error: %v", err)
+	}
+	if response == nil {
+		t.Fatal("PutPageContent() returned nil response")
+	}
+	if attemptCount != 2 {
+		t.Errorf("Expected 2 attempts (1 retry), got %d", attemptCount)
+	}
+}
+
 // Helper function to create string pointers
 func stringPtr(s string) *string {
 	return &s

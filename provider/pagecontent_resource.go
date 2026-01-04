@@ -52,7 +52,11 @@ func (r *PageContent) Annotate(a infer.Annotator) {
 	a.Describe(r, "Manages static content (text) for a Webflow page. "+
 		"This resource allows you to update text content within existing DOM nodes on a page. "+
 		"It does NOT manage page structure or layout - only content within existing nodes. "+
-		"To find node IDs, you must first retrieve the page DOM structure using the Webflow API.")
+		"To find node IDs, you must first retrieve the page DOM structure using the Webflow API. "+
+		"\n\n**IMPORTANT LIMITATION:** This resource does NOT support drift detection for content changes. "+
+		"If content is modified outside of Pulumi (via Webflow UI or API), those changes will NOT be detected "+
+		"during 'pulumi refresh' or 'pulumi up'. The resource only verifies that the page still exists. "+
+		"This is due to the complexity of extracting and comparing specific node text from the full DOM structure.")
 }
 
 // Annotate adds descriptions to the PageContentArgs fields.
@@ -263,12 +267,17 @@ func (r *PageContent) Read(
 	}
 
 	// Build current state
-	// Note: We preserve the input nodes from state since we can't easily
-	// extract specific node text from the full DOM without complex traversal.
-	// This is a limitation of the current implementation.
+	// DRIFT DETECTION LIMITATION:
+	// We preserve the configured nodes from state instead of extracting them from the API response.
+	// This means drift detection does NOT work for content changes made outside of Pulumi.
+	// Extracting and comparing specific node text from the full DOM structure would require:
+	// 1. Complex recursive traversal of the entire DOM tree
+	// 2. Matching node IDs to their current text values
+	// 3. Handling edge cases (deleted nodes, moved nodes, nested structures)
+	// For now, we only verify that the page itself still exists (basic drift check).
 	currentInputs := PageContentArgs{
 		PageID: pageID,
-		Nodes:  req.State.Nodes, // Preserve configured nodes
+		Nodes:  req.State.Nodes, // Preserve configured nodes (NOT read from API)
 	}
 	currentState := PageContentState{
 		PageContentArgs: currentInputs,

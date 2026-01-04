@@ -55,7 +55,7 @@ type CollectionItemRequest struct {
 // ValidateFieldData validates that fieldData is non-empty and contains required fields.
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateFieldData(fieldData map[string]interface{}) error {
-	if fieldData == nil || len(fieldData) == 0 {
+	if len(fieldData) == 0 {
 		return errors.New("fieldData is required but was not provided. " +
 			"Please provide a map of field slugs to values (e.g., {\"name\": \"My Item\", \"slug\": \"my-item\"}). " +
 			"The field slugs must match the fields defined in the collection schema.")

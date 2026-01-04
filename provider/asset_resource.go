@@ -51,9 +51,9 @@ type AssetState struct {
 	AssetArgs
 	// AssetID is the Webflow-assigned asset ID (read-only).
 	AssetID string `pulumi:"assetId,optional"`
-	// HostedUrl is the CDN URL where the asset is hosted (read-only).
+	// HostedURL is the CDN URL where the asset is hosted (read-only).
 	// This is the URL you can use to reference the asset in your site.
-	HostedUrl string `pulumi:"hostedUrl,optional"`
+	HostedURL string `pulumi:"hostedUrl,optional"`
 	// ContentType is the MIME type of the asset (read-only).
 	// Examples: "image/png", "image/jpeg", "application/pdf"
 	ContentType string `pulumi:"contentType,optional"`
@@ -111,7 +111,7 @@ func (state *AssetState) Annotate(a infer.Annotator) {
 		"The Webflow-assigned asset ID (read-only). "+
 			"This unique identifier can be used to reference the asset in API calls.")
 
-	a.Describe(&state.HostedUrl,
+	a.Describe(&state.HostedURL,
 		"The CDN URL where the asset is hosted (read-only). "+
 			"Use this URL to reference the asset in your Webflow site or externally. "+
 			"Example: 'https://assets.website-files.com/.../logo.png'.")
@@ -216,7 +216,7 @@ func (r *Asset) Create(
 	if req.DryRun {
 		// Set preview values
 		state.AssetID = fmt.Sprintf("preview-%d", time.Now().Unix())
-		state.HostedUrl = fmt.Sprintf("https://assets.website-files.com/preview/%s", state.FileName)
+		state.HostedURL = "https://assets.website-files.com/preview/" + state.FileName
 		state.CreatedOn = time.Now().Format(time.RFC3339)
 		previewID := GenerateAssetResourceID(req.Inputs.SiteID, state.AssetID)
 		return infer.CreateResponse[AssetState]{
@@ -302,7 +302,7 @@ func (r *Asset) Read(
 	currentState := AssetState{
 		AssetArgs:    currentInputs,
 		AssetID:      asset.ID,
-		HostedUrl:    asset.HostedUrl,
+		HostedURL:    asset.HostedURL,
 		ContentType:  asset.ContentType,
 		Size:         asset.Size,
 		CreatedOn:    asset.CreatedOn,

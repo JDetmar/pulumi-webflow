@@ -234,7 +234,7 @@ func TestGetAsset(t *testing.T) {
 			ContentType:      "image/png",
 			Size:             12345,
 			SiteID:           "5f0c8c9e1c9d440000e8d8c3",
-			HostedUrl:        "https://assets.website-files.com/example/logo.png",
+			HostedURL:        "https://assets.website-files.com/example/logo.png",
 			OriginalFileName: "logo.png",
 			DisplayName:      "Logo",
 			CreatedOn:        "2024-01-01T00:00:00Z",
@@ -267,8 +267,8 @@ func TestGetAsset(t *testing.T) {
 	if asset.Size != 12345 {
 		t.Errorf("Expected size 12345, got %d", asset.Size)
 	}
-	if asset.HostedUrl != "https://assets.website-files.com/example/logo.png" {
-		t.Errorf("Expected hosted URL https://assets.website-files.com/example/logo.png, got %s", asset.HostedUrl)
+	if asset.HostedURL != "https://assets.website-files.com/example/logo.png" {
+		t.Errorf("Expected hosted URL https://assets.website-files.com/example/logo.png, got %s", asset.HostedURL)
 	}
 }
 
@@ -297,7 +297,7 @@ func TestListAssets(t *testing.T) {
 					ContentType:      "image/png",
 					Size:             12345,
 					SiteID:           "5f0c8c9e1c9d440000e8d8c3",
-					HostedUrl:        "https://assets.website-files.com/example/logo.png",
+					HostedURL:        "https://assets.website-files.com/example/logo.png",
 					OriginalFileName: "logo.png",
 					CreatedOn:        "2024-01-01T00:00:00Z",
 					LastUpdated:      "2024-01-01T00:00:00Z",
@@ -466,7 +466,7 @@ func TestGetAssetNotFound(t *testing.T) {
 	// Create a mock server that returns 404
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte(`{"message": "Asset not found"}`))
+		_, _ = w.Write([]byte(`{"message": "Asset not found"}`))
 	}))
 	defer server.Close()
 
@@ -494,8 +494,8 @@ func TestGetAssetRateLimited(t *testing.T) {
 		if attemptCount < 3 {
 			w.Header().Set("Retry-After", "1")
 			w.WriteHeader(http.StatusTooManyRequests)
-			w.Write([]byte(`{"message": "Rate limit exceeded"}`))
-		} else {
+			_, _ = w.Write([]byte(`{"message": "Rate limit exceeded"}`))
+		} else{
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
 			response := AssetResponse{

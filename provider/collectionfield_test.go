@@ -248,7 +248,7 @@ func TestGetCollectionField(t *testing.T) {
 				// Return mock response
 				w.WriteHeader(tt.mockStatusCode)
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tt.mockResponse)
+				_ = json.NewEncoder(w).Encode(tt.mockResponse)
 			}))
 			defer server.Close()
 
@@ -340,7 +340,7 @@ func TestPostCollectionField(t *testing.T) {
 				// Return mock response
 				w.WriteHeader(tt.mockStatusCode)
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tt.mockResponse)
+				_ = json.NewEncoder(w).Encode(tt.mockResponse)
 			}))
 			defer server.Close()
 
@@ -421,7 +421,7 @@ func TestPutCollectionField(t *testing.T) {
 				// Return mock response
 				w.WriteHeader(tt.mockStatusCode)
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tt.mockResponse)
+				_ = json.NewEncoder(w).Encode(tt.mockResponse)
 			}))
 			defer server.Close()
 

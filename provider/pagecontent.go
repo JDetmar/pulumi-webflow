@@ -79,7 +79,7 @@ func ValidateNodeID(nodeID string) error {
 // Format: {pageID}/content
 // Note: PageContent is a 1:1 relationship with a page, so we use a simple suffix.
 func GeneratePageContentResourceID(pageID string) string {
-	return fmt.Sprintf("%s/content", pageID)
+	return pageID + "/content"
 }
 
 // ExtractPageIDFromPageContentResourceID extracts the pageID from a PageContent resource ID.

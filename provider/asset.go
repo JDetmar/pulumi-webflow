@@ -33,7 +33,7 @@ type AssetResponse struct {
 	ContentType      string                  `json:"contentType"`
 	Size             int                     `json:"size"`
 	SiteID           string                  `json:"siteId"`
-	HostedUrl        string                  `json:"hostedUrl"`
+	HostedURL        string                  `json:"hostedUrl"`
 	OriginalFileName string                  `json:"originalFileName"`
 	DisplayName      string                  `json:"displayName,omitempty"`
 	CreatedOn        string                  `json:"createdOn"`

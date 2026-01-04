@@ -33,7 +33,7 @@ func TestMultiSiteBasicGo(t *testing.T) {
 	examplePath := path.Join(getCwd(t), "multi-site", "basic-go")
 	mainFile := path.Join(examplePath, "main.go")
 
-	content, err := os.ReadFile(mainFile)
+	content, err := os.ReadFile(mainFile) //nolint:gosec // Test file reading from known path
 	if err != nil {
 		t.Fatalf("Failed to read main.go: %v", err)
 	}
@@ -57,14 +57,14 @@ func TestMultiSiteConfigDriven(t *testing.T) {
 
 	// Check index.ts exists
 	indexFile := path.Join(examplePath, "index.ts")
-	indexContent, err := os.ReadFile(indexFile)
+	indexContent, err := os.ReadFile(indexFile) //nolint:gosec // Test file reading from known path
 	if err != nil {
 		t.Fatalf("Failed to read index.ts: %v", err)
 	}
 
 	// Check sites.yaml exists
 	sitesFile := path.Join(examplePath, "sites.yaml")
-	sitesContent, err := os.ReadFile(sitesFile)
+	sitesContent, err := os.ReadFile(sitesFile) //nolint:gosec // Test file reading from known path
 	if err != nil {
 		t.Fatalf("Failed to read sites.yaml: %v", err)
 	}
@@ -94,7 +94,7 @@ func TestMultiSiteTemplate(t *testing.T) {
 
 	// Check site_templates.py exists
 	templatesFile := path.Join(examplePath, "site_templates.py")
-	content, err := os.ReadFile(templatesFile)
+	content, err := os.ReadFile(templatesFile) //nolint:gosec // Test file reading from known path
 	if err != nil {
 		t.Fatalf("Failed to read site_templates.py: %v", err)
 	}
@@ -132,7 +132,7 @@ func TestMultiSiteEnvironments(t *testing.T) {
 	}
 
 	for _, configPath := range stackConfigs {
-		content, err := os.ReadFile(configPath)
+		content, err := os.ReadFile(configPath) //nolint:gosec // Test file reading from known path
 		if err != nil {
 			t.Fatalf("Failed to read %s: %v", configPath, err)
 		}
@@ -149,7 +149,7 @@ func TestMultiSiteEnvironments(t *testing.T) {
 
 	// Verify main.go reads configs
 	mainFile := path.Join(examplePath, "main.go")
-	mainContent, err := os.ReadFile(mainFile)
+	mainContent, err := os.ReadFile(mainFile) //nolint:gosec // Test file reading from known path
 	if err != nil {
 		t.Fatalf("Failed to read main.go: %v", err)
 	}
@@ -166,7 +166,7 @@ func TestMultiSiteEnvironments(t *testing.T) {
 // TestMultiSiteDocumentation verifies comprehensive README exists.
 func TestMultiSiteDocumentation(t *testing.T) {
 	readmePath := path.Join(getCwd(t), "multi-site", "README.md")
-	content, err := os.ReadFile(readmePath)
+	content, err := os.ReadFile(readmePath) //nolint:gosec // Test file reading
 	if err != nil {
 		t.Fatalf("Failed to read README.md: %v", err)
 	}
@@ -211,7 +211,7 @@ func TestMultiSiteAcceptanceCriteria(t *testing.T) {
 
 	// Test 1: Basic example creates 3+ sites
 	basicExamplePath := path.Join(getCwd(t), "multi-site", "basic-typescript")
-	basicContent, err := os.ReadFile(path.Join(basicExamplePath, "index.ts"))
+	basicContent, err := os.ReadFile(path.Join(basicExamplePath, "index.ts")) //nolint:gosec // Test file reading
 	if err != nil {
 		t.Fatalf("Failed to read basic-typescript example: %v", err)
 	}
@@ -221,7 +221,7 @@ func TestMultiSiteAcceptanceCriteria(t *testing.T) {
 
 	// Test 2: Configuration example creates 10+ sites
 	configExamplePath := path.Join(getCwd(t), "multi-site", "config-driven-typescript")
-	sitesContent, err := os.ReadFile(path.Join(configExamplePath, "sites.yaml"))
+	sitesContent, err := os.ReadFile(path.Join(configExamplePath, "sites.yaml")) //nolint:gosec // Test file reading
 	if err != nil {
 		t.Fatalf("Failed to read sites.yaml: %v", err)
 	}
@@ -234,7 +234,7 @@ func TestMultiSiteAcceptanceCriteria(t *testing.T) {
 
 	// Check templates have error handling
 	templatePath := path.Join(getCwd(t), "multi-site", "template-python")
-	templateContent, err := os.ReadFile(path.Join(templatePath, "site_templates.py"))
+	templateContent, err := os.ReadFile(path.Join(templatePath, "site_templates.py")) //nolint:gosec // Test file reading
 	if err != nil {
 		t.Fatalf("Failed to read site_templates.py: %v", err)
 	}
@@ -246,7 +246,7 @@ func TestMultiSiteAcceptanceCriteria(t *testing.T) {
 
 	// Check multi-env has error handling
 	multiEnvPath := path.Join(getCwd(t), "multi-site", "multi-env-go")
-	multiEnvContent, err := os.ReadFile(path.Join(multiEnvPath, "main.go"))
+	multiEnvContent, err := os.ReadFile(path.Join(multiEnvPath, "main.go")) //nolint:gosec // Test file reading
 	if err != nil {
 		t.Fatalf("Failed to read multi-env main.go: %v", err)
 	}

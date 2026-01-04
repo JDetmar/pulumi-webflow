@@ -59,7 +59,7 @@ func TestGetSiteCustomCode(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(SiteCustomCodeResponse{
+		_ = json.NewEncoder(w).Encode(SiteCustomCodeResponse{
 			Scripts: []CustomScript{
 				{
 					ID:       "cms_slider",
@@ -119,7 +119,7 @@ func TestPutSiteCustomCode(t *testing.T) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(SiteCustomCodeResponse{
+		_ = json.NewEncoder(w).Encode(SiteCustomCodeResponse{
 			Scripts: []CustomScript{
 				{
 					ID:       "cms_slider",

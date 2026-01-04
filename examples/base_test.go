@@ -17,13 +17,14 @@ import (
 	pulumirpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
 )
 
+//nolint:unused // Reserved for future integration tests
 var providerFactory = func(_ providers.PulumiTest) (pulumirpc.ResourceProviderServer, error) {
 	return goprovider.RawServer("webflow", "0.1.0", provider.Provider())(nil)
 }
 
 // skipIfNoAPIToken skips the test if WEBFLOW_API_TOKEN is not set.
 // This allows tests to pass in CI environments without valid credentials.
-func skipIfNoAPIToken(t *testing.T) {
+func skipIfNoAPIToken(t *testing.T) { //nolint:unused // Reserved for future integration tests
 	t.Helper()
 	if os.Getenv("WEBFLOW_API_TOKEN") == "" {
 		t.Skip("Skipping: WEBFLOW_API_TOKEN not set. Set this environment variable to run integration tests.")

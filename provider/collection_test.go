@@ -694,10 +694,8 @@ func TestCollectionDiff_MultipleChanges(t *testing.T) {
 				if !result.DeleteBeforeReplace {
 					t.Error("Expected DeleteBeforeReplace=true when changes detected")
 				}
-			} else {
-				if result.HasChanges {
-					t.Error("Expected HasChanges=false when no changes")
-				}
+			} else if result.HasChanges {
+				t.Error("Expected HasChanges=false when no changes")
 			}
 
 			// Check that all expected keys are present

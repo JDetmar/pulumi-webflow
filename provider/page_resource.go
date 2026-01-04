@@ -197,13 +197,13 @@ func (r *PageData) Read(
 			PageDataArgs:  currentInputs,
 			WebflowPageID: page.ID,
 			Title:         page.Title,
-			Slug:         page.Slug,
-			ParentID:     page.ParentID,
-			CollectionID: page.CollectionID,
-			CreatedOn:    page.CreatedOn,
-			LastUpdated:  page.LastUpdated,
-			Archived:     page.Archived,
-			Draft:        page.Draft,
+			Slug:          page.Slug,
+			ParentID:      page.ParentID,
+			CollectionID:  page.CollectionID,
+			CreatedOn:     page.CreatedOn,
+			LastUpdated:   page.LastUpdated,
+			Archived:      page.Archived,
+			Draft:         page.Draft,
 		}
 
 		return infer.ReadResponse[PageDataArgs, PageDataState]{
@@ -221,7 +221,8 @@ func (r *PageData) Read(
 
 	// Convert API pages to PageInfo
 	pages := make([]PageInfo, len(response.Pages))
-	for i, p := range response.Pages {
+	for i := range response.Pages {
+		p := &response.Pages[i]
 		pages[i] = PageInfo{
 			PageID:       p.ID,
 			SiteID:       p.SiteID,

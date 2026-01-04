@@ -21,12 +21,12 @@ import (
 // Collection represents a Webflow CMS collection.
 // This struct matches the Webflow API v2 response format for collections.
 type Collection struct {
-	ID           string `json:"id,omitempty"`           // Webflow-assigned collection ID (read-only)
-	DisplayName  string `json:"displayName"`            // Human-readable name of the collection
-	SingularName string `json:"singularName"`           // Singular form of the collection name
-	Slug         string `json:"slug,omitempty"`         // URL-friendly slug for the collection
-	CreatedOn    string `json:"createdOn,omitempty"`    // Creation timestamp (read-only)
-	LastUpdated  string `json:"lastUpdated,omitempty"`  // Last update timestamp (read-only)
+	ID           string `json:"id,omitempty"`          // Webflow-assigned collection ID (read-only)
+	DisplayName  string `json:"displayName"`           // Human-readable name of the collection
+	SingularName string `json:"singularName"`          // Singular form of the collection name
+	Slug         string `json:"slug,omitempty"`        // URL-friendly slug for the collection
+	CreatedOn    string `json:"createdOn,omitempty"`   // Creation timestamp (read-only)
+	LastUpdated  string `json:"lastUpdated,omitempty"` // Last update timestamp (read-only)
 }
 
 // CollectionListResponse represents the Webflow API response for listing collections.
@@ -36,9 +36,9 @@ type CollectionListResponse struct {
 
 // CollectionRequest represents the request body for POST collection.
 type CollectionRequest struct {
-	DisplayName  string `json:"displayName"`            // Human-readable name
-	SingularName string `json:"singularName"`           // Singular form
-	Slug         string `json:"slug,omitempty"`         // Optional URL slug
+	DisplayName  string `json:"displayName"`    // Human-readable name
+	SingularName string `json:"singularName"`   // Singular form
+	Slug         string `json:"slug,omitempty"` // Optional URL slug
 }
 
 // ValidateCollectionID validates that a collectionID matches the Webflow collection ID format.
@@ -60,7 +60,7 @@ func ValidateCollectionID(collectionID string) error {
 	return nil
 }
 
-// ValidateDisplayName validates that displayName is non-empty and reasonable length.
+// ValidateCollectionDisplayName validates that displayName is non-empty and reasonable length.
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateCollectionDisplayName(displayName string) error {
 	if displayName == "" {
@@ -106,7 +106,10 @@ func ExtractIDsFromCollectionResourceID(resourceID string) (siteID, collectionID
 
 	parts := strings.Split(resourceID, "/")
 	if len(parts) < 3 || parts[1] != "collections" {
-		return "", "", fmt.Errorf("invalid resource ID format: expected {siteId}/collections/{collectionId}, got: %s", resourceID)
+		return "", "", fmt.Errorf(
+			"invalid resource ID format: expected {siteId}/collections/{collectionId}, got: %s",
+			resourceID,
+		)
 	}
 
 	siteID = parts[0]

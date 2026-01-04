@@ -17,7 +17,7 @@ import (
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
-// Collection is the resource controller for managing Webflow CMS collections.
+// CollectionResource is the resource controller for managing Webflow CMS collections.
 // It implements the infer.CustomResource interface for full CRUD operations.
 type CollectionResource struct{}
 
@@ -267,7 +267,9 @@ func (c *CollectionResource) Update(
 }
 
 // Delete removes a collection from the Webflow site.
-func (c *CollectionResource) Delete(ctx context.Context, req infer.DeleteRequest[CollectionState]) (infer.DeleteResponse, error) {
+func (c *CollectionResource) Delete(
+	ctx context.Context, req infer.DeleteRequest[CollectionState],
+) (infer.DeleteResponse, error) {
 	// Extract siteID and collectionID from resource ID
 	_, collectionID, err := ExtractIDsFromCollectionResourceID(req.ID)
 	if err != nil {

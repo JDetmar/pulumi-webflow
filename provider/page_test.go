@@ -302,16 +302,16 @@ func TestGetPage_Valid(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		page := Page{
-			ID:          "page1",
-			SiteID:      "5f0c8c9e1c9d440000e8d8c3",
-			Title:       "Home",
-			Slug:        "home",
-			ParentID:    "",
+			ID:           "page1",
+			SiteID:       "5f0c8c9e1c9d440000e8d8c3",
+			Title:        "Home",
+			Slug:         "home",
+			ParentID:     "",
 			CollectionID: "",
-			CreatedOn:   "2024-01-01T00:00:00Z",
-			LastUpdated: "2024-01-02T00:00:00Z",
-			Archived:    false,
-			Draft:       false,
+			CreatedOn:    "2024-01-01T00:00:00Z",
+			LastUpdated:  "2024-01-02T00:00:00Z",
+			Archived:     false,
+			Draft:        false,
 		}
 		_ = json.NewEncoder(w).Encode(page)
 	}))

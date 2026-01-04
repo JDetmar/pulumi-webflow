@@ -440,7 +440,10 @@ func TestPostWebhook_Valid(t *testing.T) {
 	client := &http.Client{Timeout: 30 * time.Second}
 	ctx := context.Background()
 
-	result, err := PostWebhook(ctx, client, "5f0c8c9e1c9d440000e8d8c3", "form_submission", "https://example.com/webhook", nil)
+	result, err := PostWebhook(
+		ctx, client, "5f0c8c9e1c9d440000e8d8c3", "form_submission",
+		"https://example.com/webhook", nil,
+	)
 	if err != nil {
 		t.Fatalf("PostWebhook failed: %v", err)
 	}

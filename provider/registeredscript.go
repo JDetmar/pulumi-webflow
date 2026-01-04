@@ -22,20 +22,20 @@ import (
 // RegisteredScript represents a registered custom code script in Webflow.
 // This struct matches the Webflow API v2 response format for registered scripts.
 type RegisteredScript struct {
-	ID             string `json:"id,omitempty"`             // Human-readable ID derived from display name (read-only)
-	DisplayName    string `json:"displayName"`              // User-facing name for the script (1-50 alphanumeric chars)
-	HostedLocation string `json:"hostedLocation"`           // URI for externally hosted script
-	IntegrityHash  string `json:"integrityHash"`            // Sub-Resource Integrity Hash (SRI)
-	CanCopy        bool   `json:"canCopy"`                  // Whether script can be copied on site duplication
-	Version        string `json:"version"`                  // Semantic Version (SemVer) string
-	CreatedOn      string `json:"createdOn,omitempty"`      // Timestamp when created (read-only)
-	LastUpdated    string `json:"lastUpdated,omitempty"`    // Timestamp when last updated (read-only)
+	ID             string `json:"id,omitempty"`          // Human-readable ID derived from display name (read-only)
+	DisplayName    string `json:"displayName"`           // User-facing name for the script (1-50 alphanumeric chars)
+	HostedLocation string `json:"hostedLocation"`        // URI for externally hosted script
+	IntegrityHash  string `json:"integrityHash"`         // Sub-Resource Integrity Hash (SRI)
+	CanCopy        bool   `json:"canCopy"`               // Whether script can be copied on site duplication
+	Version        string `json:"version"`               // Semantic Version (SemVer) string
+	CreatedOn      string `json:"createdOn,omitempty"`   // Timestamp when created (read-only)
+	LastUpdated    string `json:"lastUpdated,omitempty"` // Timestamp when last updated (read-only)
 }
 
 // RegisteredScriptsResponse represents the Webflow API response for listing registered scripts.
 type RegisteredScriptsResponse struct {
 	RegisteredScripts []RegisteredScript `json:"registeredScripts"`
-	Pagination       PaginationInfo     `json:"pagination,omitempty"`
+	Pagination        PaginationInfo     `json:"pagination,omitempty"`
 }
 
 // PaginationInfo represents pagination metadata from the API response.

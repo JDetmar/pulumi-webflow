@@ -333,7 +333,7 @@ func (r *RegisteredScriptResource) Update(
 	state := RegisteredScriptResourceState{
 		RegisteredScriptResourceArgs: req.Inputs,
 		CreatedOn:                    req.State.CreatedOn, // Preserve the creation timestamp from current state
-		LastUpdated:                  "", // Will be updated from API response
+		LastUpdated:                  "",                  // Will be updated from API response
 	}
 
 	// During preview, return expected state without making API calls

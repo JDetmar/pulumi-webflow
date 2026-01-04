@@ -217,7 +217,7 @@ func TestPostRegisteredScript_Success(t *testing.T) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(RegisteredScript{
+		_ = json.NewEncoder(w).Encode(RegisteredScript{
 			ID:             testScriptID,
 			DisplayName:    "TestScript",
 			HostedLocation: "https://example.com/script.js",

@@ -194,7 +194,8 @@ func (r *PageCustomCode) Create(
 ) (infer.CreateResponse[PageCustomCodeState], error) {
 	// Validate inputs BEFORE generating resource ID
 	if err := ValidatePageID(req.Inputs.PageID); err != nil {
-		return infer.CreateResponse[PageCustomCodeState]{}, fmt.Errorf("validation failed for PageCustomCode resource: %w", err)
+		return infer.CreateResponse[PageCustomCodeState]{},
+			fmt.Errorf("validation failed for PageCustomCode resource: %w", err)
 	}
 
 	// Validate scripts
@@ -247,12 +248,7 @@ func (r *PageCustomCode) Create(
 	// Convert input scripts to API format
 	apiScripts := make([]CustomCodeScript, len(req.Inputs.Scripts))
 	for i, script := range req.Inputs.Scripts {
-		apiScripts[i] = CustomCodeScript{
-			ID:         script.ID,
-			Version:    script.Version,
-			Location:   script.Location,
-			Attributes: script.Attributes,
-		}
+		apiScripts[i] = CustomCodeScript(script)
 	}
 
 	// Call Webflow API to apply scripts
@@ -289,7 +285,8 @@ func (r *PageCustomCode) Read(
 	// Get HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
-		return infer.ReadResponse[PageCustomCodeArgs, PageCustomCodeState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
+		return infer.ReadResponse[PageCustomCodeArgs, PageCustomCodeState]{},
+			fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
 	// Call Webflow API to get current custom code
@@ -382,12 +379,7 @@ func (r *PageCustomCode) Update(
 	// Convert input scripts to API format
 	apiScripts := make([]CustomCodeScript, len(req.Inputs.Scripts))
 	for i, script := range req.Inputs.Scripts {
-		apiScripts[i] = CustomCodeScript{
-			ID:         script.ID,
-			Version:    script.Version,
-			Location:   script.Location,
-			Attributes: script.Attributes,
-		}
+		apiScripts[i] = CustomCodeScript(script)
 	}
 
 	// Call Webflow API to update scripts

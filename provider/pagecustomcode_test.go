@@ -44,19 +44,19 @@ func TestValidatePageID(t *testing.T) {
 
 func TestValidateScriptID(t *testing.T) {
 	tests := []struct {
-		name    string
+		name     string
 		scriptID string
-		wantErr bool
+		wantErr  bool
 	}{
 		{
-			name:    "valid script ID",
+			name:     "valid script ID",
 			scriptID: "cms_slider",
-			wantErr: false,
+			wantErr:  false,
 		},
 		{
-			name:    "empty script ID",
+			name:     "empty script ID",
 			scriptID: "",
-			wantErr: true,
+			wantErr:  true,
 		},
 	}
 
@@ -72,24 +72,24 @@ func TestValidateScriptID(t *testing.T) {
 
 func TestValidateScriptVersion(t *testing.T) {
 	tests := []struct {
-		name     string
-		version  string
-		wantErr  bool
+		name    string
+		version string
+		wantErr bool
 	}{
 		{
-			name:     "valid version",
-			version:  "1.0.0",
-			wantErr:  false,
+			name:    "valid version",
+			version: "1.0.0",
+			wantErr: false,
 		},
 		{
-			name:     "another valid version",
-			version:  "2.5.3",
-			wantErr:  false,
+			name:    "another valid version",
+			version: "2.5.3",
+			wantErr: false,
 		},
 		{
-			name:     "empty version",
-			version:  "",
-			wantErr:  true,
+			name:    "empty version",
+			version: "",
+			wantErr: true,
 		},
 	}
 
@@ -282,7 +282,7 @@ func TestGetPageCustomCode(t *testing.T) {
 				w.WriteHeader(tt.mockStatusCode)
 				if tt.mockStatusCode == 200 {
 					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(tt.mockResponse)
+					_ = json.NewEncoder(w).Encode(tt.mockResponse)
 				}
 			}))
 			defer server.Close()
@@ -366,7 +366,7 @@ func TestPutPageCustomCode(t *testing.T) {
 				}
 				w.WriteHeader(tt.mockStatusCode)
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tt.mockResponse)
+				_ = json.NewEncoder(w).Encode(tt.mockResponse)
 			}))
 			defer server.Close()
 

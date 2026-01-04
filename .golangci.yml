@@ -26,68 +26,68 @@ linters:
     - unconvert
     - unused
 
-settings:
-  depguard:
+  settings:
+    depguard:
+      rules:
+        main:
+          list-mode: lax
+          deny:
+            - pkg: "github.com/golang/protobuf"
+              desc: Use google.golang.org/protobuf instead
+    gocritic:
+      enable-all: true
+      disabled-checks:
+        - hugeParam
+        - importShadow
+    goheader:
+      template: |-
+        Copyright 2025, Justin Detmar.
+        SPDX-License-Identifier: MIT
+
+        This is an unofficial, community-maintained Pulumi provider for Webflow.
+        Not affiliated with, endorsed by, or supported by Pulumi Corporation or Webflow, Inc.
+    govet:
+      enable:
+        - nilness
+        # Reject comparisons of reflect.Value with DeepEqual or '=='.
+        - reflectvaluecompare
+        # Reject sort.Slice calls with a non-slice argument.
+        - sortslice
+        # Detect write to struct/arrays by-value that aren't read again.
+        - unusedwrite
+    nakedret:
+      # Make an issue if func has more lines of code than this setting, and it has naked returns.
+      # Default: 30
+      max-func-lines: 60
+    nolintlint:
+      # Some linter exclusions are added to generated or templated files
+      # pre-emptively.
+      # Don't complain about these.
+      allow-unused: true
+
+  exclusions:
     rules:
-      main:
-        list-mode: lax
-        deny:
-          - pkg: "github.com/golang/protobuf"
-            desc: Use google.golang.org/protobuf instead
-  gocritic:
-    enable-all: true
-    disabled-checks:
-      - hugeParam
-      - importShadow
-  goheader:
-    template: |-
-      Copyright 2025, Justin Detmar.
-      SPDX-License-Identifier: MIT
+      # Don't warn on unused parameters.
+      # Parameter names are useful; replacing them with '_' is undesirable.
+      - linters: [revive]
+        text: 'unused-parameter: parameter \S+ seems to be unused, consider removing or renaming it as _'
 
-      This is an unofficial, community-maintained Pulumi provider for Webflow.
-      Not affiliated with, endorsed by, or supported by Pulumi Corporation or Webflow, Inc.
-  govet:
-    enable:
-      - nilness
-      # Reject comparisons of reflect.Value with DeepEqual or '=='.
-      - reflectvaluecompare
-      # Reject sort.Slice calls with a non-slice argument.
-      - sortslice
-      # Detect write to struct/arrays by-value that aren't read again.
-      - unusedwrite
-  nakedret:
-    # Make an issue if func has more lines of code than this setting, and it has naked returns.
-    # Default: 30
-    max-func-lines: 60
-  nolintlint:
-    # Some linter exclusions are added to generated or templated files
-    # pre-emptively.
-    # Don't complain about these.
-    allow-unused: true
+      # staticcheck already has smarter checks for empty blocks.
+      # revive's empty-block linter has false positives.
+      # For example, as of writing this, the following is not allowed.
+      #   for foo() { }
+      - linters: [revive]
+        text: "empty-block: this block is empty, you can remove it"
 
-exclusions:
-  rules:
-    # Don't warn on unused parameters.
-    # Parameter names are useful; replacing them with '_' is undesirable.
-    - linters: [revive]
-      text: 'unused-parameter: parameter \S+ seems to be unused, consider removing or renaming it as _'
+      # We *frequently* use the term 'new' in the context of properties
+      # (new and old properties),
+      # and we rarely use the 'new' built-in function.
+      # It's fine to ignore these cases.
+      - linters: [revive]
+        text: "redefines-builtin-id: redefinition of the built-in function new"
 
-    # staticcheck already has smarter checks for empty blocks.
-    # revive's empty-block linter has false positives.
-    # For example, as of writing this, the following is not allowed.
-    #   for foo() { }
-    - linters: [revive]
-      text: "empty-block: this block is empty, you can remove it"
-
-    # We *frequently* use the term 'new' in the context of properties
-    # (new and old properties),
-    # and we rarely use the 'new' built-in function.
-    # It's fine to ignore these cases.
-    - linters: [revive]
-      text: "redefines-builtin-id: redefinition of the built-in function new"
-
-    # Exclude paralleltest for test files that use shared global state
-    # (mock URL variables, environment variables) which makes them unsafe
-    # to parallelize without significant refactoring.
-    - linters: [paralleltest]
-      path: "_test\\.go$"
+      # Exclude paralleltest for test files that use shared global state
+      # (mock URL variables, environment variables) which makes them unsafe
+      # to parallelize without significant refactoring.
+      - linters: [paralleltest]
+        path: "_test\\.go$"

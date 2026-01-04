@@ -25,6 +25,70 @@
       }
     }
   },
+  "types": {
+    "webflow:index:NodeContentUpdate": {
+      "properties": {
+        "nodeId": {
+          "type": "string",
+          "description": "The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint."
+        },
+        "text": {
+          "type": "string",
+          "description": "The new text content for the node. This will replace the existing text content in the specified node. Only applicable to text nodes or elements containing text."
+        }
+      },
+      "type": "object",
+      "required": [
+        "nodeId",
+        "text"
+      ]
+    },
+    "webflow:index:PageInfo": {
+      "properties": {
+        "archived": {
+          "type": "boolean"
+        },
+        "collectionId": {
+          "type": "string"
+        },
+        "createdOn": {
+          "type": "string"
+        },
+        "draft": {
+          "type": "boolean"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "pageId": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string"
+        },
+        "siteId": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "required": [
+        "pageId",
+        "siteId",
+        "title",
+        "slug",
+        "createdOn",
+        "lastUpdated",
+        "archived",
+        "draft"
+      ]
+    }
+  },
   "provider": {
     "properties": {
       "apiToken": {
@@ -42,6 +106,419 @@
     }
   },
   "resources": {
+    "webflow:index:Asset": {
+      "description": "Manages assets (images, files, documents) for a Webflow site. This resource allows you to upload and manage files that can be used in your Webflow site. Note: Assets are immutable - changing any property will delete and recreate the asset.",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "The Webflow-assigned asset ID (read-only). This unique identifier can be used to reference the asset in API calls."
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The MIME type of the uploaded asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Automatically detected by Webflow based on the file content."
+        },
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the asset was created (RFC3339 format, read-only). This is automatically set when the asset is uploaded."
+        },
+        "fileHash": {
+          "type": "string",
+          "description": "Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file."
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (<, >, :, \", |, ?, *)."
+        },
+        "fileSource": {
+          "type": "string",
+          "description": "The source of the file to upload. For the current implementation, this is a reference field. In future versions, this may support URLs or local file paths for automatic upload. Examples: 'https://example.com/logo.png', '/path/to/local/file.png'."
+        },
+        "hostedUrl": {
+          "type": "string",
+          "description": "The CDN URL where the asset is hosted (read-only). Use this URL to reference the asset in your Webflow site or externally. Example: 'https://assets.website-files.com/.../logo.png'."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The timestamp when the asset was last modified (RFC3339 format, read-only). For most assets, this will be the same as createdOn since assets are immutable."
+        },
+        "parentFolder": {
+          "type": "string",
+          "description": "Optional folder ID where the asset will be organized in the Webflow Assets panel. If not specified, the asset will be placed at the root level. Example: '5f0c8c9e1c9d440000e8d8c4'."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        },
+        "size": {
+          "type": "integer",
+          "description": "The size of the asset in bytes (read-only). This is the actual size of the uploaded file."
+        }
+      },
+      "required": [
+        "siteId",
+        "fileName"
+      ],
+      "inputProperties": {
+        "fileHash": {
+          "type": "string",
+          "description": "Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file."
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (<, >, :, \", |, ?, *)."
+        },
+        "fileSource": {
+          "type": "string",
+          "description": "The source of the file to upload. For the current implementation, this is a reference field. In future versions, this may support URLs or local file paths for automatic upload. Examples: 'https://example.com/logo.png', '/path/to/local/file.png'."
+        },
+        "parentFolder": {
+          "type": "string",
+          "description": "Optional folder ID where the asset will be organized in the Webflow Assets panel. If not specified, the asset will be placed at the root level. Example: '5f0c8c9e1c9d440000e8d8c4'."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        }
+      },
+      "requiredInputs": [
+        "siteId",
+        "fileName"
+      ]
+    },
+    "webflow:index:Collection": {
+      "description": "Manages CMS collections for a Webflow site. Collections are containers for structured content items (blog posts, products, etc.). Note: Webflow collections do not support updates - any changes require replacement (delete + recreate).",
+      "properties": {
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the collection was created (RFC3339 format). This is automatically set by Webflow and is read-only."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The human-readable name of the collection (e.g., 'Blog Posts', 'Products', 'Team Members'). This name appears in the Webflow CMS interface. Maximum length: 255 characters."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The timestamp when the collection was last updated (RFC3339 format). This is automatically updated by Webflow and is read-only."
+        },
+        "singularName": {
+          "type": "string",
+          "description": "The singular form of the collection name (e.g., 'Blog Post' for 'Blog Posts', 'Product' for 'Products'). Used in the CMS UI when referring to individual items. Maximum length: 255 characters."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        },
+        "slug": {
+          "type": "string",
+          "description": "The URL-friendly slug for the collection (optional, e.g., 'blog-posts', 'products'). If not provided, Webflow will auto-generate a slug from the displayName. The slug determines the URL path for collection items."
+        }
+      },
+      "required": [
+        "siteId",
+        "displayName",
+        "singularName"
+      ],
+      "inputProperties": {
+        "displayName": {
+          "type": "string",
+          "description": "The human-readable name of the collection (e.g., 'Blog Posts', 'Products', 'Team Members'). This name appears in the Webflow CMS interface. Maximum length: 255 characters."
+        },
+        "singularName": {
+          "type": "string",
+          "description": "The singular form of the collection name (e.g., 'Blog Post' for 'Blog Posts', 'Product' for 'Products'). Used in the CMS UI when referring to individual items. Maximum length: 255 characters."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        },
+        "slug": {
+          "type": "string",
+          "description": "The URL-friendly slug for the collection (optional, e.g., 'blog-posts', 'products'). If not provided, Webflow will auto-generate a slug from the displayName. The slug determines the URL path for collection items."
+        }
+      },
+      "requiredInputs": [
+        "siteId",
+        "displayName",
+        "singularName"
+      ]
+    },
+    "webflow:index:CollectionField": {
+      "description": "Manages fields for a Webflow CMS collection. Collection fields define the structure of content items in a collection. Note: The field type cannot be changed after creation - changing it requires replacement (delete + recreate).",
+      "properties": {
+        "collectionId": {
+          "type": "string",
+          "description": "The Webflow collection ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find collection IDs via the Webflow API or dashboard. This field will be validated before making any API calls."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The human-readable name of the field (e.g., 'Title', 'Description', 'Author'). This name appears in the Webflow CMS interface. Maximum length: 255 characters."
+        },
+        "fieldId": {
+          "type": "string",
+          "description": "The Webflow-assigned field ID (read-only). This ID is automatically generated when the field is created."
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Optional help text shown in the CMS interface (e.g., 'Enter the article title'). Helps content editors understand what to enter in this field."
+        },
+        "isEditable": {
+          "type": "boolean",
+          "description": "Whether the field can be edited (read-only). System fields may not be editable."
+        },
+        "isRequired": {
+          "type": "boolean",
+          "description": "Whether the field is required (optional, defaults to false). When true, content items must provide a value for this field."
+        },
+        "slug": {
+          "type": "string",
+          "description": "The URL-friendly slug for the field (optional, e.g., 'title', 'description'). If not provided, Webflow will auto-generate a slug from the displayName. The slug is used in API requests and exports."
+        },
+        "type": {
+          "type": "string",
+          "description": "The field type (e.g., 'PlainText', 'RichText', 'Image', 'Number'). Supported types: PlainText, RichText, Image, MultiImage, Video, Link, Email, Phone, Number, DateTime, Switch, Color, Option, File, Reference, MultiReference. IMPORTANT: Cannot be changed after creation - changing this requires replacement."
+        },
+        "validations": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          },
+          "description": "Type-specific validation rules (optional). Different field types support different validations. Example for Number type: {\"min\": 0, \"max\": 100}. Example for PlainText type: {\"maxLength\": 500}. Refer to Webflow API documentation for validation options for each field type."
+        }
+      },
+      "required": [
+        "collectionId",
+        "type",
+        "displayName"
+      ],
+      "inputProperties": {
+        "collectionId": {
+          "type": "string",
+          "description": "The Webflow collection ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find collection IDs via the Webflow API or dashboard. This field will be validated before making any API calls."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The human-readable name of the field (e.g., 'Title', 'Description', 'Author'). This name appears in the Webflow CMS interface. Maximum length: 255 characters."
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Optional help text shown in the CMS interface (e.g., 'Enter the article title'). Helps content editors understand what to enter in this field."
+        },
+        "isRequired": {
+          "type": "boolean",
+          "description": "Whether the field is required (optional, defaults to false). When true, content items must provide a value for this field."
+        },
+        "slug": {
+          "type": "string",
+          "description": "The URL-friendly slug for the field (optional, e.g., 'title', 'description'). If not provided, Webflow will auto-generate a slug from the displayName. The slug is used in API requests and exports."
+        },
+        "type": {
+          "type": "string",
+          "description": "The field type (e.g., 'PlainText', 'RichText', 'Image', 'Number'). Supported types: PlainText, RichText, Image, MultiImage, Video, Link, Email, Phone, Number, DateTime, Switch, Color, Option, File, Reference, MultiReference. IMPORTANT: Cannot be changed after creation - changing this requires replacement."
+        },
+        "validations": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          },
+          "description": "Type-specific validation rules (optional). Different field types support different validations. Example for Number type: {\"min\": 0, \"max\": 100}. Example for PlainText type: {\"maxLength\": 500}. Refer to Webflow API documentation for validation options for each field type."
+        }
+      },
+      "requiredInputs": [
+        "collectionId",
+        "type",
+        "displayName"
+      ]
+    },
+    "webflow:index:CollectionItem": {
+      "description": "Manages CMS collection items for a Webflow collection. Collection items represent individual content entries (blog posts, products, etc.) within a CMS collection. Each item has dynamic field data based on the collection schema.",
+      "properties": {
+        "cmsLocaleId": {
+          "type": "string",
+          "description": "The locale ID for localized sites (optional, e.g., 'en-US'). Only required if your site uses Webflow's localization features. Leave empty for non-localized sites."
+        },
+        "collectionId": {
+          "type": "string",
+          "description": "The Webflow collection ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find collection IDs via the Webflow API or dashboard. This field will be validated before making any API calls."
+        },
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the item was created (RFC3339 format, read-only). This is automatically set by Webflow and is immutable."
+        },
+        "fieldData": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          },
+          "description": "A map of field slugs to values for the collection item. The field slugs must match the fields defined in the collection schema. Common fields include 'name' (required), 'slug' (required, URL-friendly), and any custom fields you've added to the collection. Example: {\"name\": \"My Blog Post\", \"slug\": \"my-blog-post\", \"content\": \"Post content...\"}"
+        },
+        "isArchived": {
+          "type": "boolean",
+          "description": "Whether the item is archived (optional, defaults to false). Archived items are not visible on the published site but remain in the CMS."
+        },
+        "isDraft": {
+          "type": "boolean",
+          "description": "Whether the item is a draft (optional, defaults to true). Draft items are not published to the live site. Set to false to publish the item immediately upon creation."
+        },
+        "itemId": {
+          "type": "string",
+          "description": "The Webflow-assigned item ID (read-only). This is automatically set by Webflow when the item is created."
+        },
+        "lastPublished": {
+          "type": "string",
+          "description": "The timestamp when the item was last published (RFC3339 format, read-only). This is automatically updated by Webflow when the item is published."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The timestamp when the item was last updated (RFC3339 format, read-only). This is automatically updated by Webflow whenever the item is modified."
+        }
+      },
+      "required": [
+        "collectionId",
+        "fieldData"
+      ],
+      "inputProperties": {
+        "cmsLocaleId": {
+          "type": "string",
+          "description": "The locale ID for localized sites (optional, e.g., 'en-US'). Only required if your site uses Webflow's localization features. Leave empty for non-localized sites."
+        },
+        "collectionId": {
+          "type": "string",
+          "description": "The Webflow collection ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find collection IDs via the Webflow API or dashboard. This field will be validated before making any API calls."
+        },
+        "fieldData": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          },
+          "description": "A map of field slugs to values for the collection item. The field slugs must match the fields defined in the collection schema. Common fields include 'name' (required), 'slug' (required, URL-friendly), and any custom fields you've added to the collection. Example: {\"name\": \"My Blog Post\", \"slug\": \"my-blog-post\", \"content\": \"Post content...\"}"
+        },
+        "isArchived": {
+          "type": "boolean",
+          "description": "Whether the item is archived (optional, defaults to false). Archived items are not visible on the published site but remain in the CMS."
+        },
+        "isDraft": {
+          "type": "boolean",
+          "description": "Whether the item is a draft (optional, defaults to true). Draft items are not published to the live site. Set to false to publish the item immediately upon creation."
+        }
+      },
+      "requiredInputs": [
+        "collectionId",
+        "fieldData"
+      ]
+    },
+    "webflow:index:PageContent": {
+      "description": "Manages static content (text) for a Webflow page. This resource allows you to update text content within existing DOM nodes on a page. It does NOT manage page structure or layout - only content within existing nodes. To find node IDs, you must first retrieve the page DOM structure using the Webflow API. \n\n**IMPORTANT LIMITATION:** This resource does NOT support drift detection for content changes. If content is modified outside of Pulumi (via Webflow UI or API), those changes will NOT be detected during 'pulumi refresh' or 'pulumi up'. The resource only verifies that the page still exists. This is due to the complexity of extracting and comparing specific node text from the full DOM structure.",
+      "properties": {
+        "lastUpdated": {
+          "type": "string",
+          "description": "The timestamp when the page content was last updated (RFC3339 format). This is automatically set when content is updated and is read-only."
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/webflow:index:NodeContentUpdate"
+          },
+          "description": "List of node content updates to apply. Each update specifies the nodeId (from the page's DOM structure) and the new text content. Node IDs can be retrieved by fetching the page DOM using GET /pages/{page_id}/dom. Only text content in existing nodes can be updated via this resource."
+        },
+        "pageId": {
+          "type": "string",
+          "description": "The Webflow page ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). You can find page IDs using the Pages API list endpoint or in the Webflow designer. This field will be validated before making any API calls."
+        }
+      },
+      "required": [
+        "pageId",
+        "nodes"
+      ],
+      "inputProperties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/webflow:index:NodeContentUpdate"
+          },
+          "description": "List of node content updates to apply. Each update specifies the nodeId (from the page's DOM structure) and the new text content. Node IDs can be retrieved by fetching the page DOM using GET /pages/{page_id}/dom. Only text content in existing nodes can be updated via this resource."
+        },
+        "pageId": {
+          "type": "string",
+          "description": "The Webflow page ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). You can find page IDs using the Pages API list endpoint or in the Webflow designer. This field will be validated before making any API calls."
+        }
+      },
+      "requiredInputs": [
+        "pageId",
+        "nodes"
+      ]
+    },
+    "webflow:index:PageData": {
+      "description": "Reads page information from a Webflow site. Pages cannot be created via the API - they must be created in the Webflow designer. Use this data source to retrieve page metadata for use in your infrastructure code. Specify pageId to get a single page, or omit it to list all pages in the site.",
+      "properties": {
+        "archived": {
+          "type": "boolean",
+          "description": "Indicates if the page is archived (read-only). Only populated when pageId input is specified."
+        },
+        "collectionId": {
+          "type": "string",
+          "description": "The ID of the CMS collection (read-only, optional). Only present for collection pages. Only populated when pageId input is specified."
+        },
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the page was created (read-only, RFC3339 format). Only populated when pageId input is specified."
+        },
+        "draft": {
+          "type": "boolean",
+          "description": "Indicates if the page is in draft mode (read-only). Only populated when pageId input is specified."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The timestamp when the page was last updated (read-only, RFC3339 format). Only populated when pageId input is specified."
+        },
+        "pageId": {
+          "type": "string",
+          "description": "The specific page ID to retrieve (optional, 24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). If specified, only this page's data will be returned. If omitted, all pages for the site will be returned in the 'pages' output."
+        },
+        "pages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/webflow:index:PageInfo"
+          },
+          "description": "List of all pages in the site (read-only). Only populated when pageId input is NOT specified. Each page includes all metadata fields: id, siteId, title, slug, createdOn, lastUpdated, archived, draft, and optional parentId/collectionId."
+        },
+        "parentId": {
+          "type": "string",
+          "description": "The ID of the parent page (read-only, optional). Only present for nested pages. Only populated when pageId input is specified."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        },
+        "slug": {
+          "type": "string",
+          "description": "The URL slug for the page (read-only, e.g., 'about' for '/about'). Only populated when pageId input is specified."
+        },
+        "title": {
+          "type": "string",
+          "description": "The page title (read-only). This is the title shown in browser tabs and search results. Only populated when pageId input is specified."
+        },
+        "webflowPageId": {
+          "type": "string",
+          "description": "The Webflow page ID (read-only). Only populated when pageId input is specified."
+        }
+      },
+      "required": [
+        "siteId"
+      ],
+      "inputProperties": {
+        "pageId": {
+          "type": "string",
+          "description": "The specific page ID to retrieve (optional, 24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). If specified, only this page's data will be returned. If omitted, all pages for the site will be returned in the 'pages' output."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        }
+      },
+      "requiredInputs": [
+        "siteId"
+      ]
+    },
     "webflow:index:Redirect": {
       "description": "Manages HTTP redirects for a Webflow site. This resource allows you to define redirect rules for old URLs to new locations, supporting both permanent (301) and temporary (302) redirects.",
       "properties": {
@@ -229,6 +706,69 @@
       "requiredInputs": [
         "workspaceId",
         "displayName"
+      ]
+    },
+    "webflow:index:Webhook": {
+      "description": "Manages webhooks for a Webflow site. Webhooks allow you to receive real-time notifications when events occur in your Webflow site, such as form submissions, page updates, e-commerce orders, and more. Note: Webhooks cannot be updated in-place; any change to triggerType, url, or filter requires replacement.",
+      "properties": {
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the webhook was created (RFC3339 format). This is automatically set by Webflow when the webhook is created and is read-only."
+        },
+        "filter": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          },
+          "description": "Optional filter for webhook events. The structure depends on the triggerType and allows you to receive only specific events. For example, for collection_item_created, you can filter by collection ID. Refer to Webflow API documentation for filter options for each trigger type."
+        },
+        "lastTriggered": {
+          "type": "string",
+          "description": "The timestamp when the webhook was last triggered (RFC3339 format). This is automatically updated by Webflow when the webhook fires and is read-only. Will be empty if the webhook has never been triggered."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        },
+        "triggerType": {
+          "type": "string",
+          "description": "The Webflow event that triggers this webhook. Valid values: form_submission, site_publish, page_created, page_metadata_updated, page_deleted, ecomm_new_order, ecomm_order_changed, ecomm_inventory_changed, memberships_user_account_added, memberships_user_account_updated, memberships_user_account_deleted, collection_item_created, collection_item_changed, collection_item_deleted, collection_item_unpublished. Example: 'form_submission' to receive notifications when forms are submitted."
+        },
+        "url": {
+          "type": "string",
+          "description": "The HTTPS endpoint where Webflow will send webhook events (e.g., 'https://example.com/webhooks/webflow', 'https://api.example.com/events'). Must be a valid HTTPS URL. Webflow requires HTTPS for security. Your endpoint should accept POST requests with JSON payloads containing event data."
+        }
+      },
+      "required": [
+        "siteId",
+        "triggerType",
+        "url"
+      ],
+      "inputProperties": {
+        "filter": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          },
+          "description": "Optional filter for webhook events. The structure depends on the triggerType and allows you to receive only specific events. For example, for collection_item_created, you can filter by collection ID. Refer to Webflow API documentation for filter options for each trigger type."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        },
+        "triggerType": {
+          "type": "string",
+          "description": "The Webflow event that triggers this webhook. Valid values: form_submission, site_publish, page_created, page_metadata_updated, page_deleted, ecomm_new_order, ecomm_order_changed, ecomm_inventory_changed, memberships_user_account_added, memberships_user_account_updated, memberships_user_account_deleted, collection_item_created, collection_item_changed, collection_item_deleted, collection_item_unpublished. Example: 'form_submission' to receive notifications when forms are submitted."
+        },
+        "url": {
+          "type": "string",
+          "description": "The HTTPS endpoint where Webflow will send webhook events (e.g., 'https://example.com/webhooks/webflow', 'https://api.example.com/events'). Must be a valid HTTPS URL. Webflow requires HTTPS for security. Your endpoint should accept POST requests with JSON payloads containing event data."
+        }
+      },
+      "requiredInputs": [
+        "siteId",
+        "triggerType",
+        "url"
       ]
     }
   }

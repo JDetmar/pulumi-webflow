@@ -13,13 +13,23 @@
         "strict": true
     },
     "files": [
+        "asset.ts",
+        "collection.ts",
+        "collectionField.ts",
+        "collectionItem.ts",
         "config/index.ts",
         "config/vars.ts",
         "index.ts",
+        "pageContent.ts",
+        "pageData.ts",
         "provider.ts",
         "redirect.ts",
         "robotsTxt.ts",
         "site.ts",
-        "utilities.ts"
+        "types/index.ts",
+        "types/input.ts",
+        "types/output.ts",
+        "utilities.ts",
+        "webhook.ts"
     ]
 }

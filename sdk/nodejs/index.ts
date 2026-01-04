@@ -5,6 +5,36 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 // Export members:
+export { AssetArgs } from "./asset";
+export type Asset = import("./asset").Asset;
+export const Asset: typeof import("./asset").Asset = null as any;
+utilities.lazyLoad(exports, ["Asset"], () => require("./asset"));
+
+export { CollectionArgs } from "./collection";
+export type Collection = import("./collection").Collection;
+export const Collection: typeof import("./collection").Collection = null as any;
+utilities.lazyLoad(exports, ["Collection"], () => require("./collection"));
+
+export { CollectionFieldArgs } from "./collectionField";
+export type CollectionField = import("./collectionField").CollectionField;
+export const CollectionField: typeof import("./collectionField").CollectionField = null as any;
+utilities.lazyLoad(exports, ["CollectionField"], () => require("./collectionField"));
+
+export { CollectionItemArgs } from "./collectionItem";
+export type CollectionItem = import("./collectionItem").CollectionItem;
+export const CollectionItem: typeof import("./collectionItem").CollectionItem = null as any;
+utilities.lazyLoad(exports, ["CollectionItem"], () => require("./collectionItem"));
+
+export { PageContentArgs } from "./pageContent";
+export type PageContent = import("./pageContent").PageContent;
+export const PageContent: typeof import("./pageContent").PageContent = null as any;
+utilities.lazyLoad(exports, ["PageContent"], () => require("./pageContent"));
+
+export { PageDataArgs } from "./pageData";
+export type PageData = import("./pageData").PageData;
+export const PageData: typeof import("./pageData").PageData = null as any;
+utilities.lazyLoad(exports, ["PageData"], () => require("./pageData"));
+
 export { ProviderArgs } from "./provider";
 export type Provider = import("./provider").Provider;
 export const Provider: typeof import("./provider").Provider = null as any;
@@ -25,24 +55,45 @@ export type Site = import("./site").Site;
 export const Site: typeof import("./site").Site = null as any;
 utilities.lazyLoad(exports, ["Site"], () => require("./site"));
 
+export { WebhookArgs } from "./webhook";
+export type Webhook = import("./webhook").Webhook;
+export const Webhook: typeof import("./webhook").Webhook = null as any;
+utilities.lazyLoad(exports, ["Webhook"], () => require("./webhook"));
+
 
 // Export sub-modules:
 import * as config from "./config";
+import * as types from "./types";
 
 export {
     config,
+    types,
 };
 
 const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
+            case "webflow:index:Asset":
+                return new Asset(name, <any>undefined, { urn })
+            case "webflow:index:Collection":
+                return new Collection(name, <any>undefined, { urn })
+            case "webflow:index:CollectionField":
+                return new CollectionField(name, <any>undefined, { urn })
+            case "webflow:index:CollectionItem":
+                return new CollectionItem(name, <any>undefined, { urn })
+            case "webflow:index:PageContent":
+                return new PageContent(name, <any>undefined, { urn })
+            case "webflow:index:PageData":
+                return new PageData(name, <any>undefined, { urn })
             case "webflow:index:Redirect":
                 return new Redirect(name, <any>undefined, { urn })
             case "webflow:index:RobotsTxt":
                 return new RobotsTxt(name, <any>undefined, { urn })
             case "webflow:index:Site":
                 return new Site(name, <any>undefined, { urn })
+            case "webflow:index:Webhook":
+                return new Webhook(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

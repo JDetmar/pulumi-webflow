@@ -24,6 +24,7 @@
         "pageData.ts",
         "provider.ts",
         "redirect.ts",
+        "registeredScript.ts",
         "robotsTxt.ts",
         "site.ts",
         "siteCustomCode.ts",

@@ -14,6 +14,7 @@ from .page_content import *
 from .page_data import *
 from .provider import *
 from .redirect import *
+from .registered_script import *
 from .robots_txt import *
 from .site import *
 from .site_custom_code import *
@@ -43,6 +44,7 @@ _utilities.register(
    "webflow:index:PageContent": "PageContent",
    "webflow:index:PageData": "PageData",
    "webflow:index:Redirect": "Redirect",
+   "webflow:index:RegisteredScript": "RegisteredScript",
    "webflow:index:RobotsTxt": "RobotsTxt",
    "webflow:index:Site": "Site",
    "webflow:index:SiteCustomCode": "SiteCustomCode",

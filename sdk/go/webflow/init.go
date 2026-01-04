@@ -35,6 +35,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &PageData{}
 	case "webflow:index:Redirect":
 		r = &Redirect{}
+	case "webflow:index:RegisteredScript":
+		r = &RegisteredScript{}
 	case "webflow:index:RobotsTxt":
 		r = &RobotsTxt{}
 	case "webflow:index:Site":

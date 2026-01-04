@@ -21,3 +21,5 @@ sdk/python/venv
 
 # Local development/testing
 /dev/
+coverage.txt
+*.test

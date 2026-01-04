@@ -1,3 +1,0 @@
-mode: set
-github.com/jdetmar/pulumi-webflow/provider/cmd/pulumi-resource-webflow/main.go:19.13,21.16 2 0
-github.com/jdetmar/pulumi-webflow/provider/cmd/pulumi-resource-webflow/main.go:21.16,24.3 2 0

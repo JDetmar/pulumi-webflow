@@ -35,7 +35,7 @@ type CustomScriptArgs struct {
 	Location string `pulumi:"location"`
 	// Attributes are optional developer-specified key/value pairs applied as HTML attributes to the script tag.
 	// Example: {"data-config": "value"}
-	Attributes map[string]string `pulumi:"attributes,optional"`
+	Attributes map[string]interface{} `pulumi:"attributes,optional"`
 }
 
 // SiteCustomCodeArgs defines the input properties for the SiteCustomCode resource.
@@ -165,7 +165,7 @@ func siteCustomCodeScriptsEqual(a, b []CustomScriptArgs) bool {
 }
 
 // siteCustomCodeAttributesEqual compares two attribute maps for equality.
-func siteCustomCodeAttributesEqual(a, b map[string]string) bool {
+func siteCustomCodeAttributesEqual(a, b map[string]interface{}) bool {
 	if len(a) != len(b) {
 		return false
 	}
@@ -292,17 +292,11 @@ func (r *SiteCustomCode) Read(
 	// Convert API scripts to input format
 	scripts := make([]CustomScriptArgs, len(response.Scripts))
 	for i, apiScript := range response.Scripts {
-		attrs := make(map[string]string)
-		for k, v := range apiScript.Attributes {
-			if str, ok := v.(string); ok {
-				attrs[k] = str
-			}
-		}
 		scripts[i] = CustomScriptArgs{
 			ID:         apiScript.ID,
 			Version:    apiScript.Version,
 			Location:   apiScript.Location,
-			Attributes: attrs,
+			Attributes: apiScript.Attributes,
 		}
 	}
 

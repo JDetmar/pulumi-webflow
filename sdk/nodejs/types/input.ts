@@ -35,22 +35,3 @@ export interface NodeContentUpdateArgs {
     text: pulumi.Input<string>;
 }
 
-export interface PageCustomCodeScriptArgs {
-    /**
-     * Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
-     */
-    attributes: pulumi.Input<{[key: string]: any}>;
-    /**
-     * The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
-     */
-    id: pulumi.Input<string>;
-    /**
-     * Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
-     */
-    location: pulumi.Input<string>;
-    /**
-     * The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
-     */
-    version: pulumi.Input<string>;
-}
-

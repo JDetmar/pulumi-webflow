@@ -132,7 +132,7 @@ func (r *PageCustomCode) Diff(
 	}
 
 	// Check if scripts list has changed
-	if !scriptsEqual(req.State.Scripts, req.Inputs.Scripts) {
+	if !pageCustomCodeScriptsEqual(req.State.Scripts, req.Inputs.Scripts) {
 		diff.HasChanges = true
 		diff.DetailedDiff = map[string]p.PropertyDiff{
 			"scripts": {Kind: p.Update},
@@ -143,8 +143,8 @@ func (r *PageCustomCode) Diff(
 	return diff, nil
 }
 
-// scriptsEqual checks if two script lists are equal.
-func scriptsEqual(stateScripts, inputScripts []PageCustomCodeScript) bool {
+// pageCustomCodeScriptsEqual checks if two script lists are equal.
+func pageCustomCodeScriptsEqual(stateScripts, inputScripts []PageCustomCodeScript) bool {
 	if len(stateScripts) != len(inputScripts) {
 		return false
 	}
@@ -166,7 +166,7 @@ func scriptsEqual(stateScripts, inputScripts []PageCustomCodeScript) bool {
 			return false
 		}
 		// Compare attributes maps
-		if !attributesEqual(stateScript.Attributes, inputScript.Attributes) {
+		if !pageCustomCodeAttributesEqual(stateScript.Attributes, inputScript.Attributes) {
 			return false
 		}
 	}
@@ -174,8 +174,8 @@ func scriptsEqual(stateScripts, inputScripts []PageCustomCodeScript) bool {
 	return true
 }
 
-// attributesEqual checks if two attribute maps are equal.
-func attributesEqual(stateAttrs, inputAttrs map[string]interface{}) bool {
+// pageCustomCodeAttributesEqual checks if two attribute maps are equal.
+func pageCustomCodeAttributesEqual(stateAttrs, inputAttrs map[string]interface{}) bool {
 	if len(stateAttrs) != len(inputAttrs) {
 		return false
 	}

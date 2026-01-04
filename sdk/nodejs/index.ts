@@ -30,11 +30,6 @@ export type PageContent = import("./pageContent").PageContent;
 export const PageContent: typeof import("./pageContent").PageContent = null as any;
 utilities.lazyLoad(exports, ["PageContent"], () => require("./pageContent"));
 
-export { PageCustomCodeArgs } from "./pageCustomCode";
-export type PageCustomCode = import("./pageCustomCode").PageCustomCode;
-export const PageCustomCode: typeof import("./pageCustomCode").PageCustomCode = null as any;
-utilities.lazyLoad(exports, ["PageCustomCode"], () => require("./pageCustomCode"));
-
 export { PageDataArgs } from "./pageData";
 export type PageData = import("./pageData").PageData;
 export const PageData: typeof import("./pageData").PageData = null as any;
@@ -49,11 +44,6 @@ export { RedirectArgs } from "./redirect";
 export type Redirect = import("./redirect").Redirect;
 export const Redirect: typeof import("./redirect").Redirect = null as any;
 utilities.lazyLoad(exports, ["Redirect"], () => require("./redirect"));
-
-export { RegisteredScriptArgs } from "./registeredScript";
-export type RegisteredScript = import("./registeredScript").RegisteredScript;
-export const RegisteredScript: typeof import("./registeredScript").RegisteredScript = null as any;
-utilities.lazyLoad(exports, ["RegisteredScript"], () => require("./registeredScript"));
 
 export { RobotsTxtArgs } from "./robotsTxt";
 export type RobotsTxt = import("./robotsTxt").RobotsTxt;
@@ -99,14 +89,10 @@ const _module = {
                 return new CollectionItem(name, <any>undefined, { urn })
             case "webflow:index:PageContent":
                 return new PageContent(name, <any>undefined, { urn })
-            case "webflow:index:PageCustomCode":
-                return new PageCustomCode(name, <any>undefined, { urn })
             case "webflow:index:PageData":
                 return new PageData(name, <any>undefined, { urn })
             case "webflow:index:Redirect":
                 return new Redirect(name, <any>undefined, { urn })
-            case "webflow:index:RegisteredScript":
-                return new RegisteredScript(name, <any>undefined, { urn })
             case "webflow:index:RobotsTxt":
                 return new RobotsTxt(name, <any>undefined, { urn })
             case "webflow:index:Site":

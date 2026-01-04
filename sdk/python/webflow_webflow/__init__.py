@@ -11,11 +11,9 @@ from .collection import *
 from .collection_field import *
 from .collection_item import *
 from .page_content import *
-from .page_custom_code import *
 from .page_data import *
 from .provider import *
 from .redirect import *
-from .registered_script import *
 from .robots_txt import *
 from .site import *
 from .site_custom_code import *
@@ -43,10 +41,8 @@ _utilities.register(
    "webflow:index:CollectionField": "CollectionField",
    "webflow:index:CollectionItem": "CollectionItem",
    "webflow:index:PageContent": "PageContent",
-   "webflow:index:PageCustomCode": "PageCustomCode",
    "webflow:index:PageData": "PageData",
    "webflow:index:Redirect": "Redirect",
-   "webflow:index:RegisteredScript": "RegisteredScript",
    "webflow:index:RobotsTxt": "RobotsTxt",
    "webflow:index:Site": "Site",
    "webflow:index:SiteCustomCode": "SiteCustomCode",

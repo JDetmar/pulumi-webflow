@@ -136,7 +136,7 @@ func (r *SiteCustomCode) Diff(
 	}
 
 	// Scripts changes trigger update (not replace)
-	if !scriptsEqual(req.State.Scripts, req.Inputs.Scripts) {
+	if !siteCustomCodeScriptsEqual(req.State.Scripts, req.Inputs.Scripts) {
 		diff.HasChanges = true
 		diff.DetailedDiff = map[string]p.PropertyDiff{
 			"scripts": {Kind: p.Update},
@@ -147,9 +147,9 @@ func (r *SiteCustomCode) Diff(
 	return diff, nil
 }
 
-// scriptsEqual compares two script slices for equality.
+// siteCustomCodeScriptsEqual compares two script slices for equality.
 // This is a deep comparison that checks all fields.
-func scriptsEqual(a, b []CustomScriptArgs) bool {
+func siteCustomCodeScriptsEqual(a, b []CustomScriptArgs) bool {
 	if len(a) != len(b) {
 		return false
 	}
@@ -157,15 +157,15 @@ func scriptsEqual(a, b []CustomScriptArgs) bool {
 		if a[i].ID != b[i].ID || a[i].Version != b[i].Version || a[i].Location != b[i].Location {
 			return false
 		}
-		if !attributesEqual(a[i].Attributes, b[i].Attributes) {
+		if !siteCustomCodeAttributesEqual(a[i].Attributes, b[i].Attributes) {
 			return false
 		}
 	}
 	return true
 }
 
-// attributesEqual compares two attribute maps for equality.
-func attributesEqual(a, b map[string]string) bool {
+// siteCustomCodeAttributesEqual compares two attribute maps for equality.
+func siteCustomCodeAttributesEqual(a, b map[string]string) bool {
 	if len(a) != len(b) {
 		return false
 	}

@@ -48,42 +48,6 @@ type SiteCustomCodeRequest struct {
 	Scripts []CustomScript `json:"scripts,omitempty"`
 }
 
-// ValidateScriptID validates that a script ID is non-empty.
-// Script IDs are required to identify which registered script to apply.
-// Returns actionable error messages that explain what's wrong and how to fix it.
-func ValidateScriptID(scriptID string) error {
-	if scriptID == "" {
-		return errors.New("script id is required but was not provided. " +
-			"Please provide a valid registered script ID. " +
-			"Script IDs are registered using the Register Script endpoint. " +
-			"Example: 'cms_slider', 'analytics', etc.")
-	}
-	return nil
-}
-
-// ValidateScriptVersion validates that a script version is a valid semantic version string.
-// Returns actionable error messages that explain what's wrong and how to fix it.
-func ValidateScriptVersion(version string) error {
-	if version == "" {
-		return errors.New("version is required but was not provided. " +
-			"Please provide a valid semantic version string (e.g., '1.0.0', '0.1.2'). " +
-			"The version must match a version of the registered script.")
-	}
-	return nil
-}
-
-// ValidateScriptLocation validates that a script location is either "header" or "footer".
-// Returns actionable error messages that explain what's wrong and how to fix it.
-func ValidateScriptLocation(location string) error {
-	if location != "header" && location != "footer" {
-		return fmt.Errorf("location must be either 'header' or 'footer': got '%s'. "+
-			"header = script placed in the <head> section of the page. "+
-			"footer = script placed at the end of the <body> section. "+
-			"Please choose one of these two locations.", location)
-	}
-	return nil
-}
-
 // GenerateSiteCustomCodeResourceID generates a Pulumi resource ID for a SiteCustomCode resource.
 // Format: {siteID}/custom_code
 // Note: SiteCustomCode is a 1:1 relationship with a site, so we use a simple suffix.

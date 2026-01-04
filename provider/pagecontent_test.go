@@ -421,7 +421,6 @@ func TestGetPageContent_RateLimited_429(t *testing.T) {
 
 	client := &http.Client{}
 	response, err := GetPageContent(context.Background(), client, "test-page-id")
-
 	if err != nil {
 		t.Errorf("GetPageContent() should succeed after retry, got error: %v", err)
 	}
@@ -462,7 +461,6 @@ func TestPutPageContent_RateLimited_429(t *testing.T) {
 	client := &http.Client{}
 	nodes := []DOMNodeUpdate{{NodeID: "node-1", Text: stringPtr("test")}}
 	response, err := PutPageContent(context.Background(), client, "test-page-id", nodes)
-
 	if err != nil {
 		t.Errorf("PutPageContent() should succeed after retry, got error: %v", err)
 	}

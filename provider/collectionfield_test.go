@@ -551,7 +551,6 @@ func TestCollectionFieldRateLimiting(t *testing.T) {
 
 	client := &http.Client{}
 	field, err := GetCollectionField(context.Background(), client, "collection123", "field123")
-
 	if err != nil {
 		t.Errorf("GetCollectionField() should succeed after retry, got error: %v", err)
 	}

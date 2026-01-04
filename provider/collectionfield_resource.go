@@ -311,7 +311,7 @@ func (f *CollectionField) Update(
 
 	state := CollectionFieldState{
 		CollectionFieldArgs: req.Inputs,
-		FieldID:             req.State.FieldID,     // Preserve field ID
+		FieldID:             req.State.FieldID,    // Preserve field ID
 		IsEditable:          req.State.IsEditable, // Preserve editability flag
 	}
 

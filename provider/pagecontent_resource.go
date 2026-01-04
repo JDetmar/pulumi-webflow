@@ -8,6 +8,7 @@ package provider
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -172,7 +173,7 @@ func (r *PageContent) Create(
 
 	// Validate nodes
 	if len(req.Inputs.Nodes) == 0 {
-		return infer.CreateResponse[PageContentState]{}, fmt.Errorf(
+		return infer.CreateResponse[PageContentState]{}, errors.New(
 			"validation failed for PageContent resource: " +
 				"at least one node update is required. " +
 				"Please provide a list of nodes with nodeId and text fields. " +
@@ -311,9 +312,10 @@ func (r *PageContent) Update(
 
 	// Validate nodes
 	if len(req.Inputs.Nodes) == 0 {
-		return infer.UpdateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource: " +
-			"at least one node update is required. " +
-			"Please provide a list of nodes with nodeId and text fields.")
+		return infer.UpdateResponse[PageContentState]{}, errors.New(
+			"validation failed for PageContent resource: " +
+				"at least one node update is required. " +
+				"Please provide a list of nodes with nodeId and text fields.")
 	}
 
 	for i, node := range req.Inputs.Nodes {
@@ -373,7 +375,9 @@ func (r *PageContent) Update(
 // Delete removes the page content configuration.
 // Note: For PageContent, delete is a no-op since we don't actually delete content from the page.
 // The content remains on the page - we just stop managing it via Pulumi.
-func (r *PageContent) Delete(ctx context.Context, req infer.DeleteRequest[PageContentState]) (infer.DeleteResponse, error) {
+func (r *PageContent) Delete(
+	ctx context.Context, req infer.DeleteRequest[PageContentState],
+) (infer.DeleteResponse, error) {
 	// PageContent is a configuration resource - deleting it just means we stop managing it.
 	// We don't actually delete content from the page (that would break the page).
 	// This is idempotent and always succeeds.

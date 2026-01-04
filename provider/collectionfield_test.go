@@ -108,46 +108,46 @@ func TestGenerateCollectionFieldResourceID(t *testing.T) {
 // TestExtractIDsFromCollectionFieldResourceID tests resource ID extraction.
 func TestExtractIDsFromCollectionFieldResourceID(t *testing.T) {
 	tests := []struct {
-		name              string
-		resourceID        string
-		wantCollectionID  string
-		wantFieldID       string
-		wantErr           bool
+		name             string
+		resourceID       string
+		wantCollectionID string
+		wantFieldID      string
+		wantErr          bool
 	}{
 		{
-			name:              "valid resource ID",
-			resourceID:        "5f0c8c9e1c9d440000e8d8c3/fields/6789abcdef0123456789abcd",
-			wantCollectionID:  "5f0c8c9e1c9d440000e8d8c3",
-			wantFieldID:       "6789abcdef0123456789abcd",
-			wantErr:           false,
+			name:             "valid resource ID",
+			resourceID:       "5f0c8c9e1c9d440000e8d8c3/fields/6789abcdef0123456789abcd",
+			wantCollectionID: "5f0c8c9e1c9d440000e8d8c3",
+			wantFieldID:      "6789abcdef0123456789abcd",
+			wantErr:          false,
 		},
 		{
-			name:              "fieldID with slashes",
-			resourceID:        "abc123/fields/field/with/slashes",
-			wantCollectionID:  "abc123",
-			wantFieldID:       "field/with/slashes",
-			wantErr:           false,
+			name:             "fieldID with slashes",
+			resourceID:       "abc123/fields/field/with/slashes",
+			wantCollectionID: "abc123",
+			wantFieldID:      "field/with/slashes",
+			wantErr:          false,
 		},
 		{
-			name:              "empty resource ID",
-			resourceID:        "",
-			wantCollectionID:  "",
-			wantFieldID:       "",
-			wantErr:           true,
+			name:             "empty resource ID",
+			resourceID:       "",
+			wantCollectionID: "",
+			wantFieldID:      "",
+			wantErr:          true,
 		},
 		{
-			name:              "invalid format - missing fields",
-			resourceID:        "5f0c8c9e1c9d440000e8d8c3",
-			wantCollectionID:  "",
-			wantFieldID:       "",
-			wantErr:           true,
+			name:             "invalid format - missing fields",
+			resourceID:       "5f0c8c9e1c9d440000e8d8c3",
+			wantCollectionID: "",
+			wantFieldID:      "",
+			wantErr:          true,
 		},
 		{
-			name:              "invalid format - wrong separator",
-			resourceID:        "5f0c8c9e1c9d440000e8d8c3/wrongkey/6789abcdef0123456789abcd",
-			wantCollectionID:  "",
-			wantFieldID:       "",
-			wantErr:           true,
+			name:             "invalid format - wrong separator",
+			resourceID:       "5f0c8c9e1c9d440000e8d8c3/wrongkey/6789abcdef0123456789abcd",
+			wantCollectionID: "",
+			wantFieldID:      "",
+			wantErr:          true,
 		},
 	}
 
@@ -534,7 +534,7 @@ func TestCollectionFieldRateLimiting(t *testing.T) {
 		// Second attempt succeeds
 		w.WriteHeader(200)
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]interface{}{
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
 			"fields": []map[string]interface{}{
 				{
 					"id":          "field123",

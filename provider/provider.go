@@ -42,6 +42,7 @@ func Provider() p.Provider {
 			infer.Resource(&Redirect{}),
 			infer.Resource(&RobotsTxt{}),
 			infer.Resource(&CollectionResource{}),
+			infer.Resource(&CollectionField{}),
 			infer.Resource(&CollectionItemResource{}),
 			infer.Resource(&PageData{}),
 			infer.Resource(&Webhook{}),

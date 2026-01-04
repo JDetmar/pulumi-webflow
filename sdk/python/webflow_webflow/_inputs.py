@@ -19,6 +19,8 @@ __all__ = [
     'CustomScriptArgsArgsDict',
     'NodeContentUpdateArgs',
     'NodeContentUpdateArgsDict',
+    'PageCustomCodeScriptArgs',
+    'PageCustomCodeScriptArgsDict',
 ]
 
 MYPY = False
@@ -160,5 +162,93 @@ class NodeContentUpdateArgs:
     @text.setter
     def text(self, value: pulumi.Input[_builtins.str]):
         pulumi.set(self, "text", value)
+
+
+if not MYPY:
+    class PageCustomCodeScriptArgsDict(TypedDict):
+        attributes: pulumi.Input[Mapping[str, Any]]
+        """
+        Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
+        """
+        id: pulumi.Input[_builtins.str]
+        """
+        The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
+        """
+        location: pulumi.Input[_builtins.str]
+        """
+        Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
+        """
+        version: pulumi.Input[_builtins.str]
+        """
+        The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
+        """
+elif False:
+    PageCustomCodeScriptArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class PageCustomCodeScriptArgs:
+    def __init__(__self__, *,
+                 attributes: pulumi.Input[Mapping[str, Any]],
+                 id: pulumi.Input[_builtins.str],
+                 location: pulumi.Input[_builtins.str],
+                 version: pulumi.Input[_builtins.str]):
+        """
+        :param pulumi.Input[Mapping[str, Any]] attributes: Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
+        :param pulumi.Input[_builtins.str] id: The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
+        :param pulumi.Input[_builtins.str] location: Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
+        :param pulumi.Input[_builtins.str] version: The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
+        """
+        pulumi.set(__self__, "attributes", attributes)
+        pulumi.set(__self__, "id", id)
+        pulumi.set(__self__, "location", location)
+        pulumi.set(__self__, "version", version)
+
+    @_builtins.property
+    @pulumi.getter
+    def attributes(self) -> pulumi.Input[Mapping[str, Any]]:
+        """
+        Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
+        """
+        return pulumi.get(self, "attributes")
+
+    @attributes.setter
+    def attributes(self, value: pulumi.Input[Mapping[str, Any]]):
+        pulumi.set(self, "attributes", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def id(self) -> pulumi.Input[_builtins.str]:
+        """
+        The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
+        """
+        return pulumi.get(self, "id")
+
+    @id.setter
+    def id(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "id", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def location(self) -> pulumi.Input[_builtins.str]:
+        """
+        Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
+        """
+        return pulumi.get(self, "location")
+
+    @location.setter
+    def location(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "location", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def version(self) -> pulumi.Input[_builtins.str]:
+        """
+        The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
+        """
+        return pulumi.get(self, "version")
+
+    @version.setter
+    def version(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "version", value)
 
 

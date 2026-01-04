@@ -72,6 +72,36 @@
         "text"
       ]
     },
+    "webflow:index:PageCustomCodeScript": {
+      "properties": {
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          },
+          "description": "Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page."
+        },
+        "id": {
+          "type": "string",
+          "description": "The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered."
+        },
+        "location": {
+          "type": "string",
+          "description": "Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded."
+        },
+        "version": {
+          "type": "string",
+          "description": "The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered."
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "location",
+        "attributes"
+      ]
+    },
     "webflow:index:PageInfo": {
       "properties": {
         "archived": {
@@ -474,6 +504,51 @@
       "requiredInputs": [
         "pageId",
         "nodes"
+      ]
+    },
+    "webflow:index:PageCustomCode": {
+      "description": "Manages custom code (JavaScript) scripts applied to a Webflow page. This resource allows you to apply registered custom code scripts to specific pages. Scripts must first be registered using the RegisteredScript resource before they can be applied. All scripts in the configuration will be applied to the page; scripts not listed will be removed.",
+      "properties": {
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the page custom code was first created (RFC3339 format). This is automatically set when the configuration is first created and is read-only."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The timestamp when the page custom code was last updated (RFC3339 format). This is automatically set when the configuration is updated and is read-only."
+        },
+        "pageId": {
+          "type": "string",
+          "description": "The Webflow page ID (24-character hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). You can find page IDs using the Webflow Pages API or in the Webflow designer. This field will be validated before making any API calls."
+        },
+        "scripts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/webflow:index:PageCustomCodeScript"
+          },
+          "description": "List of custom code scripts to apply to the page. Each script must reference a script ID and version that have been previously registered. All scripts in this list will be applied to the page; any scripts not listed will be removed from the page."
+        }
+      },
+      "required": [
+        "pageId",
+        "scripts"
+      ],
+      "inputProperties": {
+        "pageId": {
+          "type": "string",
+          "description": "The Webflow page ID (24-character hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). You can find page IDs using the Webflow Pages API or in the Webflow designer. This field will be validated before making any API calls."
+        },
+        "scripts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/webflow:index:PageCustomCodeScript"
+          },
+          "description": "List of custom code scripts to apply to the page. Each script must reference a script ID and version that have been previously registered. All scripts in this list will be applied to the page; any scripts not listed will be removed from the page."
+        }
+      },
+      "requiredInputs": [
+        "pageId",
+        "scripts"
       ]
     },
     "webflow:index:PageData": {

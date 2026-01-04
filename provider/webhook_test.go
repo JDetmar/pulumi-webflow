@@ -494,7 +494,10 @@ func TestPostWebhook_WithFilter(t *testing.T) {
 		"collectionId": "test-collection",
 	}
 
-	result, err := PostWebhook(ctx, client, "5f0c8c9e1c9d440000e8d8c3", "collection_item_created", "https://example.com/webhook", filter)
+	result, err := PostWebhook(
+		ctx, client, "5f0c8c9e1c9d440000e8d8c3", "collection_item_created",
+		"https://example.com/webhook", filter,
+	)
 	if err != nil {
 		t.Fatalf("PostWebhook failed: %v", err)
 	}
@@ -729,7 +732,10 @@ func TestPostWebhook_RateLimited(t *testing.T) {
 	client := &http.Client{Timeout: 30 * time.Second}
 	ctx := context.Background()
 
-	result, err := PostWebhook(ctx, client, "5f0c8c9e1c9d440000e8d8c3", "form_submission", "https://example.com/webhook", nil)
+	result, err := PostWebhook(
+		ctx, client, "5f0c8c9e1c9d440000e8d8c3", "form_submission",
+		"https://example.com/webhook", nil,
+	)
 	if err != nil {
 		t.Fatalf("PostWebhook should succeed after rate limit retry, got error: %v", err)
 	}
@@ -789,7 +795,12 @@ func TestMapsEqual(t *testing.T) {
 		{"same content", map[string]interface{}{"key": "value"}, map[string]interface{}{"key": "value"}, true},
 		{"different values", map[string]interface{}{"key": "value1"}, map[string]interface{}{"key": "value2"}, false},
 		{"different keys", map[string]interface{}{"key1": "value"}, map[string]interface{}{"key2": "value"}, false},
-		{"different length", map[string]interface{}{"key": "value"}, map[string]interface{}{"key": "value", "key2": "value2"}, false},
+		{
+			"different length",
+			map[string]interface{}{"key": "value"},
+			map[string]interface{}{"key": "value", "key2": "value2"},
+			false,
+		},
 	}
 
 	for _, tt := range tests {

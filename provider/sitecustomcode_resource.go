@@ -10,6 +10,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	p "github.com/pulumi/pulumi-go-provider"
@@ -273,14 +274,19 @@ func (r *SiteCustomCode) Read(
 	// Call Webflow API
 	response, err := GetSiteCustomCode(ctx, client, siteID)
 	if err != nil {
-		// Resource not found - return empty ID to signal deletion
+		// Propagate context cancellation errors
 		if errors.Is(err, context.Canceled) {
 			return infer.ReadResponse[SiteCustomCodeArgs, SiteCustomCodeState]{}, err
 		}
-		// For any API error, we assume the resource doesn't exist and should be recreated
-		return infer.ReadResponse[SiteCustomCodeArgs, SiteCustomCodeState]{
-			ID: "",
-		}, nil
+		// Only treat "not found" errors as resource deletion
+		// This prevents transient API failures from incorrectly triggering resource deletion
+		if strings.Contains(strings.ToLower(err.Error()), "not found") {
+			return infer.ReadResponse[SiteCustomCodeArgs, SiteCustomCodeState]{
+				ID: "",
+			}, nil
+		}
+		// For other errors (network issues, rate limiting, etc.), propagate the error
+		return infer.ReadResponse[SiteCustomCodeArgs, SiteCustomCodeState]{}, fmt.Errorf("failed to read site custom code: %w", err)
 	}
 
 	// Convert API scripts to input format

@@ -147,7 +147,8 @@ func ExtractIDsFromRegisteredScriptResourceID(resourceID string) (siteID, script
 
 	parts := strings.Split(resourceID, "/")
 	if len(parts) < 3 || parts[1] != "registered_scripts" {
-		return "", "", fmt.Errorf("invalid resource ID format: expected {siteId}/registered_scripts/{scriptId}, got: %s", resourceID)
+		return "", "",
+			fmt.Errorf("invalid resource ID format: expected {siteId}/registered_scripts/{scriptId}, got: %s", resourceID)
 	}
 
 	siteID = parts[0]

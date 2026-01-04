@@ -26,10 +26,10 @@ func TestGenerateSiteCustomCodeResourceID(t *testing.T) {
 
 func TestExtractSiteIDFromSiteCustomCodeResourceID(t *testing.T) {
 	tests := []struct {
-		name      string
-		input     string
-		wantID    string
-		wantErr   bool
+		name    string
+		input   string
+		wantID  string
+		wantErr bool
 	}{
 		{"valid", "5f0c8c9e1c9d440000e8d8c3/custom_code", "5f0c8c9e1c9d440000e8d8c3", false},
 		{"empty", "", "", true},

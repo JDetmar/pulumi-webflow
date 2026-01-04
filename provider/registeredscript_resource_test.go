@@ -182,7 +182,6 @@ func TestRegisteredScriptCreate_DryRun(t *testing.T) {
 		Inputs: inputs,
 		DryRun: true,
 	})
-
 	if err != nil {
 		t.Fatalf("Create() dry-run failed: %v", err)
 	}
@@ -239,7 +238,6 @@ func TestPostRegisteredScript_Success(t *testing.T) {
 		"TestScript", "https://example.com/script.js",
 		"sha384-abc123", "1.0.0", true,
 	)
-
 	if err != nil {
 		t.Fatalf("PostRegisteredScript() failed: %v", err)
 	}
@@ -265,7 +263,7 @@ func TestPatchRegisteredScript_Success(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(RegisteredScript{
+		_ = json.NewEncoder(w).Encode(RegisteredScript{
 			ID:             testScriptID,
 			DisplayName:    "TestScript",
 			HostedLocation: "https://cdn.example.com/script-v2.js",
@@ -287,7 +285,6 @@ func TestPatchRegisteredScript_Success(t *testing.T) {
 		"TestScript", "https://cdn.example.com/script-v2.js",
 		"sha384-def456", "2.0.0", false,
 	)
-
 	if err != nil {
 		t.Fatalf("PatchRegisteredScript() failed: %v", err)
 	}
@@ -297,7 +294,8 @@ func TestPatchRegisteredScript_Success(t *testing.T) {
 	}
 
 	if resp.HostedLocation != "https://cdn.example.com/script-v2.js" {
-		t.Errorf("PatchRegisteredScript() HostedLocation = %s, want https://cdn.example.com/script-v2.js", resp.HostedLocation)
+		t.Errorf("PatchRegisteredScript() HostedLocation = %s, want https://cdn.example.com/script-v2.js",
+			resp.HostedLocation)
 	}
 }
 
@@ -318,7 +316,6 @@ func TestDeleteRegisteredScript_Success(t *testing.T) {
 	err := DeleteRegisteredScript(
 		context.Background(), client, testSiteID, testScriptID,
 	)
-
 	if err != nil {
 		t.Fatalf("DeleteRegisteredScript() failed: %v", err)
 	}
@@ -328,7 +325,7 @@ func TestDeleteRegisteredScript_Success(t *testing.T) {
 func TestDeleteRegisteredScript_NotFound(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(map[string]string{"error": "not found"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "not found"})
 	}))
 	defer server.Close()
 
@@ -338,7 +335,6 @@ func TestDeleteRegisteredScript_NotFound(t *testing.T) {
 	err := DeleteRegisteredScript(
 		context.Background(), client, testSiteID, testScriptID,
 	)
-
 	if err != nil {
 		t.Fatalf("DeleteRegisteredScript() should handle 404 gracefully: %v", err)
 	}
@@ -356,7 +352,7 @@ func TestGetRegisteredScripts_Success(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(RegisteredScriptsResponse{
+		_ = json.NewEncoder(w).Encode(RegisteredScriptsResponse{
 			RegisteredScripts: []RegisteredScript{
 				{
 					ID:             testScriptID,
@@ -383,7 +379,6 @@ func TestGetRegisteredScripts_Success(t *testing.T) {
 
 	client := &http.Client{}
 	resp, err := GetRegisteredScripts(context.Background(), client, testSiteID)
-
 	if err != nil {
 		t.Fatalf("GetRegisteredScripts() failed: %v", err)
 	}
@@ -413,7 +408,6 @@ func TestRegisteredScriptResourceID(t *testing.T) {
 
 	// Test extraction
 	extracted, scriptID, err := ExtractIDsFromRegisteredScriptResourceID(resourceID)
-
 	if err != nil {
 		t.Fatalf("ExtractIDsFromRegisteredScriptResourceID() failed: %v", err)
 	}
@@ -430,9 +424,9 @@ func TestRegisteredScriptResourceID(t *testing.T) {
 // TestRegisteredScriptResourceID_Invalid tests error handling for invalid IDs
 func TestRegisteredScriptResourceID_Invalid(t *testing.T) {
 	tests := []struct {
-		name     string
-		inputID  string
-		wantErr  string
+		name    string
+		inputID string
+		wantErr string
 	}{
 		{
 			name:    "empty ID",

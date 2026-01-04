@@ -183,19 +183,23 @@ func (r *SiteCustomCode) Create(
 ) (infer.CreateResponse[SiteCustomCodeState], error) {
 	// Validate inputs BEFORE making API calls
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
-		return infer.CreateResponse[SiteCustomCodeState]{}, fmt.Errorf("validation failed for SiteCustomCode resource: %w", err)
+		return infer.CreateResponse[SiteCustomCodeState]{},
+			fmt.Errorf("validation failed for SiteCustomCode resource: %w", err)
 	}
 
 	// Validate each script
 	for i, script := range req.Inputs.Scripts {
 		if err := ValidateScriptID(script.ID); err != nil {
-			return infer.CreateResponse[SiteCustomCodeState]{}, fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
+			return infer.CreateResponse[SiteCustomCodeState]{},
+				fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
 		}
 		if err := ValidateScriptVersion(script.Version); err != nil {
-			return infer.CreateResponse[SiteCustomCodeState]{}, fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
+			return infer.CreateResponse[SiteCustomCodeState]{},
+				fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
 		}
 		if err := ValidateScriptLocation(script.Location); err != nil {
-			return infer.CreateResponse[SiteCustomCodeState]{}, fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
+			return infer.CreateResponse[SiteCustomCodeState]{},
+				fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
 		}
 	}
 
@@ -268,7 +272,8 @@ func (r *SiteCustomCode) Read(
 	// Get HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
-		return infer.ReadResponse[SiteCustomCodeArgs, SiteCustomCodeState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
+		return infer.ReadResponse[SiteCustomCodeArgs, SiteCustomCodeState]{},
+			fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
 	// Call Webflow API
@@ -286,18 +291,14 @@ func (r *SiteCustomCode) Read(
 			}, nil
 		}
 		// For other errors (network issues, rate limiting, etc.), propagate the error
-		return infer.ReadResponse[SiteCustomCodeArgs, SiteCustomCodeState]{}, fmt.Errorf("failed to read site custom code: %w", err)
+		return infer.ReadResponse[SiteCustomCodeArgs, SiteCustomCodeState]{},
+			fmt.Errorf("failed to read site custom code: %w", err)
 	}
 
 	// Convert API scripts to input format
 	scripts := make([]CustomScriptArgs, len(response.Scripts))
 	for i, apiScript := range response.Scripts {
-		scripts[i] = CustomScriptArgs{
-			ID:         apiScript.ID,
-			Version:    apiScript.Version,
-			Location:   apiScript.Location,
-			Attributes: apiScript.Attributes,
-		}
+		scripts[i] = CustomScriptArgs(apiScript)
 	}
 
 	// Build current state from API response
@@ -324,19 +325,23 @@ func (r *SiteCustomCode) Update(
 ) (infer.UpdateResponse[SiteCustomCodeState], error) {
 	// Validate inputs BEFORE making API calls
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
-		return infer.UpdateResponse[SiteCustomCodeState]{}, fmt.Errorf("validation failed for SiteCustomCode resource: %w", err)
+		return infer.UpdateResponse[SiteCustomCodeState]{},
+			fmt.Errorf("validation failed for SiteCustomCode resource: %w", err)
 	}
 
 	// Validate each script
 	for i, script := range req.Inputs.Scripts {
 		if err := ValidateScriptID(script.ID); err != nil {
-			return infer.UpdateResponse[SiteCustomCodeState]{}, fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
+			return infer.UpdateResponse[SiteCustomCodeState]{},
+				fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
 		}
 		if err := ValidateScriptVersion(script.Version); err != nil {
-			return infer.UpdateResponse[SiteCustomCodeState]{}, fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
+			return infer.UpdateResponse[SiteCustomCodeState]{},
+				fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
 		}
 		if err := ValidateScriptLocation(script.Location); err != nil {
-			return infer.UpdateResponse[SiteCustomCodeState]{}, fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
+			return infer.UpdateResponse[SiteCustomCodeState]{},
+				fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
 		}
 	}
 
@@ -391,7 +396,9 @@ func (r *SiteCustomCode) Update(
 }
 
 // Delete removes all custom code from the Webflow site.
-func (r *SiteCustomCode) Delete(ctx context.Context, req infer.DeleteRequest[SiteCustomCodeState]) (infer.DeleteResponse, error) {
+func (r *SiteCustomCode) Delete(
+	ctx context.Context, req infer.DeleteRequest[SiteCustomCodeState],
+) (infer.DeleteResponse, error) {
 	// Extract siteID from resource ID
 	siteID, err := ExtractSiteIDFromSiteCustomCodeResourceID(req.ID)
 	if err != nil {

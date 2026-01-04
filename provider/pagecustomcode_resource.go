@@ -330,7 +330,8 @@ func (r *PageCustomCode) Update(
 ) (infer.UpdateResponse[PageCustomCodeState], error) {
 	// Validate inputs BEFORE making API calls
 	if err := ValidatePageID(req.Inputs.PageID); err != nil {
-		return infer.UpdateResponse[PageCustomCodeState]{}, fmt.Errorf("validation failed for PageCustomCode resource: %w", err)
+		return infer.UpdateResponse[PageCustomCodeState]{},
+			fmt.Errorf("validation failed for PageCustomCode resource: %w", err)
 	}
 
 	// Validate scripts

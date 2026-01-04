@@ -172,19 +172,24 @@ func (r *RegisteredScriptResource) Create(
 ) (infer.CreateResponse[RegisteredScriptResourceState], error) {
 	// Validate inputs BEFORE generating resource ID
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
-		return infer.CreateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.CreateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 	if err := ValidateScriptDisplayName(req.Inputs.DisplayName); err != nil {
-		return infer.CreateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.CreateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 	if err := ValidateHostedLocation(req.Inputs.HostedLocation); err != nil {
-		return infer.CreateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.CreateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 	if err := ValidateIntegrityHash(req.Inputs.IntegrityHash); err != nil {
-		return infer.CreateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.CreateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 	if err := ValidateVersion(req.Inputs.Version); err != nil {
-		return infer.CreateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.CreateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 
 	state := RegisteredScriptResourceState{
@@ -220,7 +225,8 @@ func (r *RegisteredScriptResource) Create(
 		req.Inputs.Version, req.Inputs.CanCopy,
 	)
 	if err != nil {
-		return infer.CreateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("failed to create registered script: %w", err)
+		return infer.CreateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("failed to create registered script: %w", err)
 	}
 
 	// Defensive check: Ensure Webflow API returned a valid script ID
@@ -250,13 +256,15 @@ func (r *RegisteredScriptResource) Read(
 	// Extract siteID and scriptID from resource ID
 	siteID, scriptID, err := ExtractIDsFromRegisteredScriptResourceID(req.ID)
 	if err != nil {
-		return infer.ReadResponse[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{}, fmt.Errorf("invalid resource ID: %w", err)
+		return infer.ReadResponse[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{},
+			fmt.Errorf("invalid resource ID: %w", err)
 	}
 
 	// Get HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
-		return infer.ReadResponse[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
+		return infer.ReadResponse[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{},
+			fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
 	// Call Webflow API to get all scripts for this site
@@ -268,7 +276,8 @@ func (r *RegisteredScriptResource) Read(
 				ID: "",
 			}, nil
 		}
-		return infer.ReadResponse[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{}, fmt.Errorf("failed to read registered scripts: %w", err)
+		return infer.ReadResponse[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{},
+			fmt.Errorf("failed to read registered scripts: %w", err)
 	}
 
 	// Find the specific script in the list
@@ -315,19 +324,24 @@ func (r *RegisteredScriptResource) Update(
 ) (infer.UpdateResponse[RegisteredScriptResourceState], error) {
 	// Validate inputs BEFORE making API calls
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.UpdateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 	if err := ValidateScriptDisplayName(req.Inputs.DisplayName); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.UpdateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 	if err := ValidateHostedLocation(req.Inputs.HostedLocation); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.UpdateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 	if err := ValidateIntegrityHash(req.Inputs.IntegrityHash); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.UpdateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 	if err := ValidateVersion(req.Inputs.Version); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
+		return infer.UpdateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
 	}
 
 	state := RegisteredScriptResourceState{
@@ -363,7 +377,8 @@ func (r *RegisteredScriptResource) Update(
 		req.Inputs.Version, req.Inputs.CanCopy,
 	)
 	if err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("failed to update registered script: %w", err)
+		return infer.UpdateResponse[RegisteredScriptResourceState]{},
+			fmt.Errorf("failed to update registered script: %w", err)
 	}
 
 	// Update state with values from API response
@@ -375,7 +390,9 @@ func (r *RegisteredScriptResource) Update(
 }
 
 // Delete removes a registered script from the Webflow site.
-func (r *RegisteredScriptResource) Delete(ctx context.Context, req infer.DeleteRequest[RegisteredScriptResourceState]) (infer.DeleteResponse, error) {
+func (r *RegisteredScriptResource) Delete(
+	ctx context.Context, req infer.DeleteRequest[RegisteredScriptResourceState],
+) (infer.DeleteResponse, error) {
 	// Extract siteID and scriptID from resource ID
 	siteID, scriptID, err := ExtractIDsFromRegisteredScriptResourceID(req.ID)
 	if err != nil {

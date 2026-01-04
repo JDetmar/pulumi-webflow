@@ -11,8 +11,6 @@ import (
 	"testing"
 )
 
-//nolint:paralleltest // Environment variable tests cannot run in parallel
-
 // TestCIEnvironmentVariableLoading verifies that CI/CD environment variables are properly loaded
 // for non-interactive execution.
 func TestCIEnvironmentVariableLoading(t *testing.T) {

@@ -18,11 +18,11 @@ import (
 // Use these codes to identify specific error types in automation and scripts.
 const (
 	// ErrCodeAuthNotConfigured indicates the API token is missing.
-	ErrCodeAuthNotConfigured = "WEBFLOW_AUTH_001" //nolint:gosec // Error code, not a credential
+	ErrCodeAuthNotConfigured = "WEBFLOW_AUTH_001"
 	// ErrCodeAuthEmpty indicates an empty API token was provided.
-	ErrCodeAuthEmpty = "WEBFLOW_AUTH_002" //nolint:gosec // Error code, not a credential
+	ErrCodeAuthEmpty = "WEBFLOW_AUTH_002"
 	// ErrCodeAuthInvalid indicates the API token format is invalid.
-	ErrCodeAuthInvalid = "WEBFLOW_AUTH_003" //nolint:gosec // Error code, not a credential
+	ErrCodeAuthInvalid = "WEBFLOW_AUTH_003"
 )
 
 // ErrTokenNotConfigured is returned when no API token is available.

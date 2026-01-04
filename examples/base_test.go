@@ -1,3 +1,9 @@
+// Copyright 2025, Justin Detmar.
+// SPDX-License-Identifier: MIT
+//
+// This is an unofficial, community-maintained Pulumi provider for Webflow.
+// Not affiliated with, endorsed by, or supported by Pulumi Corporation or Webflow, Inc.
+
 package examples
 
 import (
@@ -5,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/jdetmar/pulumi-webflow/provider"
+
 	"github.com/pulumi/providertest/providers"
 	goprovider "github.com/pulumi/pulumi-go-provider"
 	pulumirpc "github.com/pulumi/pulumi/sdk/v3/proto/go"

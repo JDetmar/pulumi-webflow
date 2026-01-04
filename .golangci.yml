@@ -4,7 +4,6 @@ run:
   timeout: 10m
 
 linters:
-  enable-all: false
   enable:
     - depguard
     - errcheck
@@ -27,7 +26,7 @@ linters:
     - unconvert
     - unused
 
-linters-settings:
+settings:
   depguard:
     rules:
       main:
@@ -66,9 +65,8 @@ linters-settings:
     # Don't complain about these.
     allow-unused: true
 
-issues:
-  exclude-use-default: false
-  exclude-rules:
+exclusions:
+  rules:
     # Don't warn on unused parameters.
     # Parameter names are useful; replacing them with '_' is undesirable.
     - linters: [revive]

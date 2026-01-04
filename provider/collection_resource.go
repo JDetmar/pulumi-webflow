@@ -97,45 +97,39 @@ func (c *CollectionResource) Diff(
 	ctx context.Context, req infer.DiffRequest[CollectionArgs, CollectionState],
 ) (infer.DiffResponse, error) {
 	diff := infer.DiffResponse{}
+	detailedDiff := map[string]p.PropertyDiff{}
 
 	// Check for siteId change (requires replacement)
 	if req.State.SiteID != req.Inputs.SiteID {
+		detailedDiff["siteId"] = p.PropertyDiff{Kind: p.UpdateReplace}
 		diff.DeleteBeforeReplace = true
 		diff.HasChanges = true
-		diff.DetailedDiff = map[string]p.PropertyDiff{
-			"siteId": {Kind: p.UpdateReplace},
-		}
-		return diff, nil
 	}
 
 	// Check for displayName change (requires replacement - no update API)
 	if req.State.DisplayName != req.Inputs.DisplayName {
+		detailedDiff["displayName"] = p.PropertyDiff{Kind: p.UpdateReplace}
 		diff.DeleteBeforeReplace = true
 		diff.HasChanges = true
-		diff.DetailedDiff = map[string]p.PropertyDiff{
-			"displayName": {Kind: p.UpdateReplace},
-		}
-		return diff, nil
 	}
 
 	// Check for singularName change (requires replacement - no update API)
 	if req.State.SingularName != req.Inputs.SingularName {
+		detailedDiff["singularName"] = p.PropertyDiff{Kind: p.UpdateReplace}
 		diff.DeleteBeforeReplace = true
 		diff.HasChanges = true
-		diff.DetailedDiff = map[string]p.PropertyDiff{
-			"singularName": {Kind: p.UpdateReplace},
-		}
-		return diff, nil
 	}
 
 	// Check for slug change (requires replacement - no update API)
 	if req.State.Slug != req.Inputs.Slug {
+		detailedDiff["slug"] = p.PropertyDiff{Kind: p.UpdateReplace}
 		diff.DeleteBeforeReplace = true
 		diff.HasChanges = true
-		diff.DetailedDiff = map[string]p.PropertyDiff{
-			"slug": {Kind: p.UpdateReplace},
-		}
-		return diff, nil
+	}
+
+	// Only set DetailedDiff if changes were detected
+	if len(detailedDiff) > 0 {
+		diff.DetailedDiff = detailedDiff
 	}
 
 	return diff, nil

@@ -645,6 +645,133 @@ func TestWebhookErrorMessagesAreActionable(t *testing.T) {
 	}
 }
 
+// TestGetWebhooks_RateLimited tests 429 rate limiting with retry
+func TestGetWebhooks_RateLimited(t *testing.T) {
+	attempts := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attempts++
+		if attempts < 2 {
+			w.Header().Set("Retry-After", "0") // Use 0 seconds for fast test
+			w.WriteHeader(http.StatusTooManyRequests)
+			_, _ = w.Write([]byte("rate limited"))
+			return
+		}
+		// Succeed on second attempt
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		response := WebhooksListResponse{
+			Webhooks: []WebhookResponse{
+				{
+					ID:          "webhook1",
+					TriggerType: "form_submission",
+					URL:         "https://example.com/webhook",
+					SiteID:      "5f0c8c9e1c9d440000e8d8c3",
+					CreatedOn:   "2024-01-01T00:00:00Z",
+				},
+			},
+		}
+		_ = json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	oldURL := getWebhooksBaseURL
+	getWebhooksBaseURL = server.URL
+	defer func() { getWebhooksBaseURL = oldURL }()
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	ctx := context.Background()
+
+	result, err := GetWebhooks(ctx, client, "5f0c8c9e1c9d440000e8d8c3")
+	if err != nil {
+		t.Fatalf("GetWebhooks should succeed after rate limit retry, got error: %v", err)
+	}
+
+	if attempts != 2 {
+		t.Errorf("Expected 2 attempts (1 rate limited + 1 success), got %d", attempts)
+	}
+	if len(result.Webhooks) != 1 {
+		t.Errorf("Expected 1 webhook, got %d", len(result.Webhooks))
+	}
+}
+
+// TestPostWebhook_RateLimited tests 429 rate limiting with retry
+func TestPostWebhook_RateLimited(t *testing.T) {
+	attempts := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attempts++
+		if attempts < 2 {
+			w.Header().Set("Retry-After", "0")
+			w.WriteHeader(http.StatusTooManyRequests)
+			_, _ = w.Write([]byte("rate limited"))
+			return
+		}
+		// Succeed on second attempt
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		response := WebhookResponse{
+			ID:          "newwebhook",
+			TriggerType: "form_submission",
+			URL:         "https://example.com/webhook",
+			SiteID:      "5f0c8c9e1c9d440000e8d8c3",
+			CreatedOn:   "2024-01-01T00:00:00Z",
+		}
+		_ = json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	oldURL := postWebhookBaseURL
+	postWebhookBaseURL = server.URL
+	defer func() { postWebhookBaseURL = oldURL }()
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	ctx := context.Background()
+
+	result, err := PostWebhook(ctx, client, "5f0c8c9e1c9d440000e8d8c3", "form_submission", "https://example.com/webhook", nil)
+	if err != nil {
+		t.Fatalf("PostWebhook should succeed after rate limit retry, got error: %v", err)
+	}
+
+	if attempts != 2 {
+		t.Errorf("Expected 2 attempts (1 rate limited + 1 success), got %d", attempts)
+	}
+	if result.ID != "newwebhook" {
+		t.Errorf("Expected ID newwebhook, got %s", result.ID)
+	}
+}
+
+// TestDeleteWebhook_RateLimited tests 429 rate limiting with retry
+func TestDeleteWebhook_RateLimited(t *testing.T) {
+	attempts := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attempts++
+		if attempts < 2 {
+			w.Header().Set("Retry-After", "0")
+			w.WriteHeader(http.StatusTooManyRequests)
+			_, _ = w.Write([]byte("rate limited"))
+			return
+		}
+		// Succeed on second attempt
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer server.Close()
+
+	oldURL := deleteWebhookBaseURL
+	deleteWebhookBaseURL = server.URL
+	defer func() { deleteWebhookBaseURL = oldURL }()
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	ctx := context.Background()
+
+	err := DeleteWebhook(ctx, client, "webhook1")
+	if err != nil {
+		t.Fatalf("DeleteWebhook should succeed after rate limit retry, got error: %v", err)
+	}
+
+	if attempts != 2 {
+		t.Errorf("Expected 2 attempts (1 rate limited + 1 success), got %d", attempts)
+	}
+}
+
 // TestMapsEqual tests the map comparison utility
 func TestMapsEqual(t *testing.T) {
 	tests := []struct {

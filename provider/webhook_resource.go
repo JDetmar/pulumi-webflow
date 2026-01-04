@@ -10,6 +10,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 	"time"
 
@@ -106,69 +107,43 @@ func (w *Webhook) Diff(
 	ctx context.Context, req infer.DiffRequest[WebhookArgs, WebhookState],
 ) (infer.DiffResponse, error) {
 	diff := infer.DiffResponse{}
+	detailedDiff := map[string]p.PropertyDiff{}
 
 	// Check for siteId change (requires replacement)
 	if req.State.SiteID != req.Inputs.SiteID {
-		diff.DeleteBeforeReplace = true
-		diff.HasChanges = true
-		diff.DetailedDiff = map[string]p.PropertyDiff{
-			"siteId": {Kind: p.UpdateReplace},
-		}
-		return diff, nil
+		detailedDiff["siteId"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
 	// Check for triggerType change (requires replacement - webhooks cannot be updated)
 	if req.State.TriggerType != req.Inputs.TriggerType {
-		diff.DeleteBeforeReplace = true
-		diff.HasChanges = true
-		diff.DetailedDiff = map[string]p.PropertyDiff{
-			"triggerType": {Kind: p.UpdateReplace},
-		}
-		return diff, nil
+		detailedDiff["triggerType"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
 	// Check for URL change (requires replacement - webhooks cannot be updated)
 	if req.State.URL != req.Inputs.URL {
-		diff.DeleteBeforeReplace = true
-		diff.HasChanges = true
-		diff.DetailedDiff = map[string]p.PropertyDiff{
-			"url": {Kind: p.UpdateReplace},
-		}
-		return diff, nil
+		detailedDiff["url"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
 	// Check for filter change (requires replacement - webhooks cannot be updated)
 	// Compare filter maps - if either is nil or they differ, trigger replacement
 	if !mapsEqual(req.State.Filter, req.Inputs.Filter) {
-		diff.DeleteBeforeReplace = true
+		detailedDiff["filter"] = p.PropertyDiff{Kind: p.UpdateReplace}
+	}
+
+	// If any changes were detected, populate the diff response
+	if len(detailedDiff) > 0 {
 		diff.HasChanges = true
-		diff.DetailedDiff = map[string]p.PropertyDiff{
-			"filter": {Kind: p.UpdateReplace},
-		}
-		return diff, nil
+		diff.DeleteBeforeReplace = true // All webhook changes require replacement
+		diff.DetailedDiff = detailedDiff
 	}
 
 	return diff, nil
 }
 
-// mapsEqual compares two maps for equality.
-// Returns true if both maps are nil or have the same keys and values.
+// mapsEqual compares two maps for equality using deep comparison.
+// Returns true if both maps are deeply equal (same keys and values, including nested structures).
 func mapsEqual(a, b map[string]interface{}) bool {
-	if a == nil && b == nil {
-		return true
-	}
-	if a == nil || b == nil {
-		return false
-	}
-	if len(a) != len(b) {
-		return false
-	}
-	for k, v := range a {
-		if bv, ok := b[k]; !ok || fmt.Sprintf("%v", v) != fmt.Sprintf("%v", bv) {
-			return false
-		}
-	}
-	return true
+	return reflect.DeepEqual(a, b)
 }
 
 // Create creates a new webhook on the Webflow site.
@@ -324,6 +299,11 @@ func (w *Webhook) Delete(ctx context.Context, req infer.DeleteRequest[WebhookSta
 	_, webhookID, err := ExtractIDsFromWebhookResourceID(req.ID)
 	if err != nil {
 		return infer.DeleteResponse{}, fmt.Errorf("invalid resource ID: %w", err)
+	}
+
+	// Validate webhook ID
+	if err := ValidateWebhookID(webhookID); err != nil {
+		return infer.DeleteResponse{}, fmt.Errorf("invalid webhook ID: %w", err)
 	}
 
 	// Get HTTP client

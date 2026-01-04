@@ -14,6 +14,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
 // TestValidateCollectionID tests collectionID validation
@@ -460,6 +462,264 @@ func TestCollectionErrorMessagesAreActionable(t *testing.T) {
 			for _, expectedStr := range tt.contains {
 				if !strings.Contains(errMsg, expectedStr) {
 					t.Errorf("%s: error message missing %q. Got: %s", tt.name, expectedStr, errMsg)
+				}
+			}
+		})
+	}
+}
+
+// TestGetCollections_RateLimited tests 429 rate limiting with retry
+func TestGetCollections_RateLimited(t *testing.T) {
+	attempts := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attempts++
+		if attempts < 2 {
+			w.Header().Set("Retry-After", "0") // Use 0 seconds for fast test
+			w.WriteHeader(http.StatusTooManyRequests)
+			_, _ = w.Write([]byte("rate limited"))
+			return
+		}
+		// Succeed on second attempt
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		response := CollectionListResponse{
+			Collections: []Collection{
+				{
+					ID:           "collection1",
+					DisplayName:  "Blog Posts",
+					SingularName: "Blog Post",
+					Slug:         "blog-posts",
+					CreatedOn:    "2024-01-01T00:00:00Z",
+					LastUpdated:  "2024-01-02T00:00:00Z",
+				},
+			},
+		}
+		_ = json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	oldURL := getCollectionsBaseURL
+	getCollectionsBaseURL = server.URL
+	defer func() { getCollectionsBaseURL = oldURL }()
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	ctx := context.Background()
+
+	result, err := GetCollections(ctx, client, "5f0c8c9e1c9d440000e8d8c3")
+	if err != nil {
+		t.Fatalf("GetCollections should succeed after rate limit retry, got error: %v", err)
+	}
+
+	if attempts != 2 {
+		t.Errorf("Expected 2 attempts (1 rate limited + 1 success), got %d", attempts)
+	}
+	if len(result.Collections) != 1 {
+		t.Errorf("Expected 1 collection, got %d", len(result.Collections))
+	}
+}
+
+// TestPostCollection_RateLimited tests 429 rate limiting with retry
+func TestPostCollection_RateLimited(t *testing.T) {
+	attempts := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attempts++
+		if attempts < 2 {
+			w.Header().Set("Retry-After", "0")
+			w.WriteHeader(http.StatusTooManyRequests)
+			_, _ = w.Write([]byte("rate limited"))
+			return
+		}
+		// Succeed on second attempt
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		response := Collection{
+			ID:           "newcollection",
+			DisplayName:  "Blog Posts",
+			SingularName: "Blog Post",
+			Slug:         "blog-posts",
+			CreatedOn:    "2024-01-01T00:00:00Z",
+			LastUpdated:  "2024-01-01T00:00:00Z",
+		}
+		_ = json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	oldURL := postCollectionBaseURL
+	postCollectionBaseURL = server.URL
+	defer func() { postCollectionBaseURL = oldURL }()
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	ctx := context.Background()
+
+	result, err := PostCollection(ctx, client, "5f0c8c9e1c9d440000e8d8c3", "Blog Posts", "Blog Post", "blog-posts")
+	if err != nil {
+		t.Fatalf("PostCollection should succeed after rate limit retry, got error: %v", err)
+	}
+
+	if attempts != 2 {
+		t.Errorf("Expected 2 attempts (1 rate limited + 1 success), got %d", attempts)
+	}
+	if result.ID != "newcollection" {
+		t.Errorf("Expected ID newcollection, got %s", result.ID)
+	}
+}
+
+// TestDeleteCollection_RateLimited tests 429 rate limiting with retry
+func TestDeleteCollection_RateLimited(t *testing.T) {
+	attempts := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attempts++
+		if attempts < 2 {
+			w.Header().Set("Retry-After", "0")
+			w.WriteHeader(http.StatusTooManyRequests)
+			_, _ = w.Write([]byte("rate limited"))
+			return
+		}
+		// Succeed on second attempt
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer server.Close()
+
+	oldURL := deleteCollectionBaseURL
+	deleteCollectionBaseURL = server.URL
+	defer func() { deleteCollectionBaseURL = oldURL }()
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	ctx := context.Background()
+
+	err := DeleteCollection(ctx, client, "collection1")
+	if err != nil {
+		t.Fatalf("DeleteCollection should succeed after rate limit retry, got error: %v", err)
+	}
+
+	if attempts != 2 {
+		t.Errorf("Expected 2 attempts (1 rate limited + 1 success), got %d", attempts)
+	}
+}
+
+// TestCollectionDiff_MultipleChanges tests that Diff accumulates all changes in DetailedDiff
+func TestCollectionDiff_MultipleChanges(t *testing.T) {
+	resource := &CollectionResource{}
+	ctx := context.Background()
+
+	tests := []struct {
+		name                string
+		oldState            CollectionState
+		newInputs           CollectionArgs
+		expectedChangeCount int
+		expectedKeys        []string
+	}{
+		{
+			name: "all fields changed",
+			oldState: CollectionState{
+				CollectionArgs: CollectionArgs{
+					SiteID:       "oldsite123456789012345678",
+					DisplayName:  "Old Name",
+					SingularName: "Old Singular",
+					Slug:         "old-slug",
+				},
+			},
+			newInputs: CollectionArgs{
+				SiteID:       "newsite123456789012345678",
+				DisplayName:  "New Name",
+				SingularName: "New Singular",
+				Slug:         "new-slug",
+			},
+			expectedChangeCount: 4,
+			expectedKeys:        []string{"siteId", "displayName", "singularName", "slug"},
+		},
+		{
+			name: "two fields changed",
+			oldState: CollectionState{
+				CollectionArgs: CollectionArgs{
+					SiteID:       "site123456789012345678901",
+					DisplayName:  "Old Name",
+					SingularName: "Old Singular",
+					Slug:         "same-slug",
+				},
+			},
+			newInputs: CollectionArgs{
+				SiteID:       "site123456789012345678901",
+				DisplayName:  "New Name",
+				SingularName: "New Singular",
+				Slug:         "same-slug",
+			},
+			expectedChangeCount: 2,
+			expectedKeys:        []string{"displayName", "singularName"},
+		},
+		{
+			name: "no changes",
+			oldState: CollectionState{
+				CollectionArgs: CollectionArgs{
+					SiteID:       "site123456789012345678901",
+					DisplayName:  "Same Name",
+					SingularName: "Same Singular",
+					Slug:         "same-slug",
+				},
+			},
+			newInputs: CollectionArgs{
+				SiteID:       "site123456789012345678901",
+				DisplayName:  "Same Name",
+				SingularName: "Same Singular",
+				Slug:         "same-slug",
+			},
+			expectedChangeCount: 0,
+			expectedKeys:        []string{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := infer.DiffRequest[CollectionArgs, CollectionState]{
+				State:  tt.oldState,
+				Inputs: tt.newInputs,
+			}
+
+			result, err := resource.Diff(ctx, req)
+			if err != nil {
+				t.Fatalf("Diff() error = %v, want nil", err)
+			}
+
+			// Check number of changes
+			actualCount := len(result.DetailedDiff)
+			if actualCount != tt.expectedChangeCount {
+				t.Errorf("Expected %d changes in DetailedDiff, got %d", tt.expectedChangeCount, actualCount)
+			}
+
+			// Check that HasChanges is set correctly
+			if tt.expectedChangeCount > 0 {
+				if !result.HasChanges {
+					t.Error("Expected HasChanges=true when changes detected")
+				}
+				if !result.DeleteBeforeReplace {
+					t.Error("Expected DeleteBeforeReplace=true when changes detected")
+				}
+			} else {
+				if result.HasChanges {
+					t.Error("Expected HasChanges=false when no changes")
+				}
+			}
+
+			// Check that all expected keys are present
+			for _, expectedKey := range tt.expectedKeys {
+				if _, found := result.DetailedDiff[expectedKey]; !found {
+					t.Errorf("Expected key %q in DetailedDiff, but it was not found", expectedKey)
+				}
+			}
+
+			// Check that there are no unexpected keys
+			if len(tt.expectedKeys) > 0 {
+				for actualKey := range result.DetailedDiff {
+					found := false
+					for _, expectedKey := range tt.expectedKeys {
+						if actualKey == expectedKey {
+							found = true
+							break
+						}
+					}
+					if !found {
+						t.Errorf("Unexpected key %q in DetailedDiff", actualKey)
+					}
 				}
 			}
 		})

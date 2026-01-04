@@ -150,6 +150,9 @@ build_sdks: dotnet_sdk go_sdk nodejs_sdk python_sdk java_sdk
 only_build:: build
 
 lint:
+	@echo "Running formatters..."
+	@golangci-lint fmt --config .golangci.yml -E gci -E gofumpt provider || true
+	@echo "Running linters..."
 	golangci-lint --path-prefix provider --config .golangci.yml run --fix
 
 

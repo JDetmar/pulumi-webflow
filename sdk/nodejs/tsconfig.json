@@ -21,6 +21,7 @@
         "config/vars.ts",
         "index.ts",
         "pageContent.ts",
+        "pageCustomCode.ts",
         "pageData.ts",
         "provider.ts",
         "redirect.ts",

@@ -52,14 +52,14 @@ func ValidateSiteID(siteID string) error {
 		return errors.New("siteId is required but was not provided. " +
 			"Please provide a valid Webflow site ID " +
 			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). " +
-			"You can find your site ID in the Webflow dashboard under Site Settings.")
+			"You can find your site ID in the Webflow dashboard under Site Settings")
 	}
 	if !siteIDPattern.MatchString(siteID) {
 		return fmt.Errorf("siteId has invalid format: got '%s'. "+
 			"Expected a 24-character lowercase hexadecimal string "+
 			"(e.g., '5f0c8c9e1c9d440000e8d8c3'). "+
 			"Please check your site ID in the Webflow dashboard "+
-			"and ensure it contains only lowercase letters (a-f) and digits (0-9).", siteID)
+			"and ensure it contains only lowercase letters (a-f) and digits (0-9)", siteID)
 	}
 	return nil
 }
@@ -286,7 +286,7 @@ func GetRobotsTxt(ctx context.Context, client *http.Client, siteID string) (*Rob
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -384,7 +384,7 @@ func PutRobotsTxt(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -468,7 +468,7 @@ func DeleteRobotsTxt(ctx context.Context, client *http.Client, siteID string) er
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -503,7 +503,7 @@ func handleWebflowError(statusCode int, body []byte) error {
 		return fmt.Errorf("bad request: the request to Webflow API was incorrectly formatted. "+
 			"Details: %s. "+
 			"Please check your resource configuration and ensure all required fields are provided with valid values. "+
-			"If the error persists, verify your robots.txt content follows the correct format.", string(body))
+			"If the error persists, verify your robots.txt content follows the correct format", string(body))
 	case 401:
 		return errors.New("unauthorized: authentication failed. " +
 			"Your Webflow API token is invalid or has expired. " +
@@ -531,10 +531,10 @@ func handleWebflowError(statusCode int, body []byte) error {
 			"Details: %s. "+
 			"This is a temporary issue on Webflow's side. "+
 			"Please wait a few minutes and try again. "+
-			"If the problem persists, check Webflow's status page or contact Webflow support.", string(body))
+			"If the problem persists, check Webflow's status page or contact Webflow support", string(body))
 	default:
 		return fmt.Errorf("unexpected error (HTTP %d): %s. "+
 			"This is an unexpected response from the Webflow API. "+
-			"Please check Webflow's status page or contact Webflow support if this error persists.", statusCode, string(body))
+			"Please check Webflow's status page or contact Webflow support if this error persists", statusCode, string(body))
 	}
 }

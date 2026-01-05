@@ -70,7 +70,7 @@ func ValidateNodeID(nodeID string) error {
 		return errors.New("nodeId is required but was not provided. " +
 			"Please provide a valid node ID from the page's DOM structure. " +
 			"You can retrieve node IDs by fetching the page content first using the Webflow API " +
-			"GET /pages/{page_id}/dom endpoint.")
+			"GET /pages/{page_id}/dom endpoint")
 	}
 	return nil
 }
@@ -169,7 +169,7 @@ func GetPageContent(ctx context.Context, client *http.Client, pageID string) (*P
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Wait before next retry if we haven't exhausted retries
@@ -274,7 +274,7 @@ func PutPageContent(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Wait before next retry if we haven't exhausted retries

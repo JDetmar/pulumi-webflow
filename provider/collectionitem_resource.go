@@ -223,7 +223,7 @@ func (c *CollectionItemResource) Create(
 	// Defensive check: Ensure Webflow API returned a valid item ID
 	if response.ID == "" {
 		return infer.CreateResponse[CollectionItemState]{}, errors.New(
-			"Webflow API returned empty item ID - " +
+			"webflow API returned empty item ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
 

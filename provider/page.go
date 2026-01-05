@@ -72,14 +72,14 @@ func ValidatePageID(pageID string) error {
 		return errors.New("pageId is required but was not provided. " +
 			"Please provide a valid Webflow page ID " +
 			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). " +
-			"You can find page IDs using the Pages API list endpoint or in the Webflow designer.")
+			"You can find page IDs using the Pages API list endpoint or in the Webflow designer")
 	}
 	if !pageIDPattern.MatchString(pageID) {
 		return fmt.Errorf("pageId has invalid format: got '%s'. "+
 			"Expected a 24-character lowercase hexadecimal string "+
 			"(e.g., '5f0c8c9e1c9d440000e8d8c4'). "+
 			"Please check your page ID and ensure it contains only "+
-			"lowercase letters (a-f) and digits (0-9).", pageID)
+			"lowercase letters (a-f) and digits (0-9)", pageID)
 	}
 	return nil
 }
@@ -185,7 +185,7 @@ func GetPages(ctx context.Context, client *http.Client, siteID string) (*PagesRe
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Wait before next retry if we haven't exhausted retries
@@ -276,7 +276,7 @@ func GetPage(ctx context.Context, client *http.Client, pageID string) (*Page, er
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {

@@ -232,7 +232,7 @@ func (r *RegisteredScriptResource) Create(
 	// Defensive check: Ensure Webflow API returned a valid script ID
 	if response.ID == "" {
 		return infer.CreateResponse[RegisteredScriptResourceState]{}, errors.New(
-			"Webflow API returned empty registered script ID - " +
+			"webflow API returned empty registered script ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
 

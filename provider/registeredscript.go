@@ -64,18 +64,18 @@ func ValidateScriptDisplayName(name string) error {
 	if name == "" {
 		return errors.New("displayName is required but was not provided. " +
 			"Please provide a user-facing name for the script between 1 and 50 alphanumeric characters. " +
-			"Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'.")
+			"Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'")
 	}
 	if len(name) > 50 {
 		return fmt.Errorf("displayName is too long: got %d characters, maximum is 50. "+
 			"Please shorten the name. "+
-			"Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'.", len(name))
+			"Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'", len(name))
 	}
 	if !displayNamePattern.MatchString(name) {
 		return fmt.Errorf("displayName contains invalid characters: got '%s'. "+
 			"Allowed characters: A-Z, a-z, 0-9. Spaces and special characters are not allowed. "+
 			"Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'. "+
-			"Please use only alphanumeric characters.", name)
+			"Please use only alphanumeric characters", name)
 	}
 	return nil
 }
@@ -86,12 +86,12 @@ func ValidateHostedLocation(url string) error {
 	if url == "" {
 		return errors.New("hostedLocation is required but was not provided. " +
 			"Please provide a valid HTTP or HTTPS URL where your script is hosted. " +
-			"Example: 'https://cdn.example.com/my-script.js'.")
+			"Example: 'https://cdn.example.com/my-script.js'")
 	}
 	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
 		return fmt.Errorf("hostedLocation must start with 'http://' or 'https://': got '%s'. "+
 			"Example valid URLs: 'https://cdn.example.com/my-script.js', 'https://cdnjs.cloudflare.com/...'. "+
-			"Please ensure the URL is properly formatted with a scheme.", url)
+			"Please ensure the URL is properly formatted with a scheme", url)
 	}
 	return nil
 }
@@ -122,12 +122,12 @@ func ValidateVersion(version string) error {
 		return errors.New("version is required but was not provided. " +
 			"Please provide a Semantic Version (SemVer) string for your script. " +
 			"Format: 'major.minor.patch' (e.g., '1.0.0', '2.3.1'). " +
-			"See https://semver.org/ for more information.")
+			"See https://semver.org/ for more information")
 	}
 	if !strings.Contains(version, ".") {
 		return fmt.Errorf("version must be in Semantic Version format: got '%s'. "+
 			"Expected format: 'major.minor.patch' (e.g., '1.0.0', '2.3.1'). "+
-			"See https://semver.org/ for more information.", version)
+			"See https://semver.org/ for more information", version)
 	}
 	return nil
 }
@@ -219,7 +219,7 @@ func GetRegisteredScripts(ctx context.Context, client *http.Client, siteID strin
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -328,7 +328,7 @@ func PostRegisteredScript(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -437,7 +437,7 @@ func PatchRegisteredScript(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -529,7 +529,7 @@ func DeleteRegisteredScript(ctx context.Context, client *http.Client, siteID, sc
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry

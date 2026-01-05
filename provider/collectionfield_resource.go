@@ -225,7 +225,7 @@ func (f *CollectionField) Create(
 	// Defensive check: Ensure Webflow API returned a valid field ID
 	if response.ID == "" {
 		return infer.CreateResponse[CollectionFieldState]{}, errors.New(
-			"Webflow API returned empty field ID - " +
+			"webflow API returned empty field ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
 

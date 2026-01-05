@@ -197,7 +197,7 @@ func (r *Redirect) Create(
 	// Defensive check: Ensure Webflow API returned a valid redirect ID
 	if response.ID == "" {
 		return infer.CreateResponse[RedirectState]{}, errors.New(
-			"Webflow API returned empty redirect ID - " +
+			"webflow API returned empty redirect ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
 

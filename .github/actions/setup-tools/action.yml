@@ -26,6 +26,14 @@ runs:
       shell: bash
       run: mise install
 
+    - name: Force install golangci-lint v2
+      shell: bash
+      run: |
+        # Force install golangci-lint v2 to override any cached v1 version
+        mise install -f golangci-lint@2.7.2
+        # Verify the correct version is installed
+        golangci-lint version
+
     - name: Setup Go Cache
       uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
       with:

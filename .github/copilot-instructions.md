@@ -36,7 +36,7 @@ Concise, task-agnostic instructions so an agent can work efficiently without ext
 - Ensure tools from mise are installed before any Make target to avoid missing pulumictl/schema-tools.
 - Keep changes surgical; avoid editing generated `sdk/` files directly—regenerate instead.
 - Integration/example tests require `WEBFLOW_API_TOKEN`; provider unit tests do not.
-- If linters complain about `go:embed`, note CI temporarily rewrites directives; do not commit those rewrites.
+- CI lint job briefly replaces `go:embed` with ` goembed` before running golangci-lint; you do not need to do this locally—just avoid committing any such rewrites if you see them.
 - CI checks for a clean worktree; ensure `git status` clean after codegen/build.
 
 ## When to search

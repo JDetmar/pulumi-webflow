@@ -47,6 +47,7 @@ func Provider() p.Provider {
 			infer.Resource(&PageData{}),
 			infer.Resource(&Webhook{}),
 			infer.Resource(&Asset{}),
+			infer.Resource(&AssetFolder{}),
 			infer.Resource(&PageContent{}),
 			infer.Resource(&SiteCustomCode{}),
 			infer.Resource(&RegisteredScriptResource{}),

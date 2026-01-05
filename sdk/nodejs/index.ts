@@ -10,6 +10,11 @@ export type Asset = import("./asset").Asset;
 export const Asset: typeof import("./asset").Asset = null as any;
 utilities.lazyLoad(exports, ["Asset"], () => require("./asset"));
 
+export { AssetFolderArgs } from "./assetFolder";
+export type AssetFolder = import("./assetFolder").AssetFolder;
+export const AssetFolder: typeof import("./assetFolder").AssetFolder = null as any;
+utilities.lazyLoad(exports, ["AssetFolder"], () => require("./assetFolder"));
+
 export { CollectionArgs } from "./collection";
 export type Collection = import("./collection").Collection;
 export const Collection: typeof import("./collection").Collection = null as any;
@@ -91,6 +96,8 @@ const _module = {
         switch (type) {
             case "webflow:index:Asset":
                 return new Asset(name, <any>undefined, { urn })
+            case "webflow:index:AssetFolder":
+                return new AssetFolder(name, <any>undefined, { urn })
             case "webflow:index:Collection":
                 return new Collection(name, <any>undefined, { urn })
             case "webflow:index:CollectionField":

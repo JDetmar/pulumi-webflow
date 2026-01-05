@@ -7,6 +7,7 @@ from . import _utilities
 import typing
 # Export this package's modules as members:
 from .asset import *
+from .asset_folder import *
 from .collection import *
 from .collection_field import *
 from .collection_item import *
@@ -39,6 +40,7 @@ _utilities.register(
   "fqn": "webflow_webflow",
   "classes": {
    "webflow:index:Asset": "Asset",
+   "webflow:index:AssetFolder": "AssetFolder",
    "webflow:index:Collection": "Collection",
    "webflow:index:CollectionField": "CollectionField",
    "webflow:index:CollectionItem": "CollectionItem",

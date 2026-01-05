@@ -244,6 +244,64 @@
         "fileName"
       ]
     },
+    "webflow:index:AssetFolder": {
+      "description": "Manages asset folders for organizing files in a Webflow site. This resource allows you to create folders to organize your assets (images, documents, etc.) in the Webflow Assets panel. NOTE: The Webflow API does not support deleting or updating asset folders. Deleting this resource will only remove it from Pulumi state, not from Webflow. Any changes to folder properties will require creating a new folder.",
+      "properties": {
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of asset IDs currently contained in this folder (read-only). This is automatically populated by Webflow when assets are added to the folder."
+        },
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when the folder was created (RFC3339 format, read-only). This is automatically set when the folder is created."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The human-readable name for the asset folder. This name appears in the Webflow Assets panel and helps organize your files. Examples: 'Images', 'Documents', 'Icons', 'Hero Backgrounds'. Maximum length: 255 characters."
+        },
+        "folderId": {
+          "type": "string",
+          "description": "The Webflow-assigned folder ID (read-only). This unique identifier can be used to reference the folder in other resources, such as when uploading assets to this folder."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The timestamp when the folder was last modified (RFC3339 format, read-only). This is updated when assets are added or removed from the folder."
+        },
+        "parentFolder": {
+          "type": "string",
+          "description": "Optional ID of the parent folder for creating nested folder structures. If not specified, the folder will be created at the root level of the Assets panel. Example: '5f0c8c9e1c9d440000e8d8c4'."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        }
+      },
+      "required": [
+        "siteId",
+        "displayName"
+      ],
+      "inputProperties": {
+        "displayName": {
+          "type": "string",
+          "description": "The human-readable name for the asset folder. This name appears in the Webflow Assets panel and helps organize your files. Examples: 'Images', 'Documents', 'Icons', 'Hero Backgrounds'. Maximum length: 255 characters."
+        },
+        "parentFolder": {
+          "type": "string",
+          "description": "Optional ID of the parent folder for creating nested folder structures. If not specified, the folder will be created at the root level of the Assets panel. Example: '5f0c8c9e1c9d440000e8d8c4'."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+        }
+      },
+      "requiredInputs": [
+        "siteId",
+        "displayName"
+      ]
+    },
     "webflow:index:Collection": {
       "description": "Manages CMS collections for a Webflow site. Collections are containers for structured content items (blog posts, products, etc.). Note: Webflow collections do not support updates - any changes require replacement (delete + recreate).",
       "properties": {

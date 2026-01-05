@@ -255,10 +255,10 @@ func (r *Asset) Create(
 	//
 	// For now, we'll return an error explaining this limitation
 	return infer.CreateResponse[AssetState]{}, errors.New(
-		"asset upload is not yet fully implemented. " +
-			"This resource currently supports only tracking existing assets. " +
-			"To upload assets, use the Webflow dashboard or API directly. " +
-			"Future versions will support automatic file upload.")
+		"asset upload is not yet fully implemented; " +
+			"this resource currently supports only tracking existing assets; " +
+			"to upload assets, use the Webflow dashboard or API directly; " +
+			"future versions will support automatic file upload")
 }
 
 // Read retrieves the current state of an asset from Webflow.
@@ -324,8 +324,8 @@ func (r *Asset) Update(
 	// This should never be called because Diff always returns UpdateReplace
 	// But implement it defensively
 	return infer.UpdateResponse[AssetState]{}, errors.New(
-		"assets are immutable and cannot be updated in place. " +
-			"Any changes will trigger a replacement (delete and recreate).")
+		"assets are immutable and cannot be updated in place; " +
+			"any changes will trigger a replacement (delete and recreate)")
 }
 
 // Delete removes an asset from the Webflow site.

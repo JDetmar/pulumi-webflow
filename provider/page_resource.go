@@ -260,9 +260,9 @@ func (r *PageData) Create(
 	ctx context.Context, req infer.CreateRequest[PageDataArgs],
 ) (infer.CreateResponse[PageDataState], error) {
 	return infer.CreateResponse[PageDataState]{}, errors.New(
-		"PageData is a read-only data source. " +
-			"Pages cannot be created via the Webflow API - they must be created in the Webflow designer. " +
-			"Use this data source to read existing pages only.")
+		"PageData is a read-only data source; " +
+			"pages cannot be created via the Webflow API - they must be created in the Webflow designer; " +
+			"use this data source to read existing pages only")
 }
 
 // Update is not supported for PageData (data sources are read-only).
@@ -270,9 +270,9 @@ func (r *PageData) Update(
 	ctx context.Context, req infer.UpdateRequest[PageDataArgs, PageDataState],
 ) (infer.UpdateResponse[PageDataState], error) {
 	return infer.UpdateResponse[PageDataState]{}, errors.New(
-		"PageData is a read-only data source. " +
-			"Pages cannot be updated via this data source. " +
-			"To modify pages, use the Webflow designer.")
+		"PageData is a read-only data source; " +
+			"pages cannot be updated via this data source; " +
+			"to modify pages, use the Webflow designer")
 }
 
 // Delete is not supported for PageData (data sources are read-only).

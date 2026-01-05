@@ -62,20 +62,20 @@ var displayNamePattern = regexp.MustCompile(`^[a-zA-Z0-9]{1,50}$`)
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateScriptDisplayName(name string) error {
 	if name == "" {
-		return errors.New("displayName is required but was not provided. " +
-			"Please provide a user-facing name for the script between 1 and 50 alphanumeric characters. " +
-			"Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'.")
+		return errors.New("displayName is required but was not provided; " +
+			"please provide a user-facing name for the script between 1 and 50 alphanumeric characters; " +
+			"example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'")
 	}
 	if len(name) > 50 {
-		return fmt.Errorf("displayName is too long: got %d characters, maximum is 50. "+
-			"Please shorten the name. "+
-			"Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'.", len(name))
+		return fmt.Errorf("displayName is too long: got %d characters, maximum is 50; "+
+			"please shorten the name; "+
+			"example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'", len(name))
 	}
 	if !displayNamePattern.MatchString(name) {
-		return fmt.Errorf("displayName contains invalid characters: got '%s'. "+
-			"Allowed characters: A-Z, a-z, 0-9. Spaces and special characters are not allowed. "+
-			"Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'. "+
-			"Please use only alphanumeric characters.", name)
+		return fmt.Errorf("displayName contains invalid characters: got '%s', "+
+			"allowed characters: A-Z, a-z, 0-9; spaces and special characters are not allowed; "+
+			"example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'; "+
+			"please use only alphanumeric characters", name)
 	}
 	return nil
 }
@@ -84,14 +84,14 @@ func ValidateScriptDisplayName(name string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateHostedLocation(url string) error {
 	if url == "" {
-		return errors.New("hostedLocation is required but was not provided. " +
-			"Please provide a valid HTTP or HTTPS URL where your script is hosted. " +
-			"Example: 'https://cdn.example.com/my-script.js'.")
+		return errors.New("hostedLocation is required but was not provided; " +
+			"please provide a valid HTTP or HTTPS URL where your script is hosted; " +
+			"example: 'https://cdn.example.com/my-script.js'")
 	}
 	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
-		return fmt.Errorf("hostedLocation must start with 'http://' or 'https://': got '%s'. "+
-			"Example valid URLs: 'https://cdn.example.com/my-script.js', 'https://cdnjs.cloudflare.com/...'. "+
-			"Please ensure the URL is properly formatted with a scheme.", url)
+		return fmt.Errorf("hostedLocation must start with 'http://' or 'https://': got '%s', "+
+			"example valid URLs: 'https://cdn.example.com/my-script.js', 'https://cdnjs.cloudflare.com/...'; "+
+			"please ensure the URL is properly formatted with a scheme", url)
 	}
 	return nil
 }
@@ -101,16 +101,16 @@ func ValidateHostedLocation(url string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateIntegrityHash(hash string) error {
 	if hash == "" {
-		return errors.New("integrityHash is required but was not provided. " +
-			"Please provide a Sub-Resource Integrity (SRI) hash for your hosted script. " +
-			"Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. " +
-			"You can generate an SRI hash using: https://www.srihash.org/")
+		return errors.New("integrityHash is required but was not provided; " +
+			"please provide a Sub-Resource Integrity (SRI) hash for your hosted script; " +
+			"format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'; " +
+			"you can generate an SRI hash using: https://www.srihash.org/")
 	}
 	if !strings.HasPrefix(hash, "sha") {
-		return fmt.Errorf("integrityHash must start with 'sha': got '%s'. "+
-			"Supported algorithms: sha256, sha384, sha512. "+
-			"Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. "+
-			"You can generate an SRI hash using: https://www.srihash.org/", hash)
+		return fmt.Errorf("integrityHash must start with 'sha': got '%s', "+
+			"supported algorithms: sha256, sha384, sha512; "+
+			"format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'; "+
+			"you can generate an SRI hash using: https://www.srihash.org/", hash)
 	}
 	return nil
 }
@@ -119,15 +119,15 @@ func ValidateIntegrityHash(hash string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateVersion(version string) error {
 	if version == "" {
-		return errors.New("version is required but was not provided. " +
-			"Please provide a Semantic Version (SemVer) string for your script. " +
-			"Format: 'major.minor.patch' (e.g., '1.0.0', '2.3.1'). " +
-			"See https://semver.org/ for more information.")
+		return errors.New("version is required but was not provided; " +
+			"please provide a Semantic Version (SemVer) string for your script; " +
+			"format: 'major.minor.patch' (e.g., '1.0.0', '2.3.1'); " +
+			"see https://semver.org/ for more information")
 	}
 	if !strings.Contains(version, ".") {
-		return fmt.Errorf("version must be in Semantic Version format: got '%s'. "+
-			"Expected format: 'major.minor.patch' (e.g., '1.0.0', '2.3.1'). "+
-			"See https://semver.org/ for more information.", version)
+		return fmt.Errorf("version must be in Semantic Version format: got '%s', "+
+			"expected format: 'major.minor.patch' (e.g., '1.0.0', '2.3.1'); "+
+			"see https://semver.org/ for more information", version)
 	}
 	return nil
 }
@@ -216,10 +216,10 @@ func GetRegisteredScripts(ctx context.Context, client *http.Client, siteID strin
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -325,10 +325,10 @@ func PostRegisteredScript(
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -434,10 +434,10 @@ func PatchRegisteredScript(
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -526,10 +526,10 @@ func DeleteRegisteredScript(ctx context.Context, client *http.Client, siteID, sc
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry

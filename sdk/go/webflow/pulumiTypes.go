@@ -15,7 +15,7 @@ var _ = internal.GetEnvOrDefault
 
 type CustomScriptArgs struct {
 	// Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
-	Attributes map[string]string `pulumi:"attributes"`
+	Attributes map[string]interface{} `pulumi:"attributes"`
 	// The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
 	Id string `pulumi:"id"`
 	// The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
@@ -37,7 +37,7 @@ type CustomScriptArgsInput interface {
 
 type CustomScriptArgsArgs struct {
 	// Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
-	Attributes pulumi.StringMapInput `pulumi:"attributes"`
+	Attributes pulumi.MapInput `pulumi:"attributes"`
 	// The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
 	Id pulumi.StringInput `pulumi:"id"`
 	// The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
@@ -98,8 +98,8 @@ func (o CustomScriptArgsOutput) ToCustomScriptArgsOutputWithContext(ctx context.
 }
 
 // Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
-func (o CustomScriptArgsOutput) Attributes() pulumi.StringMapOutput {
-	return o.ApplyT(func(v CustomScriptArgs) map[string]string { return v.Attributes }).(pulumi.StringMapOutput)
+func (o CustomScriptArgsOutput) Attributes() pulumi.MapOutput {
+	return o.ApplyT(func(v CustomScriptArgs) map[string]interface{} { return v.Attributes }).(pulumi.MapOutput)
 }
 
 // The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'

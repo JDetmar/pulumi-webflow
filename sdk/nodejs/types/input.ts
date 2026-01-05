@@ -9,7 +9,7 @@ export interface CustomScriptArgsArgs {
     /**
      * Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
      */
-    attributes?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    attributes?: pulumi.Input<{[key: string]: any}>;
     /**
      * The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
      */

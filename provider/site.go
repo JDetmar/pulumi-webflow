@@ -88,16 +88,16 @@ type SitePublishResponse struct {
 // Actionable error messages explain: what's wrong, expected format, and how to fix it.
 func ValidateDisplayName(displayName string) error {
 	if displayName == "" {
-		return errors.New("displayName is required but was not provided.\n" +
-			"Expected format: A non-empty string representing your site's name.\n" +
-			"Fix: Provide a name for your site (e.g., 'My Marketing Site', 'Company Blog', 'Product Landing Page').")
+		return errors.New("displayName is required but was not provided; " +
+			"expected format: a non-empty string representing your site's name; " +
+			"fix: provide a name for your site (e.g., 'My Marketing Site', 'Company Blog', 'Product Landing Page')")
 	}
 
 	// Webflow site names typically have a practical length limit
 	if len(displayName) > 255 {
-		return fmt.Errorf("displayName is too long: '%s' exceeds maximum length of 255 characters.\n"+
-			"Expected format: A string with 1-255 characters.\n"+
-			"Fix: Use a shorter, more concise site name.", displayName)
+		return fmt.Errorf("displayName is too long: '%s' exceeds maximum length of 255 characters; "+
+			"expected format: a string with 1-255 characters; "+
+			"fix: use a shorter, more concise site name", displayName)
 	}
 
 	return nil
@@ -117,11 +117,11 @@ func ValidateShortName(shortName string) error {
 	// Pattern: start with letter/number, can have hyphens in middle, end with letter/number
 	shortNameRegex := regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
 	if !shortNameRegex.MatchString(shortName) {
-		return fmt.Errorf("invalid shortName format: '%s' contains invalid characters.\n"+
-			"Expected format: lowercase letters (a-z), numbers (0-9), and hyphens (-) only. "+
-			"Must start and end with a letter or number (e.g., 'my-site', 'company-blog-2024', 'product-1').\n"+
-			"Fix: Use only lowercase letters, numbers, and hyphens. No spaces, underscores, or special characters. "+
-			"No leading/trailing hyphens.", shortName)
+		return fmt.Errorf("invalid shortName format: '%s' contains invalid characters; "+
+			"expected format: lowercase letters (a-z), numbers (0-9), and hyphens (-) only; "+
+			"must start and end with a letter or number (e.g., 'my-site', 'company-blog-2024', 'product-1'); "+
+			"fix: use only lowercase letters, numbers, and hyphens; no spaces, underscores, or special characters; "+
+			"no leading/trailing hyphens", shortName)
 	}
 
 	return nil
@@ -145,11 +145,11 @@ func ValidateTimeZone(timeZone string) error {
 	timeZoneRegex := regexp.MustCompile(`^([A-Za-z_]+/[A-Za-z_]+|UTC|Etc/GMT[+-]\d+)$`)
 	if !timeZoneRegex.MatchString(timeZone) {
 		return fmt.Errorf("invalid timezone format: '%s' is not a recognized IANA "+
-			"timezone identifier.\n"+
-			"Expected format: IANA timezone identifiers like 'America/New_York', "+
-			"'Europe/London', 'Asia/Tokyo', or 'UTC'.\n"+
-			"Fix: Use a valid IANA timezone. Examples: 'America/Los_Angeles', "+
-			"'Europe/Paris', 'Asia/Singapore', 'Australia/Sydney', 'UTC', 'Etc/GMT+5'.", timeZone)
+			"timezone identifier; "+
+			"expected format: IANA timezone identifiers like 'America/New_York', "+
+			"'Europe/London', 'Asia/Tokyo', or 'UTC'; "+
+			"fix: use a valid IANA timezone; examples: 'America/Los_Angeles', "+
+			"'Europe/Paris', 'Asia/Singapore', 'Australia/Sydney', 'UTC', 'Etc/GMT+5'", timeZone)
 	}
 
 	return nil
@@ -160,10 +160,10 @@ func ValidateTimeZone(timeZone string) error {
 // Actionable error messages explain: what's wrong, expected format, and how to fix it.
 func ValidateWorkspaceID(workspaceID string) error {
 	if workspaceID == "" {
-		return errors.New("workspaceId is required but was not provided.\n" +
-			"Expected format: Your Webflow workspace ID (a 24-character hexadecimal string).\n" +
-			"Fix: Provide your workspace ID. You can find it in your Webflow dashboard under Account Settings > Workspace. " +
-			"Note: Creating sites via API requires an Enterprise workspace.")
+		return errors.New("workspaceId is required but was not provided; " +
+			"expected format: your Webflow workspace ID (a 24-character hexadecimal string); " +
+			"fix: provide your workspace ID; you can find it in your Webflow dashboard under Account Settings > Workspace; " +
+			"note: creating sites via API requires an Enterprise workspace")
 	}
 
 	return nil
@@ -257,10 +257,10 @@ func PostSite(
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Wait before next retry if we haven't exhausted retries
@@ -361,10 +361,10 @@ func PatchSite(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -463,10 +463,10 @@ func PublishSite(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -552,10 +552,10 @@ func DeleteSite(ctx context.Context, client *http.Client, siteID string) error {
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -642,10 +642,10 @@ func GetSite(ctx context.Context, client *http.Client, siteID string) (*Site, er
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -688,49 +688,49 @@ func handleSiteError(statusCode int, body []byte) error {
 	switch statusCode {
 	case 400:
 		return fmt.Errorf("bad request: the site creation/update request was "+
-			"incorrectly formatted. Details: %s. "+
-			"Please check your site configuration and ensure all required fields "+
-			"(workspaceId, displayName) are provided with valid values. "+
-			"Verify that optional fields (shortName, timeZone, templateName) "+
-			"follow the correct format.", string(body))
+			"incorrectly formatted; details: %s; "+
+			"please check your site configuration and ensure all required fields "+
+			"(workspaceId, displayName) are provided with valid values; "+
+			"verify that optional fields (shortName, timeZone, templateName) "+
+			"follow the correct format", string(body))
 	case 401:
-		return errors.New("unauthorized: authentication failed. " +
-			"Your Webflow API token is invalid or has expired. " +
-			"To fix this: 1) Verify your token in the Webflow dashboard " +
+		return errors.New("unauthorized: authentication failed; " +
+			"your Webflow API token is invalid or has expired; " +
+			"to fix this: 1) verify your token in the Webflow dashboard " +
 			"(Settings > Integrations > API Access), " +
-			"2) Ensure the token has the required scopes for site management, " +
-			"3) Update your Pulumi config with: " +
+			"2) ensure the token has the required scopes for site management, " +
+			"3) update your Pulumi config with: " +
 			"'pulumi config set webflow:apiToken <your-token> --secret'")
 	case 403:
-		return errors.New("forbidden: access denied. " +
-			"Your API token does not have permission to create/manage sites, " +
-			"OR your workspace is not an Enterprise workspace. " +
-			"To fix this: 1) Verify you have an Enterprise Webflow workspace " +
+		return errors.New("forbidden: access denied; " +
+			"your API token does not have permission to create/manage sites, " +
+			"OR your workspace is not an Enterprise workspace; " +
+			"to fix this: 1) verify you have an Enterprise Webflow workspace " +
 			"(site creation via API requires Enterprise), " +
-			"2) Ensure your API token has the required scopes for site management, " +
-			"3) Check that the workspace ID is correct and belongs to your account")
+			"2) ensure your API token has the required scopes for site management, " +
+			"3) check that the workspace ID is correct and belongs to your account")
 	case 404:
 		return errors.New("not found: the Webflow site, workspace, or template " +
-			"does not exist. " +
-			"To fix this: 1) Verify the workspace ID is correct " +
+			"does not exist; " +
+			"to fix this: 1) verify the workspace ID is correct " +
 			"(24-character lowercase hex string), " +
-			"2) If using templateName, verify the template name is valid in your " +
+			"2) if using templateName, verify the template name is valid in your " +
 			"Webflow account (check available templates in Webflow dashboard), " +
-			"3) Check that the workspace exists in your Webflow dashboard, " +
-			"4) Try creating without templateName to isolate the issue")
+			"3) check that the workspace exists in your Webflow dashboard, " +
+			"4) try creating without templateName to isolate the issue")
 	case 429:
-		return errors.New("rate limited: too many requests to Webflow API. " +
-			"The provider will automatically retry with exponential backoff. " +
-			"If this error persists, please wait a few minutes before trying again. " +
-			"Consider reducing the frequency of operations or contact Webflow support if rate limits are consistently exceeded")
+		return errors.New("rate limited: too many requests to Webflow API; " +
+			"the provider will automatically retry with exponential backoff; " +
+			"if this error persists, please wait a few minutes before trying again; " +
+			"consider reducing the frequency of operations or contact Webflow support if rate limits are consistently exceeded")
 	case 500:
-		return fmt.Errorf("server error: Webflow API encountered an internal error. "+
-			"Details: %s. "+
-			"This is a temporary issue on Webflow's side. "+
-			"The provider will automatically retry. If the error persists, please contact Webflow support", string(body))
+		return fmt.Errorf("server error: Webflow API encountered an internal error; "+
+			"details: %s; "+
+			"this is a temporary issue on Webflow's side; "+
+			"the provider will automatically retry; if the error persists, please contact Webflow support", string(body))
 	default:
-		return fmt.Errorf("unexpected error (HTTP %d): %s. "+
-			"This may indicate a temporary issue with the Webflow API or an unhandled error condition. "+
-			"Please check the Webflow API status and try again", statusCode, string(body))
+		return fmt.Errorf("unexpected error (HTTP %d): %s; "+
+			"this may indicate a temporary issue with the Webflow API or an unhandled error condition; "+
+			"please check the Webflow API status and try again", statusCode, string(body))
 	}
 }

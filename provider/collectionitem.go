@@ -56,9 +56,9 @@ type CollectionItemRequest struct {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateFieldData(fieldData map[string]interface{}) error {
 	if len(fieldData) == 0 {
-		return errors.New("fieldData is required but was not provided. " +
-			"Please provide a map of field slugs to values (e.g., {\"name\": \"My Item\", \"slug\": \"my-item\"}). " +
-			"The field slugs must match the fields defined in the collection schema.")
+		return errors.New("fieldData is required but was not provided; " +
+			"please provide a map of field slugs to values (e.g., {\"name\": \"My Item\", \"slug\": \"my-item\"}); " +
+			"the field slugs must match the fields defined in the collection schema")
 	}
 	// Note: Name and slug are typically required but may be auto-generated
 	// We don't enforce this here as it depends on the collection schema
@@ -152,10 +152,10 @@ func GetCollectionItems(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -241,10 +241,10 @@ func GetCollectionItem(ctx context.Context, client *http.Client, collectionID, i
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -347,10 +347,10 @@ func PostCollectionItem(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -453,10 +453,10 @@ func PatchCollectionItem(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -542,10 +542,10 @@ func DeleteCollectionItem(ctx context.Context, client *http.Client, collectionID
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {

@@ -16,7 +16,7 @@ namespace Pulumi.Webflow.Outputs
         /// <summary>
         /// Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         /// </summary>
-        public readonly ImmutableDictionary<string, string>? Attributes;
+        public readonly ImmutableDictionary<string, object>? Attributes;
         /// <summary>
         /// The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
         /// </summary>
@@ -32,7 +32,7 @@ namespace Pulumi.Webflow.Outputs
 
         [OutputConstructor]
         private CustomScriptArgs(
-            ImmutableDictionary<string, string>? attributes,
+            ImmutableDictionary<string, object>? attributes,
 
             string id,
 

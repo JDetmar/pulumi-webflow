@@ -46,16 +46,16 @@ type CollectionRequest struct {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateCollectionID(collectionID string) error {
 	if collectionID == "" {
-		return errors.New("collectionId is required but was not provided. " +
-			"Please provide a valid Webflow collection ID " +
-			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). " +
-			"You can find collection IDs via the Webflow API or dashboard.")
+		return errors.New("collectionId is required but was not provided; " +
+			"please provide a valid Webflow collection ID " +
+			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'); " +
+			"you can find collection IDs via the Webflow API or dashboard")
 	}
 	if !siteIDPattern.MatchString(collectionID) {
-		return fmt.Errorf("collectionId has invalid format: got '%s'. "+
-			"Expected a 24-character lowercase hexadecimal string "+
-			"(e.g., '5f0c8c9e1c9d440000e8d8c3'). "+
-			"Please ensure the collection ID contains only lowercase letters (a-f) and digits (0-9).", collectionID)
+		return fmt.Errorf("collectionId has invalid format: got '%s', "+
+			"expected a 24-character lowercase hexadecimal string "+
+			"(e.g., '5f0c8c9e1c9d440000e8d8c3'); "+
+			"please ensure the collection ID contains only lowercase letters (a-f) and digits (0-9)", collectionID)
 	}
 	return nil
 }
@@ -64,13 +64,13 @@ func ValidateCollectionID(collectionID string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateCollectionDisplayName(displayName string) error {
 	if displayName == "" {
-		return errors.New("displayName is required but was not provided. " +
-			"Please provide a name for your collection (e.g., 'Blog Posts', 'Products', 'Team Members'). " +
-			"The display name is shown in the Webflow CMS interface.")
+		return errors.New("displayName is required but was not provided; " +
+			"please provide a name for your collection (e.g., 'Blog Posts', 'Products', 'Team Members'); " +
+			"the display name is shown in the Webflow CMS interface")
 	}
 	if len(displayName) > 255 {
-		return fmt.Errorf("displayName is too long: '%s' exceeds maximum length of 255 characters. "+
-			"Please use a shorter, more concise name for your collection.", displayName)
+		return fmt.Errorf("displayName is too long: '%s' exceeds maximum length of 255 characters, "+
+			"please use a shorter, more concise name for your collection", displayName)
 	}
 	return nil
 }
@@ -79,14 +79,14 @@ func ValidateCollectionDisplayName(displayName string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateSingularName(singularName string) error {
 	if singularName == "" {
-		return errors.New("singularName is required but was not provided. " +
-			"Please provide the singular form of your collection name " +
-			"(e.g., 'Blog Post' for 'Blog Posts', 'Product' for 'Products'). " +
-			"The singular name is used in the CMS UI when referring to individual items.")
+		return errors.New("singularName is required but was not provided; " +
+			"please provide the singular form of your collection name " +
+			"(e.g., 'Blog Post' for 'Blog Posts', 'Product' for 'Products'); " +
+			"the singular name is used in the CMS UI when referring to individual items")
 	}
 	if len(singularName) > 255 {
-		return fmt.Errorf("singularName is too long: '%s' exceeds maximum length of 255 characters. "+
-			"Please use a shorter name.", singularName)
+		return fmt.Errorf("singularName is too long: '%s' exceeds maximum length of 255 characters, "+
+			"please use a shorter name", singularName)
 	}
 	return nil
 }
@@ -176,10 +176,10 @@ func GetCollections(ctx context.Context, client *http.Client, siteID string) (*C
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -265,10 +265,10 @@ func GetCollection(ctx context.Context, client *http.Client, collectionID string
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -369,10 +369,10 @@ func PostCollection(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -458,10 +458,10 @@ func DeleteCollection(ctx context.Context, client *http.Client, collectionID str
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {

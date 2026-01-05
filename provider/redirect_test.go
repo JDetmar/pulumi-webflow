@@ -281,12 +281,12 @@ func TestErrorMessagesAreActionable(t *testing.T) {
 		{
 			"ValidateSourcePath empty",
 			func() error { return ValidateSourcePath("") },
-			[]string{"required", "Example"},
+			[]string{"required", "example"},
 		},
 		{
 			"ValidateSourcePath missing slash",
 			func() error { return ValidateSourcePath("old-page") },
-			[]string{"must start with '/'", "Example"},
+			[]string{"must start with '/'", "example"},
 		},
 		{
 			"ValidateStatusCode invalid",

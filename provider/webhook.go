@@ -72,16 +72,16 @@ var validTriggerTypes = map[string]bool{
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateWebhookID(webhookID string) error {
 	if webhookID == "" {
-		return errors.New("webhookId is required but was not provided. " +
-			"Please provide a valid Webflow webhook ID " +
-			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). " +
-			"Webhook IDs are assigned by Webflow when a webhook is created.")
+		return errors.New("webhookId is required but was not provided; " +
+			"please provide a valid Webflow webhook ID " +
+			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'); " +
+			"webhook IDs are assigned by Webflow when a webhook is created")
 	}
 	if !webhookIDPattern.MatchString(webhookID) {
-		return fmt.Errorf("webhookId has invalid format: got '%s'. "+
-			"Expected a 24-character lowercase hexadecimal string "+
-			"(e.g., '5f0c8c9e1c9d440000e8d8c3'). "+
-			"Please check the webhook ID and ensure it contains only lowercase letters (a-f) and digits (0-9).", webhookID)
+		return fmt.Errorf("webhookId has invalid format: got '%s', "+
+			"expected a 24-character lowercase hexadecimal string "+
+			"(e.g., '5f0c8c9e1c9d440000e8d8c3'); "+
+			"please check the webhook ID and ensure it contains only lowercase letters (a-f) and digits (0-9)", webhookID)
 	}
 	return nil
 }
@@ -91,23 +91,23 @@ func ValidateWebhookID(webhookID string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateWebhookURL(url string) error {
 	if url == "" {
-		return errors.New("url is required but was not provided. " +
-			"Please provide a valid HTTPS URL where Webflow should send webhook events " +
-			"(e.g., 'https://example.com/webhooks/webflow', 'https://api.example.com/events'). " +
-			"Note: Webflow requires HTTPS URLs for security.")
+		return errors.New("url is required but was not provided; " +
+			"please provide a valid HTTPS URL where Webflow should send webhook events " +
+			"(e.g., 'https://example.com/webhooks/webflow', 'https://api.example.com/events'); " +
+			"note: Webflow requires HTTPS URLs for security")
 	}
 	if !strings.HasPrefix(url, "https://") {
-		return fmt.Errorf("url must use HTTPS protocol: got '%s'. "+
-			"Webflow requires webhook URLs to use HTTPS for security. "+
-			"Example valid URLs: 'https://example.com/webhooks/webflow', 'https://api.example.com/events'. "+
-			"Please update the URL to use HTTPS instead of HTTP.", url)
+		return fmt.Errorf("url must use HTTPS protocol: got '%s', "+
+			"Webflow requires webhook URLs to use HTTPS for security; "+
+			"example valid URLs: 'https://example.com/webhooks/webflow', 'https://api.example.com/events'; "+
+			"please update the URL to use HTTPS instead of HTTP", url)
 	}
 	// Basic URL format validation
 	if !strings.Contains(url[8:], ".") {
-		return fmt.Errorf("url appears to be invalid: got '%s'. "+
-			"Expected format: https://domain.com/path. "+
-			"Example valid URLs: 'https://example.com/webhooks', 'https://api.example.com/events'. "+
-			"Please provide a valid HTTPS URL.", url)
+		return fmt.Errorf("url appears to be invalid: got '%s', "+
+			"expected format: https://domain.com/path; "+
+			"example valid URLs: 'https://example.com/webhooks', 'https://api.example.com/events'; "+
+			"please provide a valid HTTPS URL", url)
 	}
 	return nil
 }
@@ -116,22 +116,22 @@ func ValidateWebhookURL(url string) error {
 // Returns actionable error messages listing all valid trigger types.
 func ValidateTriggerType(triggerType string) error {
 	if triggerType == "" {
-		return errors.New("triggerType is required but was not provided. " +
-			"Please specify which Webflow event should trigger this webhook. " +
-			"Valid trigger types: form_submission, site_publish, page_created, page_metadata_updated, " +
+		return errors.New("triggerType is required but was not provided; " +
+			"please specify which Webflow event should trigger this webhook; " +
+			"valid trigger types: form_submission, site_publish, page_created, page_metadata_updated, " +
 			"page_deleted, ecomm_new_order, ecomm_order_changed, ecomm_inventory_changed, " +
 			"memberships_user_account_added, memberships_user_account_updated, memberships_user_account_deleted, " +
-			"collection_item_created, collection_item_changed, collection_item_deleted, collection_item_unpublished. " +
-			"Example: 'form_submission' for form submissions, 'site_publish' for site publishes.")
+			"collection_item_created, collection_item_changed, collection_item_deleted, collection_item_unpublished; " +
+			"example: 'form_submission' for form submissions, 'site_publish' for site publishes")
 	}
 	if !validTriggerTypes[triggerType] {
-		return fmt.Errorf("triggerType '%s' is not a valid Webflow event type. "+
-			"Valid trigger types are: form_submission, site_publish, page_created, page_metadata_updated, "+
+		return fmt.Errorf("triggerType '%s' is not a valid Webflow event type; "+
+			"valid trigger types are: form_submission, site_publish, page_created, page_metadata_updated, "+
 			"page_deleted, ecomm_new_order, ecomm_order_changed, ecomm_inventory_changed, "+
 			"memberships_user_account_added, memberships_user_account_updated, memberships_user_account_deleted, "+
-			"collection_item_created, collection_item_changed, collection_item_deleted, collection_item_unpublished. "+
-			"Please use one of these valid trigger types. "+
-			"Example: 'form_submission' for form submissions, 'site_publish' for site publishes.", triggerType)
+			"collection_item_created, collection_item_changed, collection_item_deleted, collection_item_unpublished; "+
+			"please use one of these valid trigger types; "+
+			"example: 'form_submission' for form submissions, 'site_publish' for site publishes", triggerType)
 	}
 	return nil
 }
@@ -219,10 +219,10 @@ func GetWebhooks(ctx context.Context, client *http.Client, siteID string) (*Webh
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -309,10 +309,10 @@ func GetWebhook(ctx context.Context, client *http.Client, webhookID string) (*We
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -413,10 +413,10 @@ func PostWebhook(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -502,10 +502,10 @@ func DeleteWebhook(ctx context.Context, client *http.Client, webhookID string) e
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {

@@ -105,17 +105,17 @@ func ValidateFileName(fileName string) error {
 
 	// Check for reasonable length
 	if len(fileName) > 255 {
-		return fmt.Errorf("fileName is too long: '%s' exceeds maximum length of 255 characters. "+
-			"Please use a shorter file name.", fileName)
+		return fmt.Errorf("fileName is too long: '%s' exceeds maximum length of 255 characters, "+
+			"please use a shorter file name", fileName)
 	}
 
 	// Check for common invalid characters (most filesystems disallow these)
 	invalidChars := []string{"<", ">", ":", "\"", "|", "?", "*"}
 	for _, char := range invalidChars {
 		if strings.Contains(fileName, char) {
-			return fmt.Errorf("fileName contains invalid character '%s': got '%s'. "+
-				"Please remove invalid characters from the file name. "+
-				"Valid characters: letters, numbers, hyphens, underscores, dots, spaces.", char, fileName)
+			return fmt.Errorf("fileName contains invalid character '%s': got '%s', "+
+				"please remove invalid characters from the file name; "+
+				"valid characters: letters, numbers, hyphens, underscores, dots, spaces", char, fileName)
 		}
 	}
 
@@ -203,10 +203,10 @@ func GetAsset(ctx context.Context, client *http.Client, assetID string) (*AssetR
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -292,10 +292,10 @@ func ListAssets(ctx context.Context, client *http.Client, siteID string) (*Asset
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -397,10 +397,10 @@ func PostAssetUploadURL(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -486,10 +486,10 @@ func DeleteAsset(ctx context.Context, client *http.Client, assetID string) error
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {

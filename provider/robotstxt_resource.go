@@ -98,11 +98,11 @@ func (r *RobotsTxt) Create(
 	if req.Inputs.Content == "" {
 		return infer.CreateResponse[RobotsTxtState]{}, errors.New(
 			"validation failed for RobotsTxt resource: " +
-				"content is required but was not provided. " +
-				"Please provide robots.txt content with at least one directive " +
-				"(e.g., 'User-agent: *\\nAllow: /'). " +
-				"The content should follow the traditional robots.txt format " +
-				"with User-agent, Allow, Disallow, and Sitemap directives.")
+				"content is required but was not provided; " +
+				"please provide robots.txt content with at least one directive " +
+				"(e.g., 'User-agent: *\\nAllow: /'); " +
+				"the content should follow the traditional robots.txt format " +
+				"with User-agent, Allow, Disallow, and Sitemap directives")
 	}
 
 	state := RobotsTxtState{
@@ -206,11 +206,11 @@ func (r *RobotsTxt) Update(
 	if req.Inputs.Content == "" {
 		return infer.UpdateResponse[RobotsTxtState]{}, errors.New(
 			"validation failed for RobotsTxt resource: " +
-				"content is required but was not provided. " +
-				"Please provide robots.txt content with at least one directive " +
-				"(e.g., 'User-agent: *\\nAllow: /'). " +
-				"The content should follow the traditional robots.txt format " +
-				"with User-agent, Allow, Disallow, and Sitemap directives.")
+				"content is required but was not provided; " +
+				"please provide robots.txt content with at least one directive " +
+				"(e.g., 'User-agent: *\\nAllow: /'); " +
+				"the content should follow the traditional robots.txt format " +
+				"with User-agent, Allow, Disallow, and Sitemap directives")
 	}
 
 	state := RobotsTxtState{

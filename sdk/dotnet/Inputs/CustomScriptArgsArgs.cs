@@ -13,14 +13,14 @@ namespace Pulumi.Webflow.Inputs
     public sealed class CustomScriptArgsArgs : global::Pulumi.ResourceArgs
     {
         [Input("attributes")]
-        private InputMap<string>? _attributes;
+        private InputMap<object>? _attributes;
 
         /// <summary>
         /// Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         /// </summary>
-        public InputMap<string> Attributes
+        public InputMap<object> Attributes
         {
-            get => _attributes ?? (_attributes = new InputMap<string>());
+            get => _attributes ?? (_attributes = new InputMap<object>());
             set => _attributes = value;
         }
 

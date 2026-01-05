@@ -202,8 +202,8 @@ func (r *PageCustomCode) Create(
 	if len(req.Inputs.Scripts) == 0 {
 		return infer.CreateResponse[PageCustomCodeState]{}, errors.New(
 			"validation failed for PageCustomCode resource: " +
-				"at least one script is required. " +
-				"Please provide a list of scripts with id, version, and location fields.")
+				"at least one script is required; " +
+				"please provide a list of scripts with id, version, and location fields")
 	}
 
 	for i, script := range req.Inputs.Scripts {
@@ -338,8 +338,8 @@ func (r *PageCustomCode) Update(
 	if len(req.Inputs.Scripts) == 0 {
 		return infer.UpdateResponse[PageCustomCodeState]{}, errors.New(
 			"validation failed for PageCustomCode resource: " +
-				"at least one script is required. " +
-				"Please provide a list of scripts with id, version, and location fields.")
+				"at least one script is required; " +
+				"please provide a list of scripts with id, version, and location fields")
 	}
 
 	for i, script := range req.Inputs.Scripts {

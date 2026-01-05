@@ -52,10 +52,10 @@ type PageCustomCodeRequest struct {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateScriptID(scriptID string) error {
 	if scriptID == "" {
-		return errors.New("script id is required but was not provided. " +
-			"Please provide the ID of a registered custom code script. " +
-			"Scripts must be registered first using the RegisteredScript resource " +
-			"before they can be applied to a page.")
+		return errors.New("script id is required but was not provided; " +
+			"please provide the ID of a registered custom code script; " +
+			"scripts must be registered first using the RegisteredScript resource " +
+			"before they can be applied to a page")
 	}
 	return nil
 }
@@ -64,9 +64,9 @@ func ValidateScriptID(scriptID string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateScriptVersion(version string) error {
 	if version == "" {
-		return errors.New("script version is required but was not provided. " +
-			"Please provide a semantic version string (e.g., '1.0.0'). " +
-			"Version must match a registered version of the script.")
+		return errors.New("script version is required but was not provided; " +
+			"please provide a semantic version string (e.g., '1.0.0'); " +
+			"version must match a registered version of the script")
 	}
 	return nil
 }
@@ -75,10 +75,10 @@ func ValidateScriptVersion(version string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateScriptLocation(location string) error {
 	if location != "header" && location != "footer" {
-		return fmt.Errorf("script location must be either 'header' or 'footer': got '%s'. "+
-			"'header' = script loads in the page header (recommended for performance). "+
-			"'footer' = script loads in the page footer (use for DOM-dependent scripts). "+
-			"Please specify one of these two values.", location)
+		return fmt.Errorf("script location must be either 'header' or 'footer': got '%s'; "+
+			"'header' = script loads in the page header (recommended for performance); "+
+			"'footer' = script loads in the page footer (use for DOM-dependent scripts); "+
+			"please specify one of these two values", location)
 	}
 	return nil
 }
@@ -173,10 +173,10 @@ func GetPageCustomCode(ctx context.Context, client *http.Client, pageID string) 
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -273,10 +273,10 @@ func PutPageCustomCode(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -362,10 +362,10 @@ func DeletePageCustomCode(ctx context.Context, client *http.Client, pageID strin
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {

@@ -85,16 +85,16 @@ var ValidFieldTypes = map[string]bool{
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateFieldType(fieldType string) error {
 	if fieldType == "" {
-		return errors.New("type is required but was not provided. " +
-			"Please provide a valid field type (e.g., 'PlainText', 'RichText', 'Image'). " +
-			"Supported types: PlainText, RichText, Image, MultiImage, Video, Link, Email, Phone, " +
-			"Number, DateTime, Switch, Color, Option, File, Reference, MultiReference.")
+		return errors.New("type is required but was not provided; " +
+			"please provide a valid field type (e.g., 'PlainText', 'RichText', 'Image'); " +
+			"supported types: PlainText, RichText, Image, MultiImage, Video, Link, Email, Phone, " +
+			"Number, DateTime, Switch, Color, Option, File, Reference, MultiReference")
 	}
 	if !ValidFieldTypes[fieldType] {
-		return fmt.Errorf("type has invalid value: got '%s'. "+
-			"Supported types: PlainText, RichText, Image, MultiImage, Video, Link, Email, Phone, "+
-			"Number, DateTime, Switch, Color, Option, File, Reference, MultiReference. "+
-			"Please use one of the supported field types.", fieldType)
+		return fmt.Errorf("type has invalid value: got '%s', "+
+			"supported types: PlainText, RichText, Image, MultiImage, Video, Link, Email, Phone, "+
+			"Number, DateTime, Switch, Color, Option, File, Reference, MultiReference; "+
+			"please use one of the supported field types", fieldType)
 	}
 	return nil
 }
@@ -103,13 +103,13 @@ func ValidateFieldType(fieldType string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateFieldDisplayName(displayName string) error {
 	if displayName == "" {
-		return errors.New("displayName is required but was not provided. " +
-			"Please provide a name for your field (e.g., 'Title', 'Description', 'Author'). " +
-			"The display name is shown in the Webflow CMS interface.")
+		return errors.New("displayName is required but was not provided; " +
+			"please provide a name for your field (e.g., 'Title', 'Description', 'Author'); " +
+			"the display name is shown in the Webflow CMS interface")
 	}
 	if len(displayName) > 255 {
-		return fmt.Errorf("displayName is too long: '%s' exceeds maximum length of 255 characters. "+
-			"Please use a shorter, more concise name for your field.", displayName)
+		return fmt.Errorf("displayName is too long: '%s' exceeds maximum length of 255 characters, "+
+			"please use a shorter, more concise name for your field", displayName)
 	}
 	return nil
 }
@@ -201,10 +201,10 @@ func GetCollectionField(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -323,10 +323,10 @@ func PostCollectionField(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -431,10 +431,10 @@ func PutCollectionField(
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -520,10 +520,10 @@ func DeleteCollectionField(ctx context.Context, client *http.Client, collectionI
 				waitTime = time.Duration(1<<uint(attempt)) * time.Second
 			}
 
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {

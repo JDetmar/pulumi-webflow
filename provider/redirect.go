@@ -49,20 +49,20 @@ var pathPattern = regexp.MustCompile(`^/[a-zA-Z0-9\-_/.]*$`)
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateSourcePath(path string) error {
 	if path == "" {
-		return errors.New("sourcePath is required but was not provided. " +
-			"Please provide a valid URL path starting with '/' (e.g., '/old-page', '/blog/2023'). " +
-			"Example valid paths: '/about-us', '/products/item-1', '/news/2024'.")
+		return errors.New("sourcePath is required but was not provided; " +
+			"please provide a valid URL path starting with '/' (e.g., '/old-page', '/blog/2023'); " +
+			"example valid paths: '/about-us', '/products/item-1', '/news/2024'")
 	}
 	if !strings.HasPrefix(path, "/") {
-		return fmt.Errorf("sourcePath must start with '/': got '%s'. "+
-			"Example valid paths: '/old-page', '/blog/2023', '/products/item-1'. "+
-			"Please ensure the path begins with a forward slash.", path)
+		return fmt.Errorf("sourcePath must start with '/': got '%s', "+
+			"example valid paths: '/old-page', '/blog/2023', '/products/item-1'; "+
+			"please ensure the path begins with a forward slash", path)
 	}
 	if !pathPattern.MatchString(path) {
-		return fmt.Errorf("sourcePath contains invalid characters: got '%s'. "+
-			"Allowed characters: A-Z, a-z, 0-9, hyphens (-), underscores (_), forward slashes (/), and dots (.). "+
-			"Example valid paths: '/old-page', '/blog/2023', '/products/item-1'. "+
-			"Please remove any invalid characters.", path)
+		return fmt.Errorf("sourcePath contains invalid characters: got '%s', "+
+			"allowed characters: A-Z, a-z, 0-9, hyphens (-), underscores (_), forward slashes (/), and dots (.); "+
+			"example valid paths: '/old-page', '/blog/2023', '/products/item-1'; "+
+			"please remove any invalid characters", path)
 	}
 	return nil
 }
@@ -71,20 +71,20 @@ func ValidateSourcePath(path string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateDestinationPath(path string) error {
 	if path == "" {
-		return errors.New("destinationPath is required but was not provided. " +
-			"Please provide a valid URL path starting with '/' (e.g., '/new-page', '/home'). " +
-			"Example valid paths: '/about-us', '/products/item-1', '/news/2024'.")
+		return errors.New("destinationPath is required but was not provided; " +
+			"please provide a valid URL path starting with '/' (e.g., '/new-page', '/home'); " +
+			"example valid paths: '/about-us', '/products/item-1', '/news/2024'")
 	}
 	if !strings.HasPrefix(path, "/") {
-		return fmt.Errorf("destinationPath must start with '/': got '%s'. "+
-			"Example valid paths: '/new-page', '/home', '/products/item-1'. "+
-			"Please ensure the path begins with a forward slash.", path)
+		return fmt.Errorf("destinationPath must start with '/': got '%s', "+
+			"example valid paths: '/new-page', '/home', '/products/item-1'; "+
+			"please ensure the path begins with a forward slash", path)
 	}
 	if !pathPattern.MatchString(path) {
-		return fmt.Errorf("destinationPath contains invalid characters: got '%s'. "+
-			"Allowed characters: A-Z, a-z, 0-9, hyphens (-), underscores (_), forward slashes (/), and dots (.). "+
-			"Example valid paths: '/new-page', '/home', '/products/item-1'. "+
-			"Please remove any invalid characters.", path)
+		return fmt.Errorf("destinationPath contains invalid characters: got '%s', "+
+			"allowed characters: A-Z, a-z, 0-9, hyphens (-), underscores (_), forward slashes (/), and dots (.); "+
+			"example valid paths: '/new-page', '/home', '/products/item-1'; "+
+			"please remove any invalid characters", path)
 	}
 	return nil
 }
@@ -94,10 +94,10 @@ func ValidateDestinationPath(path string) error {
 // Returns actionable error messages explaining redirect types and accepted values.
 func ValidateStatusCode(statusCode int) error {
 	if statusCode != 301 && statusCode != 302 {
-		return fmt.Errorf("statusCode must be either 301 or 302: got %d. "+
-			"301 = permanent redirect (use for pages moved permanently). "+
-			"302 = temporary redirect (use for temporary page moves or maintenance). "+
-			"Example: statusCode=301 for permanent moves, statusCode=302 for temporary redirects.", statusCode)
+		return fmt.Errorf("statusCode must be either 301 or 302: got %d; "+
+			"301 = permanent redirect (use for pages moved permanently); "+
+			"302 = temporary redirect (use for temporary page moves or maintenance); "+
+			"example: statusCode=301 for permanent moves, statusCode=302 for temporary redirects", statusCode)
 	}
 	return nil
 }
@@ -185,10 +185,10 @@ func GetRedirects(ctx context.Context, client *http.Client, siteID string) (*Red
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -292,10 +292,10 @@ func PostRedirect(
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -400,10 +400,10 @@ func PatchRedirect(
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -492,10 +492,10 @@ func DeleteRedirect(ctx context.Context, client *http.Client, siteID, redirectID
 			}
 
 			// Enhanced rate limiting error message with clear delay information
-			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
-				"The provider will automatically retry with exponential backoff. "+
-				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429), "+
+				"the provider will automatically retry with exponential backoff; "+
+				"retry attempt %d of %d, waiting %v before next attempt; "+
+				"if this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry

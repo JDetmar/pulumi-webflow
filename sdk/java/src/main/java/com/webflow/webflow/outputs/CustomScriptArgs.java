@@ -5,6 +5,7 @@ package com.webflow.webflow.outputs;
 
 import com.pulumi.core.annotations.CustomType;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
+import java.lang.Object;
 import java.lang.String;
 import java.util.Map;
 import java.util.Objects;
@@ -16,7 +17,7 @@ public final class CustomScriptArgs {
      * @return Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {&#39;data-config&#39;: &#39;my-value&#39;}. These attributes are passed directly to the script tag.
      * 
      */
-    private @Nullable Map<String,String> attributes;
+    private @Nullable Map<String,Object> attributes;
     /**
      * @return The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: &#39;cms_slider&#39;, &#39;analytics&#39;, &#39;custom_widget&#39;
      * 
@@ -38,7 +39,7 @@ public final class CustomScriptArgs {
      * @return Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {&#39;data-config&#39;: &#39;my-value&#39;}. These attributes are passed directly to the script tag.
      * 
      */
-    public Map<String,String> attributes() {
+    public Map<String,Object> attributes() {
         return this.attributes == null ? Map.of() : this.attributes;
     }
     /**
@@ -72,7 +73,7 @@ public final class CustomScriptArgs {
     }
     @CustomType.Builder
     public static final class Builder {
-        private @Nullable Map<String,String> attributes;
+        private @Nullable Map<String,Object> attributes;
         private String id;
         private String location;
         private String version;
@@ -86,7 +87,7 @@ public final class CustomScriptArgs {
         }
 
         @CustomType.Setter
-        public Builder attributes(@Nullable Map<String,String> attributes) {
+        public Builder attributes(@Nullable Map<String,Object> attributes) {
 
             this.attributes = attributes;
             return this;

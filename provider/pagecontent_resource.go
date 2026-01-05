@@ -175,9 +175,9 @@ func (r *PageContent) Create(
 	if len(req.Inputs.Nodes) == 0 {
 		return infer.CreateResponse[PageContentState]{}, errors.New(
 			"validation failed for PageContent resource: " +
-				"at least one node update is required. " +
-				"Please provide a list of nodes with nodeId and text fields. " +
-				"Node IDs can be retrieved using GET /pages/{page_id}/dom endpoint.")
+				"at least one node update is required; " +
+				"please provide a list of nodes with nodeId and text fields; " +
+				"node IDs can be retrieved using GET /pages/{page_id}/dom endpoint")
 	}
 
 	for i, node := range req.Inputs.Nodes {
@@ -187,8 +187,8 @@ func (r *PageContent) Create(
 		}
 		if node.Text == "" {
 			return infer.CreateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource, node[%d]: "+
-				"text is required but was not provided. "+
-				"Please provide the new text content for nodeId '%s'.", i, node.NodeID)
+				"text is required but was not provided, "+
+				"please provide the new text content for nodeId '%s'", i, node.NodeID)
 		}
 	}
 
@@ -314,8 +314,8 @@ func (r *PageContent) Update(
 	if len(req.Inputs.Nodes) == 0 {
 		return infer.UpdateResponse[PageContentState]{}, errors.New(
 			"validation failed for PageContent resource: " +
-				"at least one node update is required. " +
-				"Please provide a list of nodes with nodeId and text fields.")
+				"at least one node update is required; " +
+				"please provide a list of nodes with nodeId and text fields")
 	}
 
 	for i, node := range req.Inputs.Nodes {
@@ -325,8 +325,8 @@ func (r *PageContent) Update(
 		}
 		if node.Text == "" {
 			return infer.UpdateResponse[PageContentState]{}, fmt.Errorf("validation failed for PageContent resource, node[%d]: "+
-				"text is required but was not provided. "+
-				"Please provide the new text content for nodeId '%s'.", i, node.NodeID)
+				"text is required but was not provided, "+
+				"please provide the new text content for nodeId '%s'", i, node.NodeID)
 		}
 	}
 

@@ -261,9 +261,9 @@ func (c *CollectionResource) Update(
 ) (infer.UpdateResponse[CollectionState], error) {
 	// This should never be called because Diff() always returns UpdateReplace for all changes
 	return infer.UpdateResponse[CollectionState]{}, errors.New(
-		"collection updates are not supported by the Webflow API. " +
-			"All changes require replacement (delete + recreate). " +
-			"This error should not occur - please report this as a bug.")
+		"collection updates are not supported by the Webflow API; " +
+			"all changes require replacement (delete + recreate); " +
+			"this error should not occur - please report this as a bug")
 }
 
 // Delete removes a collection from the Webflow site.

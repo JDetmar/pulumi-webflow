@@ -245,7 +245,7 @@ func (r *Asset) Create(
 	// Defensive check: Ensure Webflow API returned a valid upload URL
 	if uploadResp.UploadURL == "" {
 		return infer.CreateResponse[AssetState]{}, errors.New(
-			"Webflow API returned empty upload URL - " +
+			"webflow API returned empty upload URL; " +
 				"this is unexpected and may indicate an API issue")
 	}
 

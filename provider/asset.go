@@ -79,17 +79,17 @@ var assetIDPattern = regexp.MustCompile(`^[a-f0-9]{24}$`)
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateAssetID(assetID string) error {
 	if assetID == "" {
-		return errors.New("assetId is required but was not provided. " +
-			"Please provide a valid Webflow asset ID " +
-			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). " +
-			"You can find asset IDs in the Webflow dashboard under Assets.")
+		return errors.New("assetId is required but was not provided; " +
+			"please provide a valid Webflow asset ID " +
+			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'); " +
+			"you can find asset IDs in the Webflow dashboard under Assets")
 	}
 	if !assetIDPattern.MatchString(assetID) {
-		return fmt.Errorf("assetId has invalid format: got '%s'. "+
-			"Expected a 24-character lowercase hexadecimal string "+
-			"(e.g., '5f0c8c9e1c9d440000e8d8c3'). "+
-			"Please check your asset ID in the Webflow dashboard "+
-			"and ensure it contains only lowercase letters (a-f) and digits (0-9).", assetID)
+		return fmt.Errorf("assetId has invalid format: got '%s'; "+
+			"expected a 24-character lowercase hexadecimal string "+
+			"(e.g., '5f0c8c9e1c9d440000e8d8c3'); "+
+			"please check your asset ID in the Webflow dashboard "+
+			"and ensure it contains only lowercase letters (a-f) and digits (0-9)", assetID)
 	}
 	return nil
 }
@@ -98,9 +98,9 @@ func ValidateAssetID(assetID string) error {
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateFileName(fileName string) error {
 	if fileName == "" {
-		return errors.New("fileName is required but was not provided. " +
-			"Please provide a valid file name with extension " +
-			"(e.g., 'logo.png', 'hero-image.jpg', 'document.pdf').")
+		return errors.New("fileName is required but was not provided; " +
+			"please provide a valid file name with extension " +
+			"(e.g., 'logo.png', 'hero-image.jpg', 'document.pdf')")
 	}
 
 	// Check for reasonable length

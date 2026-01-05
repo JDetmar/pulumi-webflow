@@ -188,7 +188,7 @@ func (c *CollectionResource) Create(
 	// Defensive check: Ensure Webflow API returned a valid collection ID
 	if response.ID == "" {
 		return infer.CreateResponse[CollectionState]{}, errors.New(
-			"Webflow API returned empty collection ID - " +
+			"webflow API returned empty collection ID; " +
 				"this is unexpected and may indicate an API issue")
 	}
 

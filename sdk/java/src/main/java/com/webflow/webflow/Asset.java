@@ -11,6 +11,7 @@ import com.webflow.webflow.AssetArgs;
 import com.webflow.webflow.Utilities;
 import java.lang.Integer;
 import java.lang.String;
+import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
@@ -35,46 +36,60 @@ public class Asset extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.assetId);
     }
     /**
-     * The MIME type of the uploaded asset (read-only). Examples: &#39;image/png&#39;, &#39;image/jpeg&#39;, &#39;application/pdf&#39;. Automatically detected by Webflow based on the file content.
+     * The direct S3 URL for the asset (read-only). This is the raw S3 location where the file is stored.
+     * 
+     */
+    @Export(name="assetUrl", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> assetUrl;
+
+    /**
+     * @return The direct S3 URL for the asset (read-only). This is the raw S3 location where the file is stored.
+     * 
+     */
+    public Output<Optional<String>> assetUrl() {
+        return Codegen.optional(this.assetUrl);
+    }
+    /**
+     * The MIME type of the asset (read-only). Examples: &#39;image/png&#39;, &#39;image/jpeg&#39;, &#39;application/pdf&#39;. Determined by the fileName extension.
      * 
      */
     @Export(name="contentType", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> contentType;
 
     /**
-     * @return The MIME type of the uploaded asset (read-only). Examples: &#39;image/png&#39;, &#39;image/jpeg&#39;, &#39;application/pdf&#39;. Automatically detected by Webflow based on the file content.
+     * @return The MIME type of the asset (read-only). Examples: &#39;image/png&#39;, &#39;image/jpeg&#39;, &#39;application/pdf&#39;. Determined by the fileName extension.
      * 
      */
     public Output<Optional<String>> contentType() {
         return Codegen.optional(this.contentType);
     }
     /**
-     * The timestamp when the asset was created (RFC3339 format, read-only). This is automatically set when the asset is uploaded.
+     * The timestamp when the asset metadata was created (RFC3339 format, read-only). This is set when the asset is registered with Webflow.
      * 
      */
     @Export(name="createdOn", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> createdOn;
 
     /**
-     * @return The timestamp when the asset was created (RFC3339 format, read-only). This is automatically set when the asset is uploaded.
+     * @return The timestamp when the asset metadata was created (RFC3339 format, read-only). This is set when the asset is registered with Webflow.
      * 
      */
     public Output<Optional<String>> createdOn() {
         return Codegen.optional(this.createdOn);
     }
     /**
-     * Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+     * MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum &lt;filename&gt; (Linux) or md5 &lt;filename&gt; (macOS). Example: &#39;d41d8cd98f00b204e9800998ecf8427e&#39;.
      * 
      */
     @Export(name="fileHash", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> fileHash;
+    private Output<String> fileHash;
 
     /**
-     * @return Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+     * @return MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum &lt;filename&gt; (Linux) or md5 &lt;filename&gt; (macOS). Example: &#39;d41d8cd98f00b204e9800998ecf8427e&#39;.
      * 
      */
-    public Output<Optional<String>> fileHash() {
-        return Codegen.optional(this.fileHash);
+    public Output<String> fileHash() {
+        return this.fileHash;
     }
     /**
      * The name of the file to upload, including the extension. Examples: &#39;logo.png&#39;, &#39;hero-image.jpg&#39;, &#39;document.pdf&#39;. The file name must not exceed 255 characters and should not contain invalid characters (&lt;, &gt;, :, &#34;, |, ?, *).
@@ -105,14 +120,14 @@ public class Asset extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.fileSource);
     }
     /**
-     * The CDN URL where the asset is hosted (read-only). Use this URL to reference the asset in your Webflow site or externally. Example: &#39;https://assets.website-files.com/.../logo.png&#39;.
+     * The Webflow CDN URL where the asset will be hosted (read-only). This URL becomes accessible after completing the S3 upload. Example: &#39;https://assets.website-files.com/.../logo.png&#39;.
      * 
      */
     @Export(name="hostedUrl", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> hostedUrl;
 
     /**
-     * @return The CDN URL where the asset is hosted (read-only). Use this URL to reference the asset in your Webflow site or externally. Example: &#39;https://assets.website-files.com/.../logo.png&#39;.
+     * @return The Webflow CDN URL where the asset will be hosted (read-only). This URL becomes accessible after completing the S3 upload. Example: &#39;https://assets.website-files.com/.../logo.png&#39;.
      * 
      */
     public Output<Optional<String>> hostedUrl() {
@@ -173,6 +188,34 @@ public class Asset extends com.pulumi.resources.CustomResource {
      */
     public Output<Optional<Integer>> size() {
         return Codegen.optional(this.size);
+    }
+    /**
+     * AWS S3 POST form fields required to complete the upload (read-only). Include these as form fields when POSTing the file to uploadUrl. Keys: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential, X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control.
+     * 
+     */
+    @Export(name="uploadDetails", refs={Map.class,String.class}, tree="[0,1,1]")
+    private Output</* @Nullable */ Map<String,String>> uploadDetails;
+
+    /**
+     * @return AWS S3 POST form fields required to complete the upload (read-only). Include these as form fields when POSTing the file to uploadUrl. Keys: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential, X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control.
+     * 
+     */
+    public Output<Optional<Map<String,String>>> uploadDetails() {
+        return Codegen.optional(this.uploadDetails);
+    }
+    /**
+     * The presigned S3 URL for uploading the file content (read-only). Use this URL along with uploadDetails to complete the asset upload. See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
+     * 
+     */
+    @Export(name="uploadUrl", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> uploadUrl;
+
+    /**
+     * @return The presigned S3 URL for uploading the file content (read-only). Use this URL along with uploadDetails to complete the asset upload. See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
+     * 
+     */
+    public Output<Optional<String>> uploadUrl() {
+        return Codegen.optional(this.uploadUrl);
     }
 
     /**

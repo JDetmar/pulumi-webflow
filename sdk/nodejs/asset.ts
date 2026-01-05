@@ -39,17 +39,21 @@ export class Asset extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly assetId: pulumi.Output<string | undefined>;
     /**
-     * The MIME type of the uploaded asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Automatically detected by Webflow based on the file content.
+     * The direct S3 URL for the asset (read-only). This is the raw S3 location where the file is stored.
+     */
+    declare public /*out*/ readonly assetUrl: pulumi.Output<string | undefined>;
+    /**
+     * The MIME type of the asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Determined by the fileName extension.
      */
     declare public /*out*/ readonly contentType: pulumi.Output<string | undefined>;
     /**
-     * The timestamp when the asset was created (RFC3339 format, read-only). This is automatically set when the asset is uploaded.
+     * The timestamp when the asset metadata was created (RFC3339 format, read-only). This is set when the asset is registered with Webflow.
      */
     declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
-     * Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+     * MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'.
      */
-    declare public readonly fileHash: pulumi.Output<string | undefined>;
+    declare public readonly fileHash: pulumi.Output<string>;
     /**
      * The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (<, >, :, ", |, ?, *).
      */
@@ -59,7 +63,7 @@ export class Asset extends pulumi.CustomResource {
      */
     declare public readonly fileSource: pulumi.Output<string | undefined>;
     /**
-     * The CDN URL where the asset is hosted (read-only). Use this URL to reference the asset in your Webflow site or externally. Example: 'https://assets.website-files.com/.../logo.png'.
+     * The Webflow CDN URL where the asset will be hosted (read-only). This URL becomes accessible after completing the S3 upload. Example: 'https://assets.website-files.com/.../logo.png'.
      */
     declare public /*out*/ readonly hostedUrl: pulumi.Output<string | undefined>;
     /**
@@ -78,6 +82,14 @@ export class Asset extends pulumi.CustomResource {
      * The size of the asset in bytes (read-only). This is the actual size of the uploaded file.
      */
     declare public /*out*/ readonly size: pulumi.Output<number | undefined>;
+    /**
+     * AWS S3 POST form fields required to complete the upload (read-only). Include these as form fields when POSTing the file to uploadUrl. Keys: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential, X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control.
+     */
+    declare public /*out*/ readonly uploadDetails: pulumi.Output<{[key: string]: string} | undefined>;
+    /**
+     * The presigned S3 URL for uploading the file content (read-only). Use this URL along with uploadDetails to complete the asset upload. See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
+     */
+    declare public /*out*/ readonly uploadUrl: pulumi.Output<string | undefined>;
 
     /**
      * Create a Asset resource with the given unique name, arguments, and options.
@@ -90,6 +102,9 @@ export class Asset extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
+            if (args?.fileHash === undefined && !opts.urn) {
+                throw new Error("Missing required property 'fileHash'");
+            }
             if (args?.fileName === undefined && !opts.urn) {
                 throw new Error("Missing required property 'fileName'");
             }
@@ -102,13 +117,17 @@ export class Asset extends pulumi.CustomResource {
             resourceInputs["parentFolder"] = args?.parentFolder;
             resourceInputs["siteId"] = args?.siteId;
             resourceInputs["assetId"] = undefined /*out*/;
+            resourceInputs["assetUrl"] = undefined /*out*/;
             resourceInputs["contentType"] = undefined /*out*/;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["hostedUrl"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
             resourceInputs["size"] = undefined /*out*/;
+            resourceInputs["uploadDetails"] = undefined /*out*/;
+            resourceInputs["uploadUrl"] = undefined /*out*/;
         } else {
             resourceInputs["assetId"] = undefined /*out*/;
+            resourceInputs["assetUrl"] = undefined /*out*/;
             resourceInputs["contentType"] = undefined /*out*/;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["fileHash"] = undefined /*out*/;
@@ -119,6 +138,8 @@ export class Asset extends pulumi.CustomResource {
             resourceInputs["parentFolder"] = undefined /*out*/;
             resourceInputs["siteId"] = undefined /*out*/;
             resourceInputs["size"] = undefined /*out*/;
+            resourceInputs["uploadDetails"] = undefined /*out*/;
+            resourceInputs["uploadUrl"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(Asset.__pulumiType, name, resourceInputs, opts);
@@ -130,9 +151,9 @@ export class Asset extends pulumi.CustomResource {
  */
 export interface AssetArgs {
     /**
-     * Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+     * MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'.
      */
-    fileHash?: pulumi.Input<string>;
+    fileHash: pulumi.Input<string>;
     /**
      * The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (<, >, :, ", |, ?, *).
      */

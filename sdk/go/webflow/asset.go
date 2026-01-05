@@ -18,17 +18,19 @@ type Asset struct {
 
 	// The Webflow-assigned asset ID (read-only). This unique identifier can be used to reference the asset in API calls.
 	AssetId pulumi.StringPtrOutput `pulumi:"assetId"`
-	// The MIME type of the uploaded asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Automatically detected by Webflow based on the file content.
+	// The direct S3 URL for the asset (read-only). This is the raw S3 location where the file is stored.
+	AssetUrl pulumi.StringPtrOutput `pulumi:"assetUrl"`
+	// The MIME type of the asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Determined by the fileName extension.
 	ContentType pulumi.StringPtrOutput `pulumi:"contentType"`
-	// The timestamp when the asset was created (RFC3339 format, read-only). This is automatically set when the asset is uploaded.
+	// The timestamp when the asset metadata was created (RFC3339 format, read-only). This is set when the asset is registered with Webflow.
 	CreatedOn pulumi.StringPtrOutput `pulumi:"createdOn"`
-	// Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
-	FileHash pulumi.StringPtrOutput `pulumi:"fileHash"`
+	// MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'.
+	FileHash pulumi.StringOutput `pulumi:"fileHash"`
 	// The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (<, >, :, ", |, ?, *).
 	FileName pulumi.StringOutput `pulumi:"fileName"`
 	// The source of the file to upload. For the current implementation, this is a reference field. In future versions, this may support URLs or local file paths for automatic upload. Examples: 'https://example.com/logo.png', '/path/to/local/file.png'.
 	FileSource pulumi.StringPtrOutput `pulumi:"fileSource"`
-	// The CDN URL where the asset is hosted (read-only). Use this URL to reference the asset in your Webflow site or externally. Example: 'https://assets.website-files.com/.../logo.png'.
+	// The Webflow CDN URL where the asset will be hosted (read-only). This URL becomes accessible after completing the S3 upload. Example: 'https://assets.website-files.com/.../logo.png'.
 	HostedUrl pulumi.StringPtrOutput `pulumi:"hostedUrl"`
 	// The timestamp when the asset was last modified (RFC3339 format, read-only). For most assets, this will be the same as createdOn since assets are immutable.
 	LastUpdated pulumi.StringPtrOutput `pulumi:"lastUpdated"`
@@ -38,6 +40,10 @@ type Asset struct {
 	SiteId pulumi.StringOutput `pulumi:"siteId"`
 	// The size of the asset in bytes (read-only). This is the actual size of the uploaded file.
 	Size pulumi.IntPtrOutput `pulumi:"size"`
+	// AWS S3 POST form fields required to complete the upload (read-only). Include these as form fields when POSTing the file to uploadUrl. Keys: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential, X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control.
+	UploadDetails pulumi.StringMapOutput `pulumi:"uploadDetails"`
+	// The presigned S3 URL for uploading the file content (read-only). Use this URL along with uploadDetails to complete the asset upload. See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
+	UploadUrl pulumi.StringPtrOutput `pulumi:"uploadUrl"`
 }
 
 // NewAsset registers a new resource with the given unique name, arguments, and options.
@@ -47,6 +53,9 @@ func NewAsset(ctx *pulumi.Context,
 		return nil, errors.New("missing one or more required arguments")
 	}
 
+	if args.FileHash == nil {
+		return nil, errors.New("invalid value for required argument 'FileHash'")
+	}
 	if args.FileName == nil {
 		return nil, errors.New("invalid value for required argument 'FileName'")
 	}
@@ -86,8 +95,8 @@ func (AssetState) ElementType() reflect.Type {
 }
 
 type assetArgs struct {
-	// Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
-	FileHash *string `pulumi:"fileHash"`
+	// MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'.
+	FileHash string `pulumi:"fileHash"`
 	// The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (<, >, :, ", |, ?, *).
 	FileName string `pulumi:"fileName"`
 	// The source of the file to upload. For the current implementation, this is a reference field. In future versions, this may support URLs or local file paths for automatic upload. Examples: 'https://example.com/logo.png', '/path/to/local/file.png'.
@@ -100,8 +109,8 @@ type assetArgs struct {
 
 // The set of arguments for constructing a Asset resource.
 type AssetArgs struct {
-	// Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
-	FileHash pulumi.StringPtrInput
+	// MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'.
+	FileHash pulumi.StringInput
 	// The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (<, >, :, ", |, ?, *).
 	FileName pulumi.StringInput
 	// The source of the file to upload. For the current implementation, this is a reference field. In future versions, this may support URLs or local file paths for automatic upload. Examples: 'https://example.com/logo.png', '/path/to/local/file.png'.
@@ -154,19 +163,24 @@ func (o AssetOutput) AssetId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Asset) pulumi.StringPtrOutput { return v.AssetId }).(pulumi.StringPtrOutput)
 }
 
-// The MIME type of the uploaded asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Automatically detected by Webflow based on the file content.
+// The direct S3 URL for the asset (read-only). This is the raw S3 location where the file is stored.
+func (o AssetOutput) AssetUrl() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Asset) pulumi.StringPtrOutput { return v.AssetUrl }).(pulumi.StringPtrOutput)
+}
+
+// The MIME type of the asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Determined by the fileName extension.
 func (o AssetOutput) ContentType() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Asset) pulumi.StringPtrOutput { return v.ContentType }).(pulumi.StringPtrOutput)
 }
 
-// The timestamp when the asset was created (RFC3339 format, read-only). This is automatically set when the asset is uploaded.
+// The timestamp when the asset metadata was created (RFC3339 format, read-only). This is set when the asset is registered with Webflow.
 func (o AssetOutput) CreatedOn() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Asset) pulumi.StringPtrOutput { return v.CreatedOn }).(pulumi.StringPtrOutput)
 }
 
-// Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
-func (o AssetOutput) FileHash() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Asset) pulumi.StringPtrOutput { return v.FileHash }).(pulumi.StringPtrOutput)
+// MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'.
+func (o AssetOutput) FileHash() pulumi.StringOutput {
+	return o.ApplyT(func(v *Asset) pulumi.StringOutput { return v.FileHash }).(pulumi.StringOutput)
 }
 
 // The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (<, >, :, ", |, ?, *).
@@ -179,7 +193,7 @@ func (o AssetOutput) FileSource() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Asset) pulumi.StringPtrOutput { return v.FileSource }).(pulumi.StringPtrOutput)
 }
 
-// The CDN URL where the asset is hosted (read-only). Use this URL to reference the asset in your Webflow site or externally. Example: 'https://assets.website-files.com/.../logo.png'.
+// The Webflow CDN URL where the asset will be hosted (read-only). This URL becomes accessible after completing the S3 upload. Example: 'https://assets.website-files.com/.../logo.png'.
 func (o AssetOutput) HostedUrl() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Asset) pulumi.StringPtrOutput { return v.HostedUrl }).(pulumi.StringPtrOutput)
 }
@@ -202,6 +216,16 @@ func (o AssetOutput) SiteId() pulumi.StringOutput {
 // The size of the asset in bytes (read-only). This is the actual size of the uploaded file.
 func (o AssetOutput) Size() pulumi.IntPtrOutput {
 	return o.ApplyT(func(v *Asset) pulumi.IntPtrOutput { return v.Size }).(pulumi.IntPtrOutput)
+}
+
+// AWS S3 POST form fields required to complete the upload (read-only). Include these as form fields when POSTing the file to uploadUrl. Keys: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential, X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control.
+func (o AssetOutput) UploadDetails() pulumi.StringMapOutput {
+	return o.ApplyT(func(v *Asset) pulumi.StringMapOutput { return v.UploadDetails }).(pulumi.StringMapOutput)
+}
+
+// The presigned S3 URL for uploading the file content (read-only). Use this URL along with uploadDetails to complete the asset upload. See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
+func (o AssetOutput) UploadUrl() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Asset) pulumi.StringPtrOutput { return v.UploadUrl }).(pulumi.StringPtrOutput)
 }
 
 func init() {

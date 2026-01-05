@@ -22,22 +22,28 @@ namespace Pulumi.Webflow
         public Output<string?> AssetId { get; private set; } = null!;
 
         /// <summary>
-        /// The MIME type of the uploaded asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Automatically detected by Webflow based on the file content.
+        /// The direct S3 URL for the asset (read-only). This is the raw S3 location where the file is stored.
+        /// </summary>
+        [Output("assetUrl")]
+        public Output<string?> AssetUrl { get; private set; } = null!;
+
+        /// <summary>
+        /// The MIME type of the asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Determined by the fileName extension.
         /// </summary>
         [Output("contentType")]
         public Output<string?> ContentType { get; private set; } = null!;
 
         /// <summary>
-        /// The timestamp when the asset was created (RFC3339 format, read-only). This is automatically set when the asset is uploaded.
+        /// The timestamp when the asset metadata was created (RFC3339 format, read-only). This is set when the asset is registered with Webflow.
         /// </summary>
         [Output("createdOn")]
         public Output<string?> CreatedOn { get; private set; } = null!;
 
         /// <summary>
-        /// Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+        /// MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum &lt;filename&gt; (Linux) or md5 &lt;filename&gt; (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'.
         /// </summary>
         [Output("fileHash")]
-        public Output<string?> FileHash { get; private set; } = null!;
+        public Output<string> FileHash { get; private set; } = null!;
 
         /// <summary>
         /// The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (&lt;, &gt;, :, ", |, ?, *).
@@ -52,7 +58,7 @@ namespace Pulumi.Webflow
         public Output<string?> FileSource { get; private set; } = null!;
 
         /// <summary>
-        /// The CDN URL where the asset is hosted (read-only). Use this URL to reference the asset in your Webflow site or externally. Example: 'https://assets.website-files.com/.../logo.png'.
+        /// The Webflow CDN URL where the asset will be hosted (read-only). This URL becomes accessible after completing the S3 upload. Example: 'https://assets.website-files.com/.../logo.png'.
         /// </summary>
         [Output("hostedUrl")]
         public Output<string?> HostedUrl { get; private set; } = null!;
@@ -80,6 +86,18 @@ namespace Pulumi.Webflow
         /// </summary>
         [Output("size")]
         public Output<int?> Size { get; private set; } = null!;
+
+        /// <summary>
+        /// AWS S3 POST form fields required to complete the upload (read-only). Include these as form fields when POSTing the file to uploadUrl. Keys: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential, X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control.
+        /// </summary>
+        [Output("uploadDetails")]
+        public Output<ImmutableDictionary<string, string>?> UploadDetails { get; private set; } = null!;
+
+        /// <summary>
+        /// The presigned S3 URL for uploading the file content (read-only). Use this URL along with uploadDetails to complete the asset upload. See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
+        /// </summary>
+        [Output("uploadUrl")]
+        public Output<string?> UploadUrl { get; private set; } = null!;
 
 
         /// <summary>
@@ -127,10 +145,10 @@ namespace Pulumi.Webflow
     public sealed class AssetArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+        /// MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum &lt;filename&gt; (Linux) or md5 &lt;filename&gt; (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'.
         /// </summary>
-        [Input("fileHash")]
-        public Input<string>? FileHash { get; set; }
+        [Input("fileHash", required: true)]
+        public Input<string> FileHash { get; set; } = null!;
 
         /// <summary>
         /// The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (&lt;, &gt;, :, ", |, ?, *).

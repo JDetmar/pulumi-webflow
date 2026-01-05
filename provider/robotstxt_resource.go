@@ -102,7 +102,7 @@ func (r *RobotsTxt) Create(
 				"Please provide robots.txt content with at least one directive " +
 				"(e.g., 'User-agent: *\\nAllow: /'). " +
 				"The content should follow the traditional robots.txt format " +
-				"with User-agent, Allow, Disallow, and Sitemap directives.")
+				"with User-agent, Allow, Disallow, and Sitemap directives")
 	}
 
 	state := RobotsTxtState{
@@ -210,7 +210,7 @@ func (r *RobotsTxt) Update(
 				"Please provide robots.txt content with at least one directive " +
 				"(e.g., 'User-agent: *\\nAllow: /'). " +
 				"The content should follow the traditional robots.txt format " +
-				"with User-agent, Allow, Disallow, and Sitemap directives.")
+				"with User-agent, Allow, Disallow, and Sitemap directives")
 	}
 
 	state := RobotsTxtState{

@@ -1718,9 +1718,11 @@ func TestPreviewWorkflow_EdgeCase_LargeContent(t *testing.T) {
 
 	// Generate large content (>10KB)
 	largeContent := "User-agent: *\nAllow: /\n"
+	var largeContentSb1721 strings.Builder
 	for i := 0; i < 1000; i++ {
-		largeContent += "Disallow: /path" + string(rune(i%10)) + "/\n"
+		largeContentSb1721.WriteString("Disallow: /path" + string(rune(i%10)) + "/\n")
 	}
+	largeContent += largeContentSb1721.String()
 
 	req := infer.DiffRequest[RobotsTxtArgs, RobotsTxtState]{
 		State: RobotsTxtState{

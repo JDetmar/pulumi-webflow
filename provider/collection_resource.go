@@ -188,7 +188,7 @@ func (c *CollectionResource) Create(
 	// Defensive check: Ensure Webflow API returned a valid collection ID
 	if response.ID == "" {
 		return infer.CreateResponse[CollectionState]{}, errors.New(
-			"Webflow API returned empty collection ID - " +
+			"webflow API returned empty collection ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
 
@@ -263,7 +263,7 @@ func (c *CollectionResource) Update(
 	return infer.UpdateResponse[CollectionState]{}, errors.New(
 		"collection updates are not supported by the Webflow API. " +
 			"All changes require replacement (delete + recreate). " +
-			"This error should not occur - please report this as a bug.")
+			"This error should not occur - please report this as a bug")
 }
 
 // Delete removes a collection from the Webflow site.

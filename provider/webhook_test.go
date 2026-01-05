@@ -624,7 +624,7 @@ func TestWebhookErrorMessagesAreActionable(t *testing.T) {
 		{
 			"ValidateTriggerType empty",
 			func() error { return ValidateTriggerType("") },
-			[]string{"required", "Valid trigger types"},
+			[]string{"required", "valid trigger types"},
 		},
 		{
 			"ValidateTriggerType invalid",

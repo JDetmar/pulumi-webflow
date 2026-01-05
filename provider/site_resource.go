@@ -301,7 +301,7 @@ func (r *SiteResource) Create(
 	// Step 6: Defensive check - ensure API returned valid site ID
 	if response.ID == "" {
 		return infer.CreateResponse[SiteState]{}, errors.New(
-			"Webflow API returned empty site ID - " +
+			"webflow API returned empty site ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
 

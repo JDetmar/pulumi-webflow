@@ -48,6 +48,9 @@ func Provider() p.Provider {
 			infer.Resource(&Webhook{}),
 			infer.Resource(&Asset{}),
 			infer.Resource(&PageContent{}),
+			infer.Resource(&SiteCustomCode{}),
+			infer.Resource(&RegisteredScriptResource{}),
+			infer.Resource(&PageCustomCode{}),
 		).
 		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",

@@ -88,13 +88,13 @@ func ValidateFieldType(fieldType string) error {
 		return errors.New("type is required but was not provided. " +
 			"Please provide a valid field type (e.g., 'PlainText', 'RichText', 'Image'). " +
 			"Supported types: PlainText, RichText, Image, MultiImage, Video, Link, Email, Phone, " +
-			"Number, DateTime, Switch, Color, Option, File, Reference, MultiReference.")
+			"Number, DateTime, Switch, Color, Option, File, Reference, MultiReference")
 	}
 	if !ValidFieldTypes[fieldType] {
 		return fmt.Errorf("type has invalid value: got '%s'. "+
 			"Supported types: PlainText, RichText, Image, MultiImage, Video, Link, Email, Phone, "+
 			"Number, DateTime, Switch, Color, Option, File, Reference, MultiReference. "+
-			"Please use one of the supported field types.", fieldType)
+			"Please use one of the supported field types", fieldType)
 	}
 	return nil
 }
@@ -105,11 +105,11 @@ func ValidateFieldDisplayName(displayName string) error {
 	if displayName == "" {
 		return errors.New("displayName is required but was not provided. " +
 			"Please provide a name for your field (e.g., 'Title', 'Description', 'Author'). " +
-			"The display name is shown in the Webflow CMS interface.")
+			"The display name is shown in the Webflow CMS interface")
 	}
 	if len(displayName) > 255 {
 		return fmt.Errorf("displayName is too long: '%s' exceeds maximum length of 255 characters. "+
-			"Please use a shorter, more concise name for your field.", displayName)
+			"Please use a shorter, more concise name for your field", displayName)
 	}
 	return nil
 }
@@ -204,7 +204,7 @@ func GetCollectionField(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -326,7 +326,7 @@ func PostCollectionField(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -434,7 +434,7 @@ func PutCollectionField(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -523,7 +523,7 @@ func DeleteCollectionField(ctx context.Context, client *http.Client, collectionI
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {

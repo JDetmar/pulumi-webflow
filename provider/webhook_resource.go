@@ -197,7 +197,7 @@ func (w *Webhook) Create(
 	// Defensive check: Ensure Webflow API returned a valid webhook ID
 	if response.ID == "" {
 		return infer.CreateResponse[WebhookState]{}, errors.New(
-			"Webflow API returned empty webhook ID - " +
+			"webflow API returned empty webhook ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
 

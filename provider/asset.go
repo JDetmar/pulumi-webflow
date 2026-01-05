@@ -82,14 +82,14 @@ func ValidateAssetID(assetID string) error {
 		return errors.New("assetId is required but was not provided. " +
 			"Please provide a valid Webflow asset ID " +
 			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). " +
-			"You can find asset IDs in the Webflow dashboard under Assets.")
+			"You can find asset IDs in the Webflow dashboard under Assets")
 	}
 	if !assetIDPattern.MatchString(assetID) {
 		return fmt.Errorf("assetId has invalid format: got '%s'. "+
 			"Expected a 24-character lowercase hexadecimal string "+
 			"(e.g., '5f0c8c9e1c9d440000e8d8c3'). "+
 			"Please check your asset ID in the Webflow dashboard "+
-			"and ensure it contains only lowercase letters (a-f) and digits (0-9).", assetID)
+			"and ensure it contains only lowercase letters (a-f) and digits (0-9)", assetID)
 	}
 	return nil
 }
@@ -100,13 +100,13 @@ func ValidateFileName(fileName string) error {
 	if fileName == "" {
 		return errors.New("fileName is required but was not provided. " +
 			"Please provide a valid file name with extension " +
-			"(e.g., 'logo.png', 'hero-image.jpg', 'document.pdf').")
+			"(e.g., 'logo.png', 'hero-image.jpg', 'document.pdf')")
 	}
 
 	// Check for reasonable length
 	if len(fileName) > 255 {
 		return fmt.Errorf("fileName is too long: '%s' exceeds maximum length of 255 characters. "+
-			"Please use a shorter file name.", fileName)
+			"Please use a shorter file name", fileName)
 	}
 
 	// Check for common invalid characters (most filesystems disallow these)
@@ -115,7 +115,7 @@ func ValidateFileName(fileName string) error {
 		if strings.Contains(fileName, char) {
 			return fmt.Errorf("fileName contains invalid character '%s': got '%s'. "+
 				"Please remove invalid characters from the file name. "+
-				"Valid characters: letters, numbers, hyphens, underscores, dots, spaces.", char, fileName)
+				"Valid characters: letters, numbers, hyphens, underscores, dots, spaces", char, fileName)
 		}
 	}
 
@@ -206,7 +206,7 @@ func GetAsset(ctx context.Context, client *http.Client, assetID string) (*AssetR
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -295,7 +295,7 @@ func ListAssets(ctx context.Context, client *http.Client, siteID string) (*Asset
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -400,7 +400,7 @@ func PostAssetUploadURL(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {
@@ -489,7 +489,7 @@ func DeleteAsset(ctx context.Context, client *http.Client, assetID string) error
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			if attempt < maxRetries {

@@ -1,8 +1,7 @@
 ---
 name: api-implementer
 description: Implements a single Webflow API resource for the Pulumi provider. Use when implementing Collection, Page, Webhook, Asset, or other Webflow resources.
-allowed-tools: Bash, Read, Write, Grep, Glob
-model: haiku
+model: opus
 ---
 
 # Webflow API Resource Implementer

@@ -51,10 +51,9 @@ func TestValidateDisplayName_Empty(t *testing.T) {
 		t.Error("ValidateDisplayName(\"\") should return error for empty string")
 	}
 	if err != nil {
-		expectedErr := "displayName is required but was not provided.\n" +
-			"Expected format: A non-empty string representing your site's name.\n" +
-			"Fix: Provide a name for your site (e.g., 'My Marketing Site', " +
-			"'Company Blog', 'Product Landing Page')."
+		expectedErr := "displayName is required but was not provided. " +
+			"Expected format: A non-empty string representing your site's name. " +
+			"Fix: Provide a name for your site (e.g., 'My Marketing Site', 'Company Blog', 'Product Landing Page')"
 		if err.Error() != expectedErr {
 			t.Errorf("ValidateDisplayName(\"\") returned unexpected error message: %v", err)
 		}

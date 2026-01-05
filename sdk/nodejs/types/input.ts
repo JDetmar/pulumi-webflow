@@ -5,6 +5,25 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
+export interface CustomScriptArgsArgs {
+    /**
+     * Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
+     */
+    attributes?: pulumi.Input<{[key: string]: any}>;
+    /**
+     * The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
+     */
+    id: pulumi.Input<string>;
+    /**
+     * The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
+     */
+    location: pulumi.Input<string>;
+    /**
+     * The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
+     */
+    version: pulumi.Input<string>;
+}
+
 export interface NodeContentUpdateArgs {
     /**
      * The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
@@ -14,5 +33,24 @@ export interface NodeContentUpdateArgs {
      * The new text content for the node. This will replace the existing text content in the specified node. Only applicable to text nodes or elements containing text.
      */
     text: pulumi.Input<string>;
+}
+
+export interface PageCustomCodeScriptArgs {
+    /**
+     * Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
+     */
+    attributes: pulumi.Input<{[key: string]: any}>;
+    /**
+     * The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
+     */
+    id: pulumi.Input<string>;
+    /**
+     * Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
+     */
+    location: pulumi.Input<string>;
+    /**
+     * The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
+     */
+    version: pulumi.Input<string>;
 }
 

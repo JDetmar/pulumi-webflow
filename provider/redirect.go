@@ -51,18 +51,18 @@ func ValidateSourcePath(path string) error {
 	if path == "" {
 		return errors.New("sourcePath is required but was not provided. " +
 			"Please provide a valid URL path starting with '/' (e.g., '/old-page', '/blog/2023'). " +
-			"Example valid paths: '/about-us', '/products/item-1', '/news/2024'.")
+			"Example valid paths: '/about-us', '/products/item-1', '/news/2024'")
 	}
 	if !strings.HasPrefix(path, "/") {
 		return fmt.Errorf("sourcePath must start with '/': got '%s'. "+
 			"Example valid paths: '/old-page', '/blog/2023', '/products/item-1'. "+
-			"Please ensure the path begins with a forward slash.", path)
+			"Please ensure the path begins with a forward slash", path)
 	}
 	if !pathPattern.MatchString(path) {
 		return fmt.Errorf("sourcePath contains invalid characters: got '%s'. "+
 			"Allowed characters: A-Z, a-z, 0-9, hyphens (-), underscores (_), forward slashes (/), and dots (.). "+
 			"Example valid paths: '/old-page', '/blog/2023', '/products/item-1'. "+
-			"Please remove any invalid characters.", path)
+			"Please remove any invalid characters", path)
 	}
 	return nil
 }
@@ -73,18 +73,18 @@ func ValidateDestinationPath(path string) error {
 	if path == "" {
 		return errors.New("destinationPath is required but was not provided. " +
 			"Please provide a valid URL path starting with '/' (e.g., '/new-page', '/home'). " +
-			"Example valid paths: '/about-us', '/products/item-1', '/news/2024'.")
+			"Example valid paths: '/about-us', '/products/item-1', '/news/2024'")
 	}
 	if !strings.HasPrefix(path, "/") {
 		return fmt.Errorf("destinationPath must start with '/': got '%s'. "+
 			"Example valid paths: '/new-page', '/home', '/products/item-1'. "+
-			"Please ensure the path begins with a forward slash.", path)
+			"Please ensure the path begins with a forward slash", path)
 	}
 	if !pathPattern.MatchString(path) {
 		return fmt.Errorf("destinationPath contains invalid characters: got '%s'. "+
 			"Allowed characters: A-Z, a-z, 0-9, hyphens (-), underscores (_), forward slashes (/), and dots (.). "+
 			"Example valid paths: '/new-page', '/home', '/products/item-1'. "+
-			"Please remove any invalid characters.", path)
+			"Please remove any invalid characters", path)
 	}
 	return nil
 }
@@ -97,7 +97,7 @@ func ValidateStatusCode(statusCode int) error {
 		return fmt.Errorf("statusCode must be either 301 or 302: got %d. "+
 			"301 = permanent redirect (use for pages moved permanently). "+
 			"302 = temporary redirect (use for temporary page moves or maintenance). "+
-			"Example: statusCode=301 for permanent moves, statusCode=302 for temporary redirects.", statusCode)
+			"Example: statusCode=301 for permanent moves, statusCode=302 for temporary redirects", statusCode)
 	}
 	return nil
 }
@@ -188,7 +188,7 @@ func GetRedirects(ctx context.Context, client *http.Client, siteID string) (*Red
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -295,7 +295,7 @@ func PostRedirect(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -403,7 +403,7 @@ func PatchRedirect(
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry
@@ -495,7 +495,7 @@ func DeleteRedirect(ctx context.Context, client *http.Client, siteID, redirectID
 			lastErr = fmt.Errorf("rate limited: Webflow API rate limit exceeded (HTTP 429). "+
 				"The provider will automatically retry with exponential backoff. "+
 				"Retry attempt %d of %d, waiting %v before next attempt. "+
-				"If this error persists, please wait a few minutes before trying again or contact Webflow support.",
+				"If this error persists, please wait a few minutes before trying again or contact Webflow support",
 				attempt+1, maxRetries+1, waitTime)
 
 			// Check for Retry-After header for the next retry

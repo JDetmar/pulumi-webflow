@@ -245,7 +245,7 @@ func (r *Asset) Create(
 	// Defensive check: Ensure Webflow API returned a valid upload URL
 	if uploadResp.UploadURL == "" {
 		return infer.CreateResponse[AssetState]{}, errors.New(
-			"Webflow API returned empty upload URL - " +
+			"webflow API returned empty upload URL - " +
 				"this is unexpected and may indicate an API issue")
 	}
 
@@ -258,7 +258,7 @@ func (r *Asset) Create(
 		"asset upload is not yet fully implemented. " +
 			"This resource currently supports only tracking existing assets. " +
 			"To upload assets, use the Webflow dashboard or API directly. " +
-			"Future versions will support automatic file upload.")
+			"Future versions will support automatic file upload")
 }
 
 // Read retrieves the current state of an asset from Webflow.
@@ -325,7 +325,7 @@ func (r *Asset) Update(
 	// But implement it defensively
 	return infer.UpdateResponse[AssetState]{}, errors.New(
 		"assets are immutable and cannot be updated in place. " +
-			"Any changes will trigger a replacement (delete and recreate).")
+			"Any changes will trigger a replacement (delete and recreate)")
 }
 
 // Delete removes an asset from the Webflow site.

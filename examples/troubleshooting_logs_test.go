@@ -1,16 +1,8 @@
-// Copyright 2025, Pulumi Corporation.
+// Copyright 2025, Justin Detmar.
+// SPDX-License-Identifier: MIT
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This is an unofficial, community-maintained Pulumi provider for Webflow.
+// Not affiliated with, endorsed by, or supported by Pulumi Corporation or Webflow, Inc.
 
 package examples
 
@@ -71,7 +63,7 @@ func TestTypeScriptLoggingExample(t *testing.T) {
 
 	// Verify index.ts contains logging calls
 	indexPath := filepath.Join(exampleDir, "index.ts")
-	content, err := os.ReadFile(indexPath)
+	content, err := os.ReadFile(indexPath) //nolint:gosec // Test file reading
 	require.NoError(t, err)
 
 	indexStr := string(content)
@@ -102,7 +94,7 @@ func TestPythonCICDLoggingExample(t *testing.T) {
 
 	// Verify __main__.py contains CI/CD patterns
 	mainPath := filepath.Join(exampleDir, "__main__.py")
-	content, err := os.ReadFile(mainPath)
+	content, err := os.ReadFile(mainPath) //nolint:gosec // Test file reading
 	require.NoError(t, err)
 
 	mainStr := string(content)
@@ -134,7 +126,7 @@ func TestGoLogAnalysisExample(t *testing.T) {
 
 	// Verify main.go contains logging patterns
 	mainPath := filepath.Join(exampleDir, "main.go")
-	content, err := os.ReadFile(mainPath)
+	content, err := os.ReadFile(mainPath) //nolint:gosec // Test file reading
 	require.NoError(t, err)
 
 	mainStr := string(content)
@@ -153,7 +145,7 @@ func TestGoLogAnalysisExample(t *testing.T) {
 func TestCredentialRedactionVerification(t *testing.T) {
 	// Verify auth.go contains RedactToken function
 	authPath := "../provider/auth.go"
-	content, err := os.ReadFile(authPath)
+	content, err := os.ReadFile(authPath) //nolint:gosec // Test file reading
 	require.NoError(t, err, "../provider/auth.go should exist for redaction verification")
 
 	authStr := string(content)
@@ -178,7 +170,7 @@ func TestCredentialRedactionVerification(t *testing.T) {
 				return nil
 			}
 
-			content, err := os.ReadFile(path)
+			content, err := os.ReadFile(path) //nolint:gosec // Test file reading
 			if err != nil {
 				return err
 			}
@@ -197,21 +189,21 @@ func TestCredentialRedactionVerification(t *testing.T) {
 func TestLoggingConfigurationPatterns(t *testing.T) {
 	// Check TypeScript uses Pulumi logging API
 	tsPath := "troubleshooting-logs/typescript-troubleshooting/index.ts"
-	tsContent, err := os.ReadFile(tsPath)
+	tsContent, err := os.ReadFile(tsPath) //nolint:gosec // Test file reading
 	require.NoError(t, err)
 	tsStr := string(tsContent)
 	assert.Contains(t, tsStr, "pulumi.log", "TypeScript should use pulumi.log API")
 
 	// Check Python uses Pulumi logging API
 	pyPath := "troubleshooting-logs/python-cicd-logging/__main__.py"
-	pyContent, err := os.ReadFile(pyPath)
+	pyContent, err := os.ReadFile(pyPath) //nolint:gosec // Test file reading
 	require.NoError(t, err)
 	pyStr := string(pyContent)
 	assert.Contains(t, pyStr, "pulumi.log", "Python should use pulumi.log API")
 
 	// Check Go uses context logging
 	goPath := "troubleshooting-logs/go-log-analysis/main.go"
-	goContent, err := os.ReadFile(goPath)
+	goContent, err := os.ReadFile(goPath) //nolint:gosec // Test file reading
 	require.NoError(t, err)
 	goStr := string(goContent)
 	assert.Contains(t, goStr, "ctx.Log", "Go should use ctx.Log API")
@@ -221,7 +213,7 @@ func TestLoggingConfigurationPatterns(t *testing.T) {
 func TestLoggingPerformanceGuidance(t *testing.T) {
 	// Check README contains performance guidance
 	readmePath := "troubleshooting-logs/README.md"
-	content, err := os.ReadFile(readmePath)
+	content, err := os.ReadFile(readmePath) //nolint:gosec // Test file reading
 	require.NoError(t, err)
 
 	readmeStr := string(content)
@@ -234,7 +226,7 @@ func TestLoggingPerformanceGuidance(t *testing.T) {
 // TestREADMEStructure validates the comprehensive README structure
 func TestREADMEStructure(t *testing.T) {
 	readmePath := "troubleshooting-logs/README.md"
-	content, err := os.ReadFile(readmePath)
+	content, err := os.ReadFile(readmePath) //nolint:gosec // Test file reading
 	require.NoError(t, err)
 
 	readmeStr := string(content)
@@ -274,7 +266,7 @@ func TestGitignoreFiles(t *testing.T) {
 	}
 
 	for _, gitignorePath := range examples {
-		content, err := os.ReadFile(gitignorePath)
+		content, err := os.ReadFile(gitignorePath) //nolint:gosec // Test file reading
 		assert.NoError(t, err, "%s should exist", gitignorePath)
 
 		gitignoreStr := string(content)
@@ -296,7 +288,7 @@ func TestPulumiConfigFiles(t *testing.T) {
 	}
 
 	for _, configPath := range configs {
-		content, err := os.ReadFile(configPath)
+		content, err := os.ReadFile(configPath) //nolint:gosec // Test file reading
 		assert.NoError(t, err, "%s should exist", configPath)
 
 		configStr := string(content)

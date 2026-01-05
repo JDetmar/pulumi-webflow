@@ -23,6 +23,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 	switch typ {
 	case "webflow:index:Asset":
 		r = &Asset{}
+	case "webflow:index:AssetFolder":
+		r = &AssetFolder{}
 	case "webflow:index:Collection":
 		r = &Collection{}
 	case "webflow:index:CollectionField":

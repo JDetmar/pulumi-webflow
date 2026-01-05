@@ -14,6 +14,7 @@
     },
     "files": [
         "asset.ts",
+        "assetFolder.ts",
         "collection.ts",
         "collectionField.ts",
         "collectionItem.ts",

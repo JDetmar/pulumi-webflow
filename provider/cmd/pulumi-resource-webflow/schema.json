@@ -31,7 +31,7 @@
         "attributes": {
           "type": "object",
           "additionalProperties": {
-            "type": "string"
+            "$ref": "pulumi.json#/Any"
           },
           "description": "Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag."
         },

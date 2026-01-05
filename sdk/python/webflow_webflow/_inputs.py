@@ -39,7 +39,7 @@ if not MYPY:
         """
         The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
         """
-        attributes: NotRequired[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]
+        attributes: NotRequired[pulumi.Input[Mapping[str, Any]]]
         """
         Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         """
@@ -52,12 +52,12 @@ class CustomScriptArgsArgs:
                  id: pulumi.Input[_builtins.str],
                  location: pulumi.Input[_builtins.str],
                  version: pulumi.Input[_builtins.str],
-                 attributes: Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]] = None):
+                 attributes: Optional[pulumi.Input[Mapping[str, Any]]] = None):
         """
         :param pulumi.Input[_builtins.str] id: The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
         :param pulumi.Input[_builtins.str] location: The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
         :param pulumi.Input[_builtins.str] version: The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
-        :param pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]] attributes: Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
+        :param pulumi.Input[Mapping[str, Any]] attributes: Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         """
         pulumi.set(__self__, "id", id)
         pulumi.set(__self__, "location", location)
@@ -103,14 +103,14 @@ class CustomScriptArgsArgs:
 
     @_builtins.property
     @pulumi.getter
-    def attributes(self) -> Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]:
+    def attributes(self) -> Optional[pulumi.Input[Mapping[str, Any]]]:
         """
         Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         """
         return pulumi.get(self, "attributes")
 
     @attributes.setter
-    def attributes(self, value: Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]):
+    def attributes(self, value: Optional[pulumi.Input[Mapping[str, Any]]]):
         pulumi.set(self, "attributes", value)
 
 

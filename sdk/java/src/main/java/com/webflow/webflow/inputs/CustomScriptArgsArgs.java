@@ -6,6 +6,7 @@ package com.webflow.webflow.inputs;
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
+import java.lang.Object;
 import java.lang.String;
 import java.util.Map;
 import java.util.Objects;
@@ -22,13 +23,13 @@ public final class CustomScriptArgsArgs extends com.pulumi.resources.ResourceArg
      * 
      */
     @Import(name="attributes")
-    private @Nullable Output<Map<String,String>> attributes;
+    private @Nullable Output<Map<String,Object>> attributes;
 
     /**
      * @return Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {&#39;data-config&#39;: &#39;my-value&#39;}. These attributes are passed directly to the script tag.
      * 
      */
-    public Optional<Output<Map<String,String>>> attributes() {
+    public Optional<Output<Map<String,Object>>> attributes() {
         return Optional.ofNullable(this.attributes);
     }
 
@@ -110,7 +111,7 @@ public final class CustomScriptArgsArgs extends com.pulumi.resources.ResourceArg
          * @return builder
          * 
          */
-        public Builder attributes(@Nullable Output<Map<String,String>> attributes) {
+        public Builder attributes(@Nullable Output<Map<String,Object>> attributes) {
             $.attributes = attributes;
             return this;
         }
@@ -121,7 +122,7 @@ public final class CustomScriptArgsArgs extends com.pulumi.resources.ResourceArg
          * @return builder
          * 
          */
-        public Builder attributes(Map<String,String> attributes) {
+        public Builder attributes(Map<String,Object> attributes) {
             return attributes(Output.of(attributes));
         }
 

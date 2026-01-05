@@ -27,12 +27,12 @@ class CustomScriptArgs(dict):
                  id: _builtins.str,
                  location: _builtins.str,
                  version: _builtins.str,
-                 attributes: Optional[Mapping[str, _builtins.str]] = None):
+                 attributes: Optional[Mapping[str, Any]] = None):
         """
         :param _builtins.str id: The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
         :param _builtins.str location: The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
         :param _builtins.str version: The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
-        :param Mapping[str, _builtins.str] attributes: Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
+        :param Mapping[str, Any] attributes: Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         """
         pulumi.set(__self__, "id", id)
         pulumi.set(__self__, "location", location)
@@ -66,7 +66,7 @@ class CustomScriptArgs(dict):
 
     @_builtins.property
     @pulumi.getter
-    def attributes(self) -> Optional[Mapping[str, _builtins.str]]:
+    def attributes(self) -> Optional[Mapping[str, Any]]:
         """
         Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         """

@@ -103,7 +103,10 @@ sdk/go: ${SCHEMA_FILE}
 .PHONY: provider
 provider: bin/${PROVIDER} bin/pulumi-gen-${PACK} # Required by CI
 
-bin/${PROVIDER}:
+# Provider source files to track for rebuilds
+PROVIDER_SRC := $(shell find provider -name '*.go')
+
+bin/${PROVIDER}: $(PROVIDER_SRC)
 	cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER)
 
 .PHONY: provider_debug

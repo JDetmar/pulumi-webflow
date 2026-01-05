@@ -1,0 +1,8 @@
+name: webflow-asset-example-go
+runtime: go
+description: Example of creating and managing Asset resources with Pulumi and Webflow
+
+config:
+  siteId:
+    description: The Webflow site ID
+    secret: true

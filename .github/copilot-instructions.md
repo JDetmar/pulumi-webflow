@@ -13,7 +13,7 @@ Concise, task-agnostic instructions so an agent can work efficiently without ext
 3. For IDE/tests, export Webflow token if needed: `export WEBFLOW_API_TOKEN="your-token"` (required only for integration/example tests).
 
 ## Build, lint, and test (validated commands)
-- **Provider unit tests (validated 2026-01-05):**
+- **Provider unit tests (validated locally):**
   - `make test_provider` (runs `go test -short` in `provider/`, ~2–3 minutes). Succeeds locally; saw harmless preamble `pulumictl: not found` when tools not installed—run mise to suppress.
 - **Code generation rule (critical):** After any change in `provider/`, run `make codegen` to refresh `provider/cmd/.../schema.json` and all SDKs. CI fails if the worktree is dirty.
 - **Build provider only:** `make provider` (outputs `bin/pulumi-resource-webflow`).

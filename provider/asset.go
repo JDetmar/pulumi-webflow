@@ -51,29 +51,45 @@ type AssetListResponse struct {
 	} `json:"pagination,omitempty"`
 }
 
-// AssetUploadDetails contains additional signed parameters for S3 upload.
-type AssetUploadDetails struct {
-	URL         string `json:"url"`
-	ContentType string `json:"contentType"`
-	ACL         string `json:"acl,omitempty"`
-}
-
 // AssetUploadResponse represents the response from requesting an asset upload URL.
+// This response contains the asset ID and all metadata needed for S3 upload.
 type AssetUploadResponse struct {
-	UploadURL     string             `json:"uploadUrl"`
-	UploadDetails AssetUploadDetails `json:"uploadDetails"`
+	// ID is the Webflow-assigned asset ID (available immediately after POST)
+	ID string `json:"id"`
+	// UploadURL is the presigned S3 URL for uploading the file
+	UploadURL string `json:"uploadUrl"`
+	// UploadDetails contains AWS S3 POST form fields (acl, bucket, key, signature, etc.)
+	UploadDetails map[string]string `json:"uploadDetails"`
+	// AssetURL is the direct S3 link to the asset
+	AssetURL string `json:"assetUrl"`
+	// HostedURL is the Webflow CDN URL for the asset
+	HostedURL string `json:"hostedUrl"`
+	// ContentType is the MIME type of the asset
+	ContentType string `json:"contentType"`
+	// OriginalFileName is the original filename
+	OriginalFileName string `json:"originalFileName"`
+	// ParentFolder is the parent folder ID (if specified)
+	ParentFolder string `json:"parentFolder,omitempty"`
+	// CreatedOn is the creation timestamp
+	CreatedOn string `json:"createdOn"`
+	// LastUpdated is the last modification timestamp
+	LastUpdated string `json:"lastUpdated"`
 }
 
 // AssetUploadRequest represents the request body for initiating an asset upload.
 type AssetUploadRequest struct {
-	FileName     string `json:"fileName"`
-	FileHash     string `json:"fileHash,omitempty"`
-	ParentFolder string `json:"parentFolder,omitempty"`
+	FileName     string `json:"fileName"`               // Required: file name with extension
+	FileHash     string `json:"fileHash"`               // Required: MD5 hash of file content
+	ParentFolder string `json:"parentFolder,omitempty"` // Optional: folder ID
 }
 
 // assetIDPattern is the regex pattern for validating Webflow asset IDs.
 // Asset IDs are typically 24-character hexadecimal strings.
 var assetIDPattern = regexp.MustCompile(`^[a-f0-9]{24}$`)
+
+// md5HashPattern is the regex pattern for validating MD5 file hashes.
+// MD5 hashes are 32-character hexadecimal strings.
+var md5HashPattern = regexp.MustCompile(`^[a-fA-F0-9]{32}$`)
 
 // ValidateAssetID validates that an assetID matches the Webflow asset ID format.
 // Returns actionable error messages that explain what's wrong and how to fix it.
@@ -119,6 +135,25 @@ func ValidateFileName(fileName string) error {
 		}
 	}
 
+	return nil
+}
+
+// ValidateFileHash validates that a fileHash is a valid MD5 hash.
+// MD5 hashes are 32-character hexadecimal strings.
+// Returns actionable error messages that explain what's wrong and how to fix it.
+func ValidateFileHash(fileHash string) error {
+	if fileHash == "" {
+		return errors.New("fileHash is required but was not provided. " +
+			"Please provide the MD5 hash of your file content " +
+			"(32-character hexadecimal string, e.g., 'd41d8cd98f00b204e9800998ecf8427e'). " +
+			"You can generate an MD5 hash using: md5sum <filename> (Linux) or md5 <filename> (macOS)")
+	}
+	if !md5HashPattern.MatchString(fileHash) {
+		return fmt.Errorf("fileHash has invalid format: got '%s'. "+
+			"Expected a 32-character hexadecimal string (MD5 hash). "+
+			"Example: 'd41d8cd98f00b204e9800998ecf8427e'. "+
+			"You can generate an MD5 hash using: md5sum <filename> (Linux) or md5 <filename> (macOS)", fileHash)
+	}
 	return nil
 }
 

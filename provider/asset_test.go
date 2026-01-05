@@ -58,6 +58,65 @@ func TestValidateAssetID(t *testing.T) {
 	}
 }
 
+// TestValidateFileHash tests the ValidateFileHash function.
+func TestValidateFileHash(t *testing.T) {
+	tests := []struct {
+		name     string
+		fileHash string
+		wantErr  bool
+	}{
+		{
+			name:     "valid MD5 hash - lowercase",
+			fileHash: "d41d8cd98f00b204e9800998ecf8427e",
+			wantErr:  false,
+		},
+		{
+			name:     "valid MD5 hash - uppercase",
+			fileHash: "D41D8CD98F00B204E9800998ECF8427E",
+			wantErr:  false,
+		},
+		{
+			name:     "valid MD5 hash - mixed case",
+			fileHash: "d41D8cd98F00b204E9800998ecf8427E",
+			wantErr:  false,
+		},
+		{
+			name:     "empty hash",
+			fileHash: "",
+			wantErr:  true,
+		},
+		{
+			name:     "too short",
+			fileHash: "d41d8cd98f00b204",
+			wantErr:  true,
+		},
+		{
+			name:     "too long",
+			fileHash: "d41d8cd98f00b204e9800998ecf8427e00",
+			wantErr:  true,
+		},
+		{
+			name:     "invalid characters",
+			fileHash: "d41d8cd98f00b204e9800998ecf8427g",
+			wantErr:  true,
+		},
+		{
+			name:     "with spaces",
+			fileHash: "d41d8cd98f00b204 9800998ecf8427e",
+			wantErr:  true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ValidateFileHash(tt.fileHash)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ValidateFileHash() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
 // TestValidateFileName tests the ValidateFileName function.
 func TestValidateFileName(t *testing.T) {
 	tests := []struct {
@@ -360,17 +419,34 @@ func TestPostAssetUploadURL(t *testing.T) {
 		if req.FileName != "logo.png" {
 			t.Errorf("Expected fileName logo.png, got %s", req.FileName)
 		}
+		if req.FileHash != "d41d8cd98f00b204e9800998ecf8427e" {
+			t.Errorf("Expected fileHash d41d8cd98f00b204e9800998ecf8427e, got %s", req.FileHash)
+		}
 
-		// Return mock response
+		// Return mock response matching actual Webflow API
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		response := AssetUploadResponse{
+			ID:        "5f0c8c9e1c9d440000e8d8c4",
 			UploadURL: "https://s3.amazonaws.com/bucket/upload?signature=xyz",
-			UploadDetails: AssetUploadDetails{
-				URL:         "https://s3.amazonaws.com/bucket/upload",
-				ContentType: "image/png",
-				ACL:         "public-read",
+			UploadDetails: map[string]string{
+				"acl":                   "public-read",
+				"bucket":                "webflow-bucket",
+				"key":                   "assets/logo.png",
+				"Content-Type":          "image/png",
+				"X-Amz-Algorithm":       "AWS4-HMAC-SHA256",
+				"X-Amz-Credential":      "AKIAEXAMPLE/20240101/us-east-1/s3/aws4_request",
+				"X-Amz-Date":            "20240101T000000Z",
+				"Policy":                "base64policy",
+				"X-Amz-Signature":       "signature123",
+				"success_action_status": "201",
 			},
+			AssetURL:         "https://s3.amazonaws.com/webflow-bucket/assets/logo.png",
+			HostedURL:        "https://assets.website-files.com/example/logo.png",
+			ContentType:      "image/png",
+			OriginalFileName: "logo.png",
+			CreatedOn:        "2024-01-01T00:00:00Z",
+			LastUpdated:      "2024-01-01T00:00:00Z",
 		}
 		_ = json.NewEncoder(w).Encode(response)
 	}))
@@ -386,18 +462,35 @@ func TestPostAssetUploadURL(t *testing.T) {
 	// Test PostAssetUploadURL
 	uploadResp, err := PostAssetUploadURL(
 		context.Background(), client,
-		"5f0c8c9e1c9d440000e8d8c3", "logo.png", "", "",
+		"5f0c8c9e1c9d440000e8d8c3", "logo.png", "d41d8cd98f00b204e9800998ecf8427e", "",
 	)
 	if err != nil {
 		t.Fatalf("PostAssetUploadURL() error = %v", err)
 	}
 
-	// Verify response
+	// Verify response - asset ID
+	if uploadResp.ID != "5f0c8c9e1c9d440000e8d8c4" {
+		t.Errorf("Expected asset ID 5f0c8c9e1c9d440000e8d8c4, got %s", uploadResp.ID)
+	}
+
+	// Verify response - upload URL
 	if uploadResp.UploadURL != "https://s3.amazonaws.com/bucket/upload?signature=xyz" {
 		t.Errorf("Expected upload URL https://s3.amazonaws.com/bucket/upload?signature=xyz, got %s", uploadResp.UploadURL)
 	}
-	if uploadResp.UploadDetails.ContentType != "image/png" {
-		t.Errorf("Expected content type image/png, got %s", uploadResp.UploadDetails.ContentType)
+
+	// Verify response - hosted URL
+	if uploadResp.HostedURL != "https://assets.website-files.com/example/logo.png" {
+		t.Errorf("Expected hosted URL https://assets.website-files.com/example/logo.png, got %s", uploadResp.HostedURL)
+	}
+
+	// Verify response - content type
+	if uploadResp.ContentType != "image/png" {
+		t.Errorf("Expected content type image/png, got %s", uploadResp.ContentType)
+	}
+
+	// Verify response - upload details contain expected fields
+	if uploadResp.UploadDetails["acl"] != "public-read" {
+		t.Errorf("Expected acl public-read, got %s", uploadResp.UploadDetails["acl"])
 	}
 }
 

@@ -30,10 +30,10 @@ type AssetArgs struct {
 	// Must include the file extension (e.g., "logo.png", "hero.jpg").
 	// Examples: "logo.png", "hero-image.jpg", "document.pdf"
 	FileName string `pulumi:"fileName"`
-	// FileHash is the optional MD5 hash of the file for deduplication.
-	// If a file with the same hash already exists, Webflow may reuse it.
-	// Optional - leave empty to always upload a new file.
-	FileHash string `pulumi:"fileHash,optional"`
+	// FileHash is the MD5 hash of the file content (required).
+	// Webflow uses this to identify and deduplicate assets.
+	// Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS)
+	FileHash string `pulumi:"fileHash"`
 	// ParentFolder is the optional folder ID where the asset will be placed.
 	// If not specified, the asset will be placed at the root level.
 	// Example: "5f0c8c9e1c9d440000e8d8c4"
@@ -51,8 +51,18 @@ type AssetState struct {
 	AssetArgs
 	// AssetID is the Webflow-assigned asset ID (read-only).
 	AssetID string `pulumi:"assetId,optional"`
-	// HostedURL is the CDN URL where the asset is hosted (read-only).
-	// This is the URL you can use to reference the asset in your site.
+	// UploadURL is the presigned S3 URL for uploading the file content (read-only).
+	// Use this URL with UploadDetails to complete the asset upload via S3 POST.
+	// See: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
+	UploadURL string `pulumi:"uploadUrl,optional"`
+	// UploadDetails contains AWS S3 POST form fields required for upload (read-only).
+	// Keys include: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential,
+	// X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control.
+	UploadDetails map[string]string `pulumi:"uploadDetails,optional"`
+	// AssetURL is the direct S3 URL for the asset (read-only).
+	AssetURL string `pulumi:"assetUrl,optional"`
+	// HostedURL is the Webflow CDN URL where the asset will be hosted (read-only).
+	// This URL becomes accessible after completing the S3 upload.
 	HostedURL string `pulumi:"hostedUrl,optional"`
 	// ContentType is the MIME type of the asset (read-only).
 	// Examples: "image/png", "image/jpeg", "application/pdf"
@@ -88,10 +98,10 @@ func (args *AssetArgs) Annotate(a infer.Annotator) {
 			"invalid characters (<, >, :, \", |, ?, *).")
 
 	a.Describe(&args.FileHash,
-		"Optional MD5 hash of the file content for deduplication. "+
-			"If provided and a file with the same hash already exists in your site, "+
-			"Webflow may reuse the existing file instead of uploading a duplicate. "+
-			"Leave empty to always upload a new file.")
+		"MD5 hash of the file content (required). "+
+			"Webflow uses this hash to identify and deduplicate assets. "+
+			"Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). "+
+			"Example: 'd41d8cd98f00b204e9800998ecf8427e'.")
 
 	a.Describe(&args.ParentFolder,
 		"Optional folder ID where the asset will be organized in the Webflow Assets panel. "+
@@ -111,23 +121,38 @@ func (state *AssetState) Annotate(a infer.Annotator) {
 		"The Webflow-assigned asset ID (read-only). "+
 			"This unique identifier can be used to reference the asset in API calls.")
 
+	a.Describe(&state.UploadURL,
+		"The presigned S3 URL for uploading the file content (read-only). "+
+			"Use this URL along with uploadDetails to complete the asset upload. "+
+			"See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html")
+
+	a.Describe(&state.UploadDetails,
+		"AWS S3 POST form fields required to complete the upload (read-only). "+
+			"Include these as form fields when POSTing the file to uploadUrl. "+
+			"Keys: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential, "+
+			"X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control.")
+
+	a.Describe(&state.AssetURL,
+		"The direct S3 URL for the asset (read-only). "+
+			"This is the raw S3 location where the file is stored.")
+
 	a.Describe(&state.HostedURL,
-		"The CDN URL where the asset is hosted (read-only). "+
-			"Use this URL to reference the asset in your Webflow site or externally. "+
+		"The Webflow CDN URL where the asset will be hosted (read-only). "+
+			"This URL becomes accessible after completing the S3 upload. "+
 			"Example: 'https://assets.website-files.com/.../logo.png'.")
 
 	a.Describe(&state.ContentType,
-		"The MIME type of the uploaded asset (read-only). "+
+		"The MIME type of the asset (read-only). "+
 			"Examples: 'image/png', 'image/jpeg', 'application/pdf'. "+
-			"Automatically detected by Webflow based on the file content.")
+			"Determined by the fileName extension.")
 
 	a.Describe(&state.Size,
 		"The size of the asset in bytes (read-only). "+
 			"This is the actual size of the uploaded file.")
 
 	a.Describe(&state.CreatedOn,
-		"The timestamp when the asset was created (RFC3339 format, read-only). "+
-			"This is automatically set when the asset is uploaded.")
+		"The timestamp when the asset metadata was created (RFC3339 format, read-only). "+
+			"This is set when the asset is registered with Webflow.")
 
 	a.Describe(&state.LastUpdated,
 		"The timestamp when the asset was last modified (RFC3339 format, read-only). "+
@@ -195,16 +220,19 @@ func (r *Asset) Diff(
 }
 
 // Create creates a new asset by requesting an upload URL from Webflow.
-// Note: For MVP, this creates the upload URL but doesn't perform the actual upload.
-// Future versions will support automatic file upload.
+// The Webflow API returns an asset ID and presigned S3 upload URL.
+// Note: The actual file upload to S3 must be done separately using the uploadUrl and uploadDetails.
 func (r *Asset) Create(
 	ctx context.Context, req infer.CreateRequest[AssetArgs],
 ) (infer.CreateResponse[AssetState], error) {
-	// Validate inputs BEFORE generating resource ID
+	// Validate inputs BEFORE making API calls
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
 		return infer.CreateResponse[AssetState]{}, fmt.Errorf("validation failed for Asset resource: %w", err)
 	}
 	if err := ValidateFileName(req.Inputs.FileName); err != nil {
+		return infer.CreateResponse[AssetState]{}, fmt.Errorf("validation failed for Asset resource: %w", err)
+	}
+	if err := ValidateFileHash(req.Inputs.FileHash); err != nil {
 		return infer.CreateResponse[AssetState]{}, fmt.Errorf("validation failed for Asset resource: %w", err)
 	}
 
@@ -231,34 +259,41 @@ func (r *Asset) Create(
 		return infer.CreateResponse[AssetState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
-	// Call Webflow API to get upload URL
-	// Note: For MVP, we're getting the upload URL but not performing the actual upload
-	// Future versions will support automatic file upload from FileSource
+	// Call Webflow API to create asset metadata and get upload URL
 	uploadResp, err := PostAssetUploadURL(
 		ctx, client, req.Inputs.SiteID,
 		req.Inputs.FileName, req.Inputs.FileHash, req.Inputs.ParentFolder,
 	)
 	if err != nil {
-		return infer.CreateResponse[AssetState]{}, fmt.Errorf("failed to request asset upload URL: %w", err)
+		return infer.CreateResponse[AssetState]{}, fmt.Errorf("failed to create asset: %w", err)
 	}
 
-	// Defensive check: Ensure Webflow API returned a valid upload URL
-	if uploadResp.UploadURL == "" {
+	// Defensive check: Ensure Webflow API returned a valid asset ID
+	if uploadResp.ID == "" {
 		return infer.CreateResponse[AssetState]{}, errors.New(
-			"webflow API returned empty upload URL - " +
+			"webflow API returned empty asset ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
 
-	// For MVP: We have the upload URL but don't perform the actual upload
-	// The user would need to upload the file manually using the upload URL
-	// or we track an existing asset
-	//
-	// For now, we'll return an error explaining this limitation
-	return infer.CreateResponse[AssetState]{}, errors.New(
-		"asset upload is not yet fully implemented. " +
-			"This resource currently supports only tracking existing assets. " +
-			"To upload assets, use the Webflow dashboard or API directly. " +
-			"Future versions will support automatic file upload")
+	// Populate state from API response
+	state.AssetID = uploadResp.ID
+	state.UploadURL = uploadResp.UploadURL
+	state.UploadDetails = uploadResp.UploadDetails
+	state.AssetURL = uploadResp.AssetURL
+	state.HostedURL = uploadResp.HostedURL
+	state.ContentType = uploadResp.ContentType
+	state.CreatedOn = uploadResp.CreatedOn
+	state.LastUpdated = uploadResp.LastUpdated
+
+	// Note: The actual file must be uploaded to S3 using uploadUrl and uploadDetails.
+	// See: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
+
+	resourceID := GenerateAssetResourceID(req.Inputs.SiteID, uploadResp.ID)
+
+	return infer.CreateResponse[AssetState]{
+		ID:     resourceID,
+		Output: state,
+	}, nil
 }
 
 // Read retrieves the current state of an asset from Webflow.

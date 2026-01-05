@@ -17,18 +17,18 @@ public final class AssetArgs extends com.pulumi.resources.ResourceArgs {
     public static final AssetArgs Empty = new AssetArgs();
 
     /**
-     * Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+     * MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum &lt;filename&gt; (Linux) or md5 &lt;filename&gt; (macOS). Example: &#39;d41d8cd98f00b204e9800998ecf8427e&#39;.
      * 
      */
-    @Import(name="fileHash")
-    private @Nullable Output<String> fileHash;
+    @Import(name="fileHash", required=true)
+    private Output<String> fileHash;
 
     /**
-     * @return Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+     * @return MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum &lt;filename&gt; (Linux) or md5 &lt;filename&gt; (macOS). Example: &#39;d41d8cd98f00b204e9800998ecf8427e&#39;.
      * 
      */
-    public Optional<Output<String>> fileHash() {
-        return Optional.ofNullable(this.fileHash);
+    public Output<String> fileHash() {
+        return this.fileHash;
     }
 
     /**
@@ -120,18 +120,18 @@ public final class AssetArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param fileHash Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+         * @param fileHash MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum &lt;filename&gt; (Linux) or md5 &lt;filename&gt; (macOS). Example: &#39;d41d8cd98f00b204e9800998ecf8427e&#39;.
          * 
          * @return builder
          * 
          */
-        public Builder fileHash(@Nullable Output<String> fileHash) {
+        public Builder fileHash(Output<String> fileHash) {
             $.fileHash = fileHash;
             return this;
         }
 
         /**
-         * @param fileHash Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file.
+         * @param fileHash MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum &lt;filename&gt; (Linux) or md5 &lt;filename&gt; (macOS). Example: &#39;d41d8cd98f00b204e9800998ecf8427e&#39;.
          * 
          * @return builder
          * 
@@ -225,6 +225,9 @@ public final class AssetArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         public AssetArgs build() {
+            if ($.fileHash == null) {
+                throw new MissingRequiredPropertyException("AssetArgs", "fileHash");
+            }
             if ($.fileName == null) {
                 throw new MissingRequiredPropertyException("AssetArgs", "fileName");
             }

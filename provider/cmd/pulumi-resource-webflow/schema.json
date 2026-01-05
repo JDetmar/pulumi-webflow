@@ -172,17 +172,21 @@
           "type": "string",
           "description": "The Webflow-assigned asset ID (read-only). This unique identifier can be used to reference the asset in API calls."
         },
+        "assetUrl": {
+          "type": "string",
+          "description": "The direct S3 URL for the asset (read-only). This is the raw S3 location where the file is stored."
+        },
         "contentType": {
           "type": "string",
-          "description": "The MIME type of the uploaded asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Automatically detected by Webflow based on the file content."
+          "description": "The MIME type of the asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Determined by the fileName extension."
         },
         "createdOn": {
           "type": "string",
-          "description": "The timestamp when the asset was created (RFC3339 format, read-only). This is automatically set when the asset is uploaded."
+          "description": "The timestamp when the asset metadata was created (RFC3339 format, read-only). This is set when the asset is registered with Webflow."
         },
         "fileHash": {
           "type": "string",
-          "description": "Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file."
+          "description": "MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'."
         },
         "fileName": {
           "type": "string",
@@ -194,7 +198,7 @@
         },
         "hostedUrl": {
           "type": "string",
-          "description": "The CDN URL where the asset is hosted (read-only). Use this URL to reference the asset in your Webflow site or externally. Example: 'https://assets.website-files.com/.../logo.png'."
+          "description": "The Webflow CDN URL where the asset will be hosted (read-only). This URL becomes accessible after completing the S3 upload. Example: 'https://assets.website-files.com/.../logo.png'."
         },
         "lastUpdated": {
           "type": "string",
@@ -211,16 +215,28 @@
         "size": {
           "type": "integer",
           "description": "The size of the asset in bytes (read-only). This is the actual size of the uploaded file."
+        },
+        "uploadDetails": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "AWS S3 POST form fields required to complete the upload (read-only). Include these as form fields when POSTing the file to uploadUrl. Keys: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential, X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control."
+        },
+        "uploadUrl": {
+          "type": "string",
+          "description": "The presigned S3 URL for uploading the file content (read-only). Use this URL along with uploadDetails to complete the asset upload. See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html"
         }
       },
       "required": [
         "siteId",
-        "fileName"
+        "fileName",
+        "fileHash"
       ],
       "inputProperties": {
         "fileHash": {
           "type": "string",
-          "description": "Optional MD5 hash of the file content for deduplication. If provided and a file with the same hash already exists in your site, Webflow may reuse the existing file instead of uploading a duplicate. Leave empty to always upload a new file."
+          "description": "MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'."
         },
         "fileName": {
           "type": "string",
@@ -241,7 +257,8 @@
       },
       "requiredInputs": [
         "siteId",
-        "fileName"
+        "fileName",
+        "fileHash"
       ]
     },
     "webflow:index:AssetFolder": {

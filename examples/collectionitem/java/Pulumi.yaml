@@ -1,0 +1,10 @@
+name: webflow-collectionitem-example-java
+runtime: java
+description: Example of creating and managing CollectionItem resources with Pulumi and Webflow
+
+config:
+  collectionId:
+    description: The Webflow collection ID (24-character hexadecimal string)
+  environment:
+    description: Deployment environment (development, staging, production)
+    default: development

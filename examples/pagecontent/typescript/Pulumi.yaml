@@ -1,0 +1,11 @@
+name: webflow-pagecontent-example
+runtime: nodejs
+description: Example of managing static page content with Pulumi and Webflow
+
+config:
+  pageId:
+    description: The Webflow page ID (24-character hex string)
+    secret: true
+  environment:
+    description: Deployment environment (development, staging, production)
+    default: development

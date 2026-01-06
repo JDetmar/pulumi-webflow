@@ -241,12 +241,10 @@ func (r *UserResource) Create(
 		state.Name = user.Data.Name
 	}
 
-	// Extract access group slugs from response
-	if len(user.AccessGroups) > 0 {
-		state.AccessGroups = make([]string, len(user.AccessGroups))
-		for i, ag := range user.AccessGroups {
-			state.AccessGroups[i] = ag.Slug
-		}
+	// Extract access group slugs from response (including empty list to handle removals)
+	state.AccessGroups = make([]string, len(user.AccessGroups))
+	for i, ag := range user.AccessGroups {
+		state.AccessGroups[i] = ag.Slug
 	}
 
 	resourceID := GenerateUserResourceID(req.Inputs.SiteID, user.ID)
@@ -293,13 +291,10 @@ func (r *UserResource) Read(
 		name = user.Data.Name
 	}
 
-	// Extract access group slugs
-	var accessGroups []string
-	if len(user.AccessGroups) > 0 {
-		accessGroups = make([]string, len(user.AccessGroups))
-		for i, ag := range user.AccessGroups {
-			accessGroups[i] = ag.Slug
-		}
+	// Extract access group slugs (including empty list to handle removals)
+	accessGroups := make([]string, len(user.AccessGroups))
+	for i, ag := range user.AccessGroups {
+		accessGroups[i] = ag.Slug
 	}
 
 	// Build current state from API response
@@ -393,12 +388,10 @@ func (r *UserResource) Update(
 	state.LastUpdated = user.LastUpdated
 	state.LastLogin = user.LastLogin
 
-	// Extract access group slugs from response
-	if len(user.AccessGroups) > 0 {
-		state.AccessGroups = make([]string, len(user.AccessGroups))
-		for i, ag := range user.AccessGroups {
-			state.AccessGroups[i] = ag.Slug
-		}
+	// Extract access group slugs from response (including empty list to handle removals)
+	state.AccessGroups = make([]string, len(user.AccessGroups))
+	for i, ag := range user.AccessGroups {
+		state.AccessGroups[i] = ag.Slug
 	}
 
 	// Extract name from user data if present

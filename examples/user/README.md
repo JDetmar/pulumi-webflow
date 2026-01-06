@@ -35,7 +35,7 @@ Users can be assigned to **Access Groups** which control what content they can v
 cd typescript
 npm install
 pulumi stack init dev
-pulumi config set siteId your-site-id-here --secret
+pulumi config set siteId your-site-id-here
 pulumi up
 ```
 

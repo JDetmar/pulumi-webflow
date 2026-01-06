@@ -1,0 +1,11 @@
+name: webflow-asset-example-csharp
+runtime: dotnet
+description: Example of creating and managing Asset resources with Pulumi and Webflow
+
+config:
+  siteId:
+    description: The Webflow site ID
+    secret: true
+  environment:
+    description: Deployment environment (development, staging, production)
+    default: development

@@ -1,0 +1,11 @@
+name: webflow-page-example-go
+runtime: go
+description: Example of reading Page data source with Pulumi and Webflow
+
+config:
+  siteId:
+    description: The Webflow site ID
+    secret: true
+  pageId:
+    description: Optional - The specific page ID to retrieve (omit to list all pages)
+    default: ""

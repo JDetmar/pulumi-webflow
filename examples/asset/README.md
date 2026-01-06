@@ -30,6 +30,8 @@ The Webflow Asset API uses a two-step process:
 | TypeScript | `typescript/`| `index.ts`     | `package.json`      |
 | Python     | `python/`    | `__main__.py`  | `requirements.txt`  |
 | Go         | `go/`        | `main.go`      | `go.mod`            |
+| C#         | `csharp/`    | `Program.cs`   | `.csproj`           |
+| Java       | `java/`      | `App.java`     | `pom.xml`           |
 
 ## Quick Start
 
@@ -60,6 +62,26 @@ pulumi up
 ```bash
 cd go
 go mod download
+pulumi stack init dev
+pulumi config set webflow:siteId your-site-id --secret
+pulumi up
+```
+
+### C#
+
+```bash
+cd csharp
+dotnet restore
+pulumi stack init dev
+pulumi config set webflow:siteId your-site-id --secret
+pulumi up
+```
+
+### Java
+
+```bash
+cd java
+mvn clean install
 pulumi stack init dev
 pulumi config set webflow:siteId your-site-id --secret
 pulumi up

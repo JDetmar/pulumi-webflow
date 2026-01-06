@@ -57,6 +57,23 @@ git commit -m "your message"
 | `make test_provider` | Run provider unit tests |
 | `make lint` | Run golangci-lint on provider code |
 
+### Adding New Resources
+
+**IMPORTANT:** When adding a new resource, you MUST also create examples. See [EXAMPLES.md](EXAMPLES.md) for complete requirements.
+
+Required steps:
+1. Implement resource in `provider/<resource>_resource.go`
+2. Run `make codegen` to generate SDKs
+3. Create at minimum: TypeScript example in `examples/<resource>/typescript/`
+4. Create `examples/<resource>/README.md`
+5. Create integration test in `examples/<resource>_test.go`
+6. For core resources: Add Python, Go, C#, Java examples
+7. Test with `make test_examples`
+
+**Minimum example coverage:** Every resource must have at least a TypeScript example with README and integration test.
+
+**See:** [EXAMPLES.md](EXAMPLES.md) for detailed guidelines, templates, and current coverage status.
+
 ### Testing
 
 ```bash

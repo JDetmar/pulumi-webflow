@@ -367,12 +367,9 @@ func (r *UserResource) Update(
 		return infer.UpdateResponse[UserResourceState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
-	// Prepare user data for update
-	var userData *UserData
-	if req.Inputs.Name != "" {
-		userData = &UserData{
-			Name: req.Inputs.Name,
-		}
+	// Prepare user data for update (always send to allow clearing name)
+	userData := &UserData{
+		Name: req.Inputs.Name,
 	}
 
 	// Call Webflow API

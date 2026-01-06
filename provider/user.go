@@ -27,7 +27,7 @@ type UserAccessGroup struct {
 
 // UserData represents the user's basic info and custom fields.
 type UserData struct {
-	Name                 string `json:"name,omitempty"`                  // User's name
+	Name                 string `json:"name"`                            // User's name (no omitempty to allow clearing)
 	Email                string `json:"email,omitempty"`                 // User's email address
 	AcceptPrivacy        bool   `json:"accept-privacy,omitempty"`        // Privacy policy acceptance
 	AcceptCommunications bool   `json:"accept-communications,omitempty"` // Communications acceptance

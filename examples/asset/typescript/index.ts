@@ -37,6 +37,7 @@ const heroAsset = new webflow.Asset("hero-image", {
 });
 
 // Example 3: Bulk asset registration
+// NOTE: Replace fileHash values with actual MD5 hashes of your files
 const iconAssets: webflow.Asset[] = [];
 const icons = [
   { name: "icon-home", fileName: "home.svg", fileHash: "11111111111111111111111111111111" },

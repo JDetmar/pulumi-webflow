@@ -36,6 +36,7 @@ func main() {
 		}
 
 		// Example 3: Bulk asset registration
+		// NOTE: Replace fileHash values with actual MD5 hashes of your files
 		iconAssets := []struct {
 			name     string
 			fileName string

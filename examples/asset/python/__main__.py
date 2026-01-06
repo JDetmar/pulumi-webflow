@@ -35,6 +35,7 @@ hero_asset = webflow.Asset("hero-image",
     # parent_folder="folder-id-here"  # Uncomment to organize in a folder
 
 # Example 3: Bulk asset registration
+# NOTE: Replace file_hash values with actual MD5 hashes of your files
 icon_assets = []
 icons = [
     {"name": "icon-home", "file_name": "home.svg", "file_hash": "11111111111111111111111111111111"},

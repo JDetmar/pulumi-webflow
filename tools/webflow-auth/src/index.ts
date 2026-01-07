@@ -2,6 +2,7 @@ import express from "express";
 import open from "open";
 import * as dotenv from "dotenv";
 import fetch from "node-fetch";
+import crypto from "crypto";
 
 dotenv.config();
 
@@ -53,7 +54,7 @@ if (!CLIENT_ID || !CLIENT_SECRET) {
 const app = express();
 
 // Generate random state for CSRF protection
-const state = Math.random().toString(36).substring(2, 15);
+const state = crypto.randomBytes(32).toString('hex');
 
 // OAuth callback handler
 app.get("/callback", async (req, res) => {
@@ -93,7 +94,7 @@ app.get("/callback", async (req, res) => {
       body: JSON.stringify({
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
-        code: code as string,
+        code: String(code),
         grant_type: "authorization_code",
         redirect_uri: REDIRECT_URI,
       }),
@@ -121,7 +122,7 @@ app.get("/callback", async (req, res) => {
     console.log("\n1. Set environment variable:");
     console.log(`   export WEBFLOW_API_TOKEN="${accessToken}"`);
     console.log("\n2. Or set Pulumi config:");
-    console.log(`   pulumi config set webflow:token "${accessToken}" --secret`);
+    console.log(`   pulumi config set webflow:apiToken "${accessToken}" --secret`);
     console.log("\n" + "=".repeat(60));
 
     res.send(`

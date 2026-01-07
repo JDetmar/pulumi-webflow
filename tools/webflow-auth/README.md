@@ -65,7 +65,7 @@ pulumi up
 ### Option 2: Pulumi Config
 
 ```bash
-pulumi config set webflow:token "your_token_here" --secret
+pulumi config set webflow:apiToken "your_token_here" --secret
 ```
 
 ### Option 3: Pulumi ESC (Recommended for teams)
@@ -74,10 +74,10 @@ pulumi config set webflow:token "your_token_here" --secret
 # environments/webflow.yaml
 values:
   webflow:
-    token:
+    apiToken:
       fn::secret: "your_token_here"
   pulumiConfig:
-    webflow:token: ${webflow.token}
+    webflow:apiToken: ${webflow.apiToken}
 ```
 
 ## Modifying Scopes

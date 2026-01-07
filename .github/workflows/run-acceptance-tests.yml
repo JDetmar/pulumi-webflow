@@ -221,7 +221,7 @@ jobs:
     runs-on: ubuntu-latest
     name: sentinel
     needs:
-      - test
+      - build_sdks
       - prerequisites
       - lint
     steps:

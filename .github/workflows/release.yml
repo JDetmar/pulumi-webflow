@@ -173,6 +173,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: publish
     name: publish_sdks
+    permissions:
+      id-token: write  # Required for PyPI Trusted Publishing and npm provenance
+      contents: read
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -219,38 +222,54 @@ jobs:
       - name: Uncompress nodejs SDK
         run: tar -zxf ${{ github.workspace }}/sdk/nodejs.tar.gz -C ${{ github.workspace }}/sdk/nodejs
 
-      # Publish Node.js SDK to npm
+      # Publish Node.js SDK to npm using Trusted Publishing (OIDC)
+      # No NPM_TOKEN needed - uses GitHub's OIDC identity
+      # Provenance attestations are automatic with Trusted Publishing
+      # Requires npm 11.5.1+ for OIDC support
+      # See: https://docs.npmjs.com/trusted-publishers/
       - name: Setup Node for npm publishing
         uses: actions/setup-node@v4
         with:
+          node-version: "22.x"  # Node 22 includes npm 10.x, we'll upgrade below
           registry-url: https://registry.npmjs.org
+
+      - name: Upgrade npm for Trusted Publishing
+        run: npm install -g npm@latest  # Trusted Publishing requires npm 11.5.1+
 
       - name: Publish Node.js SDK
         run: |
           cd sdk/nodejs
           npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ""  # Clear any default token to ensure OIDC is used
         continue-on-error: true
 
-      # Publish Python SDK to PyPI
-      - name: Install Twine
-        run: pip install twine
-
+      # Publish Python SDK to PyPI using Trusted Publishing (OIDC)
+      # No API token needed - uses GitHub's OIDC identity
+      # Automatically generates Sigstore attestations
+      # See: https://docs.pypi.org/trusted-publishers/
       - name: Publish Python SDK
-        run: |
-          cd sdk/python/bin
-          twine upload dist/*
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: sdk/python/bin/dist/
+          skip-existing: true  # Don't fail if version exists
         continue-on-error: true
 
-      # Publish .NET SDK to NuGet
+      # Publish .NET SDK to NuGet using Trusted Publishing (OIDC)
+      # No long-lived API key needed - uses GitHub's OIDC identity
+      # See: https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing
+      - name: NuGet Login (OIDC)
+        uses: nuget/login@v1
+        id: nuget-login
+        with:
+          user: ${{ secrets.NUGET_USERNAME }}
+        continue-on-error: true
+
       - name: Publish .NET SDK
+        if: steps.nuget-login.outcome == 'success'
         run: |
           cd sdk/dotnet
-          dotnet nuget push $(find . -maxdepth 5 -name '*.nupkg' -print) --api-key ${{ secrets.NUGET_PUBLISH_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          dotnet nuget push $(find . -maxdepth 5 -name '*.nupkg' -print) --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
         continue-on-error: true
 
   publish_java_sdk:

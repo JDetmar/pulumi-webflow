@@ -66,22 +66,17 @@ Required steps:
 2. Run `make codegen` to generate SDKs
 3. Create at minimum: TypeScript example in `examples/<resource>/typescript/`
 4. Create `examples/<resource>/README.md`
-5. Create integration test in `examples/<resource>_test.go`
-6. For core resources: Add Python, Go, C#, Java examples
-7. Test with `make test_examples`
+5. For core resources: Add Python, Go, C#, Java examples
 
-**Minimum example coverage:** Every resource must have at least a TypeScript example with README and integration test.
+**Minimum example coverage:** Every resource must have at least a TypeScript example with README.
 
 **See:** [EXAMPLES.md](EXAMPLES.md) for detailed guidelines, templates, and current coverage status.
 
 ### Testing
 
 ```bash
-# Run provider tests
+# Run provider tests (uses mocked HTTP, no API token needed)
 make test_provider
-
-# Run example integration tests (requires WEBFLOW_API_TOKEN)
-make test_examples
 ```
 
 ## Project Structure

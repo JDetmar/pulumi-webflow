@@ -19,13 +19,13 @@ Concise, task-agnostic instructions so an agent can work efficiently without ext
 - **Build provider only:** `make provider` (outputs `bin/pulumi-resource-webflow`).
 - **Full build (provider + SDKs):** `make build` (calls `make build_sdks`; heavier).
 - **Lint:** `make lint` (golangci-lint using `.golangci.yml`; workflow temporarily rewrites `go:embed` to ` goembed`).
-- **Example/integration tests:** `make test_examples` or `cd examples && go test -tags=all ...` need `WEBFLOW_API_TOKEN` (skips when missing).
+- **Examples:** Example programs in `examples/` serve as documentation. Test manually with `pulumi up` if needed.
 - **Language SDK builds (after codegen):** `make build_nodejs|build_python|build_go|build_dotnet|build_java`; they expect dependencies from mise and may write artifacts under `sdk/*`.
 
 ## Project layout shortcuts
 - `provider/`: Go provider implementation (`provider.go`, `config.go`, `auth.go`, `*_resource.go`, tests). Entry binary at `provider/cmd/pulumi-resource-webflow/main.go`; schema extracted to `provider/cmd/.../schema.json`.
 - `sdk/`: Generated; do not hand-edit. Language-specific READMEs under each SDK.
-- `examples/`: Extensive Pulumi programs plus Go-based tests (`examples/*.go`). Many tests skip without `WEBFLOW_API_TOKEN`.
+- `examples/`: Extensive Pulumi programs serving as documentation and reference implementations.
 - `docs/`: Guides, API docs (`docs/api/*.md`), troubleshooting, sprint artifacts. `CLAUDE.md` repeats the “run make codegen after provider changes” rule.
 - `Makefile`: All build/test targets and codegen steps; uses `pulumictl convert-version` and `pulumi package gen-sdk`.
 - Config & lint: `.config/mise.toml`, `.golangci.yml`, `.pulumi.version`.
@@ -35,7 +35,7 @@ Concise, task-agnostic instructions so an agent can work efficiently without ext
 - Always run `make codegen` after touching `provider/` Go code, then commit generated changes.
 - Ensure tools from mise are installed before any Make target to avoid missing pulumictl/schema-tools.
 - Keep changes surgical; avoid editing generated `sdk/` files directly—regenerate instead.
-- Integration/example tests require `WEBFLOW_API_TOKEN`; provider unit tests do not.
+- Provider unit tests use mocked HTTP and do not require `WEBFLOW_API_TOKEN`.
 - CI lint job briefly replaces `go:embed` with ` goembed` before running golangci-lint; you do not need to do this locally—just avoid committing any such rewrites if you see them.
 - CI checks for a clean worktree; ensure `git status` clean after codegen/build.
 

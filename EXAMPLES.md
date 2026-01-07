@@ -6,9 +6,8 @@ This document defines the standards and requirements for examples in the pulumi-
 
 Every resource in this provider MUST have example code demonstrating its usage. Examples serve as:
 - Documentation for users learning the provider
-- Validation that resources work correctly
-- Integration tests for CI/CD
 - Reference implementations for common patterns
+- Validation that resources work correctly (manual testing)
 
 ## Example Coverage Requirements
 
@@ -17,7 +16,6 @@ Every resource in this provider MUST have example code demonstrating its usage. 
 **Every resource MUST have:**
 - ✅ At least one working example in **TypeScript**
 - ✅ A README.md explaining what the example does
-- ✅ Integration test coverage (e.g., `examples/<resource>_test.go`)
 
 **Minimum content:**
 - Demonstrates all required properties
@@ -147,28 +145,6 @@ All example code SHOULD:
 - ✅ Include error handling where appropriate
 - ✅ Follow the patterns established in existing examples
 
-## Testing Requirements
-
-### Integration Tests
-
-Each resource example MUST have a corresponding test in `examples/<resource>_test.go`:
-
-```go
-func TestAccRedirect(t *testing.T) {
-    test := getBaseOptions(t).
-        With(integration.ProgramTestOptions{
-            Dir: filepath.Join(getCwd(t), "redirect", "typescript"),
-        })
-    integration.ProgramTest(t, &test)
-}
-```
-
-Tests SHOULD cover:
-- ✅ At least the TypeScript example
-- ✅ Multiple languages for core resources
-- ✅ Up and update operations
-- ✅ Output validation
-
 ## Workflow: Adding a New Resource
 
 When implementing a new resource, follow this checklist:
@@ -178,10 +154,8 @@ When implementing a new resource, follow this checklist:
 - [ ] Create `examples/<resource>/` directory
 - [ ] Create TypeScript example (REQUIRED)
 - [ ] Create README.md
-- [ ] Create integration test in `examples/<resource>_test.go`
 - [ ] Test the example: `cd examples/<resource>/typescript && pulumi up`
 - [ ] If core resource: Add Python, Go, C#, Java examples
-- [ ] Run `make test_examples` to verify tests pass
 - [ ] Commit all generated SDK code along with examples
 
 ## Workflow: Updating an Existing Resource

@@ -11,7 +11,7 @@ Your provider is configured to publish to **5 package managers** automatically w
 | **GitHub Releases** | `pulumi-resource-webflow` | Provider binary | SBOM included |
 | **npm** | `@jdetmar/pulumi-webflow` | TypeScript/JavaScript | Provenance attestation |
 | **PyPI** | `pulumi-webflow` | Python | Trusted Publishing + Sigstore |
-| **NuGet** | `Pulumi.Webflow` | .NET/C# | - |
+| **NuGet** | `Pulumi.Webflow` | .NET/C# | Trusted Publishing |
 | **Maven Central** | `com.pulumi:webflow` | Java | GPG signed |
 
 The Go SDK is published to a separate GitHub repository branch.
@@ -21,6 +21,7 @@ The Go SDK is published to a separate GitHub repository branch.
 This provider uses modern supply chain security practices:
 
 - **PyPI Trusted Publishing**: No long-lived API tokens. Uses GitHub OIDC to authenticate directly with PyPI. Automatically generates Sigstore attestations.
+- **NuGet Trusted Publishing**: No long-lived API keys. Uses GitHub OIDC to obtain short-lived, single-use API keys.
 - **npm Provenance**: Each npm release includes a cryptographic attestation proving it was built from this repository.
 - **SBOM Generation**: Each GitHub Release includes Software Bill of Materials (`.sbom.json`) files for vulnerability scanning.
 - **Auto-generated Changelog**: Release notes are automatically generated from commit messages.
@@ -88,14 +89,24 @@ PyPI uses Trusted Publishing via GitHub OIDC - no API token required.
 
 See: https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/
 
-#### NuGet API Key
+#### NuGet Trusted Publisher (No API Key Needed!)
 
-1. Go to https://www.nuget.org/account/apikeys
-2. Click "Create"
-3. Key Name: `github-actions-pulumi-webflow`
-4. Expiration: 365 days (max)
-5. Glob Pattern: `Pulumi.Webflow*`
-6. Copy the API key
+NuGet uses Trusted Publishing via GitHub OIDC - no long-lived API key required.
+
+1. Go to https://www.nuget.org/ and sign in
+2. Click your username → "Trusted Publishing"
+3. Click "Add new trusted publishing policy"
+4. Fill in:
+   - Package name: `Pulumi.Webflow`
+   - Owner: `JDetmar`
+   - Repository: `pulumi-webflow`
+   - Workflow: `release.yml`
+   - Environment: (leave blank)
+5. Click "Add"
+
+**Note:** You still need to add `NUGET_USERNAME` as a GitHub secret (your nuget.org username).
+
+See: https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing
 
 #### Java/Maven Central GPG Key
 
@@ -133,14 +144,14 @@ Add these secrets:
 | Secret Name | Value | Required |
 |-------------|-------|----------|
 | `NPM_TOKEN` | npm automation token | Yes |
-| `NUGET_PUBLISH_KEY` | NuGet API key | Yes |
+| `NUGET_USERNAME` | Your nuget.org username | Yes |
 | `OSSRH_USERNAME` | Sonatype JIRA username | Yes |
 | `OSSRH_PASSWORD` | Sonatype user token | Yes |
 | `JAVA_SIGNING_KEY_ID` | GPG key ID (e.g., `ABCD1234EFGH5678`) | Yes |
 | `JAVA_SIGNING_KEY` | Base64-encoded GPG private key | Yes |
 | `JAVA_SIGNING_PASSWORD` | GPG key passphrase | Yes |
 
-**Note:** PyPI does NOT require a secret - it uses Trusted Publishing via OIDC.
+**Note:** PyPI and NuGet use Trusted Publishing via OIDC - no API tokens/keys needed!
 
 **Optional secrets (for Windows binary signing):**
 
@@ -400,7 +411,7 @@ git tag -d v0.1.0 && git push origin :refs/tags/v0.1.0
 
 ```
 NPM_TOKEN              # npm publishing
-NUGET_PUBLISH_KEY      # NuGet publishing
+NUGET_USERNAME         # NuGet Trusted Publishing (username only)
 OSSRH_USERNAME         # Maven Central
 OSSRH_PASSWORD         # Maven Central
 JAVA_SIGNING_KEY_ID    # Maven GPG signing
@@ -408,7 +419,7 @@ JAVA_SIGNING_KEY       # Maven GPG signing
 JAVA_SIGNING_PASSWORD  # Maven GPG signing
 ```
 
-**Note:** PyPI uses Trusted Publishing - no secret needed!
+**Note:** PyPI and NuGet use Trusted Publishing - no API keys needed!
 
 ### Package URLs
 

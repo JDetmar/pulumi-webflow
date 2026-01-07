@@ -249,11 +249,21 @@ jobs:
           skip-existing: true  # Don't fail if version exists
         continue-on-error: true
 
-      # Publish .NET SDK to NuGet
+      # Publish .NET SDK to NuGet using Trusted Publishing (OIDC)
+      # No long-lived API key needed - uses GitHub's OIDC identity
+      # See: https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing
+      - name: NuGet Login (OIDC)
+        uses: nuget/login@v1
+        id: nuget-login
+        with:
+          user: ${{ secrets.NUGET_USERNAME }}
+        continue-on-error: true
+
       - name: Publish .NET SDK
+        if: steps.nuget-login.outcome == 'success'
         run: |
           cd sdk/dotnet
-          dotnet nuget push $(find . -maxdepth 5 -name '*.nupkg' -print) --api-key ${{ secrets.NUGET_PUBLISH_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          dotnet nuget push $(find . -maxdepth 5 -name '*.nupkg' -print) --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
         continue-on-error: true
 
   publish_java_sdk:

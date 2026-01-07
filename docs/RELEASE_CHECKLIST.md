@@ -8,7 +8,7 @@ Check off when configured:
 
 - [ ] **npm**: Token added as `NPM_TOKEN` secret
 - [ ] **PyPI**: Trusted Publisher configured on pypi.org (no secret needed!)
-- [ ] **NuGet**: Key added as `NUGET_PUBLISH_KEY` secret
+- [ ] **NuGet**: Trusted Publisher configured + `NUGET_USERNAME` secret added
 - [ ] **Maven Central**: All Java secrets configured
   - [ ] `OSSRH_USERNAME`
   - [ ] `OSSRH_PASSWORD`

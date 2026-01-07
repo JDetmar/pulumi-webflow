@@ -225,12 +225,16 @@ jobs:
       # Publish Node.js SDK to npm using Trusted Publishing (OIDC)
       # No NPM_TOKEN needed - uses GitHub's OIDC identity
       # Provenance attestations are automatic with Trusted Publishing
+      # Requires npm 11.5.1+ for OIDC support
       # See: https://docs.npmjs.com/trusted-publishers/
       - name: Setup Node for npm publishing
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "22.x"  # Node 22 includes npm 10.x, we'll upgrade below
           registry-url: https://registry.npmjs.org
+
+      - name: Upgrade npm for Trusted Publishing
+        run: npm install -g npm@latest  # Trusted Publishing requires npm 11.5.1+
 
       - name: Publish Node.js SDK
         run: |

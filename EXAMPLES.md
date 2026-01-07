@@ -222,12 +222,15 @@ Track example coverage in this section:
 - ✅ RegisteredScript
 - ✅ SiteCustomCode
 
+### TypeScript-Only Coverage (continued)
+- ✅ User
+
 ### Missing Examples
 - (None - all resources have examples!)
 
-**Current Coverage: 100% (14/14 resources with at least TypeScript examples)**
-**Multi-Language Coverage: 57% (8/14 resources with 3+ languages)**
-**Complete Coverage: 57% (8/14 resources with all 5 languages)**
+**Current Coverage: 100% (15/15 resources with at least TypeScript examples)**
+**Multi-Language Coverage: 53% (8/15 resources with 3+ languages)**
+**Complete Coverage: 53% (8/15 resources with all 5 languages)**
 
 ✅ **Target Met:** 100% of resources have at least TypeScript examples
 ✅ **Bonus:** All core resources have multi-language coverage

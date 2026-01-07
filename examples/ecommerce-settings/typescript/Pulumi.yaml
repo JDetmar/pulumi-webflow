@@ -1,0 +1,11 @@
+name: webflow-ecommerce-settings-example
+runtime: nodejs
+description: Example of reading EcommerceSettings resources with Pulumi and Webflow
+
+config:
+  siteId:
+    description: The Webflow site ID (must have ecommerce enabled)
+    secret: true
+  environment:
+    description: Deployment environment (development, staging, production)
+    default: development

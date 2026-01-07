@@ -31,6 +31,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &CollectionField{}
 	case "webflow:index:CollectionItem":
 		r = &CollectionItem{}
+	case "webflow:index:EcommerceSettings":
+		r = &EcommerceSettings{}
 	case "webflow:index:PageContent":
 		r = &PageContent{}
 	case "webflow:index:PageCustomCode":

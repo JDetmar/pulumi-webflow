@@ -11,6 +11,7 @@ from .asset_folder import *
 from .collection import *
 from .collection_field import *
 from .collection_item import *
+from .ecommerce_settings import *
 from .page_content import *
 from .page_custom_code import *
 from .page_data import *
@@ -45,6 +46,7 @@ _utilities.register(
    "webflow:index:Collection": "Collection",
    "webflow:index:CollectionField": "CollectionField",
    "webflow:index:CollectionItem": "CollectionItem",
+   "webflow:index:EcommerceSettings": "EcommerceSettings",
    "webflow:index:PageContent": "PageContent",
    "webflow:index:PageCustomCode": "PageCustomCode",
    "webflow:index:PageData": "PageData",

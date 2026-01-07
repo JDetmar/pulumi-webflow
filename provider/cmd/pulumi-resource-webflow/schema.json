@@ -540,6 +540,36 @@
         "fieldData"
       ]
     },
+    "webflow:index:EcommerceSettings": {
+      "description": "Manages (imports) ecommerce settings for a Webflow site. This is a read-only resource that allows you to track and reference existing ecommerce settings. Ecommerce must be enabled through the Webflow dashboard before this resource can be used. Use this resource to access the site's default currency and verify ecommerce is enabled.",
+      "properties": {
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when ecommerce was enabled on the site (ISO 8601 format). This is automatically set when ecommerce is enabled and is read-only."
+        },
+        "defaultCurrency": {
+          "type": "string",
+          "description": "The three-letter ISO 4217 currency code for the site (e.g., 'USD', 'EUR', 'GBP'). This is the default currency used for ecommerce transactions on this site. This value is set in the Webflow dashboard and is read-only."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). The site must have ecommerce enabled through the Webflow dashboard. You can find your site ID in the Webflow dashboard under Site Settings."
+        }
+      },
+      "required": [
+        "siteId",
+        "defaultCurrency"
+      ],
+      "inputProperties": {
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). The site must have ecommerce enabled through the Webflow dashboard. You can find your site ID in the Webflow dashboard under Site Settings."
+        }
+      },
+      "requiredInputs": [
+        "siteId"
+      ]
+    },
     "webflow:index:PageContent": {
       "description": "Manages static content (text) for a Webflow page. This resource allows you to update text content within existing DOM nodes on a page. It does NOT manage page structure or layout - only content within existing nodes. To find node IDs, you must first retrieve the page DOM structure using the Webflow API. \n\n**IMPORTANT LIMITATION:** This resource does NOT support drift detection for content changes. If content is modified outside of Pulumi (via Webflow UI or API), those changes will NOT be detected during 'pulumi refresh' or 'pulumi up'. The resource only verifies that the page still exists. This is due to the complexity of extracting and comparing specific node text from the full DOM structure.",
       "properties": {

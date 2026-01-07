@@ -137,6 +137,155 @@ func (o CustomScriptArgsArrayOutput) Index(i pulumi.IntInput) CustomScriptArgsOu
 	}).(CustomScriptArgsOutput)
 }
 
+type GetTokenInfoApplication struct {
+	// The application description.
+	Description string `pulumi:"description"`
+	// The human-readable name of the application.
+	DisplayName string `pulumi:"displayName"`
+	// The application homepage URL.
+	Homepage string `pulumi:"homepage"`
+	// The unique identifier for the application.
+	Id string `pulumi:"id"`
+}
+
+type GetTokenInfoApplicationOutput struct{ *pulumi.OutputState }
+
+func (GetTokenInfoApplicationOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetTokenInfoApplication)(nil)).Elem()
+}
+
+func (o GetTokenInfoApplicationOutput) ToGetTokenInfoApplicationOutput() GetTokenInfoApplicationOutput {
+	return o
+}
+
+func (o GetTokenInfoApplicationOutput) ToGetTokenInfoApplicationOutputWithContext(ctx context.Context) GetTokenInfoApplicationOutput {
+	return o
+}
+
+// The application description.
+func (o GetTokenInfoApplicationOutput) Description() pulumi.StringOutput {
+	return o.ApplyT(func(v GetTokenInfoApplication) string { return v.Description }).(pulumi.StringOutput)
+}
+
+// The human-readable name of the application.
+func (o GetTokenInfoApplicationOutput) DisplayName() pulumi.StringOutput {
+	return o.ApplyT(func(v GetTokenInfoApplication) string { return v.DisplayName }).(pulumi.StringOutput)
+}
+
+// The application homepage URL.
+func (o GetTokenInfoApplicationOutput) Homepage() pulumi.StringOutput {
+	return o.ApplyT(func(v GetTokenInfoApplication) string { return v.Homepage }).(pulumi.StringOutput)
+}
+
+// The unique identifier for the application.
+func (o GetTokenInfoApplicationOutput) Id() pulumi.StringOutput {
+	return o.ApplyT(func(v GetTokenInfoApplication) string { return v.Id }).(pulumi.StringOutput)
+}
+
+type GetTokenInfoAuthorization struct {
+	// The resources this token is authorized to access.
+	AuthorizedTo GetTokenInfoAuthorizedTo `pulumi:"authorizedTo"`
+	// The timestamp when this authorization was created (RFC3339 format).
+	CreatedOn string `pulumi:"createdOn"`
+	// The OAuth grant type used to obtain this token (e.g., 'authorization_code').
+	GrantType string `pulumi:"grantType"`
+	// The unique identifier for this authorization.
+	Id string `pulumi:"id"`
+	// The timestamp when this token was last used (RFC3339 format).
+	LastUsed string `pulumi:"lastUsed"`
+	// The rate limit for this token in requests per minute.
+	RateLimit int `pulumi:"rateLimit"`
+	// The OAuth scopes granted to this token (space or comma separated).
+	Scope string `pulumi:"scope"`
+}
+
+type GetTokenInfoAuthorizationOutput struct{ *pulumi.OutputState }
+
+func (GetTokenInfoAuthorizationOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetTokenInfoAuthorization)(nil)).Elem()
+}
+
+func (o GetTokenInfoAuthorizationOutput) ToGetTokenInfoAuthorizationOutput() GetTokenInfoAuthorizationOutput {
+	return o
+}
+
+func (o GetTokenInfoAuthorizationOutput) ToGetTokenInfoAuthorizationOutputWithContext(ctx context.Context) GetTokenInfoAuthorizationOutput {
+	return o
+}
+
+// The resources this token is authorized to access.
+func (o GetTokenInfoAuthorizationOutput) AuthorizedTo() GetTokenInfoAuthorizedToOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorization) GetTokenInfoAuthorizedTo { return v.AuthorizedTo }).(GetTokenInfoAuthorizedToOutput)
+}
+
+// The timestamp when this authorization was created (RFC3339 format).
+func (o GetTokenInfoAuthorizationOutput) CreatedOn() pulumi.StringOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorization) string { return v.CreatedOn }).(pulumi.StringOutput)
+}
+
+// The OAuth grant type used to obtain this token (e.g., 'authorization_code').
+func (o GetTokenInfoAuthorizationOutput) GrantType() pulumi.StringOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorization) string { return v.GrantType }).(pulumi.StringOutput)
+}
+
+// The unique identifier for this authorization.
+func (o GetTokenInfoAuthorizationOutput) Id() pulumi.StringOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorization) string { return v.Id }).(pulumi.StringOutput)
+}
+
+// The timestamp when this token was last used (RFC3339 format).
+func (o GetTokenInfoAuthorizationOutput) LastUsed() pulumi.StringOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorization) string { return v.LastUsed }).(pulumi.StringOutput)
+}
+
+// The rate limit for this token in requests per minute.
+func (o GetTokenInfoAuthorizationOutput) RateLimit() pulumi.IntOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorization) int { return v.RateLimit }).(pulumi.IntOutput)
+}
+
+// The OAuth scopes granted to this token (space or comma separated).
+func (o GetTokenInfoAuthorizationOutput) Scope() pulumi.StringOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorization) string { return v.Scope }).(pulumi.StringOutput)
+}
+
+type GetTokenInfoAuthorizedTo struct {
+	// List of site IDs this token is authorized to access.
+	SiteIds []string `pulumi:"siteIds"`
+	// List of user IDs this token is authorized to access.
+	UserIds []string `pulumi:"userIds"`
+	// List of workspace IDs this token is authorized to access.
+	WorkspaceIds []string `pulumi:"workspaceIds"`
+}
+
+type GetTokenInfoAuthorizedToOutput struct{ *pulumi.OutputState }
+
+func (GetTokenInfoAuthorizedToOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetTokenInfoAuthorizedTo)(nil)).Elem()
+}
+
+func (o GetTokenInfoAuthorizedToOutput) ToGetTokenInfoAuthorizedToOutput() GetTokenInfoAuthorizedToOutput {
+	return o
+}
+
+func (o GetTokenInfoAuthorizedToOutput) ToGetTokenInfoAuthorizedToOutputWithContext(ctx context.Context) GetTokenInfoAuthorizedToOutput {
+	return o
+}
+
+// List of site IDs this token is authorized to access.
+func (o GetTokenInfoAuthorizedToOutput) SiteIds() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorizedTo) []string { return v.SiteIds }).(pulumi.StringArrayOutput)
+}
+
+// List of user IDs this token is authorized to access.
+func (o GetTokenInfoAuthorizedToOutput) UserIds() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorizedTo) []string { return v.UserIds }).(pulumi.StringArrayOutput)
+}
+
+// List of workspace IDs this token is authorized to access.
+func (o GetTokenInfoAuthorizedToOutput) WorkspaceIds() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v GetTokenInfoAuthorizedTo) []string { return v.WorkspaceIds }).(pulumi.StringArrayOutput)
+}
+
 type NodeContentUpdate struct {
 	// The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
 	NodeId string `pulumi:"nodeId"`
@@ -463,6 +612,9 @@ func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*PageCustomCodeScriptArrayInput)(nil)).Elem(), PageCustomCodeScriptArray{})
 	pulumi.RegisterOutputType(CustomScriptArgsOutput{})
 	pulumi.RegisterOutputType(CustomScriptArgsArrayOutput{})
+	pulumi.RegisterOutputType(GetTokenInfoApplicationOutput{})
+	pulumi.RegisterOutputType(GetTokenInfoAuthorizationOutput{})
+	pulumi.RegisterOutputType(GetTokenInfoAuthorizedToOutput{})
 	pulumi.RegisterOutputType(NodeContentUpdateOutput{})
 	pulumi.RegisterOutputType(NodeContentUpdateArrayOutput{})
 	pulumi.RegisterOutputType(PageCustomCodeScriptOutput{})

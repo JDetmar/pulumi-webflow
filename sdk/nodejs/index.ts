@@ -35,6 +35,16 @@ export type EcommerceSettings = import("./ecommerceSettings").EcommerceSettings;
 export const EcommerceSettings: typeof import("./ecommerceSettings").EcommerceSettings = null as any;
 utilities.lazyLoad(exports, ["EcommerceSettings"], () => require("./ecommerceSettings"));
 
+export { GetAuthorizedUserArgs, GetAuthorizedUserResult } from "./getAuthorizedUser";
+export const getAuthorizedUser: typeof import("./getAuthorizedUser").getAuthorizedUser = null as any;
+export const getAuthorizedUserOutput: typeof import("./getAuthorizedUser").getAuthorizedUserOutput = null as any;
+utilities.lazyLoad(exports, ["getAuthorizedUser","getAuthorizedUserOutput"], () => require("./getAuthorizedUser"));
+
+export { GetTokenInfoArgs, GetTokenInfoResult } from "./getTokenInfo";
+export const getTokenInfo: typeof import("./getTokenInfo").getTokenInfo = null as any;
+export const getTokenInfoOutput: typeof import("./getTokenInfo").getTokenInfoOutput = null as any;
+utilities.lazyLoad(exports, ["getTokenInfo","getTokenInfoOutput"], () => require("./getTokenInfo"));
+
 export { PageContentArgs } from "./pageContent";
 export type PageContent = import("./pageContent").PageContent;
 export const PageContent: typeof import("./pageContent").PageContent = null as any;

@@ -21,6 +21,8 @@
         "config/index.ts",
         "config/vars.ts",
         "ecommerceSettings.ts",
+        "getAuthorizedUser.ts",
+        "getTokenInfo.ts",
         "index.ts",
         "pageContent.ts",
         "pageCustomCode.ts",

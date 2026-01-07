@@ -17,7 +17,6 @@ Thank you for your interest in contributing to the Pulumi Webflow provider!
 5. **Test your changes**:
    ```bash
    make test_provider
-   make test_examples
    ```
 6. **Submit a pull request**
 
@@ -66,18 +65,16 @@ When adding a new resource, follow these steps:
    ```
 
 3. **Create examples** (see [EXAMPLES.md](EXAMPLES.md)):
-   - **Minimum requirement:** TypeScript example + README + integration test
+   - **Minimum requirement:** TypeScript example + README
    - **Recommended for core resources:** Examples in all 5 languages
 
 4. **Write tests**:
-   - Unit tests in the provider code
-   - Integration test in `examples/<resource>_test.go`
+   - Unit tests in the provider code (using mocked HTTP)
 
 5. **Test everything**:
    ```bash
    make lint
    make test_provider
-   make test_examples
    ```
 
 6. **Commit and push**:
@@ -111,15 +108,14 @@ sdk/                # Generated SDKs (DO NOT edit manually)
   ├── dotnet/
   └── java/
 
-examples/           # Example programs + integration tests
-  ├── <resource>/   # Per-resource examples
-  │   ├── typescript/
-  │   ├── python/
-  │   ├── go/
-  │   ├── csharp/
-  │   ├── java/
-  │   └── README.md
-  └── *_test.go     # Integration tests
+examples/           # Example programs (documentation)
+  └── <resource>/   # Per-resource examples
+      ├── typescript/
+      ├── python/
+      ├── go/
+      ├── csharp/
+      ├── java/
+      └── README.md
 ```
 
 ## Important Make Targets
@@ -128,8 +124,7 @@ examples/           # Example programs + integration tests
 |---------|-------------|
 | `make codegen` | **Run after ANY provider code change** |
 | `make build` | Build provider + all SDKs |
-| `make test_provider` | Run Go unit tests |
-| `make test_examples` | Run integration tests (needs WEBFLOW_API_TOKEN) |
+| `make test_provider` | Run Go unit tests (mocked HTTP, no API token needed) |
 | `make lint` | Run golangci-lint |
 
 ## Commit Message Conventions
@@ -172,25 +167,13 @@ Reviewers will check for:
 
 ### Unit Tests
 
-Provider unit tests are in `provider/*_test.go`:
+Provider unit tests are in `provider/*_test.go`. They use mocked HTTP servers, so no API token is needed:
 
 ```bash
 make test_provider
 ```
 
-### Integration Tests
-
-Integration tests run actual Pulumi programs against the Webflow API:
-
-```bash
-# Requires WEBFLOW_API_TOKEN
-export WEBFLOW_API_TOKEN="your-token"
-make test_examples
-```
-
-**Note:** Integration tests use real API calls and may create/modify/delete Webflow resources.
-
-### Testing Specific Examples
+### Testing Examples Manually
 
 ```bash
 cd examples/redirect/typescript
@@ -219,7 +202,6 @@ pulumi destroy  # Clean up
 4. **Test before submitting**
    - Run `make lint` to catch style issues
    - Run `make test_provider` for unit tests
-   - Run `make test_examples` for integration tests (if you have API access)
 
 ## Resources
 

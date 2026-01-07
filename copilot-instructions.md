@@ -214,8 +214,7 @@ git push
 | `make codegen` | Regenerate schema + all SDK source files | **After every provider code change** |
 | `make build` | Build provider + compile all SDKs | Before testing, to ensure everything compiles |
 | `make provider` | Build only the provider binary | Quick iteration on provider code |
-| `make test_provider` | Run provider unit tests | After implementing features |
-| `make test_examples` | Run example integration tests | Before merging, requires WEBFLOW_API_TOKEN |
+| `make test_provider` | Run provider unit tests (mocked HTTP) | After implementing features |
 | `make lint` | Run golangci-lint on provider code | Before committing |
 | `make clean` | Remove build artifacts | When you want a fresh start |
 
@@ -315,7 +314,6 @@ mise install
 5. **Test your changes**:
    ```bash
    make test_provider
-   make test_examples  # Requires WEBFLOW_API_TOKEN
    ```
 
 ### Working with the Webflow API
@@ -468,22 +466,9 @@ func TestRedirectCreate(t *testing.T) {
 }
 ```
 
-### Integration Tests
-
-Integration tests require a real Webflow API token:
-
-```bash
-# Set your API token
-export WEBFLOW_API_TOKEN="your-token-here"
-
-# Run integration tests (slower, hits real API)
-make test_examples
-```
-
 ### Test Coverage Goals
 
 - **Unit tests**: 80%+ coverage for provider code
-- **Integration tests**: At least one example per resource
 - **Error cases**: Test error handling paths
 - **Edge cases**: Test boundary conditions (empty strings, max lengths, etc.)
 
@@ -893,7 +878,6 @@ make build
 
 # Run tests
 make test_provider
-make test_examples
 
 # Lint code
 make lint

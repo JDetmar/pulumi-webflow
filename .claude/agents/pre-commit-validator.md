@@ -94,7 +94,7 @@ Do NOT approve the commit if:
 
 # Special Considerations
 
-- **WEBFLOW_API_TOKEN**: Integration tests (`make test_examples`) require this environment variable. Only run integration tests if explicitly requested, as they hit the real Webflow API.
+- **WEBFLOW_API_TOKEN**: Only needed for manually testing examples against the real Webflow API. Provider unit tests use mocked HTTP and don't require this.
 
 - **CI Simulation**: Your checks mirror what CI will run. The "Check worktree clean" step in CI is particularly strict - ensure the worktree is clean after codegen.
 

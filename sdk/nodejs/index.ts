@@ -30,6 +30,11 @@ export type CollectionItem = import("./collectionItem").CollectionItem;
 export const CollectionItem: typeof import("./collectionItem").CollectionItem = null as any;
 utilities.lazyLoad(exports, ["CollectionItem"], () => require("./collectionItem"));
 
+export { EcommerceSettingsArgs } from "./ecommerceSettings";
+export type EcommerceSettings = import("./ecommerceSettings").EcommerceSettings;
+export const EcommerceSettings: typeof import("./ecommerceSettings").EcommerceSettings = null as any;
+utilities.lazyLoad(exports, ["EcommerceSettings"], () => require("./ecommerceSettings"));
+
 export { PageContentArgs } from "./pageContent";
 export type PageContent = import("./pageContent").PageContent;
 export const PageContent: typeof import("./pageContent").PageContent = null as any;
@@ -109,6 +114,8 @@ const _module = {
                 return new CollectionField(name, <any>undefined, { urn })
             case "webflow:index:CollectionItem":
                 return new CollectionItem(name, <any>undefined, { urn })
+            case "webflow:index:EcommerceSettings":
+                return new EcommerceSettings(name, <any>undefined, { urn })
             case "webflow:index:PageContent":
                 return new PageContent(name, <any>undefined, { urn })
             case "webflow:index:PageCustomCode":

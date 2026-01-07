@@ -224,13 +224,14 @@ Track example coverage in this section:
 
 ### TypeScript-Only Coverage (continued)
 - ✅ User
+- ✅ EcommerceSettings
 
 ### Missing Examples
 - (None - all resources have examples!)
 
-**Current Coverage: 100% (15/15 resources with at least TypeScript examples)**
-**Multi-Language Coverage: 53% (8/15 resources with 3+ languages)**
-**Complete Coverage: 53% (8/15 resources with all 5 languages)**
+**Current Coverage: 100% (16/16 resources with at least TypeScript examples)**
+**Multi-Language Coverage: 50% (8/16 resources with 3+ languages)**
+**Complete Coverage: 50% (8/16 resources with all 5 languages)**
 
 ✅ **Target Met:** 100% of resources have at least TypeScript examples
 ✅ **Bonus:** All core resources have multi-language coverage

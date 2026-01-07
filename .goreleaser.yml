@@ -77,5 +77,5 @@ release:
     vulnerabilities using tools like [grype](https://github.com/anchore/grype):
 
     ```bash
-    grype sbom:./pulumi-resource-pulumi-webflow-{{ .Tag }}-linux-amd64.sbom.json
+    grype sbom:./pulumi-resource-pulumi-webflow-{{ .Tag }}-linux-amd64.tar.gz.sbom.json
     ```

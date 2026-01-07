@@ -24,6 +24,71 @@ export interface CustomScriptArgs {
     version: string;
 }
 
+export interface GetTokenInfoApplication {
+    /**
+     * The application description.
+     */
+    description: string;
+    /**
+     * The human-readable name of the application.
+     */
+    displayName: string;
+    /**
+     * The application homepage URL.
+     */
+    homepage: string;
+    /**
+     * The unique identifier for the application.
+     */
+    id: string;
+}
+
+export interface GetTokenInfoAuthorization {
+    /**
+     * The resources this token is authorized to access.
+     */
+    authorizedTo: outputs.GetTokenInfoAuthorizedTo;
+    /**
+     * The timestamp when this authorization was created (RFC3339 format).
+     */
+    createdOn: string;
+    /**
+     * The OAuth grant type used to obtain this token (e.g., 'authorization_code').
+     */
+    grantType: string;
+    /**
+     * The unique identifier for this authorization.
+     */
+    id: string;
+    /**
+     * The timestamp when this token was last used (RFC3339 format).
+     */
+    lastUsed: string;
+    /**
+     * The rate limit for this token in requests per minute.
+     */
+    rateLimit: number;
+    /**
+     * The OAuth scopes granted to this token (space or comma separated).
+     */
+    scope: string;
+}
+
+export interface GetTokenInfoAuthorizedTo {
+    /**
+     * List of site IDs this token is authorized to access.
+     */
+    siteIds: string[];
+    /**
+     * List of user IDs this token is authorized to access.
+     */
+    userIds: string[];
+    /**
+     * List of workspace IDs this token is authorized to access.
+     */
+    workspaceIds: string[];
+}
+
 export interface NodeContentUpdate {
     /**
      * The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.

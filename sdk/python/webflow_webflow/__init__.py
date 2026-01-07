@@ -12,6 +12,8 @@ from .collection import *
 from .collection_field import *
 from .collection_item import *
 from .ecommerce_settings import *
+from .get_authorized_user import *
+from .get_token_info import *
 from .page_content import *
 from .page_custom_code import *
 from .page_data import *

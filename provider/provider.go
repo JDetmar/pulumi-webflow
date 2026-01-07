@@ -55,6 +55,10 @@ func Provider() p.Provider {
 			infer.Resource(&UserResource{}),
 			infer.Resource(&EcommerceSettings{}),
 		).
+		WithFunctions(
+			infer.Function(&GetTokenInfo{}),
+			infer.Function(&GetAuthorizedUser{}),
+		).
 		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",
 		}).

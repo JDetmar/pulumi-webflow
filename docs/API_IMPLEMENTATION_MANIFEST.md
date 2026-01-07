@@ -43,10 +43,11 @@ These APIs were evaluated as good IaC candidates but not yet implemented:
 |----------|---------|-----------|-------|-------|
 | EcommerceSettings | GET | `/sites/{site_id}/ecommerce/settings` | ecommerce:read | Site-wide e-commerce configuration (payment, tax, shipping settings) |
 
-### Provider Utilities (Data Sources)
-| Resource | Methods | Endpoints | Scope | Notes |
-|----------|---------|-----------|-------|-------|
-| TokenInfo | GET | `/token/introspect` | - | Token permission introspection for validation |
+### ✅ Implemented Data Sources (Functions)
+| Data Source | Methods | Endpoints | Scope | Notes |
+|-------------|---------|-----------|-------|-------|
+| GetTokenInfo | GET | `/token/introspect` | - | Token permission introspection for validation |
+| GetAuthorizedUser | GET | `/token/authorized_by` | authorized_user:read | Info about the user who authorized the token |
 
 ---
 

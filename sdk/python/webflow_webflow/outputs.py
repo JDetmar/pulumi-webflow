@@ -13,9 +13,13 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
 
 __all__ = [
     'CustomScriptArgs',
+    'GetTokenInfoApplication',
+    'GetTokenInfoAuthorization',
+    'GetTokenInfoAuthorizedTo',
     'NodeContentUpdate',
     'PageCustomCodeScript',
     'PageInfo',
@@ -71,6 +75,181 @@ class CustomScriptArgs(dict):
         Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         """
         return pulumi.get(self, "attributes")
+
+
+@pulumi.output_type
+class GetTokenInfoApplication(dict):
+    def __init__(__self__, *,
+                 description: _builtins.str,
+                 display_name: _builtins.str,
+                 homepage: _builtins.str,
+                 id: _builtins.str):
+        """
+        :param _builtins.str description: The application description.
+        :param _builtins.str display_name: The human-readable name of the application.
+        :param _builtins.str homepage: The application homepage URL.
+        :param _builtins.str id: The unique identifier for the application.
+        """
+        pulumi.set(__self__, "description", description)
+        pulumi.set(__self__, "display_name", display_name)
+        pulumi.set(__self__, "homepage", homepage)
+        pulumi.set(__self__, "id", id)
+
+    @_builtins.property
+    @pulumi.getter
+    def description(self) -> _builtins.str:
+        """
+        The application description.
+        """
+        return pulumi.get(self, "description")
+
+    @_builtins.property
+    @pulumi.getter(name="displayName")
+    def display_name(self) -> _builtins.str:
+        """
+        The human-readable name of the application.
+        """
+        return pulumi.get(self, "display_name")
+
+    @_builtins.property
+    @pulumi.getter
+    def homepage(self) -> _builtins.str:
+        """
+        The application homepage URL.
+        """
+        return pulumi.get(self, "homepage")
+
+    @_builtins.property
+    @pulumi.getter
+    def id(self) -> _builtins.str:
+        """
+        The unique identifier for the application.
+        """
+        return pulumi.get(self, "id")
+
+
+@pulumi.output_type
+class GetTokenInfoAuthorization(dict):
+    def __init__(__self__, *,
+                 authorized_to: 'outputs.GetTokenInfoAuthorizedTo',
+                 created_on: _builtins.str,
+                 grant_type: _builtins.str,
+                 id: _builtins.str,
+                 last_used: _builtins.str,
+                 rate_limit: _builtins.int,
+                 scope: _builtins.str):
+        """
+        :param 'GetTokenInfoAuthorizedTo' authorized_to: The resources this token is authorized to access.
+        :param _builtins.str created_on: The timestamp when this authorization was created (RFC3339 format).
+        :param _builtins.str grant_type: The OAuth grant type used to obtain this token (e.g., 'authorization_code').
+        :param _builtins.str id: The unique identifier for this authorization.
+        :param _builtins.str last_used: The timestamp when this token was last used (RFC3339 format).
+        :param _builtins.int rate_limit: The rate limit for this token in requests per minute.
+        :param _builtins.str scope: The OAuth scopes granted to this token (space or comma separated).
+        """
+        pulumi.set(__self__, "authorized_to", authorized_to)
+        pulumi.set(__self__, "created_on", created_on)
+        pulumi.set(__self__, "grant_type", grant_type)
+        pulumi.set(__self__, "id", id)
+        pulumi.set(__self__, "last_used", last_used)
+        pulumi.set(__self__, "rate_limit", rate_limit)
+        pulumi.set(__self__, "scope", scope)
+
+    @_builtins.property
+    @pulumi.getter(name="authorizedTo")
+    def authorized_to(self) -> 'outputs.GetTokenInfoAuthorizedTo':
+        """
+        The resources this token is authorized to access.
+        """
+        return pulumi.get(self, "authorized_to")
+
+    @_builtins.property
+    @pulumi.getter(name="createdOn")
+    def created_on(self) -> _builtins.str:
+        """
+        The timestamp when this authorization was created (RFC3339 format).
+        """
+        return pulumi.get(self, "created_on")
+
+    @_builtins.property
+    @pulumi.getter(name="grantType")
+    def grant_type(self) -> _builtins.str:
+        """
+        The OAuth grant type used to obtain this token (e.g., 'authorization_code').
+        """
+        return pulumi.get(self, "grant_type")
+
+    @_builtins.property
+    @pulumi.getter
+    def id(self) -> _builtins.str:
+        """
+        The unique identifier for this authorization.
+        """
+        return pulumi.get(self, "id")
+
+    @_builtins.property
+    @pulumi.getter(name="lastUsed")
+    def last_used(self) -> _builtins.str:
+        """
+        The timestamp when this token was last used (RFC3339 format).
+        """
+        return pulumi.get(self, "last_used")
+
+    @_builtins.property
+    @pulumi.getter(name="rateLimit")
+    def rate_limit(self) -> _builtins.int:
+        """
+        The rate limit for this token in requests per minute.
+        """
+        return pulumi.get(self, "rate_limit")
+
+    @_builtins.property
+    @pulumi.getter
+    def scope(self) -> _builtins.str:
+        """
+        The OAuth scopes granted to this token (space or comma separated).
+        """
+        return pulumi.get(self, "scope")
+
+
+@pulumi.output_type
+class GetTokenInfoAuthorizedTo(dict):
+    def __init__(__self__, *,
+                 site_ids: Sequence[_builtins.str],
+                 user_ids: Sequence[_builtins.str],
+                 workspace_ids: Sequence[_builtins.str]):
+        """
+        :param Sequence[_builtins.str] site_ids: List of site IDs this token is authorized to access.
+        :param Sequence[_builtins.str] user_ids: List of user IDs this token is authorized to access.
+        :param Sequence[_builtins.str] workspace_ids: List of workspace IDs this token is authorized to access.
+        """
+        pulumi.set(__self__, "site_ids", site_ids)
+        pulumi.set(__self__, "user_ids", user_ids)
+        pulumi.set(__self__, "workspace_ids", workspace_ids)
+
+    @_builtins.property
+    @pulumi.getter(name="siteIds")
+    def site_ids(self) -> Sequence[_builtins.str]:
+        """
+        List of site IDs this token is authorized to access.
+        """
+        return pulumi.get(self, "site_ids")
+
+    @_builtins.property
+    @pulumi.getter(name="userIds")
+    def user_ids(self) -> Sequence[_builtins.str]:
+        """
+        List of user IDs this token is authorized to access.
+        """
+        return pulumi.get(self, "user_ids")
+
+    @_builtins.property
+    @pulumi.getter(name="workspaceIds")
+    def workspace_ids(self) -> Sequence[_builtins.str]:
+        """
+        List of workspace IDs this token is authorized to access.
+        """
+        return pulumi.get(self, "workspace_ids")
 
 
 @pulumi.output_type

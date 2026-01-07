@@ -55,6 +55,106 @@
         "location"
       ]
     },
+    "webflow:index:GetTokenInfoApplication": {
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "The application description."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The human-readable name of the application."
+        },
+        "homepage": {
+          "type": "string",
+          "description": "The application homepage URL."
+        },
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the application."
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "homepage",
+        "displayName"
+      ]
+    },
+    "webflow:index:GetTokenInfoAuthorization": {
+      "properties": {
+        "authorizedTo": {
+          "$ref": "#/types/webflow:index:GetTokenInfoAuthorizedTo",
+          "description": "The resources this token is authorized to access."
+        },
+        "createdOn": {
+          "type": "string",
+          "description": "The timestamp when this authorization was created (RFC3339 format)."
+        },
+        "grantType": {
+          "type": "string",
+          "description": "The OAuth grant type used to obtain this token (e.g., 'authorization_code')."
+        },
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for this authorization."
+        },
+        "lastUsed": {
+          "type": "string",
+          "description": "The timestamp when this token was last used (RFC3339 format)."
+        },
+        "rateLimit": {
+          "type": "integer",
+          "description": "The rate limit for this token in requests per minute."
+        },
+        "scope": {
+          "type": "string",
+          "description": "The OAuth scopes granted to this token (space or comma separated)."
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "createdOn",
+        "lastUsed",
+        "grantType",
+        "rateLimit",
+        "scope",
+        "authorizedTo"
+      ]
+    },
+    "webflow:index:GetTokenInfoAuthorizedTo": {
+      "properties": {
+        "siteIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of site IDs this token is authorized to access."
+        },
+        "userIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of user IDs this token is authorized to access."
+        },
+        "workspaceIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of workspace IDs this token is authorized to access."
+        }
+      },
+      "type": "object",
+      "required": [
+        "siteIds",
+        "workspaceIds",
+        "userIds"
+      ]
+    },
     "webflow:index:NodeContentUpdate": {
       "properties": {
         "nodeId": {
@@ -1182,6 +1282,64 @@
         "triggerType",
         "url"
       ]
+    }
+  },
+  "functions": {
+    "webflow:index:getAuthorizedUser": {
+      "description": "Retrieves information about the user who authorized the current Webflow API token. This is useful for auditing and understanding which user's credentials are being used. Requires the 'authorized_user:read' scope.",
+      "inputs": {
+        "type": "object"
+      },
+      "outputs": {
+        "properties": {
+          "email": {
+            "description": "The email address of the authorized user.",
+            "type": "string"
+          },
+          "firstName": {
+            "description": "The first name of the authorized user.",
+            "type": "string"
+          },
+          "lastName": {
+            "description": "The last name of the authorized user.",
+            "type": "string"
+          },
+          "userId": {
+            "description": "The unique identifier for the authorized user.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "email",
+          "firstName",
+          "lastName"
+        ],
+        "type": "object"
+      }
+    },
+    "webflow:index:getTokenInfo": {
+      "description": "Retrieves information about the current Webflow API token, including authorization details, scopes, rate limits, and the authorized resources. This is useful for validating your API token configuration and understanding what resources it can access.",
+      "inputs": {
+        "type": "object"
+      },
+      "outputs": {
+        "properties": {
+          "application": {
+            "$ref": "#/types/webflow:index:GetTokenInfoApplication",
+            "description": "Application details for the token owner."
+          },
+          "authorization": {
+            "$ref": "#/types/webflow:index:GetTokenInfoAuthorization",
+            "description": "Authorization details for the API token, including scopes and authorized resources."
+          }
+        },
+        "required": [
+          "authorization",
+          "application"
+        ],
+        "type": "object"
+      }
     }
   }
 }

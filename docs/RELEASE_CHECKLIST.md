@@ -6,7 +6,7 @@ Quick reference for releasing new versions. See [RELEASE_GUIDE.md](RELEASE_GUIDE
 
 Check off when configured:
 
-- [ ] **npm**: Token added as `NPM_TOKEN` secret
+- [ ] **npm**: Trusted Publisher configured on npmjs.com (no secret needed!)
 - [ ] **PyPI**: Trusted Publisher configured on pypi.org (no secret needed!)
 - [ ] **NuGet**: Trusted Publisher configured + `NUGET_USERNAME` secret added
 - [ ] **Maven Central**: All Java secrets configured

@@ -9,7 +9,7 @@ Your provider is configured to publish to **5 package managers** automatically w
 | Package Manager | Package Name | Language | Security |
 |-----------------|--------------|----------|----------|
 | **GitHub Releases** | `pulumi-resource-webflow` | Provider binary | SBOM included |
-| **npm** | `@jdetmar/pulumi-webflow` | TypeScript/JavaScript | Provenance attestation |
+| **npm** | `@jdetmar/pulumi-webflow` | TypeScript/JavaScript | Trusted Publishing + Provenance |
 | **PyPI** | `pulumi-webflow` | Python | Trusted Publishing + Sigstore |
 | **NuGet** | `Pulumi.Webflow` | .NET/C# | Trusted Publishing |
 | **Maven Central** | `com.pulumi:webflow` | Java | GPG signed |
@@ -20,9 +20,9 @@ The Go SDK is published to a separate GitHub repository branch.
 
 This provider uses modern supply chain security practices:
 
-- **PyPI Trusted Publishing**: No long-lived API tokens. Uses GitHub OIDC to authenticate directly with PyPI. Automatically generates Sigstore attestations.
+- **npm Trusted Publishing**: No long-lived API tokens. Uses GitHub OIDC to authenticate directly with npm. Automatic provenance attestations.
+- **PyPI Trusted Publishing**: No long-lived API tokens. Uses GitHub OIDC to authenticate directly with PyPI. Automatic Sigstore attestations.
 - **NuGet Trusted Publishing**: No long-lived API keys. Uses GitHub OIDC to obtain short-lived, single-use API keys.
-- **npm Provenance**: Each npm release includes a cryptographic attestation proving it was built from this repository.
 - **SBOM Generation**: Each GitHub Release includes Software Bill of Materials (`.sbom.json`) files for vulnerability scanning.
 - **Auto-generated Changelog**: Release notes are automatically generated from commit messages.
 
@@ -53,19 +53,29 @@ You need accounts on each package registry:
    - Open a ticket to claim your group ID (e.g., `com.pulumi` or your own)
    - Wait for approval (can take 1-2 business days)
 
-### Step 2: Generate API Tokens/Keys
+### Step 2: Configure Trusted Publishers
 
-#### npm Token
+#### npm Trusted Publisher (No Token Needed!)
 
-```bash
-# Login to npm
-npm login
+npm uses Trusted Publishing via GitHub OIDC - no API token required.
 
-# Create automation token (recommended for CI)
-npm token create --type=automation
-```
+**For a new package (first release):**
 
-Or via web: https://www.npmjs.com/settings/~/tokens → Generate New Token → Automation
+You need to publish a placeholder first. Use `npx setup-npm-trusted-publish @jdetmar/pulumi-webflow` or publish manually once with a token, then configure Trusted Publishing.
+
+**For an existing package:**
+1. Go to https://www.npmjs.com/package/@jdetmar/pulumi-webflow/access
+2. Scroll to "Trusted Publishers" section
+3. Click "Add Trusted Publisher"
+4. Select "GitHub Actions"
+5. Fill in:
+   - Owner: `JDetmar`
+   - Repository: `pulumi-webflow`
+   - Workflow: `release.yml`
+   - Environment: (leave blank)
+6. Click "Add"
+
+See: https://docs.npmjs.com/trusted-publishers/
 
 #### PyPI Trusted Publisher (No Token Needed!)
 
@@ -143,7 +153,6 @@ Add these secrets:
 
 | Secret Name | Value | Required |
 |-------------|-------|----------|
-| `NPM_TOKEN` | npm automation token | Yes |
 | `NUGET_USERNAME` | Your nuget.org username | Yes |
 | `OSSRH_USERNAME` | Sonatype JIRA username | Yes |
 | `OSSRH_PASSWORD` | Sonatype user token | Yes |
@@ -151,7 +160,7 @@ Add these secrets:
 | `JAVA_SIGNING_KEY` | Base64-encoded GPG private key | Yes |
 | `JAVA_SIGNING_PASSWORD` | GPG key passphrase | Yes |
 
-**Note:** PyPI and NuGet use Trusted Publishing via OIDC - no API tokens/keys needed!
+**Note:** npm, PyPI, and NuGet all use Trusted Publishing via OIDC - no API tokens/keys needed!
 
 **Optional secrets (for Windows binary signing):**
 
@@ -372,8 +381,9 @@ If only some packages failed, you can:
 - ✅ Pre-release detection
 - ✅ **Changelog generation** from commit messages
 - ✅ **SBOM generation** for supply chain security
-- ✅ **npm provenance** attestations
+- ✅ **npm Trusted Publishing** with automatic provenance
 - ✅ **PyPI Trusted Publishing** with Sigstore attestations
+- ✅ **NuGet Trusted Publishing** with short-lived API keys
 
 ### Could Be Added
 
@@ -385,9 +395,6 @@ If only some packages failed, you can:
 
 3. **Slack/Discord Notifications**
    - Add notification step to release workflow
-
-4. **npm Trusted Publishing**
-   - Currently uses NPM_TOKEN; could upgrade to full OIDC (requires npm CLI 11.5.1+)
 
 ---
 
@@ -410,7 +417,6 @@ git tag -d v0.1.0 && git push origin :refs/tags/v0.1.0
 ### Required Secrets Summary
 
 ```
-NPM_TOKEN              # npm publishing
 NUGET_USERNAME         # NuGet Trusted Publishing (username only)
 OSSRH_USERNAME         # Maven Central
 OSSRH_PASSWORD         # Maven Central
@@ -419,7 +425,7 @@ JAVA_SIGNING_KEY       # Maven GPG signing
 JAVA_SIGNING_PASSWORD  # Maven GPG signing
 ```
 
-**Note:** PyPI and NuGet use Trusted Publishing - no API keys needed!
+**Note:** npm, PyPI, and NuGet all use Trusted Publishing - no API keys/tokens needed!
 
 ### Package URLs
 

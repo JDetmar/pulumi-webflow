@@ -222,20 +222,22 @@ jobs:
       - name: Uncompress nodejs SDK
         run: tar -zxf ${{ github.workspace }}/sdk/nodejs.tar.gz -C ${{ github.workspace }}/sdk/nodejs
 
-      # Publish Node.js SDK to npm with provenance
-      # Provenance creates a cryptographic attestation linking the package to this build
-      # See: https://docs.npmjs.com/generating-provenance-statements
+      # Publish Node.js SDK to npm using Trusted Publishing (OIDC)
+      # No NPM_TOKEN needed - uses GitHub's OIDC identity
+      # Provenance attestations are automatic with Trusted Publishing
+      # See: https://docs.npmjs.com/trusted-publishers/
       - name: Setup Node for npm publishing
         uses: actions/setup-node@v4
         with:
+          node-version: "20.x"
           registry-url: https://registry.npmjs.org
 
       - name: Publish Node.js SDK
         run: |
           cd sdk/nodejs
-          npm publish --access public --provenance
+          npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ""  # Clear any default token to ensure OIDC is used
         continue-on-error: true
 
       # Publish Python SDK to PyPI using Trusted Publishing (OIDC)

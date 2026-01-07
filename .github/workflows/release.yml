@@ -173,6 +173,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: publish
     name: publish_sdks
+    permissions:
+      id-token: write  # Required for PyPI Trusted Publishing and npm provenance
+      contents: read
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -219,7 +222,9 @@ jobs:
       - name: Uncompress nodejs SDK
         run: tar -zxf ${{ github.workspace }}/sdk/nodejs.tar.gz -C ${{ github.workspace }}/sdk/nodejs
 
-      # Publish Node.js SDK to npm
+      # Publish Node.js SDK to npm with provenance
+      # Provenance creates a cryptographic attestation linking the package to this build
+      # See: https://docs.npmjs.com/generating-provenance-statements
       - name: Setup Node for npm publishing
         uses: actions/setup-node@v4
         with:
@@ -228,22 +233,20 @@ jobs:
       - name: Publish Node.js SDK
         run: |
           cd sdk/nodejs
-          npm publish --access public
+          npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         continue-on-error: true
 
-      # Publish Python SDK to PyPI
-      - name: Install Twine
-        run: pip install twine
-
+      # Publish Python SDK to PyPI using Trusted Publishing (OIDC)
+      # No API token needed - uses GitHub's OIDC identity
+      # Automatically generates Sigstore attestations
+      # See: https://docs.pypi.org/trusted-publishers/
       - name: Publish Python SDK
-        run: |
-          cd sdk/python/bin
-          twine upload dist/*
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: sdk/python/bin/dist/
+          skip-existing: true  # Don't fail if version exists
         continue-on-error: true
 
       # Publish .NET SDK to NuGet

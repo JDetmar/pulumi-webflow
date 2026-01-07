@@ -6,15 +6,24 @@ This guide covers the complete CD (Continuous Deployment) setup, including one-t
 
 Your provider is configured to publish to **5 package managers** automatically when you push a git tag:
 
-| Package Manager | Package Name | Language |
-|-----------------|--------------|----------|
-| **GitHub Releases** | `pulumi-resource-webflow` | Provider binary |
-| **npm** | `@jdetmar/pulumi-webflow` | TypeScript/JavaScript |
-| **PyPI** | `pulumi-webflow` | Python |
-| **NuGet** | `Pulumi.Webflow` | .NET/C# |
-| **Maven Central** | `com.pulumi:webflow` | Java |
+| Package Manager | Package Name | Language | Security |
+|-----------------|--------------|----------|----------|
+| **GitHub Releases** | `pulumi-resource-webflow` | Provider binary | SBOM included |
+| **npm** | `@jdetmar/pulumi-webflow` | TypeScript/JavaScript | Provenance attestation |
+| **PyPI** | `pulumi-webflow` | Python | Trusted Publishing + Sigstore |
+| **NuGet** | `Pulumi.Webflow` | .NET/C# | - |
+| **Maven Central** | `com.pulumi:webflow` | Java | GPG signed |
 
 The Go SDK is published to a separate GitHub repository branch.
+
+### Security Features
+
+This provider uses modern supply chain security practices:
+
+- **PyPI Trusted Publishing**: No long-lived API tokens. Uses GitHub OIDC to authenticate directly with PyPI. Automatically generates Sigstore attestations.
+- **npm Provenance**: Each npm release includes a cryptographic attestation proving it was built from this repository.
+- **SBOM Generation**: Each GitHub Release includes Software Bill of Materials (`.sbom.json`) files for vulnerability scanning.
+- **Auto-generated Changelog**: Release notes are automatically generated from commit messages.
 
 ---
 
@@ -32,7 +41,7 @@ You need accounts on each package registry:
 2. **PyPI** (https://pypi.org)
    - Create account
    - Verify email address
-   - Enable 2FA (required for API tokens)
+   - Enable 2FA (recommended)
 
 3. **NuGet** (https://www.nuget.org)
    - Sign in with Microsoft account
@@ -57,14 +66,27 @@ npm token create --type=automation
 
 Or via web: https://www.npmjs.com/settings/~/tokens → Generate New Token → Automation
 
-#### PyPI Token
+#### PyPI Trusted Publisher (No Token Needed!)
 
-1. Go to https://pypi.org/manage/account/
-2. Scroll to "API tokens"
-3. Click "Add API token"
-4. Name: `github-actions-pulumi-webflow`
-5. Scope: "Entire account" (or project-specific after first publish)
-6. Copy the token (starts with `pypi-`)
+PyPI uses Trusted Publishing via GitHub OIDC - no API token required.
+
+**For a new package (first release):**
+1. Go to https://pypi.org/manage/account/publishing/
+2. Click "Add a new pending publisher"
+3. Fill in:
+   - PyPI Project Name: `pulumi-webflow`
+   - Owner: `JDetmar`
+   - Repository name: `pulumi-webflow`
+   - Workflow name: `release.yml`
+   - Environment name: (leave blank)
+4. Click "Add"
+
+**For an existing package:**
+1. Go to https://pypi.org/manage/project/pulumi-webflow/settings/publishing/
+2. Click "Add a new publisher"
+3. Fill in the same details as above
+
+See: https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/
 
 #### NuGet API Key
 
@@ -111,13 +133,14 @@ Add these secrets:
 | Secret Name | Value | Required |
 |-------------|-------|----------|
 | `NPM_TOKEN` | npm automation token | Yes |
-| `PYPI_API_TOKEN` | PyPI API token (starts with `pypi-`) | Yes |
 | `NUGET_PUBLISH_KEY` | NuGet API key | Yes |
 | `OSSRH_USERNAME` | Sonatype JIRA username | Yes |
 | `OSSRH_PASSWORD` | Sonatype user token | Yes |
 | `JAVA_SIGNING_KEY_ID` | GPG key ID (e.g., `ABCD1234EFGH5678`) | Yes |
 | `JAVA_SIGNING_KEY` | Base64-encoded GPG private key | Yes |
 | `JAVA_SIGNING_PASSWORD` | GPG key passphrase | Yes |
+
+**Note:** PyPI does NOT require a secret - it uses Trusted Publishing via OIDC.
 
 **Optional secrets (for Windows binary signing):**
 
@@ -196,8 +219,9 @@ Use this checklist every time you release a new version.
     - MINOR: New features (backwards compatible)
     - PATCH: Bug fixes
 
-- [ ] **CHANGELOG updated** (recommended)
-  - Document what's new in this version
+- [ ] **Changelog will be auto-generated**
+  - GoReleaser generates changelog from commit messages
+  - Use conventional commit prefixes for best results: `feat:`, `fix:`, `docs:`, `chore:`
 
 ### Release Process
 
@@ -287,9 +311,10 @@ GoReleaser automatically detects these as pre-releases.
 - Verify package name isn't taken by someone else
 
 #### PyPI publish fails
-- Ensure PYPI_API_TOKEN starts with `pypi-`
-- Username should be `__token__` (configured in workflow)
-- Check if package name is available
+- Verify Trusted Publisher is configured on PyPI (see setup guide above)
+- Check that repository name, owner, and workflow name match exactly
+- For new packages, use "pending publisher" before first release
+- Check if package name is available/not taken
 
 #### NuGet publish fails
 - API keys expire after 365 days - regenerate if needed
@@ -334,20 +359,24 @@ If only some packages failed, you can:
 - ✅ Package publishing to all registries
 - ✅ Version extraction from git tags
 - ✅ Pre-release detection
+- ✅ **Changelog generation** from commit messages
+- ✅ **SBOM generation** for supply chain security
+- ✅ **npm provenance** attestations
+- ✅ **PyPI Trusted Publishing** with Sigstore attestations
 
 ### Could Be Added
 
-1. **Automated Changelog Generation**
-   - Add a tool like `conventional-changelog` or enable GoReleaser's changelog
-
-2. **Release Approval Gates**
+1. **Release Approval Gates**
    - Add environment protection rules in GitHub settings
 
-3. **Automated Version Bumping**
+2. **Automated Version Bumping**
    - Use tools like `standard-version` or `release-please`
 
-4. **Slack/Discord Notifications**
+3. **Slack/Discord Notifications**
    - Add notification step to release workflow
+
+4. **npm Trusted Publishing**
+   - Currently uses NPM_TOKEN; could upgrade to full OIDC (requires npm CLI 11.5.1+)
 
 ---
 
@@ -370,15 +399,16 @@ git tag -d v0.1.0 && git push origin :refs/tags/v0.1.0
 ### Required Secrets Summary
 
 ```
-NPM_TOKEN
-PYPI_API_TOKEN
-NUGET_PUBLISH_KEY
-OSSRH_USERNAME
-OSSRH_PASSWORD
-JAVA_SIGNING_KEY_ID
-JAVA_SIGNING_KEY
-JAVA_SIGNING_PASSWORD
+NPM_TOKEN              # npm publishing
+NUGET_PUBLISH_KEY      # NuGet publishing
+OSSRH_USERNAME         # Maven Central
+OSSRH_PASSWORD         # Maven Central
+JAVA_SIGNING_KEY_ID    # Maven GPG signing
+JAVA_SIGNING_KEY       # Maven GPG signing
+JAVA_SIGNING_PASSWORD  # Maven GPG signing
 ```
+
+**Note:** PyPI uses Trusted Publishing - no secret needed!
 
 ### Package URLs
 

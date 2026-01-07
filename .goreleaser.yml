@@ -28,9 +28,54 @@ archives:
 snapshot:
   name_template: "{{ .Tag }}-SNAPSHOT"
 
+# Generate checksums for all artifacts
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+# Generate Software Bill of Materials (SBOM) for supply chain security
+# Users can scan these for vulnerabilities using tools like grype
+sboms:
+  - artifacts: archive
+    documents:
+      - "{{ .ArtifactName }}.sbom.json"
+
+# Auto-generate changelog from git commits
+# Groups commits by type based on conventional commit prefixes
 changelog:
-  disable: true
+  disable: false
+  use: github
+  sort: asc
+  groups:
+    - title: "🚀 Features"
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: "🐛 Bug Fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: "📚 Documentation"
+      regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
+      order: 2
+    - title: "🧹 Maintenance"
+      regexp: '^.*?(chore|refactor|test|ci)(\([[:word:]]+\))??!?:.+$'
+      order: 3
+    - title: "Other Changes"
+      order: 999
+  filters:
+    exclude:
+      - "^Merge"
 
 release:
   disable: false
   prerelease: auto
+  # Include SBOM info in release notes
+  footer: |
+    ## Security
+
+    Each release artifact includes an SBOM (Software Bill of Materials) file
+    (`.sbom.json`) that lists all dependencies. You can scan these for
+    vulnerabilities using tools like [grype](https://github.com/anchore/grype):
+
+    ```bash
+    grype sbom:./pulumi-resource-pulumi-webflow-{{ .Tag }}-linux-amd64.sbom.json
+    ```

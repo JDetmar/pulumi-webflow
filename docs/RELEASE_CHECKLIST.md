@@ -7,7 +7,7 @@ Quick reference for releasing new versions. See [RELEASE_GUIDE.md](RELEASE_GUIDE
 Check off when configured:
 
 - [ ] **npm**: Token added as `NPM_TOKEN` secret
-- [ ] **PyPI**: Token added as `PYPI_API_TOKEN` secret
+- [ ] **PyPI**: Trusted Publisher configured on pypi.org (no secret needed!)
 - [ ] **NuGet**: Key added as `NUGET_PUBLISH_KEY` secret
 - [ ] **Maven Central**: All Java secrets configured
   - [ ] `OSSRH_USERNAME`
@@ -39,7 +39,7 @@ make lint
 
 - [ ] CI green on main branch
 - [ ] Version number decided: `v____.____.____`
-- [ ] Changelog updated (optional)
+- [ ] Commits use conventional prefixes (`feat:`, `fix:`, `docs:`) for auto-changelog
 
 ### Create Release
 
@@ -52,9 +52,12 @@ git push origin vX.Y.Z
 ### Monitor & Verify
 
 - [ ] Watch workflow: https://github.com/JDetmar/pulumi-webflow/actions
-- [ ] GitHub Release created with binaries
-- [ ] npm package visible
-- [ ] PyPI package visible
+- [ ] GitHub Release created with:
+  - [ ] Binaries for all platforms
+  - [ ] SBOM files (`.sbom.json`)
+  - [ ] Auto-generated changelog
+- [ ] npm package visible (with provenance badge)
+- [ ] PyPI package visible (with Sigstore attestation)
 - [ ] NuGet package visible
 - [ ] Maven package visible (may take 1-2 hours)
 

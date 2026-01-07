@@ -23,3 +23,7 @@ sdk/python/venv
 /dev/
 coverage.txt
 *.test
+
+# Environment files (may contain secrets)
+.env
+!.env.example

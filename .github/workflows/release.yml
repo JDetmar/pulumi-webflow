@@ -361,8 +361,8 @@ jobs:
         with:
           repository: ${{ github.repository }}
           base-ref: ${{ github.sha }}
-          source: sdk/go/pulumi-webflow
-          path: sdk/go/pulumi-webflow
+          source: sdk/go/webflow
+          path: sdk/go/webflow
           version: ${{ steps.version.outputs.version }}
           additive: false
           files: "**"

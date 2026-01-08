@@ -131,6 +131,12 @@ nodejs_sdk: sdk/nodejs
 	cd ${PACKDIR}/nodejs/ && \
 		yarn install && \
 		yarn run tsc
+	# Replace version placeholder in package.json before copying to bin/
+	@if [ "$$(uname)" = "Darwin" ]; then \
+		sed -i '' 's/$${VERSION}/$(VERSION_GENERIC)/g' ${PACKDIR}/nodejs/package.json; \
+	else \
+		sed -i 's/$${VERSION}/$(VERSION_GENERIC)/g' ${PACKDIR}/nodejs/package.json; \
+	fi
 	cp README.md LICENSE ${PACKDIR}/nodejs/package.json ${PACKDIR}/nodejs/yarn.lock ${PACKDIR}/nodejs/bin/
 
 python_sdk: sdk/python

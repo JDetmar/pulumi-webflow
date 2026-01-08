@@ -252,9 +252,9 @@ jobs:
           else
             NPM_TAG="latest"
           fi
-          npm publish --access public --tag "$NPM_TAG"
+          npm publish --access public --tag "$NPM_TAG" --provenance
         env:
-          NODE_AUTH_TOKEN: ""  # Clear any default token to ensure OIDC is used
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         continue-on-error: true
 
       # Publish Python SDK to PyPI using Trusted Publishing (OIDC)

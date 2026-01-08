@@ -64,7 +64,8 @@ func Provider() p.Provider {
 		}).
 		WithLanguageMap(map[string]any{
 			"csharp": map[string]any{
-				"rootNamespace": "Pulumi",
+				"rootNamespace":        "Pulumi",
+				"respectSchemaVersion": true,
 			},
 			"nodejs": map[string]any{
 				"packageName": "@jdetmar/pulumi-webflow",

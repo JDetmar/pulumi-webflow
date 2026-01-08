@@ -14,12 +14,12 @@ builds:
       - amd64
       - arm64
     ignore: []
-    main: ./cmd/pulumi-resource-pulumi-webflow/
+    main: ./cmd/pulumi-resource-webflow/
     ldflags:
       - -s
       - -w
-      - -X github.com/jdetmar/pulumi-webflow/provider/pkg/version.Version={{.Tag}}
-    binary: pulumi-resource-pulumi-webflow
+      - -X github.com/jdetmar/pulumi-webflow/provider.Version={{.Tag}}
+    binary: pulumi-resource-webflow
 
 archives:
   - name_template: "{{ .Binary }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
@@ -77,5 +77,5 @@ release:
     vulnerabilities using tools like [grype](https://github.com/anchore/grype):
 
     ```bash
-    grype sbom:./pulumi-resource-pulumi-webflow-{{ .Tag }}-linux-amd64.tar.gz.sbom.json
+    grype sbom:./pulumi-resource-webflow-{{ .Tag }}-linux-amd64.tar.gz.sbom.json
     ```

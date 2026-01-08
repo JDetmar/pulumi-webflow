@@ -6,6 +6,7 @@
   "namespace": "webflow",
   "language": {
     "csharp": {
+      "respectSchemaVersion": true,
       "rootNamespace": "Pulumi"
     },
     "go": {

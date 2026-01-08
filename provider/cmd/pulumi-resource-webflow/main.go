@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"os"
 
-	xyz "github.com/jdetmar/pulumi-webflow/provider"
+	xyz "github.com/JDetmar/pulumi-webflow/provider"
 )
 
 // Serve the provider against Pulumi's Provider protocol.

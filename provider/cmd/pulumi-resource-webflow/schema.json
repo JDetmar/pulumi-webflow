@@ -2,12 +2,12 @@
   "name": "webflow",
   "displayName": "Webflow (Unofficial)",
   "description": "Unofficial community-maintained Pulumi provider for managing Webflow sites, redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.",
-  "homepage": "https://github.com/jdetmar/pulumi-webflow",
+  "homepage": "https://github.com/JDetmar/pulumi-webflow",
   "namespace": "webflow",
   "language": {
     "csharp": {
       "respectSchemaVersion": true,
-      "rootNamespace": "Pulumi"
+      "rootNamespace": "Community.Pulumi"
     },
     "go": {
       "importBasePath": "github.com/JDetmar/pulumi-webflow/sdk/go/webflow"

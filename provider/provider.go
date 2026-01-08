@@ -76,6 +76,11 @@ func Provider() p.Provider {
 				"packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. " +
 					"Not affiliated with Pulumi Corporation or Webflow, Inc.",
 			},
+			"python": map[string]any{
+				"packageName": "pulumi_webflow",
+				"packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. " +
+					"Not affiliated with Pulumi Corporation or Webflow, Inc.",
+			},
 		}).
 		Build()
 	if err != nil {

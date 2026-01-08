@@ -19,6 +19,10 @@
     "nodejs": {
       "packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",
       "packageName": "@jdetmar/pulumi-webflow"
+    },
+    "python": {
+      "packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",
+      "packageName": "pulumi_webflow"
     }
   },
   "config": {

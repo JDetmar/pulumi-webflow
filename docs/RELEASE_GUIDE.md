@@ -12,7 +12,7 @@ Your provider is configured to publish to **5 package managers** automatically w
 | **npm** | `@jdetmar/pulumi-webflow` | TypeScript/JavaScript | Trusted Publishing + Provenance |
 | **PyPI** | `pulumi-webflow` | Python | Trusted Publishing + Sigstore |
 | **NuGet** | `Pulumi.Webflow` | .NET/C# | Trusted Publishing |
-| **Maven Central** | `io.github.jdetmar:pulumi-webflow` | Java | GPG signed |
+| **Maven Central** | `io.github.jdetmar.pulumi:pulumi-webflow` | Java | GPG signed |
 
 The Go SDK is published to a separate GitHub repository branch.
 

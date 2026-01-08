@@ -12,7 +12,7 @@
       "importBasePath": "github.com/jdetmar/pulumi-webflow/sdk/go/webflow"
     },
     "java": {
-      "basePackage": "io.github.jdetmar",
+      "basePackage": "io.github.jdetmar.pulumi",
       "buildFiles": "gradle"
     },
     "nodejs": {

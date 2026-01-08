@@ -67,7 +67,7 @@ func Provider() p.Provider {
 				"rootNamespace": "Pulumi",
 			},
 			"java": map[string]any{
-				"basePackage": "io.github.jdetmar",
+				"basePackage": "io.github.jdetmar.pulumi",
 				"buildFiles":  "gradle",
 			},
 			"nodejs": map[string]any{

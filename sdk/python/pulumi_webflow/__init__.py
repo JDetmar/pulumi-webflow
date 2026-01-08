@@ -30,10 +30,10 @@ from . import outputs
 
 # Make subpackages available:
 if typing.TYPE_CHECKING:
-    import webflow_webflow.config as __config
+    import pulumi_webflow.config as __config
     config = __config
 else:
-    config = _utilities.lazy_import('webflow_webflow.config')
+    config = _utilities.lazy_import('pulumi_webflow.config')
 
 _utilities.register(
     resource_modules="""
@@ -41,7 +41,7 @@ _utilities.register(
  {
   "pkg": "webflow",
   "mod": "index",
-  "fqn": "webflow_webflow",
+  "fqn": "pulumi_webflow",
   "classes": {
    "webflow:index:Asset": "Asset",
    "webflow:index:AssetFolder": "AssetFolder",
@@ -68,7 +68,7 @@ _utilities.register(
  {
   "pkg": "webflow",
   "token": "pulumi:providers:webflow",
-  "fqn": "webflow_webflow",
+  "fqn": "pulumi_webflow",
   "class": "Provider"
  }
 ]

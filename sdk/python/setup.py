@@ -18,7 +18,7 @@ def readme():
         return "webflow Pulumi Package - Development Version"
 
 
-setup(name='webflow_webflow',
+setup(name='pulumi_webflow',
       python_requires='>=3.9',
       version=VERSION,
       description="Unofficial community-maintained Pulumi provider for managing Webflow sites, redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.",
@@ -27,7 +27,7 @@ setup(name='webflow_webflow',
       url='https://github.com/jdetmar/pulumi-webflow',
       packages=find_packages(),
       package_data={
-          'webflow_webflow': [
+          'pulumi_webflow': [
               'py.typed',
               'pulumi-plugin.json',
           ]

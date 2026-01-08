@@ -10,8 +10,8 @@ import (
 	"context"
 	"testing"
 
+	xyz "github.com/JDetmar/pulumi-webflow/provider"
 	"github.com/blang/semver"
-	xyz "github.com/jdetmar/pulumi-webflow/provider"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 

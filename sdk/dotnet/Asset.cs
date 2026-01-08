@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
-using Pulumi;
 
-namespace Community.Pulumi.Webflow
+namespace Pulumi.Webflow
 {
     /// <summary>
     /// Manages assets (images, files, documents) for a Webflow site. This resource allows you to upload and manage files that can be used in your Webflow site. Note: Assets are immutable - changing any property will delete and recreate the asset.

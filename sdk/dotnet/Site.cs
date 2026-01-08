@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
-using Pulumi;
 
-namespace Community.Pulumi.Webflow
+namespace Pulumi.Webflow
 {
     /// <summary>
     /// Manages Webflow sites programmatically. This resource allows you to create, configure, and manage Webflow sites through infrastructure code. Create, Read, Update, and Delete operations are fully supported for complete site lifecycle management.

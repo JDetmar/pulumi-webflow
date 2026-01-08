@@ -2,7 +2,7 @@ PROJECT_NAME := Pulumi Provider Webflow
 
 PACK             := webflow
 PACKDIR          := sdk
-PROJECT          := github.com/jdetmar/pulumi-webflow
+PROJECT          := github.com/JDetmar/pulumi-webflow
 NODE_MODULE_NAME := @jdetmar/pulumi-webflow
 NUGET_PKG_NAME   := Pulumi.Webflow
 
@@ -55,7 +55,7 @@ ensure::
 
 $(SCHEMA_FILE): provider
 	$(PULUMI) package get-schema $(WORKING_DIR)/bin/${PROVIDER} | \
-		jq 'del(.version) | (.language.go.importBasePath="github.com/jdetmar/pulumi-webflow/sdk/go/webflow")' > $(SCHEMA_FILE)
+		jq 'del(.version) | (.language.go.importBasePath="github.com/JDetmar/pulumi-webflow/sdk/go/webflow")' > $(SCHEMA_FILE)
 
 # Codegen generates the schema file and *generates* all sdks. This is a local process and
 # does not require the ability to build all SDKs.
@@ -101,7 +101,7 @@ sdk/go: ${SCHEMA_FILE}
 	mkdir -p $$GO_PKG_DIR; \
 	cp go.mod $$GO_PKG_DIR/go.mod; \
 	cd $$GO_PKG_DIR && \
-		go mod edit -module=github.com/jdetmar/pulumi-webflow/sdk/go/webflow && \
+		go mod edit -module=github.com/JDetmar/pulumi-webflow/sdk/go/webflow && \
 		go mod tidy
 
 .PHONY: provider

@@ -6,28 +6,30 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
-using Pulumi;
 
-namespace Community.Pulumi.Webflow.Inputs
+namespace Pulumi.Webflow.Outputs
 {
 
-    public sealed class NodeContentUpdateArgs : global::Pulumi.ResourceArgs
+    [OutputType]
+    public sealed class NodeContentUpdate
     {
         /// <summary>
         /// The unique identifier for the DOM node to update. This ID comes from the page's DOM structure and must exist on the page. Retrieve node IDs using GET /pages/{page_id}/dom endpoint.
         /// </summary>
-        [Input("nodeId", required: true)]
-        public Input<string> NodeId { get; set; } = null!;
-
+        public readonly string NodeId;
         /// <summary>
         /// The new text content for the node. This will replace the existing text content in the specified node. Only applicable to text nodes or elements containing text.
         /// </summary>
-        [Input("text", required: true)]
-        public Input<string> Text { get; set; } = null!;
+        public readonly string Text;
 
-        public NodeContentUpdateArgs()
+        [OutputConstructor]
+        private NodeContentUpdate(
+            string nodeId,
+
+            string text)
         {
+            NodeId = nodeId;
+            Text = text;
         }
-        public static new NodeContentUpdateArgs Empty => new NodeContentUpdateArgs();
     }
 }

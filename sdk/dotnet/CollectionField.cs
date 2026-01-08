@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
-using Pulumi;
 
-namespace Community.Pulumi.Webflow
+namespace Pulumi.Webflow
 {
     /// <summary>
     /// Manages fields for a Webflow CMS collection. Collection fields define the structure of content items in a collection. Note: The field type cannot be changed after creation - changing it requires replacement (delete + recreate).

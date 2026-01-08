@@ -1,4 +1,4 @@
-module github.com/jdetmar/pulumi-webflow/sdk/go/webflow
+module github.com/JDetmar/pulumi-webflow/sdk/go/webflow
 
 go 1.24.7
 

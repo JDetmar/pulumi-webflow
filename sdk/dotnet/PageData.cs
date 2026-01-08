@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
-using Pulumi;
 
-namespace Community.Pulumi.Webflow
+namespace Pulumi.Webflow
 {
     /// <summary>
     /// Reads page information from a Webflow site. Pages cannot be created via the API - they must be created in the Webflow designer. Use this data source to retrieve page metadata for use in your infrastructure code. Specify pageId to get a single page, or omit it to list all pages in the site.

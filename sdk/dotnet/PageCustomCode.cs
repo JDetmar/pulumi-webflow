@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
-using Pulumi;
 
-namespace Community.Pulumi.Webflow
+namespace Pulumi.Webflow
 {
     /// <summary>
     /// Manages custom code (JavaScript) scripts applied to a Webflow page. This resource allows you to apply registered custom code scripts to specific pages. Scripts must first be registered using the RegisteredScript resource before they can be applied. All scripts in the configuration will be applied to the page; scripts not listed will be removed.

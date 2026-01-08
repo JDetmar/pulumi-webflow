@@ -7,7 +7,7 @@ import (
 	"context"
 	"reflect"
 
-	"github.com/jdetmar/pulumi-webflow/sdk/go/webflow/internal"
+	"github.com/JDetmar/pulumi-webflow/sdk/go/webflow/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 

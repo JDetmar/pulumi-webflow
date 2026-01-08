@@ -242,7 +242,17 @@ jobs:
       - name: Publish Node.js SDK
         run: |
           cd sdk/nodejs
-          npm publish --access public
+          # Determine npm tag based on version (prerelease versions need explicit tag)
+          if [[ "$PROVIDER_VERSION" == *"-alpha"* ]]; then
+            NPM_TAG="alpha"
+          elif [[ "$PROVIDER_VERSION" == *"-beta"* ]]; then
+            NPM_TAG="beta"
+          elif [[ "$PROVIDER_VERSION" == *"-rc"* ]]; then
+            NPM_TAG="rc"
+          else
+            NPM_TAG="latest"
+          fi
+          npm publish --access public --tag "$NPM_TAG"
         env:
           NODE_AUTH_TOKEN: ""  # Clear any default token to ensure OIDC is used
         continue-on-error: true

@@ -310,6 +310,9 @@ jobs:
         with:
           gradle-version: "7.6"
 
+      # Publish to Maven Central using gradle-nexus-publish-plugin v2.0.0
+      # Tasks must be in same invocation: publishToSonatype followed by closeAndReleaseSonatypeStagingRepository
+      # See: https://github.com/gradle-nexus/publish-plugin
       - name: Publish Java SDK
         run: gradle -p sdk/java publishToSonatype closeAndReleaseSonatypeStagingRepository
         env:
@@ -317,8 +320,9 @@ jobs:
           SIGNING_KEY_ID: ${{ secrets.JAVA_SIGNING_KEY_ID }}
           SIGNING_KEY: ${{ secrets.JAVA_SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.JAVA_SIGNING_PASSWORD }}
-          PUBLISH_REPO_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          PUBLISH_REPO_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          # Maven Central Portal credentials (token-based auth)
+          PUBLISH_REPO_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          PUBLISH_REPO_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
 
   publish_go_sdk:
     runs-on: ubuntu-latest

@@ -12,7 +12,7 @@ Your provider is configured to publish to **5 package managers** automatically w
 | **npm** | `@jdetmar/pulumi-webflow` | TypeScript/JavaScript | Trusted Publishing + Provenance |
 | **PyPI** | `pulumi-webflow` | Python | Trusted Publishing + Sigstore |
 | **NuGet** | `Pulumi.Webflow` | .NET/C# | Trusted Publishing |
-| **Maven Central** | `com.pulumi:webflow` | Java | GPG signed |
+| **Maven Central** | `io.github.jdetmar:pulumi-webflow` | Java | GPG signed |
 
 The Go SDK is published to a separate GitHub repository branch.
 
@@ -48,10 +48,11 @@ You need accounts on each package registry:
    - Sign in with Microsoft account
    - Verify email address
 
-4. **Maven Central / Sonatype OSSRH** (https://central.sonatype.org)
-   - Create Sonatype JIRA account: https://issues.sonatype.org/secure/Signup!default.jspa
-   - Open a ticket to claim your group ID (e.g., `com.pulumi` or your own)
-   - Wait for approval (can take 1-2 business days)
+4. **Maven Central Portal** (https://central.sonatype.com)
+   - Create account at https://central.sonatype.com (GitHub login recommended)
+   - Verify your namespace (e.g., `io.github.yourusername`)
+   - For GitHub namespaces: Create a repo matching the verification code
+   - Generate a user token at Account → Generate User Token
 
 ### Step 2: Configure Trusted Publishers
 
@@ -140,10 +141,11 @@ gpg --armor --export-secret-keys ABCD1234EFGH5678 | base64
 gpg --keyserver keyserver.ubuntu.com --send-keys ABCD1234EFGH5678
 ```
 
-#### Sonatype OSSRH Credentials
+#### Maven Central Portal Credentials
 
-1. Your JIRA username from Step 1
-2. Generate a user token at https://oss.sonatype.org/#profile;User%20Token
+1. Log in to https://central.sonatype.com
+2. Go to Account → Generate User Token
+3. Copy the generated username and password (these are your API credentials)
 
 ### Step 3: Configure GitHub Repository Secrets
 
@@ -154,8 +156,8 @@ Add these secrets:
 | Secret Name | Value | Required |
 |-------------|-------|----------|
 | `NUGET_USERNAME` | Your nuget.org username | Yes |
-| `OSSRH_USERNAME` | Sonatype JIRA username | Yes |
-| `OSSRH_PASSWORD` | Sonatype user token | Yes |
+| `MAVEN_CENTRAL_USERNAME` | Maven Central Portal token username | Yes |
+| `MAVEN_CENTRAL_PASSWORD` | Maven Central Portal token password | Yes |
 | `JAVA_SIGNING_KEY_ID` | GPG key ID (e.g., `ABCD1234EFGH5678`) | Yes |
 | `JAVA_SIGNING_KEY` | Base64-encoded GPG private key | Yes |
 | `JAVA_SIGNING_PASSWORD` | GPG key passphrase | Yes |
@@ -271,7 +273,7 @@ Use this checklist every time you release a new version.
    | npm | https://www.npmjs.com/package/@jdetmar/pulumi-webflow |
    | PyPI | https://pypi.org/project/pulumi-webflow/ |
    | NuGet | https://www.nuget.org/packages/Pulumi.Webflow |
-   | Maven | https://central.sonatype.com/artifact/com.pulumi/webflow |
+   | Maven | https://central.sonatype.com/artifact/io.github.jdetmar/pulumi-webflow |
 
 ### Post-Release Checklist
 
@@ -417,12 +419,12 @@ git tag -d v0.1.0 && git push origin :refs/tags/v0.1.0
 ### Required Secrets Summary
 
 ```
-NUGET_USERNAME         # NuGet Trusted Publishing (username only)
-OSSRH_USERNAME         # Maven Central
-OSSRH_PASSWORD         # Maven Central
-JAVA_SIGNING_KEY_ID    # Maven GPG signing
-JAVA_SIGNING_KEY       # Maven GPG signing
-JAVA_SIGNING_PASSWORD  # Maven GPG signing
+NUGET_USERNAME           # NuGet Trusted Publishing (username only)
+MAVEN_CENTRAL_USERNAME   # Maven Central Portal token username
+MAVEN_CENTRAL_PASSWORD   # Maven Central Portal token password
+JAVA_SIGNING_KEY_ID      # Maven GPG signing
+JAVA_SIGNING_KEY         # Maven GPG signing
+JAVA_SIGNING_PASSWORD    # Maven GPG signing
 ```
 
 **Note:** npm, PyPI, and NuGet all use Trusted Publishing - no API keys/tokens needed!
@@ -433,4 +435,4 @@ JAVA_SIGNING_PASSWORD  # Maven GPG signing
 - npm: https://www.npmjs.com/package/@jdetmar/pulumi-webflow
 - PyPI: https://pypi.org/project/pulumi-webflow/
 - NuGet: https://www.nuget.org/packages/Pulumi.Webflow
-- Maven: https://central.sonatype.com/artifact/com.pulumi/webflow
+- Maven: https://central.sonatype.com/artifact/io.github.jdetmar/pulumi-webflow

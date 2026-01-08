@@ -79,6 +79,10 @@ sdk/java: $(SCHEMA_FILE)
 	else \
 		sed -i '/^include("lib")/d' sdk/java/settings.gradle; \
 	fi
+	# Post-process build.gradle for Maven Central publishing
+	# pulumi-java-gen doesn't support all POM metadata fields, so we use a Python script for reliable patching
+	@echo "Post-processing Java SDK build.gradle for Maven Central..."
+	@python3 scripts/patch-java-build-gradle.py sdk/java/build.gradle
 
 sdk/python: $(SCHEMA_FILE)
 	rm -rf $@

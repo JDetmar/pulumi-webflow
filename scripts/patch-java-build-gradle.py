@@ -11,11 +11,37 @@ filled in for Maven Central compliance. This script patches the file with:
 
 import re
 import sys
+from pathlib import Path
+
+
+class PatchError(Exception):
+    """Raised when patching fails due to unexpected file format."""
+    pass
 
 
 def patch_build_gradle(filepath: str) -> None:
-    with open(filepath, 'r') as f:
-        content = f.read()
+    """
+    Patch the generated build.gradle file with Maven Central publishing configuration.
+
+    Args:
+        filepath: Path to the build.gradle file to patch
+
+    Raises:
+        FileNotFoundError: If the file doesn't exist
+        PermissionError: If the file can't be read/written
+        PatchError: If the file format is unexpected and patching fails
+    """
+    path = Path(filepath)
+
+    if not path.exists():
+        raise FileNotFoundError(f"build.gradle not found: {filepath}")
+
+    try:
+        content = path.read_text(encoding='utf-8')
+    except PermissionError:
+        raise PermissionError(f"Cannot read build.gradle (permission denied): {filepath}")
+
+    original_content = content
 
     # Add nexus publish plugin if not present
     if 'io.github.gradle-nexus.publish-plugin' not in content:
@@ -32,21 +58,29 @@ def patch_build_gradle(filepath: str) -> None:
         )
 
     # Add publishStagingURL with default if not present or missing default
+    # Note: The staging URL is for Maven Central Portal's staging API (not legacy OSSRH)
+    # See: https://central.sonatype.org/publish/publish-portal-api/
+    staging_url = "https://ossrh-staging-api.central.sonatype.com/service/local/"
+
     if 'def publishStagingURL' not in content:
         content = content.replace(
             'def publishRepoUsername = System.getenv("PUBLISH_REPO_USERNAME")',
-            'def publishStagingURL = System.getenv("PUBLISH_STAGING_URL") ?: "https://ossrh-staging-api.central.sonatype.com/service/local/"\ndef publishRepoUsername = System.getenv("PUBLISH_REPO_USERNAME")'
+            f'def publishStagingURL = System.getenv("PUBLISH_STAGING_URL") ?: "{staging_url}"\ndef publishRepoUsername = System.getenv("PUBLISH_REPO_USERNAME")'
         )
-    elif '?:' not in content.split('def publishStagingURL')[1].split('\n')[0]:
-        # publishStagingURL exists but without default value
-        content = content.replace(
-            'def publishStagingURL = System.getenv("PUBLISH_STAGING_URL")',
-            'def publishStagingURL = System.getenv("PUBLISH_STAGING_URL") ?: "https://ossrh-staging-api.central.sonatype.com/service/local/"'
-        )
+    elif 'def publishStagingURL' in content:
+        # publishStagingURL exists; check if it already has a default value
+        after_def = content.split('def publishStagingURL', 1)[1]
+        first_line = after_def.split('\n', 1)[0] if '\n' in after_def else after_def
+        if '?:' not in first_line:
+            # publishStagingURL exists but without default value
+            content = content.replace(
+                'def publishStagingURL = System.getenv("PUBLISH_STAGING_URL")',
+                f'def publishStagingURL = System.getenv("PUBLISH_STAGING_URL") ?: "{staging_url}"'
+            )
 
-    # Update publishRepoURL default to Maven Central snapshots
+    # Update publishRepoURL default to Maven Central snapshots (only if no default exists)
     content = re.sub(
-        r'def publishRepoURL = System\.getenv\("PUBLISH_REPO_URL"\)',
+        r'def publishRepoURL = System\.getenv\("PUBLISH_REPO_URL"\)(?!\s*\?:)',
         'def publishRepoURL = System.getenv("PUBLISH_REPO_URL") ?: "https://central.sonatype.com/repository/maven-snapshots/"',
         content
     )
@@ -144,15 +178,45 @@ if (publishRepoUsername) {
         if publishing_match:
             insert_pos = publishing_match.end()
             content = content[:insert_pos] + nexus_block + content[insert_pos:]
+        else:
+            raise PatchError(
+                "Failed to locate 'publishing { ... }' block in build.gradle; "
+                "the file format may have changed and nexusPublishing could not be added. "
+                f"File: {filepath}"
+            )
 
-    with open(filepath, 'w') as f:
-        f.write(content)
+    # Write the patched content
+    try:
+        path.write_text(content, encoding='utf-8')
+    except PermissionError:
+        raise PermissionError(f"Cannot write to build.gradle (permission denied): {filepath}")
 
-    print(f"Successfully patched {filepath}")
+    # Report what was done
+    if content == original_content:
+        print(f"No changes needed for {filepath} (already patched)")
+    else:
+        print(f"Successfully patched {filepath}")
+
+
+def main() -> int:
+    """Main entry point."""
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <build.gradle path>", file=sys.stderr)
+        return 1
+
+    try:
+        patch_build_gradle(sys.argv[1])
+        return 0
+    except FileNotFoundError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+    except PermissionError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+    except PatchError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <build.gradle path>")
-        sys.exit(1)
-    patch_build_gradle(sys.argv[1])
+    sys.exit(main())

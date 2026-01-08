@@ -6,45 +6,45 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Webflow.Inputs
+namespace Community.Pulumi.Webflow.Outputs
 {
 
-    public sealed class CustomScriptArgsArgs : global::Pulumi.ResourceArgs
+    [OutputType]
+    public sealed class CustomScriptArgs
     {
-        [Input("attributes")]
-        private InputMap<object>? _attributes;
-
         /// <summary>
         /// Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         /// </summary>
-        public InputMap<object> Attributes
-        {
-            get => _attributes ?? (_attributes = new InputMap<object>());
-            set => _attributes = value;
-        }
-
+        public readonly ImmutableDictionary<string, object>? Attributes;
         /// <summary>
         /// The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
         /// </summary>
-        [Input("id", required: true)]
-        public Input<string> Id { get; set; } = null!;
-
+        public readonly string Id;
         /// <summary>
         /// The location where the script is placed on the page. Valid values: 'header' (placed in the &lt;head&gt; section), 'footer' (placed before &lt;/body&gt;). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
         /// </summary>
-        [Input("location", required: true)]
-        public Input<string> Location { get; set; } = null!;
-
+        public readonly string Location;
         /// <summary>
         /// The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
         /// </summary>
-        [Input("version", required: true)]
-        public Input<string> Version { get; set; } = null!;
+        public readonly string Version;
 
-        public CustomScriptArgsArgs()
+        [OutputConstructor]
+        private CustomScriptArgs(
+            ImmutableDictionary<string, object>? attributes,
+
+            string id,
+
+            string location,
+
+            string version)
         {
+            Attributes = attributes;
+            Id = id;
+            Location = location;
+            Version = version;
         }
-        public static new CustomScriptArgsArgs Empty => new CustomScriptArgsArgs();
     }
 }

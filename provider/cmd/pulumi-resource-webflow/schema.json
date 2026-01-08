@@ -7,7 +7,7 @@
   "language": {
     "csharp": {
       "respectSchemaVersion": true,
-      "rootNamespace": "Pulumi"
+      "rootNamespace": "Community.Pulumi"
     },
     "go": {
       "importBasePath": "github.com/jdetmar/pulumi-webflow/sdk/go/webflow"

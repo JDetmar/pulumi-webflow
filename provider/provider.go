@@ -64,7 +64,7 @@ func Provider() p.Provider {
 		}).
 		WithLanguageMap(map[string]any{
 			"csharp": map[string]any{
-				"rootNamespace":        "Pulumi",
+				"rootNamespace":        "Community.Pulumi",
 				"respectSchemaVersion": true,
 			},
 			"java": map[string]any{

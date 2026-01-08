@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Webflow
+namespace Community.Pulumi.Webflow
 {
     /// <summary>
     /// Manages HTTP redirects for a Webflow site. This resource allows you to define redirect rules for old URLs to new locations, supporting both permanent (301) and temporary (302) redirects.

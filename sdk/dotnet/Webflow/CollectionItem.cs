@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Webflow
+namespace Community.Pulumi.Webflow
 {
     /// <summary>
     /// Manages CMS collection items for a Webflow collection. Collection items represent individual content entries (blog posts, products, etc.) within a CMS collection. Each item has dynamic field data based on the collection schema.

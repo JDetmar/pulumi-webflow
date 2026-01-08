@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Webflow
+namespace Community.Pulumi.Webflow
 {
     /// <summary>
     /// Manages (imports) ecommerce settings for a Webflow site. This is a read-only resource that allows you to track and reference existing ecommerce settings. Ecommerce must be enabled through the Webflow dashboard before this resource can be used. Use this resource to access the site's default currency and verify ecommerce is enabled.

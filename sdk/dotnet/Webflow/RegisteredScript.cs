@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Webflow
+namespace Community.Pulumi.Webflow
 {
     /// <summary>
     /// Manages custom code scripts in the Webflow script registry. This resource allows you to register and manage externally hosted scripts that can be deployed across your Webflow site with version control and integrity verification.

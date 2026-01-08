@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Webflow.Inputs
+namespace Community.Pulumi.Webflow.Inputs
 {
 
     public sealed class PageCustomCodeScriptArgs : global::Pulumi.ResourceArgs

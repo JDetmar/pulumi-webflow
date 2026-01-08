@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Webflow
+namespace Community.Pulumi.Webflow
 {
     /// <summary>
     /// Manages asset folders for organizing files in a Webflow site. This resource allows you to create folders to organize your assets (images, documents, etc.) in the Webflow Assets panel. NOTE: The Webflow API does not support deleting or updating asset folders. Deleting this resource will only remove it from Pulumi state, not from Webflow. Any changes to folder properties will require creating a new folder.

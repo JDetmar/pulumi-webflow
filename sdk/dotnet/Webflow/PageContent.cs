@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Webflow
+namespace Community.Pulumi.Webflow
 {
     /// <summary>
     /// Manages static content (text) for a Webflow page. This resource allows you to update text content within existing DOM nodes on a page. It does NOT manage page structure or layout - only content within existing nodes. To find node IDs, you must first retrieve the page DOM structure using the Webflow API.

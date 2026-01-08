@@ -72,6 +72,23 @@ Required steps:
 
 **See:** [EXAMPLES.md](EXAMPLES.md) for detailed guidelines, templates, and current coverage status.
 
+### Java SDK Build Process
+
+The Java SDK requires post-processing after generation because `pulumi-java-gen` doesn't support all Maven Central requirements.
+
+**What `pulumi-java-gen` supports via schema.json:**
+- `basePackage` - Java package prefix (set to `io.github.jdetmar.pulumi`)
+- `buildFiles` - Generates Gradle build files
+
+**What requires post-processing** (in `scripts/patch-java-build-gradle.py`):
+- `groupId` / `artifactId` - Maven coordinates
+- POM metadata: name, license, developers, SCM URLs
+- GPG signing with 3-parameter `useInMemoryPgpKeys(keyId, key, password)`
+
+The Makefile automatically runs the post-processing script after Java SDK generation.
+
+**Maven Central coordinates:** `io.github.jdetmar.pulumi:pulumi-webflow`
+
 ### Testing
 
 ```bash
@@ -93,6 +110,9 @@ sdk/                # Generated SDK code (DO NOT edit manually)
   ├── python/
   ├── dotnet/
   └── java/
+
+scripts/            # Build scripts
+  └── patch-java-build-gradle.py  # Post-processes Java SDK for Maven Central
 
 examples/           # Example Pulumi programs for each language
 ```

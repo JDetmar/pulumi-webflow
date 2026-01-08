@@ -10,4 +10,4 @@ pluginManagement {
   }
 }
 
-rootProject.name = "com.webflow.webflow"
+rootProject.name = "io.github.jdetmar.pulumi.webflow"

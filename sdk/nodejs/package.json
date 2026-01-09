@@ -3,6 +3,10 @@
     "version": "${VERSION}",
     "description": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",
     "homepage": "https://github.com/JDetmar/pulumi-webflow",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/JDetmar/pulumi-webflow"
+    },
     "scripts": {
         "build": "tsc"
     },

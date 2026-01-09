@@ -1,4 +1,0 @@
-# Development stack configuration
-config:
-  sitePrefix: "dev"
-  siteCount: 3

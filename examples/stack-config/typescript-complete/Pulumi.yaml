@@ -1,8 +1,0 @@
-name: webflow-multi-environment
-runtime: nodejs
-description: Multi-environment Webflow site deployment with stack-specific configuration
-
-config:
-  # Default configuration (can be overridden per stack in Pulumi.<stack>.yaml)
-  webflow:
-    description: Webflow provider configuration

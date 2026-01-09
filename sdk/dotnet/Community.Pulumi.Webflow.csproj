@@ -7,7 +7,7 @@
     <Description>Unofficial community-maintained Pulumi provider for managing Webflow sites, redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.</Description>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/JDetmar/pulumi-webflow</PackageProjectUrl>
-    <RepositoryUrl></RepositoryUrl>
+    <RepositoryUrl>https://github.com/JDetmar/pulumi-webflow</RepositoryUrl>
     <PackageIcon>logo.png</PackageIcon>
     <Version>1.0.0-alpha.0+dev</Version>
 

@@ -25,6 +25,9 @@ setup(name='pulumi_webflow',
       long_description=readme(),
       long_description_content_type='text/markdown',
       url='https://github.com/JDetmar/pulumi-webflow',
+      project_urls={
+          'Repository': 'https://github.com/JDetmar/pulumi-webflow'
+      },
       packages=find_packages(),
       package_data={
           'pulumi_webflow': [

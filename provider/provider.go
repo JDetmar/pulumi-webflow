@@ -35,6 +35,7 @@ func Provider() p.Provider {
 				"redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.",
 		).
 		WithHomepage("https://github.com/JDetmar/pulumi-webflow").
+		WithRepository("https://github.com/JDetmar/pulumi-webflow").
 		WithNamespace(Name).
 		WithConfig(infer.Config(&Config{})).
 		WithResources(

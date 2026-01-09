@@ -76,6 +76,7 @@ func Provider() p.Provider {
 				"packageName": "@jdetmar/pulumi-webflow",
 				"packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. " +
 					"Not affiliated with Pulumi Corporation or Webflow, Inc.",
+				"respectSchemaVersion": true,
 			},
 			"python": map[string]any{
 				"packageName": "pulumi_webflow",

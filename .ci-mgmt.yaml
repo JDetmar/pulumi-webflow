@@ -5,7 +5,7 @@ providerDefaultBranch: main
 publishRegistry: false
 providerVersion: github.com/JDetmar/pulumi-webflow/provider.Version
 parallel: 3
-sdkModuleDir: sdk/go/pulumi-webflow
+sdkModuleDir: sdk/go/webflow
 esc:
     enabled: true
     environment: imports/github-secrets

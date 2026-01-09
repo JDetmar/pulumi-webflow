@@ -34,7 +34,8 @@ func Provider() p.Provider {
 			"Unofficial community-maintained Pulumi provider for managing Webflow sites, "+
 				"redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.",
 		).
-		WithHomepage("https://github.com/jdetmar/pulumi-webflow").
+		WithHomepage("https://github.com/JDetmar/pulumi-webflow").
+		WithRepository("https://github.com/JDetmar/pulumi-webflow").
 		WithNamespace(Name).
 		WithConfig(infer.Config(&Config{})).
 		WithResources(
@@ -64,7 +65,7 @@ func Provider() p.Provider {
 		}).
 		WithLanguageMap(map[string]any{
 			"csharp": map[string]any{
-				"rootNamespace":        "Pulumi",
+				"rootNamespace":        "Community.Pulumi",
 				"respectSchemaVersion": true,
 			},
 			"java": map[string]any{
@@ -75,6 +76,7 @@ func Provider() p.Provider {
 				"packageName": "@jdetmar/pulumi-webflow",
 				"packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. " +
 					"Not affiliated with Pulumi Corporation or Webflow, Inc.",
+				"respectSchemaVersion": true,
 			},
 			"python": map[string]any{
 				"packageName": "pulumi_webflow",

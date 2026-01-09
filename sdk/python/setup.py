@@ -24,7 +24,10 @@ setup(name='pulumi_webflow',
       description="Unofficial community-maintained Pulumi provider for managing Webflow sites, redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.",
       long_description=readme(),
       long_description_content_type='text/markdown',
-      url='https://github.com/jdetmar/pulumi-webflow',
+      url='https://github.com/JDetmar/pulumi-webflow',
+      project_urls={
+          'Repository': 'https://github.com/JDetmar/pulumi-webflow'
+      },
       packages=find_packages(),
       package_data={
           'pulumi_webflow': [

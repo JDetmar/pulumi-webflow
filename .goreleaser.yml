@@ -18,7 +18,7 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X github.com/jdetmar/pulumi-webflow/provider.Version={{.Tag}}
+      - -X github.com/JDetmar/pulumi-webflow/provider.Version={{.Tag}}
     binary: pulumi-resource-webflow
 
 archives:

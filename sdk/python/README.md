@@ -1,6 +1,6 @@
 # Webflow Pulumi Provider
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/jdetmar/pulumi-webflow/ci.yml?branch=main)](https://github.com/jdetmar/pulumi-webflow/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/JDetmar/pulumi-webflow/build.yml?branch=main)](https://github.com/JDetmar/pulumi-webflow/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **⚠️ Unofficial Community Provider**
@@ -9,15 +9,15 @@
 >
 > - **Not an official product** - Created and maintained by the community
 > - **No warranties** - Provided "as-is" under the MIT License
-> - **Community support only** - Issues and questions via [GitHub](https://github.com/jdetmar/pulumi-webflow/issues)
+> - **Community support only** - Issues and questions via [GitHub](https://github.com/JDetmar/pulumi-webflow/issues)
 
 **Manage your Webflow sites and resources as code using Pulumi**
 
-The Webflow Pulumi Provider lets you programmatically manage Webflow resources (sites, redirects, robots.txt, and more) using the same Pulumi infrastructure-as-code approach you use for cloud resources. Deploy, preview, and destroy Webflow infrastructure alongside your other cloud deployments.
+The Webflow Pulumi Provider lets you programmatically manage Webflow resources using the same Pulumi infrastructure-as-code approach you use for cloud resources. Manage sites, pages, collections, redirects, webhooks, assets, and more. Deploy, preview, and destroy Webflow infrastructure alongside your other cloud deployments.
 
 ## What You Can Do
 
-- **Deploy Webflow resources as code** - Define sites, redirects, robots.txt and other resources in TypeScript, Python, Go, C#, or Java
+- **Deploy Webflow resources as code** - Define sites, pages, collections, redirects, webhooks, assets, and more in TypeScript, Python, Go, C#, or Java
 - **Preview before deploying** - Use `pulumi preview` to see exactly what will change
 - **Manage multiple environments** - Create separate stacks for dev, staging, and production
 - **Version control your infrastructure** - Track all changes in Git
@@ -27,10 +27,10 @@ The Webflow Pulumi Provider lets you programmatically manage Webflow resources (
 
 1. [Prerequisites](#prerequisites)
 2. [Installation](#installation)
-3. [Quick Start](#quick-start) ← **Start here** (20 minutes to your first deployment)
+3. [Quick Start](#quick-start) - Start here
 4. [Authentication](#authentication)
 5. [Verification](#verification)
-6. [Troubleshooting](#troubleshooting)
+6. [Get Help](#get-help)
 7. [Version Control & Audit Trail](#version-control--audit-trail)
 8. [Multi-Language Examples](#multi-language-examples)
 9. [Next Steps](#next-steps)
@@ -47,8 +47,8 @@ Before you begin, make sure you have:
 - Verify installation: `pulumi version` (requires v3.0 or later)
 
 ### 2. **Programming Language Runtime** (choose at least one)
-- **TypeScript**: [Node.js](https://nodejs.org/) 14.x or later
-- **Python**: [Python](https://www.python.org/downloads/) 3.8 or later
+- **TypeScript**: [Node.js](https://nodejs.org/) 18.x or later
+- **Python**: [Python](https://www.python.org/downloads/) 3.9 or later
 - **Go**: [Go](https://golang.org/dl/) 1.21 or later
 - **C#**: [.NET](https://dotnet.microsoft.com/download) 6.0 or later
 - **Java**: [Java](https://adoptopenjdk.net/) 11 or later
@@ -126,7 +126,7 @@ Replace the contents of `index.ts` with:
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as webflow from "pulumi-webflow";
+import * as webflow from "@jdetmar/pulumi-webflow";
 
 // Get config values
 const config = new pulumi.Config();
@@ -286,7 +286,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: pulumi/actions@v4
+      - uses: pulumi/actions@v6
         with:
           command: up
 ```
@@ -342,180 +342,31 @@ pulumi preview
 
 ---
 
-## Troubleshooting
+## Get Help
 
-### Installation Issues
-
-**Problem: "Plugin not found: webflow" error**
-
-```
-Error: Plugin webflow not found. Run `pulumi plugin install` to make sure the plugin is installed.
-```
-
-**Solution:**
-```bash
-# Manual plugin installation
-pulumi plugin install resource webflow
-
-# Or just run pulumi up - it will install automatically
-pulumi up
-```
-
----
-
-### Authentication Issues
-
-**Problem: "Unauthorized" error during pulumi up**
-
-```
-Error: Unauthorized - Invalid or expired Webflow API token
-```
-
-**Solutions:**
-1. Verify your token was set correctly:
-   ```bash
-   pulumi config get webflow:apiToken --show-secrets
-   # Should show your actual token (masked normally, shown with --show-secrets)
-   ```
-
-2. Check if token is expired - regenerate it in Webflow:
-   - Account Settings → API Tokens
-   - Click the refresh icon next to your token
-   - Update Pulumi: `pulumi config set webflow:apiToken --secret`
-
-3. Verify token permissions:
-   - Go to Webflow Account Settings → API Tokens
-   - Check that the token has "Sites: Read & Write" permission
-
----
-
-### Configuration Issues
-
-**Problem: "Invalid site ID" error**
-
-```
-Error: Invalid or malformed siteId. Must be a 24-character hex string.
-```
-
-**Solutions:**
-1. Get the correct site ID:
-   - Open Webflow Designer
-   - Go to Project Settings → API & Webhooks
-   - Copy your Site ID (24-character hex string)
-
-2. Update your config:
-   ```bash
-   pulumi config set siteId --secret
-   # Paste your correct site ID
-   ```
-
-3. Verify it was set:
-   ```bash
-   pulumi config get siteId --show-secrets
-   ```
-
----
-
-### Network Issues
-
-**Problem: "Connection timeout" or "Connection refused"**
-
-**Solutions:**
-1. Check your internet connection
-2. Check if Webflow API is accessible:
-   ```bash
-   curl -H "Authorization: Bearer YOUR_TOKEN" https://api.webflow.com/v2/sites
-   ```
-3. Check for corporate firewalls or proxy issues
-4. Try again - may be temporary API issue
-
----
-
-### Get Help
-
-- 📖 **Full Troubleshooting Guide**: [docs/troubleshooting.md](./docs/troubleshooting.md) - Comprehensive error reference and diagnostic procedures
-- ❓ **FAQ**: [docs/faq.md](./docs/faq.md) - Answers to common questions
-- 📚 **Full Documentation**: [docs/](./docs/)
-- 🔧 **Examples**: Check [examples/](./examples/) for comprehensive examples
-- 🐛 **Report Bugs**: [GitHub Issues](https://github.com/jdetmar/pulumi-webflow/issues)
-- 💬 **Ask Questions**: [GitHub Discussions](https://github.com/jdetmar/pulumi-webflow/discussions)
+- [Troubleshooting Guide](./docs/troubleshooting.md) - Comprehensive error reference and solutions
+- [FAQ](./docs/faq.md) - Answers to common questions
+- [Examples](./examples/) - Working code for all resources
+- [GitHub Issues](https://github.com/JDetmar/pulumi-webflow/issues) - Report bugs
+- [GitHub Discussions](https://github.com/JDetmar/pulumi-webflow/discussions) - Ask questions
 
 ---
 
 ## Version Control & Audit Trail
 
-All infrastructure changes can be tracked in Git to create an immutable audit trail for compliance.
+Track all infrastructure changes in Git for compliance and auditability. Features include automatic audit trails, code review via pull requests, and SOC 2/HIPAA/GDPR-ready reporting.
 
-### Key Features
-
-- ✅ **Automatic Audit Trail** - Every change tracked with author, timestamp, and reason
-- ✅ **Code Review Process** - Pull requests enable peer review before deployment
-- ✅ **Compliance Ready** - Generate audit reports for SOC 2, HIPAA, GDPR compliance
-- ✅ **CI/CD Integration** - GitHub Actions validates changes before merge
-- ✅ **Multi-Environment** - Separate tracking for dev, staging, production
-
-### Quick Example
-
-```bash
-# Create a feature branch for your change
-git checkout -b feat/add-redirects
-
-# Make infrastructure changes
-# ... update your Pulumi code ...
-
-# Preview the changes
-pulumi preview
-
-# Commit with a clear message
-git commit -m "feat(redirects): add GDPR-compliant redirect rules
-
-- Redirect /privacy to privacy-policy.webflow.io
-- Redirect /terms to terms-of-service.webflow.io
-- Requires approval before deployment
-
-Story: 2.2 - Redirect CRUD Operations"
-
-# Push and create a Pull Request for code review
-git push origin feat/add-redirects
-```
-
-### Compliance Documentation
-
-- 📖 **[Version Control Integration Guide](./docs/version-control.md)** - Complete Git workflow guide with best practices
-
-### Generating Audit Reports
-
-```bash
-# View recent changes
-git log --oneline -- Pulumi.*.yaml
-
-# Generate detailed audit report for a time period
-git log --since="2025-12-01" --until="2025-12-31" \
-  --format="%ai | %an | %s" \
-  -- Pulumi.*.yaml
-
-# Export audit trail for compliance review
-git log -p -- Pulumi.*.yaml > audit-report.txt
-```
-
-See the [Version Control guide](./docs/version-control.md) for complete instructions on setting up Git workflows and compliance reporting.
+See the [Version Control Guide](./docs/version-control.md) for Git workflows, commit conventions, and audit report generation.
 
 ---
 
 ## Multi-Language Examples
 
-The quickstart above uses TypeScript. Complete examples for other languages are in the [examples/quickstart/](./examples/quickstart/) directory:
+The Quick Start uses TypeScript. Complete examples for all languages are in [examples/quickstart/](./examples/quickstart/):
 
-- **TypeScript**: [examples/quickstart/typescript/](./examples/quickstart/typescript/) - Recommended for quick onboarding
-- **Python**: [examples/quickstart/python/](./examples/quickstart/python/) - Pythonic approach
-- **Go**: [examples/quickstart/go/](./examples/quickstart/go/) - High-performance deployment
+- [TypeScript](./examples/quickstart/typescript/) | [Python](./examples/quickstart/python/) | [Go](./examples/quickstart/go/)
 
-Each example includes:
-- Complete, copy-pasteable code
-- Language-specific setup instructions
-- Pulumi.yaml configuration
-- Package manager files (package.json, requirements.txt, go.mod)
-- Comprehensive README
+Each includes setup instructions, complete code, and a README.
 
 ---
 
@@ -555,8 +406,8 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for gu
 
 ### Ways to Contribute
 
-- **Report bugs** - Found an issue? [Create a GitHub issue](https://github.com/jdetmar/pulumi-webflow/issues)
-- **Submit improvements** - Have an idea? [Create a discussion](https://github.com/jdetmar/pulumi-webflow/discussions)
+- **Report bugs** - Found an issue? [Create a GitHub issue](https://github.com/JDetmar/pulumi-webflow/issues)
+- **Submit improvements** - Have an idea? [Create a discussion](https://github.com/JDetmar/pulumi-webflow/discussions)
 - **Contribute code** - Fork the repo, make changes, and submit a pull request
 - **Improve documentation** - Help us document features and patterns
 

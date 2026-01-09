@@ -2,7 +2,7 @@ PROJECT_NAME := Pulumi Provider Webflow
 
 PACK             := webflow
 PACKDIR          := sdk
-PROJECT          := github.com/jdetmar/pulumi-webflow
+PROJECT          := github.com/JDetmar/pulumi-webflow
 NODE_MODULE_NAME := @jdetmar/pulumi-webflow
 NUGET_PKG_NAME   := Pulumi.Webflow
 
@@ -55,7 +55,7 @@ ensure::
 
 $(SCHEMA_FILE): provider
 	$(PULUMI) package get-schema $(WORKING_DIR)/bin/${PROVIDER} | \
-		jq 'del(.version) | (.language.go.importBasePath="github.com/jdetmar/pulumi-webflow/sdk/go/webflow")' > $(SCHEMA_FILE)
+		jq 'del(.version) | (.language.go.importBasePath="github.com/JDetmar/pulumi-webflow/sdk/go/webflow")' > $(SCHEMA_FILE)
 
 # Codegen generates the schema file and *generates* all sdks. This is a local process and
 # does not require the ability to build all SDKs.
@@ -69,6 +69,11 @@ codegen: $(SCHEMA_FILE) sdk/dotnet sdk/go sdk/nodejs sdk/python sdk/java
 sdk/%: $(SCHEMA_FILE)
 	rm -rf $@
 	$(PULUMI) package gen-sdk --language $* $(SCHEMA_FILE) --version "${VERSION_GENERIC}"
+
+sdk/nodejs: $(SCHEMA_FILE)
+	rm -rf $@
+	$(PULUMI) package gen-sdk --language nodejs $(SCHEMA_FILE) --version "${VERSION_GENERIC}"
+	cp README.md ${PACKDIR}/nodejs/
 
 sdk/java: $(SCHEMA_FILE)
 	rm -rf $@
@@ -101,7 +106,7 @@ sdk/go: ${SCHEMA_FILE}
 	mkdir -p $$GO_PKG_DIR; \
 	cp go.mod $$GO_PKG_DIR/go.mod; \
 	cd $$GO_PKG_DIR && \
-		go mod edit -module=github.com/jdetmar/pulumi-webflow/sdk/go/webflow && \
+		go mod edit -module=github.com/JDetmar/pulumi-webflow/sdk/go/webflow && \
 		go mod tidy
 
 .PHONY: provider
@@ -238,15 +243,6 @@ sign-goreleaser-exe-%: bin/jsign-6.0.jar
 			az logout; \
 		fi; \
 	fi
-
-# To make an immediately observable change to .ci-mgmt.yaml:
-#
-# - Edit .ci-mgmt.yaml
-# - Run make ci-mgmt to apply the change locally.
-#
-ci-mgmt: .ci-mgmt.yaml
-	go run github.com/pulumi/ci-mgmt/provider-ci@master generate
-.PHONY: ci-mgmt
 
 .PHONY:local_generate
 local_generate: # Required by CI

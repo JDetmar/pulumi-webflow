@@ -1,8 +1,9 @@
 {
     "name": "@jdetmar/pulumi-webflow",
-    "version": "${VERSION}",
+    "version": "1.0.0-alpha.0+dev",
     "description": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",
-    "homepage": "https://github.com/jdetmar/pulumi-webflow",
+    "homepage": "https://github.com/JDetmar/pulumi-webflow",
+    "repository": "https://github.com/JDetmar/pulumi-webflow",
     "scripts": {
         "build": "tsc"
     },
@@ -15,6 +16,7 @@
     },
     "pulumi": {
         "resource": true,
-        "name": "webflow"
+        "name": "webflow",
+        "version": "1.0.0-alpha.0+dev"
     }
 }

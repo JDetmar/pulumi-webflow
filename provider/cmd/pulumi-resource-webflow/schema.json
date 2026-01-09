@@ -2,15 +2,16 @@
   "name": "webflow",
   "displayName": "Webflow (Unofficial)",
   "description": "Unofficial community-maintained Pulumi provider for managing Webflow sites, redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.",
-  "homepage": "https://github.com/jdetmar/pulumi-webflow",
+  "homepage": "https://github.com/JDetmar/pulumi-webflow",
+  "repository": "https://github.com/JDetmar/pulumi-webflow",
   "namespace": "webflow",
   "language": {
     "csharp": {
       "respectSchemaVersion": true,
-      "rootNamespace": "Pulumi"
+      "rootNamespace": "Community.Pulumi"
     },
     "go": {
-      "importBasePath": "github.com/jdetmar/pulumi-webflow/sdk/go/webflow"
+      "importBasePath": "github.com/JDetmar/pulumi-webflow/sdk/go/webflow"
     },
     "java": {
       "basePackage": "io.github.jdetmar.pulumi",
@@ -18,7 +19,8 @@
     },
     "nodejs": {
       "packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",
-      "packageName": "@jdetmar/pulumi-webflow"
+      "packageName": "@jdetmar/pulumi-webflow",
+      "respectSchemaVersion": true
     },
     "python": {
       "packageDescription": "Unofficial community-maintained Pulumi provider for Webflow. Not affiliated with Pulumi Corporation or Webflow, Inc.",

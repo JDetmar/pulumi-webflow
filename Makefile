@@ -70,6 +70,11 @@ sdk/%: $(SCHEMA_FILE)
 	rm -rf $@
 	$(PULUMI) package gen-sdk --language $* $(SCHEMA_FILE) --version "${VERSION_GENERIC}"
 
+sdk/nodejs: $(SCHEMA_FILE)
+	rm -rf $@
+	$(PULUMI) package gen-sdk --language nodejs $(SCHEMA_FILE) --version "${VERSION_GENERIC}"
+	cp README.md ${PACKDIR}/nodejs/
+
 sdk/java: $(SCHEMA_FILE)
 	rm -rf $@
 	$(PULUMI) package gen-sdk --language java $(SCHEMA_FILE)

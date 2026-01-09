@@ -3,7 +3,7 @@ provider: pulumi-webflow
 major-version: 0
 providerDefaultBranch: main
 publishRegistry: false
-providerVersion: github.com/jdetmar/pulumi-webflow/provider.Version
+providerVersion: github.com/JDetmar/pulumi-webflow/provider.Version
 parallel: 3
 sdkModuleDir: sdk/go/pulumi-webflow
 esc:

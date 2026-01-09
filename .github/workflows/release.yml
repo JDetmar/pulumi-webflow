@@ -226,10 +226,20 @@ jobs:
         run: tar -zxf ${{ github.workspace }}/sdk/nodejs.tar.gz -C ${{ github.workspace }}/sdk/nodejs
 
       # Publish Node.js SDK to npm using Trusted Publishing (OIDC)
-      # Requires: Trusted Publisher configured on npmjs.com + id-token: write permission
+      # Requirements:
+      # - Trusted Publisher configured on npmjs.com with exact match (case-sensitive):
+      #   Owner: JDetmar, Repository: pulumi-webflow, Workflow: release.yml
+      # - id-token: write permission (set above)
+      # - npm 11.5+ for OIDC support
       # See: https://docs.npmjs.com/trusted-publishers/
-      - name: Setup npm Trusted Publishing
-        uses: azu/setup-npm-trusted-publish@v1
+      - name: Setup Node for npm publishing
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Upgrade npm for Trusted Publishing
+        run: npm install -g npm@11
 
       - name: Publish Node.js SDK
         run: |
@@ -244,7 +254,7 @@ jobs:
           else
             NPM_TAG="latest"
           fi
-          npm publish --access public --tag "$NPM_TAG"
+          npm publish --access public --tag "$NPM_TAG" --provenance
         continue-on-error: true
 
       # Publish Python SDK to PyPI using Trusted Publishing (OIDC)

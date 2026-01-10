@@ -312,6 +312,12 @@ func (r *RegisteredScriptResource) Read(
 			// Last resort fallback - API doesn't return version and no state available
 			// This can happen during import when state is empty
 			version = "0.0.0"
+			p.GetLogger(ctx).Warningf(
+				"RegisteredScript '%s': Webflow API did not return version and no previous state available. "+
+					"Using fallback version '0.0.0'. The actual registered script version may differ. "+
+					"To set the correct version, update your Pulumi configuration with the actual version.",
+				foundScript.DisplayName,
+			)
 		}
 	}
 

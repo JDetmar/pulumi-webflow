@@ -23,24 +23,25 @@ class RegisteredScriptArgs:
                  hosted_location: pulumi.Input[_builtins.str],
                  integrity_hash: pulumi.Input[_builtins.str],
                  site_id: pulumi.Input[_builtins.str],
-                 version: pulumi.Input[_builtins.str],
-                 can_copy: Optional[pulumi.Input[_builtins.bool]] = None):
+                 can_copy: Optional[pulumi.Input[_builtins.bool]] = None,
+                 version: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a RegisteredScript resource.
         :param pulumi.Input[_builtins.str] display_name: The user-facing name for the script (1-50 alphanumeric characters). This name is used to identify the script in the Webflow interface. Only letters (A-Z, a-z) and numbers (0-9) are allowed. Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'.
         :param pulumi.Input[_builtins.str] hosted_location: The URI for the externally hosted script (e.g., 'https://cdn.example.com/my-script.js'). Must be a valid HTTP or HTTPS URL. The script should be publicly accessible and properly configured for cross-origin requests.
         :param pulumi.Input[_builtins.str] integrity_hash: The Sub-Resource Integrity (SRI) hash for the script. Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/
         :param pulumi.Input[_builtins.str] site_id: The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
-        :param pulumi.Input[_builtins.str] version: The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
         :param pulumi.Input[_builtins.bool] can_copy: Indicates whether the script can be copied when the site is duplicated. Default: false. When true, the script will be included when creating a copy of the site.
+        :param pulumi.Input[_builtins.str] version: The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
         """
         pulumi.set(__self__, "display_name", display_name)
         pulumi.set(__self__, "hosted_location", hosted_location)
         pulumi.set(__self__, "integrity_hash", integrity_hash)
         pulumi.set(__self__, "site_id", site_id)
-        pulumi.set(__self__, "version", version)
         if can_copy is not None:
             pulumi.set(__self__, "can_copy", can_copy)
+        if version is not None:
+            pulumi.set(__self__, "version", version)
 
     @_builtins.property
     @pulumi.getter(name="displayName")
@@ -91,18 +92,6 @@ class RegisteredScriptArgs:
         pulumi.set(self, "site_id", value)
 
     @_builtins.property
-    @pulumi.getter
-    def version(self) -> pulumi.Input[_builtins.str]:
-        """
-        The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-        """
-        return pulumi.get(self, "version")
-
-    @version.setter
-    def version(self, value: pulumi.Input[_builtins.str]):
-        pulumi.set(self, "version", value)
-
-    @_builtins.property
     @pulumi.getter(name="canCopy")
     def can_copy(self) -> Optional[pulumi.Input[_builtins.bool]]:
         """
@@ -113,6 +102,18 @@ class RegisteredScriptArgs:
     @can_copy.setter
     def can_copy(self, value: Optional[pulumi.Input[_builtins.bool]]):
         pulumi.set(self, "can_copy", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def version(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+        """
+        return pulumi.get(self, "version")
+
+    @version.setter
+    def version(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "version", value)
 
 
 @pulumi.type_token("webflow:index:RegisteredScript")
@@ -192,8 +193,6 @@ class RegisteredScript(pulumi.CustomResource):
             if site_id is None and not opts.urn:
                 raise TypeError("Missing required property 'site_id'")
             __props__.__dict__["site_id"] = site_id
-            if version is None and not opts.urn:
-                raise TypeError("Missing required property 'version'")
             __props__.__dict__["version"] = version
             __props__.__dict__["created_on"] = None
             __props__.__dict__["last_updated"] = None
@@ -287,7 +286,7 @@ class RegisteredScript(pulumi.CustomResource):
 
     @_builtins.property
     @pulumi.getter
-    def version(self) -> pulumi.Output[_builtins.str]:
+    def version(self) -> pulumi.Output[Optional[_builtins.str]]:
         """
         The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
         """

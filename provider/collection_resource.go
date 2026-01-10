@@ -42,6 +42,9 @@ type CollectionArgs struct {
 // It embeds CollectionArgs to include input properties in the output.
 type CollectionState struct {
 	CollectionArgs
+	// CollectionID is the Webflow-assigned collection ID (read-only).
+	// This is the raw 24-character ID that can be used with CollectionField and CollectionItem resources.
+	CollectionID string `pulumi:"collectionId,optional"`
 	// CreatedOn is the timestamp when the collection was created (read-only).
 	CreatedOn string `pulumi:"createdOn,optional"`
 	// LastUpdated is the timestamp when the collection was last updated (read-only).
@@ -82,6 +85,11 @@ func (args *CollectionArgs) Annotate(a infer.Annotator) {
 
 // Annotate adds descriptions to the CollectionState fields.
 func (state *CollectionState) Annotate(a infer.Annotator) {
+	a.Describe(&state.CollectionID,
+		"The Webflow-assigned collection ID (24-character lowercase hexadecimal string). "+
+			"Use this ID when creating CollectionField or CollectionItem resources. "+
+			"This is automatically assigned when the collection is created and is read-only.")
+
 	a.Describe(&state.CreatedOn,
 		"The timestamp when the collection was created (RFC3339 format). "+
 			"This is automatically set by Webflow and is read-only.")
@@ -152,6 +160,7 @@ func (c *CollectionResource) Create(
 
 	state := CollectionState{
 		CollectionArgs: req.Inputs,
+		CollectionID:   "", // Will be populated from API response
 		CreatedOn:      "", // Will be populated from API response
 		LastUpdated:    "", // Will be populated from API response
 	}
@@ -164,6 +173,7 @@ func (c *CollectionResource) Create(
 		state.LastUpdated = now
 		// Generate a predictable ID for dry-run
 		previewID := fmt.Sprintf("preview-%d", time.Now().Unix())
+		state.CollectionID = previewID
 		return infer.CreateResponse[CollectionState]{
 			ID:     GenerateCollectionResourceID(req.Inputs.SiteID, previewID),
 			Output: state,
@@ -192,7 +202,8 @@ func (c *CollectionResource) Create(
 				"this is unexpected and may indicate an API issue")
 	}
 
-	// Set timestamps from API response
+	// Set output fields from API response
+	state.CollectionID = response.ID
 	state.CreatedOn = response.CreatedOn
 	state.LastUpdated = response.LastUpdated
 
@@ -242,6 +253,7 @@ func (c *CollectionResource) Read(
 	}
 	currentState := CollectionState{
 		CollectionArgs: currentInputs,
+		CollectionID:   collectionID,
 		CreatedOn:      response.CreatedOn,
 		LastUpdated:    response.LastUpdated,
 	}

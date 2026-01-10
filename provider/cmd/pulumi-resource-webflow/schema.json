@@ -433,6 +433,10 @@
     "webflow:index:Collection": {
       "description": "Manages CMS collections for a Webflow site. Collections are containers for structured content items (blog posts, products, etc.). Note: Webflow collections do not support updates - any changes require replacement (delete + recreate).",
       "properties": {
+        "collectionId": {
+          "type": "string",
+          "description": "The Webflow-assigned collection ID (24-character lowercase hexadecimal string). Use this ID when creating CollectionField or CollectionItem resources. This is automatically assigned when the collection is created and is read-only."
+        },
         "createdOn": {
           "type": "string",
           "description": "The timestamp when the collection was created (RFC3339 format). This is automatically set by Webflow and is read-only."
@@ -934,8 +938,7 @@
         "siteId",
         "displayName",
         "hostedLocation",
-        "integrityHash",
-        "version"
+        "integrityHash"
       ],
       "inputProperties": {
         "canCopy": {
@@ -967,8 +970,7 @@
         "siteId",
         "displayName",
         "hostedLocation",
-        "integrityHash",
-        "version"
+        "integrityHash"
       ]
     },
     "webflow:index:RobotsTxt": {

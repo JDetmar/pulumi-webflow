@@ -363,8 +363,9 @@ func PostCollectionItem(
 			continue
 		}
 
-		// Accept both 200 and 201 as success
-		if resp.StatusCode != 200 && resp.StatusCode != 201 {
+		// Accept 200, 201, and 202 as success
+		// 202 Accepted is returned when the item is created asynchronously
+		if resp.StatusCode != 200 && resp.StatusCode != 201 && resp.StatusCode != 202 {
 			return nil, handleWebflowError(resp.StatusCode, body)
 		}
 

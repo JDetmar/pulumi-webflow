@@ -65,7 +65,7 @@ export class RegisteredScript extends pulumi.CustomResource {
     /**
      * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
      */
-    declare public readonly version: pulumi.Output<string>;
+    declare public readonly version: pulumi.Output<string | undefined>;
 
     /**
      * Create a RegisteredScript resource with the given unique name, arguments, and options.
@@ -89,9 +89,6 @@ export class RegisteredScript extends pulumi.CustomResource {
             }
             if (args?.siteId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
-            }
-            if (args?.version === undefined && !opts.urn) {
-                throw new Error("Missing required property 'version'");
             }
             resourceInputs["canCopy"] = args?.canCopy;
             resourceInputs["displayName"] = args?.displayName;
@@ -143,5 +140,5 @@ export interface RegisteredScriptArgs {
     /**
      * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
      */
-    version: pulumi.Input<string>;
+    version?: pulumi.Input<string>;
 }

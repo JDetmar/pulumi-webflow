@@ -71,7 +71,7 @@ func GetTokenIntrospect(ctx context.Context, client *http.Client) (*TokenIntrosp
 		baseURL = getTokenIntrospectBaseURL
 	}
 
-	url := baseURL + "/token/introspect"
+	url := baseURL + "/v2/token/introspect"
 
 	var lastErr error
 	for attempt := 0; attempt <= maxRetries; attempt++ {
@@ -160,7 +160,7 @@ func GetAuthorizedBy(ctx context.Context, client *http.Client) (*AuthorizedByRes
 		baseURL = getAuthorizedByBaseURL
 	}
 
-	url := baseURL + "/token/authorized_by"
+	url := baseURL + "/v2/token/authorized_by"
 
 	var lastErr error
 	for attempt := 0; attempt <= maxRetries; attempt++ {

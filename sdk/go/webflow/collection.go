@@ -16,6 +16,8 @@ import (
 type Collection struct {
 	pulumi.CustomResourceState
 
+	// The Webflow-assigned collection ID (24-character lowercase hexadecimal string). Use this ID when creating CollectionField or CollectionItem resources. This is automatically assigned when the collection is created and is read-only.
+	CollectionId pulumi.StringPtrOutput `pulumi:"collectionId"`
 	// The timestamp when the collection was created (RFC3339 format). This is automatically set by Webflow and is read-only.
 	CreatedOn pulumi.StringPtrOutput `pulumi:"createdOn"`
 	// The human-readable name of the collection (e.g., 'Blog Posts', 'Products', 'Team Members'). This name appears in the Webflow CMS interface. Maximum length: 255 characters.
@@ -136,6 +138,11 @@ func (o CollectionOutput) ToCollectionOutput() CollectionOutput {
 
 func (o CollectionOutput) ToCollectionOutputWithContext(ctx context.Context) CollectionOutput {
 	return o
+}
+
+// The Webflow-assigned collection ID (24-character lowercase hexadecimal string). Use this ID when creating CollectionField or CollectionItem resources. This is automatically assigned when the collection is created and is read-only.
+func (o CollectionOutput) CollectionId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Collection) pulumi.StringPtrOutput { return v.CollectionId }).(pulumi.StringPtrOutput)
 }
 
 // The timestamp when the collection was created (RFC3339 format). This is automatically set by Webflow and is read-only.

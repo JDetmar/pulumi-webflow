@@ -20,6 +20,20 @@ import javax.annotation.Nullable;
 @ResourceType(type="webflow:index:Collection")
 public class Collection extends com.pulumi.resources.CustomResource {
     /**
+     * The Webflow-assigned collection ID (24-character lowercase hexadecimal string). Use this ID when creating CollectionField or CollectionItem resources. This is automatically assigned when the collection is created and is read-only.
+     * 
+     */
+    @Export(name="collectionId", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> collectionId;
+
+    /**
+     * @return The Webflow-assigned collection ID (24-character lowercase hexadecimal string). Use this ID when creating CollectionField or CollectionItem resources. This is automatically assigned when the collection is created and is read-only.
+     * 
+     */
+    public Output<Optional<String>> collectionId() {
+        return Codegen.optional(this.collectionId);
+    }
+    /**
      * The timestamp when the collection was created (RFC3339 format). This is automatically set by Webflow and is read-only.
      * 
      */

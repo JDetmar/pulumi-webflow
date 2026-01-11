@@ -17,6 +17,12 @@ namespace Community.Pulumi.Webflow
     public partial class Collection : global::Pulumi.CustomResource
     {
         /// <summary>
+        /// The Webflow-assigned collection ID (24-character lowercase hexadecimal string). Use this ID when creating CollectionField or CollectionItem resources. This is automatically assigned when the collection is created and is read-only.
+        /// </summary>
+        [Output("collectionId")]
+        public Output<string?> CollectionId { get; private set; } = null!;
+
+        /// <summary>
         /// The timestamp when the collection was created (RFC3339 format). This is automatically set by Webflow and is read-only.
         /// </summary>
         [Output("createdOn")]

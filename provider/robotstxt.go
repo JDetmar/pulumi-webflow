@@ -46,6 +46,7 @@ var siteIDPattern = regexp.MustCompile(`^[a-f0-9]{24}$`)
 
 // ValidateSiteID validates that a siteID matches the Webflow site ID format.
 // Webflow site IDs are 24-character lowercase hexadecimal strings.
+// During Pulumi preview, placeholder IDs (starting with "preview-") are allowed.
 // Returns actionable error messages that explain what's wrong and how to fix it.
 func ValidateSiteID(siteID string) error {
 	if siteID == "" {
@@ -53,6 +54,11 @@ func ValidateSiteID(siteID string) error {
 			"Please provide a valid Webflow site ID " +
 			"(24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). " +
 			"You can find your site ID in the Webflow dashboard under Site Settings")
+	}
+	// During Pulumi preview, dependent resources receive placeholder IDs like "preview-1234567890"
+	// These must be allowed to pass validation since the real ID isn't known yet
+	if strings.HasPrefix(siteID, "preview-") {
+		return nil
 	}
 	if !siteIDPattern.MatchString(siteID) {
 		return fmt.Errorf("siteId has invalid format: got '%s'. "+

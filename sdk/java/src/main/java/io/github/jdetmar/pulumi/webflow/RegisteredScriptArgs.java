@@ -96,15 +96,15 @@ public final class RegisteredScriptArgs extends com.pulumi.resources.ResourceArg
      * The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
      * 
      */
-    @Import(name="version", required=true)
-    private Output<String> version;
+    @Import(name="version")
+    private @Nullable Output<String> version;
 
     /**
      * @return The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
      * 
      */
-    public Output<String> version() {
-        return this.version;
+    public Optional<Output<String>> version() {
+        return Optional.ofNullable(this.version);
     }
 
     private RegisteredScriptArgs() {}
@@ -247,7 +247,7 @@ public final class RegisteredScriptArgs extends com.pulumi.resources.ResourceArg
          * @return builder
          * 
          */
-        public Builder version(Output<String> version) {
+        public Builder version(@Nullable Output<String> version) {
             $.version = version;
             return this;
         }
@@ -274,9 +274,6 @@ public final class RegisteredScriptArgs extends com.pulumi.resources.ResourceArg
             }
             if ($.siteId == null) {
                 throw new MissingRequiredPropertyException("RegisteredScriptArgs", "siteId");
-            }
-            if ($.version == null) {
-                throw new MissingRequiredPropertyException("RegisteredScriptArgs", "version");
             }
             return $;
         }

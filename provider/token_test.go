@@ -22,8 +22,8 @@ func TestGetTokenIntrospect_Valid(t *testing.T) {
 		if r.Method != "GET" {
 			t.Errorf("Expected GET, got %s", r.Method)
 		}
-		if !strings.Contains(r.URL.Path, "/token/introspect") {
-			t.Errorf("Expected /token/introspect in path, got %s", r.URL.Path)
+		if !strings.Contains(r.URL.Path, "/v2/token/introspect") {
+			t.Errorf("Expected /v2/token/introspect in path, got %s", r.URL.Path)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -197,8 +197,8 @@ func TestGetAuthorizedBy_Valid(t *testing.T) {
 		if r.Method != "GET" {
 			t.Errorf("Expected GET, got %s", r.Method)
 		}
-		if !strings.Contains(r.URL.Path, "/token/authorized_by") {
-			t.Errorf("Expected /token/authorized_by in path, got %s", r.URL.Path)
+		if !strings.Contains(r.URL.Path, "/v2/token/authorized_by") {
+			t.Errorf("Expected /v2/token/authorized_by in path, got %s", r.URL.Path)
 		}
 
 		w.Header().Set("Content-Type", "application/json")

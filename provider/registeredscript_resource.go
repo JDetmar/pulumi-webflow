@@ -39,7 +39,8 @@ type RegisteredScriptResourceArgs struct {
 	// Version is the Semantic Version (SemVer) string for the script.
 	// Format: "major.minor.patch" (e.g., "1.0.0", "2.3.1")
 	// See https://semver.org/ for more information.
-	Version string `pulumi:"version"`
+	// Note: Marked as optional because Webflow's list API doesn't return this field.
+	Version string `pulumi:"version,optional"`
 	// CanCopy indicates whether the script can be copied on site duplication.
 	// Default: false
 	CanCopy bool `pulumi:"canCopy,optional"`
@@ -297,12 +298,35 @@ func (r *RegisteredScriptResource) Read(
 	}
 
 	// Build current state from API response
+	// Note: Webflow's list scripts API doesn't return the version field,
+	// so we preserve it from the existing inputs/state if the API returns empty.
+	version := foundScript.Version
+	if version == "" {
+		// Try to get version from inputs first, then from state, then use fallback
+		switch {
+		case req.Inputs.Version != "":
+			version = req.Inputs.Version
+		case req.State.Version != "":
+			version = req.State.Version
+		default:
+			// Last resort fallback - API doesn't return version and no state available
+			// This can happen during import when state is empty
+			version = "0.0.0"
+			p.GetLogger(ctx).Warningf(
+				"RegisteredScript '%s': Webflow API did not return version and no previous state available. "+
+					"Using fallback version '0.0.0'. The actual registered script version may differ. "+
+					"To set the correct version, update your Pulumi configuration with the actual version.",
+				foundScript.DisplayName,
+			)
+		}
+	}
+
 	currentInputs := RegisteredScriptResourceArgs{
 		SiteID:         siteID,
 		DisplayName:    foundScript.DisplayName,
 		HostedLocation: foundScript.HostedLocation,
 		IntegrityHash:  foundScript.IntegrityHash,
-		Version:        foundScript.Version,
+		Version:        version,
 		CanCopy:        foundScript.CanCopy,
 	}
 	currentState := RegisteredScriptResourceState{

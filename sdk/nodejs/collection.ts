@@ -35,6 +35,10 @@ export class Collection extends pulumi.CustomResource {
     }
 
     /**
+     * The Webflow-assigned collection ID (24-character lowercase hexadecimal string). Use this ID when creating CollectionField or CollectionItem resources. This is automatically assigned when the collection is created and is read-only.
+     */
+    declare public /*out*/ readonly collectionId: pulumi.Output<string | undefined>;
+    /**
      * The timestamp when the collection was created (RFC3339 format). This is automatically set by Webflow and is read-only.
      */
     declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
@@ -83,9 +87,11 @@ export class Collection extends pulumi.CustomResource {
             resourceInputs["singularName"] = args?.singularName;
             resourceInputs["siteId"] = args?.siteId;
             resourceInputs["slug"] = args?.slug;
+            resourceInputs["collectionId"] = undefined /*out*/;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
         } else {
+            resourceInputs["collectionId"] = undefined /*out*/;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["displayName"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;

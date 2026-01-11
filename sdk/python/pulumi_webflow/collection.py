@@ -153,6 +153,7 @@ class Collection(pulumi.CustomResource):
                 raise TypeError("Missing required property 'site_id'")
             __props__.__dict__["site_id"] = site_id
             __props__.__dict__["slug"] = slug
+            __props__.__dict__["collection_id"] = None
             __props__.__dict__["created_on"] = None
             __props__.__dict__["last_updated"] = None
         super(Collection, __self__).__init__(
@@ -177,6 +178,7 @@ class Collection(pulumi.CustomResource):
 
         __props__ = CollectionArgs.__new__(CollectionArgs)
 
+        __props__.__dict__["collection_id"] = None
         __props__.__dict__["created_on"] = None
         __props__.__dict__["display_name"] = None
         __props__.__dict__["last_updated"] = None
@@ -184,6 +186,14 @@ class Collection(pulumi.CustomResource):
         __props__.__dict__["site_id"] = None
         __props__.__dict__["slug"] = None
         return Collection(resource_name, opts=opts, __props__=__props__)
+
+    @_builtins.property
+    @pulumi.getter(name="collectionId")
+    def collection_id(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        The Webflow-assigned collection ID (24-character lowercase hexadecimal string). Use this ID when creating CollectionField or CollectionItem resources. This is automatically assigned when the collection is created and is read-only.
+        """
+        return pulumi.get(self, "collection_id")
 
     @_builtins.property
     @pulumi.getter(name="createdOn")

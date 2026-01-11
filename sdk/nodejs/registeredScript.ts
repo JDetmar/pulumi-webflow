@@ -59,6 +59,10 @@ export class RegisteredScript extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
     /**
+     * The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
+     */
+    declare public /*out*/ readonly scriptId: pulumi.Output<string | undefined>;
+    /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
     declare public readonly siteId: pulumi.Output<string>;
@@ -98,6 +102,7 @@ export class RegisteredScript extends pulumi.CustomResource {
             resourceInputs["version"] = args?.version;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
+            resourceInputs["scriptId"] = undefined /*out*/;
         } else {
             resourceInputs["canCopy"] = undefined /*out*/;
             resourceInputs["createdOn"] = undefined /*out*/;
@@ -105,6 +110,7 @@ export class RegisteredScript extends pulumi.CustomResource {
             resourceInputs["hostedLocation"] = undefined /*out*/;
             resourceInputs["integrityHash"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
+            resourceInputs["scriptId"] = undefined /*out*/;
             resourceInputs["siteId"] = undefined /*out*/;
             resourceInputs["version"] = undefined /*out*/;
         }

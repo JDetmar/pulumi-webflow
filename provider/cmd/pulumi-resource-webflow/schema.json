@@ -925,6 +925,10 @@
           "type": "string",
           "description": "The timestamp when the script was last updated (RFC3339 format). This is automatically updated by Webflow when the script is modified and is read-only."
         },
+        "scriptId": {
+          "type": "string",
+          "description": "The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources."
+        },
         "siteId": {
           "type": "string",
           "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."

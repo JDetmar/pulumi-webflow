@@ -13,6 +13,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
 // TestValidateFieldData tests the ValidateFieldData function.
@@ -542,5 +544,78 @@ func TestDeleteCollectionItem(t *testing.T) {
 				t.Errorf("DeleteCollectionItem() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
+	}
+}
+
+// =============================================================================
+// CollectionItem Drift Detection Tests
+// =============================================================================
+
+// TestCollectionItemDrift_OptionalCmsLocaleId_ShouldNotTriggerChange tests that when
+// API returns cmsLocaleId that user didn't specify, it should NOT trigger a phantom change.
+//
+// Bug scenario:
+// 1. User's Pulumi config: { collectionId, fieldData } (no cmsLocaleId)
+// 2. API returns: { collectionId, fieldData, cmsLocaleId: "auto-assigned-locale" }
+// 3. Read() currently sets State.CmsLocaleID = "auto-assigned-locale"
+// 4. Diff() compares user input (empty cmsLocaleId) vs state (has cmsLocaleId)
+// 5. BUG: Diff() reports cmsLocaleId needs to be removed → phantom update
+func TestCollectionItemDrift_OptionalCmsLocaleId_ShouldNotTriggerChange(t *testing.T) {
+	resource := &CollectionItemResource{}
+
+	// Helper to create bool pointers
+	boolPtr := func(b bool) *bool { return &b }
+
+	// User's Pulumi config - they did NOT specify cmsLocaleId
+	userInputs := CollectionItemArgs{
+		CollectionID: "collection123",
+		FieldData: map[string]interface{}{
+			"name": "Test Item",
+			"slug": "test-item",
+		},
+		IsDraft:    boolPtr(true),
+		IsArchived: boolPtr(false),
+		// CmsLocaleID intentionally empty - user didn't specify it
+	}
+
+	// Simulate what Read() currently returns after fetching from API
+	// API returns cmsLocaleId, so Read() populates it in State
+	stateFromRead := CollectionItemState{
+		CollectionItemArgs: CollectionItemArgs{
+			CollectionID: "collection123",
+			FieldData: map[string]interface{}{
+				"name": "Test Item",
+				"slug": "test-item",
+			},
+			IsDraft:     boolPtr(true),
+			IsArchived:  boolPtr(false),
+			CmsLocaleID: "6961ec56c0ac873557148af4", // API returned this
+		},
+		ItemID: "item123",
+	}
+
+	// Diff compares user inputs vs state from Read
+	diffReq := infer.DiffRequest[CollectionItemArgs, CollectionItemState]{
+		Inputs: userInputs,
+		State:  stateFromRead,
+	}
+
+	diffResp, err := resource.Diff(context.Background(), diffReq)
+	if err != nil {
+		t.Fatalf("Diff() error = %v", err)
+	}
+
+	// THE KEY ASSERTION: There should be NO changes detected
+	// The user didn't specify cmsLocaleId, and we shouldn't force them to
+	if diffResp.HasChanges {
+		t.Errorf("Diff() detected phantom changes - this is the bug we're fixing")
+		t.Errorf("DetailedDiff: %+v", diffResp.DetailedDiff)
+	}
+
+	// Specifically check that cmsLocaleId is NOT flagged
+	if diffResp.DetailedDiff != nil {
+		if _, hasCmsLocaleID := diffResp.DetailedDiff["cmsLocaleId"]; hasCmsLocaleID {
+			t.Errorf("Diff() incorrectly flagged cmsLocaleId - user didn't specify it, shouldn't be a change")
+		}
 	}
 }

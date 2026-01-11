@@ -53,6 +53,12 @@ namespace Community.Pulumi.Webflow
         public Output<string?> LastUpdated { get; private set; } = null!;
 
         /// <summary>
+        /// The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
+        /// </summary>
+        [Output("scriptId")]
+        public Output<string?> ScriptId { get; private set; } = null!;
+
+        /// <summary>
         /// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
         /// </summary>
         [Output("siteId")]

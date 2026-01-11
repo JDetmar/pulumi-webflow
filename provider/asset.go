@@ -448,8 +448,9 @@ func PostAssetUploadURL(
 			continue
 		}
 
-		// Handle error responses (accept both 200 and 201 as success)
-		if resp.StatusCode != 200 && resp.StatusCode != 201 {
+		// Handle error responses (accept 200, 201, and 202 as success)
+		// 202 Accepted is returned when asset is registered for async upload to S3
+		if resp.StatusCode != 200 && resp.StatusCode != 201 && resp.StatusCode != 202 {
 			return nil, handleWebflowError(resp.StatusCode, body)
 		}
 

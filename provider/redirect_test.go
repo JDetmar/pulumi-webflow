@@ -15,6 +15,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
 // TestValidateSourcePath_Valid tests valid source paths
@@ -586,5 +588,84 @@ func TestDeleteRedirect_ServerError(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "server error") {
 		t.Errorf("Expected 'server error' in error, got: %v", err)
+	}
+}
+
+// TestRedirectDiff_StatusCodeZeroNoDrift tests that statusCode: 0 in state
+// (API didn't return it) doesn't cause drift when input specifies a valid code.
+func TestRedirectDiff_StatusCodeZeroNoDrift(t *testing.T) {
+	r := &Redirect{}
+
+	// Simulate state where API returned statusCode 0 (not in response)
+	// but user specified statusCode 301 in their Pulumi program
+	req := infer.DiffRequest[RedirectArgs, RedirectState]{
+		ID: "siteid/redirects/redirectid",
+		Inputs: RedirectArgs{
+			SiteID:          "siteid",
+			SourcePath:      "/old",
+			DestinationPath: "/new",
+			StatusCode:      301,
+		},
+		State: RedirectState{
+			RedirectArgs: RedirectArgs{
+				SiteID:          "siteid",
+				SourcePath:      "/old",
+				DestinationPath: "/new",
+				StatusCode:      0, // API list endpoint doesn't return statusCode
+			},
+		},
+	}
+
+	ctx := context.Background()
+	result, err := r.Diff(ctx, req)
+	if err != nil {
+		t.Fatalf("Diff returned error: %v", err)
+	}
+
+	// Should NOT report changes when state.StatusCode is 0
+	if result.HasChanges {
+		t.Error("Expected no changes when state.StatusCode is 0, but HasChanges is true")
+	}
+	if _, ok := result.DetailedDiff["statusCode"]; ok {
+		t.Error("Expected no statusCode diff when state is 0, but diff was reported")
+	}
+}
+
+// TestRedirectDiff_StatusCodeActualChange tests that actual statusCode changes are detected.
+func TestRedirectDiff_StatusCodeActualChange(t *testing.T) {
+	r := &Redirect{}
+
+	// Simulate state where API returned statusCode 301
+	// but user changed their Pulumi program to 302
+	req := infer.DiffRequest[RedirectArgs, RedirectState]{
+		ID: "siteid/redirects/redirectid",
+		Inputs: RedirectArgs{
+			SiteID:          "siteid",
+			SourcePath:      "/old",
+			DestinationPath: "/new",
+			StatusCode:      302, // User changed to 302
+		},
+		State: RedirectState{
+			RedirectArgs: RedirectArgs{
+				SiteID:          "siteid",
+				SourcePath:      "/old",
+				DestinationPath: "/new",
+				StatusCode:      301, // Was 301
+			},
+		},
+	}
+
+	ctx := context.Background()
+	result, err := r.Diff(ctx, req)
+	if err != nil {
+		t.Fatalf("Diff returned error: %v", err)
+	}
+
+	// Should report changes when statusCode actually changed
+	if !result.HasChanges {
+		t.Error("Expected changes when statusCode changed from 301 to 302, but HasChanges is false")
+	}
+	if _, ok := result.DetailedDiff["statusCode"]; !ok {
+		t.Error("Expected statusCode diff when changing 301->302, but no diff was reported")
 	}
 }

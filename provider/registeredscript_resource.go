@@ -39,7 +39,7 @@ type RegisteredScriptResourceArgs struct {
 	// Version is the Semantic Version (SemVer) string for the script.
 	// Format: "major.minor.patch" (e.g., "1.0.0", "2.3.1")
 	// See https://semver.org/ for more information.
-	// Note: Marked as optional because Webflow's list API doesn't return this field.
+	// Note: Marked as optional because Webflow's list API doesn't always return this field.
 	Version string `pulumi:"version,optional"`
 	// CanCopy indicates whether the script can be copied on site duplication.
 	// Default: false
@@ -50,6 +50,10 @@ type RegisteredScriptResourceArgs struct {
 // It embeds RegisteredScriptResourceArgs to include input properties in the output.
 type RegisteredScriptResourceState struct {
 	RegisteredScriptResourceArgs
+	// ScriptID is the Webflow-assigned script ID (read-only).
+	// This is typically the lowercase version of displayName and is used
+	// when applying scripts via SiteCustomCode or PageCustomCode.
+	ScriptID string `pulumi:"scriptId,optional"`
 	// CreatedOn is the timestamp when the script was created (read-only).
 	CreatedOn string `pulumi:"createdOn,optional"`
 	// LastUpdated is the timestamp when the script was last updated (read-only).
@@ -103,6 +107,11 @@ func (args *RegisteredScriptResourceArgs) Annotate(a infer.Annotator) {
 
 // Annotate adds descriptions to the RegisteredScriptResourceState fields.
 func (state *RegisteredScriptResourceState) Annotate(a infer.Annotator) {
+	a.Describe(&state.ScriptID,
+		"The Webflow-assigned script ID (read-only). "+
+			"This is typically the lowercase version of displayName. "+
+			"Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.")
+
 	a.Describe(&state.CreatedOn,
 		"The timestamp when the script was created (RFC3339 format). "+
 			"This is automatically set by Webflow when the script is created and is read-only.")
@@ -142,7 +151,10 @@ func (r *RegisteredScriptResource) Diff(
 	}
 
 	// Check for version change (supports update)
-	if req.State.Version != req.Inputs.Version {
+	// Only report change if user explicitly specified a version that differs from state.
+	// This handles the case where req.Inputs.Version may be empty due to deserialization issues
+	// in pulumi-go-provider when the field is marked optional.
+	if req.Inputs.Version != "" && req.State.Version != req.Inputs.Version {
 		detailedDiff["version"] = p.PropertyDiff{Kind: p.Update}
 	}
 
@@ -207,6 +219,7 @@ func (r *RegisteredScriptResource) Create(
 		state.LastUpdated = now
 		// Generate a predictable ID for dry-run
 		previewID := fmt.Sprintf("preview-%d", time.Now().Unix())
+		state.ScriptID = previewID
 		return infer.CreateResponse[RegisteredScriptResourceState]{
 			ID:     GenerateRegisteredScriptResourceID(req.Inputs.SiteID, previewID),
 			Output: state,
@@ -238,6 +251,7 @@ func (r *RegisteredScriptResource) Create(
 	}
 
 	// Update state with values from API response
+	state.ScriptID = response.ID
 	state.CreatedOn = response.CreatedOn
 	state.LastUpdated = response.LastUpdated
 
@@ -331,6 +345,7 @@ func (r *RegisteredScriptResource) Read(
 	}
 	currentState := RegisteredScriptResourceState{
 		RegisteredScriptResourceArgs: currentInputs,
+		ScriptID:                     foundScript.ID,
 		CreatedOn:                    foundScript.CreatedOn,
 		LastUpdated:                  foundScript.LastUpdated,
 	}
@@ -370,6 +385,7 @@ func (r *RegisteredScriptResource) Update(
 
 	state := RegisteredScriptResourceState{
 		RegisteredScriptResourceArgs: req.Inputs,
+		ScriptID:                     req.State.ScriptID,  // Preserve the script ID from current state
 		CreatedOn:                    req.State.CreatedOn, // Preserve the creation timestamp from current state
 		LastUpdated:                  "",                  // Will be updated from API response
 	}

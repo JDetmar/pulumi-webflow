@@ -2090,3 +2090,62 @@ func TestGetSite_AllFields(t *testing.T) {
 // Note: Complex ID parsing tests were removed as the Site resource now uses
 // simple siteId as the resource ID instead of {workspaceId}/sites/{siteId}.
 // Import tests were also removed as import now just uses the siteId directly.
+
+// TestSiteDrift_OptionalFieldFromAPI_ShouldNotTriggerChange tests that when
+// API returns optional fields (like shortName) that user didn't specify,
+// it should NOT trigger a phantom change in Diff.
+//
+// Bug scenario:
+// 1. User's Pulumi config: { workspaceId, displayName } (no shortName)
+// 2. API returns: { workspaceId, displayName, shortName: "auto-generated" }
+// 3. Read() currently sets State.ShortName = "auto-generated"
+// 4. Diff() compares user input (empty shortName) vs state (has shortName)
+// 5. BUG: Diff() reports shortName needs to be removed → phantom update
+//
+// Fix: Read() should preserve user's original inputs for optional fields.
+func TestSiteDrift_OptionalFieldFromAPI_ShouldNotTriggerChange(t *testing.T) {
+	resource := &SiteResource{}
+
+	// User's Pulumi config - they did NOT specify shortName
+	userInputs := SiteArgs{
+		WorkspaceID: "workspace456",
+		DisplayName: "My Test Site",
+		// ShortName intentionally empty - user didn't specify it
+	}
+
+	// Simulate what Read() currently returns after fetching from API
+	// API always returns shortName, so Read() populates it in State
+	stateFromRead := SiteState{
+		SiteArgs: SiteArgs{
+			WorkspaceID: "workspace456",
+			DisplayName: "My Test Site",
+			ShortName:   "my-test-site", // API returned this, Read() included it
+		},
+	}
+
+	// Diff compares user inputs vs state from Read
+	diffReq := infer.DiffRequest[SiteArgs, SiteState]{
+		Inputs: userInputs,    // What user has in Pulumi config
+		State:  stateFromRead, // What Read() returned (includes API values)
+	}
+
+	diffResp, err := resource.Diff(context.Background(), diffReq)
+	if err != nil {
+		t.Fatalf("Diff() error = %v", err)
+	}
+
+	// THE KEY ASSERTION: There should be NO changes detected
+	// The user didn't specify shortName, and we shouldn't force them to
+	// explicitly set it to empty just because the API returned a value
+	if diffResp.HasChanges {
+		t.Errorf("Diff() detected phantom changes - this is the bug we're fixing")
+		t.Errorf("DetailedDiff: %+v", diffResp.DetailedDiff)
+	}
+
+	// Specifically check that shortName is NOT flagged
+	if diffResp.DetailedDiff != nil {
+		if _, hasShortName := diffResp.DetailedDiff["shortName"]; hasShortName {
+			t.Errorf("Diff() incorrectly flagged shortName - user didn't specify it, shouldn't be a change")
+		}
+	}
+}

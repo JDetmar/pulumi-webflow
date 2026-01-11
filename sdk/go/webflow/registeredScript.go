@@ -28,6 +28,8 @@ type RegisteredScript struct {
 	IntegrityHash pulumi.StringOutput `pulumi:"integrityHash"`
 	// The timestamp when the script was last updated (RFC3339 format). This is automatically updated by Webflow when the script is modified and is read-only.
 	LastUpdated pulumi.StringPtrOutput `pulumi:"lastUpdated"`
+	// The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
+	ScriptId pulumi.StringPtrOutput `pulumi:"scriptId"`
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringOutput `pulumi:"siteId"`
 	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
@@ -181,6 +183,11 @@ func (o RegisteredScriptOutput) IntegrityHash() pulumi.StringOutput {
 // The timestamp when the script was last updated (RFC3339 format). This is automatically updated by Webflow when the script is modified and is read-only.
 func (o RegisteredScriptOutput) LastUpdated() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *RegisteredScript) pulumi.StringPtrOutput { return v.LastUpdated }).(pulumi.StringPtrOutput)
+}
+
+// The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
+func (o RegisteredScriptOutput) ScriptId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *RegisteredScript) pulumi.StringPtrOutput { return v.ScriptId }).(pulumi.StringPtrOutput)
 }
 
 // The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.

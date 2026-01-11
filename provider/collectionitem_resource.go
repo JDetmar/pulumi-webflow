@@ -155,7 +155,10 @@ func (c *CollectionItemResource) Diff(
 	}
 
 	// Check for cmsLocaleId change (can be updated in place)
-	if req.State.CmsLocaleID != req.Inputs.CmsLocaleID {
+	// Only report change if user explicitly specified it.
+	// An empty input means "I don't care about this field" not "remove it".
+	// This prevents phantom updates when API returns a value user didn't set.
+	if req.Inputs.CmsLocaleID != "" && req.State.CmsLocaleID != req.Inputs.CmsLocaleID {
 		detailedDiff["cmsLocaleId"] = p.PropertyDiff{Kind: p.Update}
 		diff.HasChanges = true
 	}

@@ -353,11 +353,16 @@ func (c *CollectionItemResource) Update(
 		fieldDataForPatch[k] = v
 	}
 
-	// Check if slug is unchanged and remove it from the patch payload if so
+	// Check if slug is unchanged and remove it from the patch payload if so.
+	// Use type-safe comparisons to handle interface{} values properly.
 	if oldSlug, oldOk := req.State.FieldData["slug"]; oldOk {
 		if newSlug, newOk := fieldDataForPatch["slug"]; newOk {
-			if oldSlug == newSlug {
-				delete(fieldDataForPatch, "slug")
+			if oldSlugStr, okOld := oldSlug.(string); okOld {
+				if newSlugStr, okNew := newSlug.(string); okNew {
+					if oldSlugStr == newSlugStr {
+						delete(fieldDataForPatch, "slug")
+					}
+				}
 			}
 		}
 	}

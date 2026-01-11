@@ -551,6 +551,32 @@ func TestDeleteCollectionItem(t *testing.T) {
 // CollectionItem Drift Detection Tests
 // =============================================================================
 
+// PrepareFieldDataForPatch applies the slug-stripping logic used in the Update method.
+// This helper function is extracted for testing purposes and mirrors the exact logic
+// in CollectionItemResource.Update.
+func PrepareFieldDataForPatch(oldFieldData, newFieldData map[string]interface{}) map[string]interface{} {
+	fieldDataForPatch := make(map[string]interface{})
+	for k, v := range newFieldData {
+		fieldDataForPatch[k] = v
+	}
+
+	// Check if slug is unchanged and remove it from the patch payload if so.
+	// Use type-safe comparisons to handle interface{} values properly.
+	if oldSlug, oldOk := oldFieldData["slug"]; oldOk {
+		if newSlug, newOk := fieldDataForPatch["slug"]; newOk {
+			if oldSlugStr, okOld := oldSlug.(string); okOld {
+				if newSlugStr, okNew := newSlug.(string); okNew {
+					if oldSlugStr == newSlugStr {
+						delete(fieldDataForPatch, "slug")
+					}
+				}
+			}
+		}
+	}
+
+	return fieldDataForPatch
+}
+
 // TestPrepareFieldDataForPatch_UnchangedSlugExcluded tests the slug-stripping logic
 // that prevents "duplicate slug" validation errors when updating collection items.
 //
@@ -617,24 +643,36 @@ func TestPrepareFieldDataForPatch_UnchangedSlugExcluded(t *testing.T) {
 			},
 			expectSlugInPatch: false,
 		},
+		{
+			name: "non-string slug types should be preserved (type safety)",
+			oldFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": 123, // Non-string type
+			},
+			newFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": 123, // Same non-string value
+			},
+			expectSlugInPatch: true, // Should be preserved since type assertion fails
+		},
+		{
+			name: "mismatched slug types should preserve new slug",
+			oldFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": "old-slug",
+			},
+			newFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": 456, // Different type
+			},
+			expectSlugInPatch: true, // Should be preserved since type assertion fails
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// This replicates the slug-stripping logic from Update method
-			fieldDataForPatch := make(map[string]interface{})
-			for k, v := range tt.newFieldData {
-				fieldDataForPatch[k] = v
-			}
-
-			// Check if slug is unchanged and remove it from the patch payload if so
-			if oldSlug, oldOk := tt.oldFieldData["slug"]; oldOk {
-				if newSlug, newOk := fieldDataForPatch["slug"]; newOk {
-					if oldSlug == newSlug {
-						delete(fieldDataForPatch, "slug")
-					}
-				}
-			}
+			// Use the helper function that mirrors the Update method logic
+			fieldDataForPatch := PrepareFieldDataForPatch(tt.oldFieldData, tt.newFieldData)
 
 			// Verify expectations
 			_, hasSlug := fieldDataForPatch["slug"]

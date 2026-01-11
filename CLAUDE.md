@@ -96,6 +96,20 @@ The Makefile automatically runs the post-processing script after Java SDK genera
 make test_provider
 ```
 
+### Local Provider Testing
+
+To test provider changes with a real Pulumi stack:
+
+```bash
+# Build and install the provider locally
+make provider && install -m 755 bin/pulumi-resource-webflow ~/.pulumi/plugins/resource-webflow-v1.0.0-alpha.0/
+
+# Test with your stack
+cd /path/to/your/stack && pulumi preview --diff
+```
+
+**IMPORTANT:** Use `install` instead of `cp` when copying the provider binary. On macOS, `cp` preserves certain extended attributes that cause the binary to be killed by the OS security system, resulting in "exit status -1" errors.
+
 ## Project Structure
 
 ```

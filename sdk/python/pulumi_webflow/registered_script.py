@@ -196,6 +196,7 @@ class RegisteredScript(pulumi.CustomResource):
             __props__.__dict__["version"] = version
             __props__.__dict__["created_on"] = None
             __props__.__dict__["last_updated"] = None
+            __props__.__dict__["script_id"] = None
         super(RegisteredScript, __self__).__init__(
             'webflow:index:RegisteredScript',
             resource_name,
@@ -224,6 +225,7 @@ class RegisteredScript(pulumi.CustomResource):
         __props__.__dict__["hosted_location"] = None
         __props__.__dict__["integrity_hash"] = None
         __props__.__dict__["last_updated"] = None
+        __props__.__dict__["script_id"] = None
         __props__.__dict__["site_id"] = None
         __props__.__dict__["version"] = None
         return RegisteredScript(resource_name, opts=opts, __props__=__props__)
@@ -275,6 +277,14 @@ class RegisteredScript(pulumi.CustomResource):
         The timestamp when the script was last updated (RFC3339 format). This is automatically updated by Webflow when the script is modified and is read-only.
         """
         return pulumi.get(self, "last_updated")
+
+    @_builtins.property
+    @pulumi.getter(name="scriptId")
+    def script_id(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
+        """
+        return pulumi.get(self, "script_id")
 
     @_builtins.property
     @pulumi.getter(name="siteId")

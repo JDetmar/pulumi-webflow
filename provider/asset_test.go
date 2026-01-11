@@ -494,6 +494,48 @@ func TestPostAssetUploadURL(t *testing.T) {
 	}
 }
 
+// TestPostAssetUploadURL_202Accepted tests that 202 Accepted is handled correctly.
+// Webflow returns 202 when registering an asset for async upload to S3.
+func TestPostAssetUploadURL_202Accepted(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusAccepted) // 202
+		response := AssetUploadResponse{
+			ID:               "5f0c8c9e1c9d440000e8d8c4",
+			UploadURL:        "https://webflow-prod-assets.s3.amazonaws.com/",
+			HostedURL:        "https://cdn.prod.website-files.com/example/logo.png",
+			ContentType:      "image/png",
+			OriginalFileName: "logo.png",
+			CreatedOn:        "2024-01-01T00:00:00Z",
+			LastUpdated:      "2024-01-01T00:00:00Z",
+			UploadDetails: map[string]string{
+				"acl":    "public-read",
+				"bucket": "webflow-prod-assets",
+			},
+		}
+		_ = json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	postAssetUploadURLBaseURL = server.URL
+	defer func() { postAssetUploadURLBaseURL = "" }()
+
+	client := &http.Client{}
+	uploadResp, err := PostAssetUploadURL(
+		context.Background(), client,
+		"5f0c8c9e1c9d440000e8d8c3", "logo.png", "d41d8cd98f00b204e9800998ecf8427e", "",
+	)
+	if err != nil {
+		t.Fatalf("PostAssetUploadURL() should accept 202 Accepted, got error: %v", err)
+	}
+	if uploadResp.ID != "5f0c8c9e1c9d440000e8d8c4" {
+		t.Errorf("Expected asset ID 5f0c8c9e1c9d440000e8d8c4, got %s", uploadResp.ID)
+	}
+	if uploadResp.HostedURL != "https://cdn.prod.website-files.com/example/logo.png" {
+		t.Errorf("Expected hosted URL from response, got %s", uploadResp.HostedURL)
+	}
+}
+
 // TestDeleteAsset tests the DeleteAsset function with a mock server.
 func TestDeleteAsset(t *testing.T) {
 	tests := []struct {

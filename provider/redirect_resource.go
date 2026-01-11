@@ -132,7 +132,9 @@ func (r *Redirect) Diff(
 	}
 
 	// Check for statusCode change (requires replacement due to Webflow API limitation)
-	if req.State.StatusCode != req.Inputs.StatusCode {
+	// Only report change if state has valid statusCode that differs from inputs.
+	// The Webflow API list endpoint doesn't return statusCode, so it comes back as 0.
+	if req.State.StatusCode != 0 && req.State.StatusCode != req.Inputs.StatusCode {
 		diff.DeleteBeforeReplace = true
 		diff.HasChanges = true
 		diff.DetailedDiff = map[string]p.PropertyDiff{

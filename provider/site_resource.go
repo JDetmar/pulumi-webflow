@@ -216,7 +216,10 @@ func (r *SiteResource) Diff(
 		}
 	}
 
-	if req.Inputs.ShortName != req.State.ShortName {
+	// Only report shortName change if user explicitly specified it.
+	// An empty input means "I don't care about this field" not "remove it".
+	// This prevents phantom updates when API returns a value user didn't set.
+	if req.Inputs.ShortName != "" && req.Inputs.ShortName != req.State.ShortName {
 		diff.HasChanges = true
 		diff.DetailedDiff["shortName"] = p.PropertyDiff{
 			Kind: p.Update,

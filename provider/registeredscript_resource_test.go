@@ -561,3 +561,102 @@ func TestValidateVersion(t *testing.T) {
 		})
 	}
 }
+
+// =============================================================================
+// RegisteredScript Drift Detection Tests
+// =============================================================================
+
+// TestRegisteredScriptDiff_SameVersion_NoChange tests that Diff correctly
+// reports NO changes when user input version matches state version.
+// This tests the bug where pulumi preview showed "version: 1.0.0 => 1.0.0" as an update.
+func TestRegisteredScriptDiff_SameVersion_NoChange(t *testing.T) {
+	resource := &RegisteredScriptResource{}
+
+	// User input and state have IDENTICAL version
+	userInputs := RegisteredScriptResourceArgs{
+		SiteID:         "site123",
+		DisplayName:    "TestScript",
+		HostedLocation: "https://cdn.example.com/script.js",
+		IntegrityHash:  "sha384-abc123",
+		Version:        "1.0.0",
+		CanCopy:        false,
+	}
+
+	stateFromRead := RegisteredScriptResourceState{
+		RegisteredScriptResourceArgs: RegisteredScriptResourceArgs{
+			SiteID:         "site123",
+			DisplayName:    "TestScript",
+			HostedLocation: "https://cdn.example.com/script.js",
+			IntegrityHash:  "sha384-abc123",
+			Version:        "1.0.0", // SAME as user input
+			CanCopy:        false,
+		},
+	}
+
+	diffReq := infer.DiffRequest[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{
+		Inputs: userInputs,
+		State:  stateFromRead,
+	}
+
+	diffResp, err := resource.Diff(context.Background(), diffReq)
+	if err != nil {
+		t.Fatalf("Diff() error = %v", err)
+	}
+
+	// CRITICAL: No changes should be detected when values are identical
+	if diffResp.HasChanges {
+		t.Errorf("Diff() incorrectly detected changes when version is identical")
+		t.Errorf("DetailedDiff: %+v", diffResp.DetailedDiff)
+	}
+
+	if diffResp.DetailedDiff != nil {
+		if _, hasVersion := diffResp.DetailedDiff["version"]; hasVersion {
+			t.Errorf("Diff() incorrectly flagged version for change when values are identical")
+		}
+	}
+}
+
+// TestRegisteredScriptDiff_EmptyVersionInState_ShouldNotTriggerChange tests that
+// when API doesn't return version (Read falls back to user input), Diff works correctly.
+func TestRegisteredScriptDiff_VersionFromFallback_NoChange(t *testing.T) {
+	resource := &RegisteredScriptResource{}
+
+	// User specified version
+	userInputs := RegisteredScriptResourceArgs{
+		SiteID:         "site123",
+		DisplayName:    "TestScript",
+		HostedLocation: "https://cdn.example.com/script.js",
+		IntegrityHash:  "sha384-abc123",
+		Version:        "1.0.0",
+		CanCopy:        false,
+	}
+
+	// Read() falls back to user input when API returns empty version
+	// (as implemented in registeredscript_resource.go lines 303-322)
+	stateFromRead := RegisteredScriptResourceState{
+		RegisteredScriptResourceArgs: RegisteredScriptResourceArgs{
+			SiteID:         "site123",
+			DisplayName:    "TestScript",
+			HostedLocation: "https://cdn.example.com/script.js",
+			IntegrityHash:  "sha384-abc123",
+			Version:        "1.0.0", // Fallback from user input
+			CanCopy:        false,
+		},
+	}
+
+	diffReq := infer.DiffRequest[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{
+		Inputs: userInputs,
+		State:  stateFromRead,
+	}
+
+	diffResp, err := resource.Diff(context.Background(), diffReq)
+	if err != nil {
+		t.Fatalf("Diff() error = %v", err)
+	}
+
+	// No changes should be detected
+	if diffResp.HasChanges {
+		t.Errorf("Diff() incorrectly detected changes with fallback version")
+		t.Errorf("DetailedDiff: %+v", diffResp.DetailedDiff)
+	}
+}

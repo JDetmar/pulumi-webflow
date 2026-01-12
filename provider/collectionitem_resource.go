@@ -345,9 +345,31 @@ func (c *CollectionItemResource) Update(
 		return infer.UpdateResponse[CollectionItemState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
+	// Prepare fieldData for the PATCH request.
+	// Webflow API rejects updates that include an unchanged slug (duplicate slug error),
+	// so we need to exclude the slug field if it hasn't changed.
+	fieldDataForPatch := make(map[string]interface{})
+	for k, v := range req.Inputs.FieldData {
+		fieldDataForPatch[k] = v
+	}
+
+	// Check if slug is unchanged and remove it from the patch payload if so.
+	// Use type-safe comparisons to handle interface{} values properly.
+	if oldSlug, oldOk := req.State.FieldData["slug"]; oldOk {
+		if newSlug, newOk := fieldDataForPatch["slug"]; newOk {
+			if oldSlugStr, okOld := oldSlug.(string); okOld {
+				if newSlugStr, okNew := newSlug.(string); okNew {
+					if oldSlugStr == newSlugStr {
+						delete(fieldDataForPatch, "slug")
+					}
+				}
+			}
+		}
+	}
+
 	// Call Webflow API
 	response, err := PatchCollectionItem(
-		ctx, client, collectionID, itemID, req.Inputs.FieldData,
+		ctx, client, collectionID, itemID, fieldDataForPatch,
 		req.Inputs.IsArchived, req.Inputs.IsDraft, req.Inputs.CmsLocaleID,
 	)
 	if err != nil {

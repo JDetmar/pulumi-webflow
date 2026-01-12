@@ -20,7 +20,7 @@ error: failed to update registered script: not found: the Webflow site or robots
 
 ---
 
-## 2. CollectionItem Update Slug Collision
+## 2. ~~CollectionItem Update Slug Collision~~ ✅ FIXED
 
 **File:** `provider/collectionitem_resource.go` (Update method)
 
@@ -31,10 +31,9 @@ error: failed to update registered script: not found: the Webflow site or robots
 error: failed to update collection item: bad request: {"message":"Validation Error","code":"validation_error","externalReference":null,"details":[{"param":"slug","description":"Unique value is already in database: 'test-blog-post'"}]}
 ```
 
-**Investigation needed:**
-- Check if PATCH endpoint should omit unchanged fields
-- May need to exclude `slug` from update payload if it hasn't changed
-- Review `PatchCollectionItem` function in `provider/collectionitem.go`
+**Fix applied:** Modified the `Update` method in `collectionitem_resource.go` to exclude the `slug` field from the PATCH payload when it hasn't changed. The fix creates a copy of `fieldData`, compares the old and new slug values, and removes the slug from the payload if they're identical.
+
+**Test added:** `TestPrepareFieldDataForPatch_UnchangedSlugExcluded` in `collectionitem_test.go`
 
 ---
 

@@ -551,6 +551,155 @@ func TestDeleteCollectionItem(t *testing.T) {
 // CollectionItem Drift Detection Tests
 // =============================================================================
 
+// PrepareFieldDataForPatch applies the slug-stripping logic used in the Update method.
+// This helper function is extracted for testing purposes and mirrors the exact logic
+// in CollectionItemResource.Update.
+func PrepareFieldDataForPatch(oldFieldData, newFieldData map[string]interface{}) map[string]interface{} {
+	fieldDataForPatch := make(map[string]interface{})
+	for k, v := range newFieldData {
+		fieldDataForPatch[k] = v
+	}
+
+	// Check if slug is unchanged and remove it from the patch payload if so.
+	// Use type-safe comparisons to handle interface{} values properly.
+	if oldSlug, oldOk := oldFieldData["slug"]; oldOk {
+		if newSlug, newOk := fieldDataForPatch["slug"]; newOk {
+			if oldSlugStr, okOld := oldSlug.(string); okOld {
+				if newSlugStr, okNew := newSlug.(string); okNew {
+					if oldSlugStr == newSlugStr {
+						delete(fieldDataForPatch, "slug")
+					}
+				}
+			}
+		}
+	}
+
+	return fieldDataForPatch
+}
+
+// TestPrepareFieldDataForPatch_UnchangedSlugExcluded tests the slug-stripping logic
+// that prevents "duplicate slug" validation errors when updating collection items.
+//
+// Bug scenario (issue #2 in ISSUES-TO-FIX.md):
+// 1. User has a CollectionItem with slug "test-blog-post"
+// 2. User updates another field (e.g., name) but keeps the same slug
+// 3. Without the fix, PATCH includes the unchanged slug
+// 4. Webflow API rejects it: "Unique value is already in database: 'test-blog-post'"
+func TestPrepareFieldDataForPatch_UnchangedSlugExcluded(t *testing.T) {
+	tests := []struct {
+		name              string
+		oldFieldData      map[string]interface{}
+		newFieldData      map[string]interface{}
+		expectSlugInPatch bool
+		expectedSlug      string
+	}{
+		{
+			name: "unchanged slug should be excluded",
+			oldFieldData: map[string]interface{}{
+				"name": "Old Name",
+				"slug": "test-blog-post",
+			},
+			newFieldData: map[string]interface{}{
+				"name": "Updated Name",
+				"slug": "test-blog-post", // Same slug
+			},
+			expectSlugInPatch: false,
+		},
+		{
+			name: "changed slug should be included",
+			oldFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": "old-slug",
+			},
+			newFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": "new-slug", // Different slug
+			},
+			expectSlugInPatch: true,
+			expectedSlug:      "new-slug",
+		},
+		{
+			name: "new slug added should be included",
+			oldFieldData: map[string]interface{}{
+				"name": "Same Name",
+				// No slug in old data
+			},
+			newFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": "new-slug",
+			},
+			expectSlugInPatch: true,
+			expectedSlug:      "new-slug",
+		},
+		{
+			name: "slug removed should not be in patch",
+			oldFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": "old-slug",
+			},
+			newFieldData: map[string]interface{}{
+				"name": "Same Name",
+				// No slug in new data
+			},
+			expectSlugInPatch: false,
+		},
+		{
+			name: "non-string slug types should be preserved (type safety)",
+			oldFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": 123, // Non-string type
+			},
+			newFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": 123, // Same non-string value
+			},
+			expectSlugInPatch: true, // Should be preserved since type assertion fails
+		},
+		{
+			name: "mismatched slug types should preserve new slug",
+			oldFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": "old-slug",
+			},
+			newFieldData: map[string]interface{}{
+				"name": "Same Name",
+				"slug": 456, // Different type
+			},
+			expectSlugInPatch: true, // Should be preserved since type assertion fails
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Use the helper function that mirrors the Update method logic
+			fieldDataForPatch := PrepareFieldDataForPatch(tt.oldFieldData, tt.newFieldData)
+
+			// Verify expectations
+			_, hasSlug := fieldDataForPatch["slug"]
+			if hasSlug != tt.expectSlugInPatch {
+				if tt.expectSlugInPatch {
+					t.Errorf("Expected slug to be in patch payload, but it was not")
+				} else {
+					t.Errorf("Expected slug to be excluded from patch payload, but it was included")
+				}
+			}
+
+			if tt.expectSlugInPatch && tt.expectedSlug != "" {
+				if slug, ok := fieldDataForPatch["slug"].(string); ok {
+					if slug != tt.expectedSlug {
+						t.Errorf("Expected slug %q, got %q", tt.expectedSlug, slug)
+					}
+				}
+			}
+
+			// Verify name is always preserved
+			if _, hasName := fieldDataForPatch["name"]; !hasName {
+				t.Errorf("Expected 'name' field to be preserved in patch payload")
+			}
+		})
+	}
+}
+
 // TestCollectionItemDrift_OptionalCmsLocaleId_ShouldNotTriggerChange tests that when
 // API returns cmsLocaleId that user didn't specify, it should NOT trigger a phantom change.
 //

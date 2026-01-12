@@ -20,24 +20,7 @@ error: failed to update registered script: not found: the Webflow site or robots
 
 ---
 
-## 2. ~~CollectionItem Update Slug Collision~~ ✅ FIXED
-
-**File:** `provider/collectionitem_resource.go` (Update method)
-
-**Problem:** When updating a CollectionItem, even if the slug hasn't changed, the API returns a validation error about duplicate slug.
-
-**Error:**
-```
-error: failed to update collection item: bad request: {"message":"Validation Error","code":"validation_error","externalReference":null,"details":[{"param":"slug","description":"Unique value is already in database: 'test-blog-post'"}]}
-```
-
-**Fix applied:** Modified the `Update` method in `collectionitem_resource.go` to exclude the `slug` field from the PATCH payload when it hasn't changed. The fix creates a copy of `fieldData`, compares the old and new slug values, and removes the slug from the payload if they're identical.
-
-**Test added:** `TestPrepareFieldDataForPatch_UnchangedSlugExcluded` in `collectionitem_test.go`
-
----
-
-## 3. SiteCustomCode Script ID Format
+## 2. SiteCustomCode Script ID Format
 
 **File:** `provider/sitecustomcode_resource.go`
 
@@ -56,7 +39,7 @@ error: failed to create site custom code: bad request: {"message":"Bad Request: 
 
 ---
 
-## 4. getTokenInfo / getAuthorizedUser Invoke Functions Crash
+## 3. getTokenInfo / getAuthorizedUser Invoke Functions Crash
 
 **Files:** `provider/token.go`, `provider/authorized_user.go`
 
@@ -74,7 +57,7 @@ error: rpc error: code = Unknown desc = invocation of webflow:index:getTokenInfo
 
 ---
 
-## 5. RegisteredScript Version Diff on Every Run
+## 4. RegisteredScript Version Diff on Every Run
 
 **File:** `provider/registeredscript_resource.go` (Diff method)
 

@@ -137,14 +137,14 @@ public class RegisteredScript extends com.pulumi.resources.CustomResource {
      * 
      */
     @Export(name="version", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> version;
+    private Output<String> version;
 
     /**
      * @return The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
      * 
      */
-    public Output<Optional<String>> version() {
-        return Codegen.optional(this.version);
+    public Output<String> version() {
+        return this.version;
     }
 
     /**

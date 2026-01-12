@@ -16,6 +16,7 @@ import (
 	"testing"
 	"time"
 
+	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
@@ -658,5 +659,150 @@ func TestRegisteredScriptDiff_VersionFromFallback_NoChange(t *testing.T) {
 	if diffResp.HasChanges {
 		t.Errorf("Diff() incorrectly detected changes with fallback version")
 		t.Errorf("DetailedDiff: %+v", diffResp.DetailedDiff)
+	}
+}
+
+// TestRegisteredScriptDiff_ChangesRequireReplacement tests that all property changes
+// trigger UpdateReplace since Webflow API doesn't support PATCH for registered scripts.
+func TestRegisteredScriptDiff_ChangesRequireReplacement(t *testing.T) {
+	resource := &RegisteredScriptResource{}
+
+	baseInputs := RegisteredScriptResourceArgs{
+		SiteID:         "site123",
+		DisplayName:    "TestScript",
+		HostedLocation: "https://cdn.example.com/script.js",
+		IntegrityHash:  "sha384-abc123",
+		Version:        "1.0.0",
+		CanCopy:        false,
+	}
+
+	baseState := RegisteredScriptResourceState{
+		RegisteredScriptResourceArgs: baseInputs,
+	}
+
+	tests := []struct {
+		name      string
+		modifyFn  func(args *RegisteredScriptResourceArgs)
+		fieldName string
+	}{
+		{
+			name: "siteId change",
+			modifyFn: func(args *RegisteredScriptResourceArgs) {
+				args.SiteID = "site456"
+			},
+			fieldName: "siteId",
+		},
+		{
+			name: "displayName change",
+			modifyFn: func(args *RegisteredScriptResourceArgs) {
+				args.DisplayName = "NewScriptName"
+			},
+			fieldName: "displayName",
+		},
+		{
+			name: "hostedLocation change",
+			modifyFn: func(args *RegisteredScriptResourceArgs) {
+				args.HostedLocation = "https://cdn.example.com/script-v2.js"
+			},
+			fieldName: "hostedLocation",
+		},
+		{
+			name: "integrityHash change",
+			modifyFn: func(args *RegisteredScriptResourceArgs) {
+				args.IntegrityHash = "sha384-def456"
+			},
+			fieldName: "integrityHash",
+		},
+		{
+			name: "version change",
+			modifyFn: func(args *RegisteredScriptResourceArgs) {
+				args.Version = "2.0.0"
+			},
+			fieldName: "version",
+		},
+		{
+			name: "canCopy change",
+			modifyFn: func(args *RegisteredScriptResourceArgs) {
+				args.CanCopy = true
+			},
+			fieldName: "canCopy",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create modified inputs
+			modifiedInputs := baseInputs
+			tt.modifyFn(&modifiedInputs)
+
+			diffReq := infer.DiffRequest[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{
+				Inputs: modifiedInputs,
+				State:  baseState,
+			}
+
+			diffResp, err := resource.Diff(context.Background(), diffReq)
+			if err != nil {
+				t.Fatalf("Diff() error = %v", err)
+			}
+
+			// Changes should be detected
+			if !diffResp.HasChanges {
+				t.Errorf("Diff() should detect changes for %s", tt.fieldName)
+			}
+
+			// DeleteBeforeReplace should be true (all changes require replacement)
+			if !diffResp.DeleteBeforeReplace {
+				t.Errorf("Diff() DeleteBeforeReplace should be true for %s", tt.fieldName)
+			}
+
+			// Field should be marked as UpdateReplace, not Update
+			if diff, ok := diffResp.DetailedDiff[tt.fieldName]; ok {
+				if diff.Kind != p.UpdateReplace {
+					t.Errorf("Diff() %s should be UpdateReplace, got %v", tt.fieldName, diff.Kind)
+				}
+			} else {
+				t.Errorf("Diff() DetailedDiff should contain %s", tt.fieldName)
+			}
+		})
+	}
+}
+
+// TestRegisteredScriptUpdate_ReturnsError tests that Update method returns an error
+// since Webflow API doesn't support PATCH for registered scripts.
+func TestRegisteredScriptUpdate_ReturnsError(t *testing.T) {
+	resource := &RegisteredScriptResource{}
+
+	updateReq := infer.UpdateRequest[RegisteredScriptResourceArgs, RegisteredScriptResourceState]{
+		ID: "site123/registered_scripts/script456",
+		Inputs: RegisteredScriptResourceArgs{
+			SiteID:         "site123",
+			DisplayName:    "TestScript",
+			HostedLocation: "https://cdn.example.com/script.js",
+			IntegrityHash:  "sha384-abc123",
+			Version:        "1.0.0",
+		},
+		State: RegisteredScriptResourceState{
+			RegisteredScriptResourceArgs: RegisteredScriptResourceArgs{
+				SiteID:         "site123",
+				DisplayName:    "TestScript",
+				HostedLocation: "https://cdn.example.com/old-script.js",
+				IntegrityHash:  "sha384-old",
+				Version:        "0.9.0",
+			},
+		},
+	}
+
+	_, err := resource.Update(context.Background(), updateReq)
+
+	if err == nil {
+		t.Fatal("Update() should return an error")
+	}
+
+	if !containsStr(err.Error(), "cannot be updated in-place") {
+		t.Errorf("Update() error should mention updates not supported, got: %v", err)
+	}
+
+	if !containsStr(err.Error(), "PATCH") {
+		t.Errorf("Update() error should mention PATCH not supported, got: %v", err)
 	}
 }

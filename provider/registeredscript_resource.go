@@ -39,8 +39,7 @@ type RegisteredScriptResourceArgs struct {
 	// Version is the Semantic Version (SemVer) string for the script.
 	// Format: "major.minor.patch" (e.g., "1.0.0", "2.3.1")
 	// See https://semver.org/ for more information.
-	// Note: Marked as optional because Webflow's list API doesn't always return this field.
-	Version string `pulumi:"version,optional"`
+	Version string `pulumi:"version"`
 	// CanCopy indicates whether the script can be copied on site duplication.
 	// Default: false
 	CanCopy bool `pulumi:"canCopy,optional"`
@@ -122,57 +121,43 @@ func (state *RegisteredScriptResourceState) Annotate(a infer.Annotator) {
 }
 
 // Diff determines what changes need to be made to the registered script resource.
-// SiteID and DisplayName changes trigger replacement.
-// Other changes trigger in-place update.
+// NOTE: Webflow API does not support updating registered scripts (no PATCH endpoint).
+// All changes require replacement (delete + recreate), similar to Webhook resources.
 func (r *RegisteredScriptResource) Diff(
 	ctx context.Context, req infer.DiffRequest[RegisteredScriptResourceArgs, RegisteredScriptResourceState],
 ) (infer.DiffResponse, error) {
 	diff := infer.DiffResponse{}
 	detailedDiff := map[string]p.PropertyDiff{}
 
-	// Check for siteId change (requires replacement - primary key)
+	// All field changes trigger replacement since Webflow API doesn't support PATCH
 	if req.State.SiteID != req.Inputs.SiteID {
 		detailedDiff["siteId"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
-	// Check for displayName change (requires replacement - secondary key)
 	if req.State.DisplayName != req.Inputs.DisplayName {
 		detailedDiff["displayName"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
-	// Check for hostedLocation change (supports update)
 	if req.State.HostedLocation != req.Inputs.HostedLocation {
-		detailedDiff["hostedLocation"] = p.PropertyDiff{Kind: p.Update}
+		detailedDiff["hostedLocation"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
-	// Check for integrityHash change (supports update)
 	if req.State.IntegrityHash != req.Inputs.IntegrityHash {
-		detailedDiff["integrityHash"] = p.PropertyDiff{Kind: p.Update}
+		detailedDiff["integrityHash"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
-	// Check for version change (supports update)
-	// Only report change if user explicitly specified a version that differs from state.
-	// This handles the case where req.Inputs.Version may be empty due to deserialization issues
-	// in pulumi-go-provider when the field is marked optional.
-	if req.Inputs.Version != "" && req.State.Version != req.Inputs.Version {
-		detailedDiff["version"] = p.PropertyDiff{Kind: p.Update}
+	if req.State.Version != req.Inputs.Version {
+		detailedDiff["version"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
-	// Check for canCopy change (supports update)
 	if req.State.CanCopy != req.Inputs.CanCopy {
-		detailedDiff["canCopy"] = p.PropertyDiff{Kind: p.Update}
+		detailedDiff["canCopy"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
-	// If any changes were detected, populate the diff response
+	// If any changes were detected, all require replacement
 	if len(detailedDiff) > 0 {
 		diff.HasChanges = true
-		// Only set DeleteBeforeReplace if any replacement changes are needed
-		for _, change := range detailedDiff {
-			if change.Kind == p.UpdateReplace {
-				diff.DeleteBeforeReplace = true
-				break
-			}
-		}
+		diff.DeleteBeforeReplace = true
 		diff.DetailedDiff = detailedDiff
 	}
 
@@ -357,76 +342,17 @@ func (r *RegisteredScriptResource) Read(
 	}, nil
 }
 
-// Update modifies an existing registered script.
+// Update is not supported by Webflow API for registered scripts.
+// All changes trigger replacement via Diff, so this method should never be called.
+// This is a safety net that returns an error if somehow invoked.
 func (r *RegisteredScriptResource) Update(
-	ctx context.Context, req infer.UpdateRequest[RegisteredScriptResourceArgs, RegisteredScriptResourceState],
+	_ context.Context, _ infer.UpdateRequest[RegisteredScriptResourceArgs, RegisteredScriptResourceState],
 ) (infer.UpdateResponse[RegisteredScriptResourceState], error) {
-	// Validate inputs BEFORE making API calls
-	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{},
-			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
-	}
-	if err := ValidateScriptDisplayName(req.Inputs.DisplayName); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{},
-			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
-	}
-	if err := ValidateHostedLocation(req.Inputs.HostedLocation); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{},
-			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
-	}
-	if err := ValidateIntegrityHash(req.Inputs.IntegrityHash); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{},
-			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
-	}
-	if err := ValidateVersion(req.Inputs.Version); err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{},
-			fmt.Errorf("validation failed for RegisteredScript resource: %w", err)
-	}
-
-	state := RegisteredScriptResourceState{
-		RegisteredScriptResourceArgs: req.Inputs,
-		ScriptID:                     req.State.ScriptID,  // Preserve the script ID from current state
-		CreatedOn:                    req.State.CreatedOn, // Preserve the creation timestamp from current state
-		LastUpdated:                  "",                  // Will be updated from API response
-	}
-
-	// During preview, return expected state without making API calls
-	if req.DryRun {
-		state.LastUpdated = time.Now().Format(time.RFC3339)
-		return infer.UpdateResponse[RegisteredScriptResourceState]{
-			Output: state,
-		}, nil
-	}
-
-	// Extract the Webflow script ID from the Pulumi resource ID
-	_, scriptID, err := ExtractIDsFromRegisteredScriptResourceID(req.ID)
-	if err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("invalid resource ID: %w", err)
-	}
-
-	// Get HTTP client
-	client, err := GetHTTPClient(ctx, providerVersion)
-	if err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
-	}
-
-	// Call Webflow API
-	response, err := PatchRegisteredScript(
-		ctx, client, req.Inputs.SiteID, scriptID,
-		req.Inputs.DisplayName, req.Inputs.HostedLocation, req.Inputs.IntegrityHash,
-		req.Inputs.Version, req.Inputs.CanCopy,
-	)
-	if err != nil {
-		return infer.UpdateResponse[RegisteredScriptResourceState]{},
-			fmt.Errorf("failed to update registered script: %w", err)
-	}
-
-	// Update state with values from API response
-	state.LastUpdated = response.LastUpdated
-
-	return infer.UpdateResponse[RegisteredScriptResourceState]{
-		Output: state,
-	}, nil
+	return infer.UpdateResponse[RegisteredScriptResourceState]{},
+		errors.New("registered scripts cannot be updated in-place: " +
+			"Webflow API does not support PATCH for registered scripts. " +
+			"All changes require replacement (delete + recreate). " +
+			"If you see this error, please report it as a provider bug")
 }
 
 // Delete removes a registered script from the Webflow site.

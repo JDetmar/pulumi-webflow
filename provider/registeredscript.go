@@ -364,6 +364,11 @@ var patchRegisteredScriptBaseURL = ""
 // PatchRegisteredScript updates an existing registered script for a Webflow site.
 // It calls PATCH /v2/sites/{site_id}/registered_scripts/{script_id} endpoint.
 // Returns the updated script or an error if the request fails.
+//
+// Deprecated: Webflow API does not actually support PATCH for registered scripts.
+// This endpoint returns 404 Not Found. All RegisteredScript changes now trigger
+// replacement (delete + recreate) via the Diff method. This function is kept for
+// backwards compatibility but should not be used.
 func PatchRegisteredScript(
 	ctx context.Context, client *http.Client,
 	siteID, scriptID, displayName, hostedLocation, integrityHash, version string, canCopy bool,

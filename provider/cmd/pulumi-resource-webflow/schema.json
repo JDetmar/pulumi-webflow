@@ -942,7 +942,8 @@
         "siteId",
         "displayName",
         "hostedLocation",
-        "integrityHash"
+        "integrityHash",
+        "version"
       ],
       "inputProperties": {
         "canCopy": {
@@ -974,7 +975,8 @@
         "siteId",
         "displayName",
         "hostedLocation",
-        "integrityHash"
+        "integrityHash",
+        "version"
       ]
     },
     "webflow:index:RobotsTxt": {

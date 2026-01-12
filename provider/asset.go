@@ -20,25 +20,30 @@ import (
 )
 
 // AssetVariant represents different size variants of an uploaded asset.
+// These variants are created by Webflow to serve the site responsively.
 type AssetVariant struct {
-	URL    string `json:"url"`
-	Width  int    `json:"width,omitempty"`
-	Height int    `json:"height,omitempty"`
-	Size   int    `json:"size,omitempty"`
+	HostedURL        string `json:"hostedUrl,omitempty"`
+	OriginalFileName string `json:"originalFileName,omitempty"`
+	DisplayName      string `json:"displayName,omitempty"`
+	Format           string `json:"format,omitempty"`
+	Width            int    `json:"width,omitempty"`
+	Height           int    `json:"height,omitempty"`
+	Quality          int    `json:"quality,omitempty"`
+	Error            string `json:"error,omitempty"`
 }
 
 // AssetResponse represents a Webflow asset from the API.
 type AssetResponse struct {
-	ID               string                  `json:"id"`
-	ContentType      string                  `json:"contentType"`
-	Size             int                     `json:"size"`
-	SiteID           string                  `json:"siteId"`
-	HostedURL        string                  `json:"hostedUrl"`
-	OriginalFileName string                  `json:"originalFileName"`
-	DisplayName      string                  `json:"displayName,omitempty"`
-	CreatedOn        string                  `json:"createdOn"`
-	LastUpdated      string                  `json:"lastUpdated"`
-	Variants         map[string]AssetVariant `json:"variants,omitempty"`
+	ID               string         `json:"id"`
+	ContentType      string         `json:"contentType"`
+	Size             int            `json:"size"`
+	SiteID           string         `json:"siteId"`
+	HostedURL        string         `json:"hostedUrl"`
+	OriginalFileName string         `json:"originalFileName"`
+	DisplayName      string         `json:"displayName,omitempty"`
+	CreatedOn        string         `json:"createdOn"`
+	LastUpdated      string         `json:"lastUpdated"`
+	Variants         []AssetVariant `json:"variants,omitempty"`
 }
 
 // AssetListResponse represents the response from listing assets.

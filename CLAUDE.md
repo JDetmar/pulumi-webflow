@@ -143,6 +143,6 @@ Tools are managed via [mise](https://mise.jdx.dev/). Key versions in `.config/mi
 - Go (latest)
 - Node.js 20.x
 - Python 3.11
-- .NET 8.0
+- .NET 6.0
 - Java 11 (Corretto)
 - Gradle 7.6.6

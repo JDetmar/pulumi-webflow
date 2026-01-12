@@ -39,7 +39,9 @@ type RegisteredScriptResourceArgs struct {
 	// Version is the Semantic Version (SemVer) string for the script.
 	// Format: "major.minor.patch" (e.g., "1.0.0", "2.3.1")
 	// See https://semver.org/ for more information.
-	Version string `pulumi:"version"`
+	// Note: Marked optional for backwards compatibility with existing state, but
+	// Create validates that version is provided for new resources.
+	Version string `pulumi:"version,optional"`
 	// CanCopy indicates whether the script can be copied on site duplication.
 	// Default: false
 	CanCopy bool `pulumi:"canCopy,optional"`
@@ -146,7 +148,16 @@ func (r *RegisteredScriptResource) Diff(
 		detailedDiff["integrityHash"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
-	if req.State.Version != req.Inputs.Version {
+	// Compare version - only if state has a non-empty version.
+	// If state version is empty (from old state before field was required),
+	// check if the current state outputs have version set. If they don't differ
+	// from inputs, no change is needed.
+	// Note: Due to struct embedding, the state version might not deserialize correctly
+	// in some cases. We handle this by only flagging a diff if both versions are
+	// non-empty AND different.
+	stateVersion := req.State.Version
+	inputVersion := req.Inputs.Version
+	if stateVersion != "" && inputVersion != "" && stateVersion != inputVersion {
 		detailedDiff["version"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 

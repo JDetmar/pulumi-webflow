@@ -33,7 +33,7 @@ type RegisteredScript struct {
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringOutput `pulumi:"siteId"`
 	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-	Version pulumi.StringOutput `pulumi:"version"`
+	Version pulumi.StringPtrOutput `pulumi:"version"`
 }
 
 // NewRegisteredScript registers a new resource with the given unique name, arguments, and options.
@@ -54,9 +54,6 @@ func NewRegisteredScript(ctx *pulumi.Context,
 	}
 	if args.SiteId == nil {
 		return nil, errors.New("invalid value for required argument 'SiteId'")
-	}
-	if args.Version == nil {
-		return nil, errors.New("invalid value for required argument 'Version'")
 	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource RegisteredScript
@@ -102,7 +99,7 @@ type registeredScriptArgs struct {
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId string `pulumi:"siteId"`
 	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-	Version string `pulumi:"version"`
+	Version *string `pulumi:"version"`
 }
 
 // The set of arguments for constructing a RegisteredScript resource.
@@ -118,7 +115,7 @@ type RegisteredScriptArgs struct {
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringInput
 	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-	Version pulumi.StringInput
+	Version pulumi.StringPtrInput
 }
 
 func (RegisteredScriptArgs) ElementType() reflect.Type {
@@ -199,8 +196,8 @@ func (o RegisteredScriptOutput) SiteId() pulumi.StringOutput {
 }
 
 // The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-func (o RegisteredScriptOutput) Version() pulumi.StringOutput {
-	return o.ApplyT(func(v *RegisteredScript) pulumi.StringOutput { return v.Version }).(pulumi.StringOutput)
+func (o RegisteredScriptOutput) Version() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *RegisteredScript) pulumi.StringPtrOutput { return v.Version }).(pulumi.StringPtrOutput)
 }
 
 func init() {

@@ -71,9 +71,9 @@ error: rpc error: code = Unknown desc = invocation of webflow:index:getTokenInfo
 
 ---
 
-## 5. Asset Variants Parsing Error (NEW)
+## 5. Asset Variants Parsing Error
 
-**Status:** ❌ NOT YET FIXED
+**Status:** ✅ FIXED
 
 **File:** `provider/asset.go`
 
@@ -84,18 +84,18 @@ error: rpc error: code = Unknown desc = invocation of webflow:index:getTokenInfo
 error: Preview failed: failed to read asset: failed to parse response: json: cannot unmarshal array into Go struct field AssetResponse.variants of type map[string]provider.AssetVariant
 ```
 
-**Root Cause:** The Webflow API returns `variants` as an array, but the Go struct expects a map.
+**Root Cause:** The Webflow API returns `variants` as an array, but the Go struct expected a map.
 
-**Investigation needed:**
+**Solution:**
 
-- Update the `AssetResponse` struct to handle `variants` as an array
-- Check Webflow API documentation for the correct variants format
+- Changed `Variants` field from `map[string]AssetVariant` to `[]AssetVariant`
+- Updated `AssetVariant` struct fields to match API response: `hostedUrl`, `originalFileName`, `displayName`, `format`, `width`, `height`, `quality`, `error`
 
 ---
 
-## 6. CollectionItem Slug Uniqueness Error (NEW)
+## 6. CollectionItem Slug Uniqueness Error
 
-**Status:** ❌ NOT YET FIXED
+**Status:** ✅ ALREADY FIXED (verified by api-verifier audit)
 
 **File:** `provider/collectionitem_resource.go`
 
@@ -109,22 +109,22 @@ error: failed to update collection item: bad request: {"message":"Validation Err
 
 **Root Cause:** The update request includes the unchanged slug, and Webflow rejects it because the slug already exists (for the same item).
 
-**Fix needed:** Exclude unchanged slug from PATCH requests, similar to the fix applied for Collection resource.
+**Solution:** Code at lines 351-368 in `collectionitem_resource.go` already excludes unchanged slug from PATCH requests. The error may have occurred during a transient state before the fix was applied.
 
 ---
 
 ## Test Stack Location
 
 Test stack is at `/private/tmp/test-webflow` with these working resources:
+
 - Site
 - Redirect
 - RobotsTxt
 - Collection (with new `collectionId` output)
 - CollectionField
-- CollectionItem (note: has slug update issue)
+- CollectionItem ✅ (slug exclusion working)
 - Webhook
 - AssetFolder
+- Asset ✅ (variants parsing fixed)
 - RegisteredScript ✅ (fully working)
 - SiteCustomCode ✅ (fully working)
-
-Asset is temporarily commented out due to variants parsing bug.

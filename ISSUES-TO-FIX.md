@@ -4,42 +4,35 @@ Issues discovered during testing session on 2026-01-09.
 
 ## 1. RegisteredScript Update Returns 404
 
+**Status:** ✅ FIXED in PR #51
+
 **File:** `provider/registeredscript_resource.go` (Update method)
 
 **Problem:** When Pulumi detects a diff in RegisteredScript (e.g., version change), it calls the Update method which uses `PutRegisteredScript`. The Webflow API returns 404.
 
-**Error:**
-```
-error: failed to update registered script: not found: the Webflow site or robots.txt configuration does not exist.
-```
+**Root Cause:** Webflow API v2 does not support PATCH/PUT for registered scripts. Only GET (list), POST (create), and DELETE are available.
 
-**Investigation needed:**
-- Check if Webflow's API supports updating registered scripts at all
-- Verify the PUT endpoint URL is correct
-- May need to implement as delete+recreate instead of update
+**Solution:** Changed all field changes to trigger replacement (delete + recreate) instead of in-place update. All changes now use `p.UpdateReplace` in the Diff method with `DeleteBeforeReplace = true`.
 
 ---
 
 ## 2. SiteCustomCode Script ID Format
 
+**Status:** ✅ RESOLVED (was blocked by Issue 1 & 4)
+
 **File:** `provider/sitecustomcode_resource.go`
 
 **Problem:** When creating SiteCustomCode with a registered script, the API returns "invalid id and version".
 
-**Error:**
-```
-error: failed to create site custom code: bad request: {"message":"Bad Request: At least one script contained an invalid id and version","code":"bad_request"}
-```
+**Root Cause:** This issue was caused by Issues 1 and 4. When RegisteredScript had problems (update 404 errors, false version diffs triggering unnecessary replacements), the script ID would become unknown during replacement, causing SiteCustomCode validation to fail.
 
-**Investigation needed:**
-- Verify what format the `id` field expects (displayName vs script ID)
-- Check if version must match exactly what's registered
-- Test with hardcoded values to isolate the issue
-- May be blocked until RegisteredScript issues are resolved
+**Resolution:** After fixing Issues 1 and 4, SiteCustomCode works correctly. The script ID format (human-readable string derived from displayName) is correct as documented.
 
 ---
 
 ## 3. getTokenInfo / getAuthorizedUser Invoke Functions Crash
+
+**Status:** ❌ NOT YET INVESTIGATED
 
 **Files:** `provider/token.go`, `provider/authorized_user.go`
 
@@ -59,18 +52,64 @@ error: rpc error: code = Unknown desc = invocation of webflow:index:getTokenInfo
 
 ## 4. RegisteredScript Version Diff on Every Run
 
+**Status:** ✅ FIXED in PR #51 + additional fix
+
 **File:** `provider/registeredscript_resource.go` (Diff method)
 
 **Problem:** Even after refresh, Pulumi keeps detecting a version diff on RegisteredScript, triggering unnecessary updates.
 
-**Root cause:** Webflow's list scripts API doesn't return the `version` field. The Read method preserves version from state, but something causes Diff to still see a change.
+**Root Causes:**
 
-**Workaround applied:** Made `version` optional in schema (line 43), but this may have side effects.
+1. All changes should trigger replacement, not update (fixed in PR #51)
+2. Pulumi's struct embedding doesn't properly deserialize the version field into the embedded `RegisteredScriptResourceArgs` struct, causing `req.State.Version` to be empty when compared
+
+**Solution:**
+
+- Changed version field back to optional in struct tag (for backwards compatibility with existing state)
+- Updated Diff method to only compare version if both state and inputs have non-empty values
+- Create method still validates that version is provided for new resources
+
+---
+
+## 5. Asset Variants Parsing Error (NEW)
+
+**Status:** ❌ NOT YET FIXED
+
+**File:** `provider/asset.go`
+
+**Problem:** The Asset resource fails to read with a JSON parsing error.
+
+**Error:**
+```
+error: Preview failed: failed to read asset: failed to parse response: json: cannot unmarshal array into Go struct field AssetResponse.variants of type map[string]provider.AssetVariant
+```
+
+**Root Cause:** The Webflow API returns `variants` as an array, but the Go struct expects a map.
 
 **Investigation needed:**
-- Debug what values Diff receives for `req.State.Version` vs `req.Inputs.Version`
-- May need to adjust how Read populates the response
-- Consider if version should trigger replacement instead of update
+
+- Update the `AssetResponse` struct to handle `variants` as an array
+- Check Webflow API documentation for the correct variants format
+
+---
+
+## 6. CollectionItem Slug Uniqueness Error (NEW)
+
+**Status:** ❌ NOT YET FIXED
+
+**File:** `provider/collectionitem_resource.go`
+
+**Problem:** When updating a CollectionItem, the API rejects the request with a slug uniqueness error even when the slug hasn't changed.
+
+**Error:**
+
+```text
+error: failed to update collection item: bad request: {"message":"Validation Error","code":"validation_error","details":[{"param":"slug","description":"Unique value is already in database: 'test-blog-post'"}]}
+```
+
+**Root Cause:** The update request includes the unchanged slug, and Webflow rejects it because the slug already exists (for the same item).
+
+**Fix needed:** Exclude unchanged slug from PATCH requests, similar to the fix applied for Collection resource.
 
 ---
 
@@ -82,9 +121,10 @@ Test stack is at `/private/tmp/test-webflow` with these working resources:
 - RobotsTxt
 - Collection (with new `collectionId` output)
 - CollectionField
-- CollectionItem
+- CollectionItem (note: has slug update issue)
 - Webhook
 - AssetFolder
-- RegisteredScript (Read works, Update broken)
+- RegisteredScript ✅ (fully working)
+- SiteCustomCode ✅ (fully working)
 
-SiteCustomCode is defined but not yet created due to above issues.
+Asset is temporarily commented out due to variants parsing bug.

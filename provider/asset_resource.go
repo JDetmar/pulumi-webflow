@@ -10,6 +10,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	p "github.com/pulumi/pulumi-go-provider"
@@ -317,7 +318,7 @@ func (r *Asset) Read(
 	asset, err := GetAsset(ctx, client, assetID)
 	if err != nil {
 		// Resource not found - return empty ID to signal deletion
-		if errors.Is(err, errors.New("not found")) {
+		if strings.Contains(err.Error(), "not found") {
 			return infer.ReadResponse[AssetArgs, AssetState]{
 				ID: "",
 			}, nil

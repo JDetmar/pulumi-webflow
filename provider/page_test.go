@@ -14,6 +14,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
 // TestValidatePageID_Valid tests valid page IDs
@@ -477,5 +479,58 @@ func TestGetPages_ServerError(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "server error") {
 		t.Errorf("Expected 'server error' in error, got: %v", err)
+	}
+}
+
+// TestPageDataRead_NotFound tests that Read() returns empty ID when page is not found.
+// This is critical for Pulumi to detect resource deletion and trigger recreation.
+func TestPageDataRead_NotFound(t *testing.T) {
+	// t.Setenv automatically restores the original value after the test
+	t.Setenv("WEBFLOW_API_TOKEN", "wfp_1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd")
+
+	// Setup mock server that returns 404 for GetPage
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "/pages/") {
+			w.WriteHeader(http.StatusNotFound)
+			_, _ = w.Write([]byte("page not found"))
+			return
+		}
+		t.Errorf("Unexpected request path: %s", r.URL.Path)
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer server.Close()
+
+	// Override API base URL
+	oldURL := getPageBaseURL
+	getPageBaseURL = server.URL
+	defer func() { getPageBaseURL = oldURL }()
+
+	// Create PageData resource
+	pageData := &PageData{}
+	ctx := context.Background()
+
+	// Create a test request as if Pulumi is calling Read()
+	state := PageDataState{
+		PageDataArgs: PageDataArgs{
+			SiteID: "5f0c8c9e1c9d440000e8d8c3",
+			PageID: "5f0c8c9e1c9d440000e8d8c4", // Valid format page ID
+		},
+	}
+
+	req := infer.ReadRequest[PageDataArgs, PageDataState]{
+		ID:    "5f0c8c9e1c9d440000e8d8c3/pages/5f0c8c9e1c9d440000e8d8c4",
+		State: state,
+	}
+
+	// Call Read() - should return empty ID for "not found" error
+	response, err := pageData.Read(ctx, req)
+	// Verify no error is returned (not found is handled gracefully)
+	if err != nil {
+		t.Errorf("Read() returned error for not found case, expected nil: %v", err)
+	}
+
+	// Verify that ID is empty (signals deletion to Pulumi)
+	if response.ID != "" {
+		t.Errorf("Read() returned ID = %q, expected empty string to signal deletion", response.ID)
 	}
 }

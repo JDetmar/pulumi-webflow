@@ -10,6 +10,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
@@ -180,7 +181,7 @@ func (r *PageData) Read(
 		page, err := GetPage(ctx, client, req.State.PageID)
 		if err != nil {
 			// If page not found, return empty ID to signal deletion
-			if errors.Is(err, errors.New("not found")) {
+			if strings.Contains(err.Error(), "not found") {
 				return infer.ReadResponse[PageDataArgs, PageDataState]{
 					ID: "",
 				}, nil

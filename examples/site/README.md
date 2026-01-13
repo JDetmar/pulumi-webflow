@@ -5,7 +5,7 @@ This directory contains examples demonstrating how to create and manage Webflow 
 ## What You'll Learn
 
 - Create basic Webflow sites with required properties
-- Configure custom domains for sites
+- Configure workspaces and site settings
 - Implement multi-environment site configurations
 - Manage site lifecycle (create, update, delete)
 
@@ -27,6 +27,7 @@ This directory contains examples demonstrating how to create and manage Webflow 
 cd typescript
 npm install
 pulumi stack init dev
+pulumi config set workspaceId "YOUR_WORKSPACE_ID"
 pulumi config set displayName "My Site"
 pulumi config set shortName "my-site"
 pulumi up
@@ -40,6 +41,7 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 pulumi stack init dev
+pulumi config set workspaceId "YOUR_WORKSPACE_ID"
 pulumi config set displayName "My Site"
 pulumi config set shortName "my-site"
 pulumi up
@@ -51,6 +53,7 @@ pulumi up
 cd go
 go mod download
 pulumi stack init dev
+pulumi config set workspaceId "YOUR_WORKSPACE_ID"
 pulumi config set displayName "My Site"
 pulumi config set shortName "my-site"
 pulumi up
@@ -62,6 +65,7 @@ pulumi up
 cd csharp
 dotnet restore
 pulumi stack init dev
+pulumi config set workspaceId "YOUR_WORKSPACE_ID"
 pulumi config set displayName "My Site"
 pulumi config set shortName "my-site"
 pulumi up
@@ -73,6 +77,7 @@ pulumi up
 cd java
 mvn install
 pulumi stack init dev
+pulumi config set workspaceId "YOUR_WORKSPACE_ID"
 pulumi config set displayName "My Site"
 pulumi config set shortName "my-site"
 pulumi up
@@ -86,26 +91,14 @@ Create a simple site with required properties.
 
 ```typescript
 const basicSite = new webflow.Site("basic-site", {
+    workspaceId: "YOUR_WORKSPACE_ID",
     displayName: "My Website",
     shortName: "my-website",
-    timezone: "America/New_York",
+    timeZone: "America/New_York",
 });
 ```
 
-### 2. Site with Custom Domain
-
-Create a site with a custom domain configured.
-
-```typescript
-const siteWithDomain = new webflow.Site("site-with-domain", {
-    displayName: "My Production Site",
-    shortName: "my-prod-site",
-    customDomain: "www.example.com",
-    timezone: "America/New_York",
-});
-```
-
-### 3. Multi-Environment Configuration
+### 2. Multi-Environment Configuration
 
 Create sites for different environments (development, staging, production).
 
@@ -113,14 +106,15 @@ Create sites for different environments (development, staging, production).
 const environments = ["development", "staging", "production"];
 const sites = environments.map(env =>
     new webflow.Site(`site-${env}`, {
+        workspaceId: "YOUR_WORKSPACE_ID",
         displayName: `My Site - ${env}`,
         shortName: `my-site-${env}`,
-        timezone: "America/New_York",
+        timeZone: "America/New_York",
     })
 );
 ```
 
-### 4. Full Configuration Example
+### 3. Full Configuration Example
 
 Demonstrates all available configuration options.
 
@@ -130,11 +124,10 @@ Each example requires the following configuration:
 
 | Config Key      | Required | Description                                    |
 |-----------------|----------|------------------------------------------------|
+| `workspaceId`   | Yes      | Webflow workspace ID where site will be created |
 | `displayName`   | Yes      | Human-readable name for the site               |
 | `shortName`     | Yes      | URL slug for the site                          |
-| `customDomain`  | No       | Custom domain (e.g., www.example.com)          |
 | `timezone`      | No       | Site timezone (default: America/New_York)      |
-| `environment`   | No       | Deployment environment (default: development)  |
 
 ## Expected Output
 
@@ -144,9 +137,8 @@ After successful deployment, you'll see exports like:
 Outputs:
     basicSiteId           : "abc123..."
     basicSiteName         : "My Site"
-    customDomainSiteId    : "def456..." (or "not-created")
-    environmentSiteIds    : ["ghi789...", "jkl012...", "mno345..."]
-    configuredSiteId      : "pqr678..."
+    environmentSiteIds    : ["def456...", "ghi789...", "jkl012..."]
+    configuredSiteId      : "mno345..."
 ```
 
 ## Cleanup
@@ -167,11 +159,9 @@ The short name must be:
 - No spaces or special characters
 - Unique within your Webflow account
 
-### "Custom domain already in use" Error
+### "Invalid workspace ID" Error
 
-The custom domain is already configured on another site. Either:
-1. Remove it from the other site first
-2. Use a different domain
+The workspace ID must be a valid Webflow workspace ID. You can find your workspace ID in the Webflow dashboard under Account Settings > Workspace. Note that an Enterprise workspace is required for site creation via the API.
 
 ### "Quota exceeded" Error
 

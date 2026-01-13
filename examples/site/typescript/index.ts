@@ -5,9 +5,9 @@ import * as webflow from "@jdetmar/pulumi-webflow";
 const config = new pulumi.Config();
 
 // Get configuration values
+const workspaceId = config.require("workspaceId");
 const displayName = config.require("displayName");
 const shortName = config.require("shortName");
-const customDomain = config.get("customDomain");
 const timezone = config.get("timezone") || "America/New_York";
 
 /**
@@ -19,47 +19,38 @@ const timezone = config.get("timezone") || "America/New_York";
 
 // Example 1: Basic Site Creation
 const basicSite = new webflow.Site("basic-site", {
+  workspaceId: workspaceId,
   displayName: displayName,
   shortName: shortName,
-  timezone: timezone,
+  timeZone: timezone,
 });
 
-// Example 2: Site with Custom Domain
-let siteWithDomain: webflow.Site | undefined;
-if (customDomain) {
-  siteWithDomain = new webflow.Site("site-with-domain", {
-    displayName: `${displayName}-domain`,
-    shortName: `${shortName}-domain`,
-    customDomain: customDomain,
-    timezone: timezone,
-  });
-}
-
-// Example 3: Multi-Environment Site Configuration
+// Example 2: Multi-Environment Site Configuration
 const environments = ["development", "staging", "production"];
 const environmentSites = environments.map(
   (env) =>
     new webflow.Site(`site-${env}`, {
+      workspaceId: workspaceId,
       displayName: `${displayName}-${env}`,
       shortName: `${shortName}-${env}`,
-      timezone: timezone,
+      timeZone: timezone,
     })
 );
 
-// Example 4: Site with Configuration
+// Example 3: Site with Configuration
 const configuredSite = new webflow.Site("configured-site", {
+  workspaceId: workspaceId,
   displayName: `${displayName}-configured`,
   shortName: `${shortName}-configured`,
-  timezone: timezone,
+  timeZone: timezone,
 });
 
 // Export the site resources for reference
 export const basicSiteId = basicSite.id;
 export const basicSiteName = basicSite.displayName;
-export const customDomainSiteId = siteWithDomain?.id || "not-created";
 export const environmentSiteIds = environmentSites.map((s) => s.id);
 export const configuredSiteId = configuredSite.id;
 
 // Print deployment success message
-const message = pulumi.interpolate`✅ Successfully created ${environmentSites.length + 1} sites`;
+const message = pulumi.interpolate`✅ Successfully created ${environmentSites.length + 2} sites`;
 message.apply((m) => console.log(m));

@@ -123,7 +123,7 @@ provider_debug:
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 test_provider:
-	cd provider && go test -short -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM} -coverprofile="coverage.txt" ./...
+	cd provider && go test -short -race -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM} -coverprofile="coverage.txt" ./...
 
 dotnet_sdk: sdk/dotnet
 	cd ${PACKDIR}/dotnet/&& \
@@ -169,7 +169,7 @@ install:: install_nodejs_sdk install_dotnet_sdk
 	cp $(WORKING_DIR)/bin/${PROVIDER} ${GOPATH}/bin
 
 
-GO_TEST := go test -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM}
+GO_TEST := go test -race -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM}
 
 test_all:: test
 	cd provider/pkg && $(GO_TEST) ./...

@@ -481,9 +481,7 @@ Error: Authentication failed - invalid API token
 
 - [Webflow API Documentation](https://developers.webflow.com/reference/webflow-rest-api)
 - [Pulumi Documentation](https://www.pulumi.com/docs/)
-- [Provider API Reference](../docs/api/)
-- [Quickstart Guide](../docs/quickstart.md)
-- [API Documentation](../docs/api-reference.md)
+- [Main Repository README](../README.md)
 
 ## Contributing
 

@@ -293,10 +293,10 @@ pulumi stack rm dev
 
 ## Related Resources
 
-- [Webhook API Reference](../../docs/api/webhook.md) (if available)
 - [Main Examples Index](../README.md)
 - [Webflow Webhooks Documentation](https://developers.webflow.com/data/docs/webhooks)
 - [Webflow Webhook Trigger Types](https://developers.webflow.com/data/docs/webhook-triggers)
+- [Webflow Webhooks API](https://developers.webflow.com/reference/webhooks)
 
 ## Next Steps
 

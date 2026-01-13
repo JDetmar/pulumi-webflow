@@ -246,7 +246,7 @@ If the pages array is empty:
 
 ## Related Resources
 
-- [Page Data Source API Reference](../../docs/api/page.md)
 - [PageCustomCode Resource](../page-custom-code/)
 - [Main Examples Index](../README.md)
 - [Webflow Pages Documentation](https://university.webflow.com/lesson/intro-to-pages)
+- [Webflow Pages API](https://developers.webflow.com/reference/pages)

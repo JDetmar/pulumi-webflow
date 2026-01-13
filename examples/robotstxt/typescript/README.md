@@ -236,10 +236,10 @@ for (let i = 0; i < sites.length; i++) {
 
 ## See Also
 
-- [Webflow Provider Documentation](../../../docs/api/robotstxt.md)
-- [RobotsTxt API Reference](../../../docs/api/robotstxt.md)
+- [Main Examples Index](../../README.md)
 - [Pulumi Documentation](https://www.pulumi.com/docs/)
 - [robots.txt Standard](https://www.robotstxt.org/)
+- [Webflow API Documentation](https://developers.webflow.com/reference)
 
 ## Next Steps
 

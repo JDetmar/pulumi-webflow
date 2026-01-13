@@ -219,7 +219,6 @@ If your content isn't changing:
 
 ## Related Resources
 
-- [PageContent API Reference](../../docs/api/pagecontent.md)
 - [Page Resource Example](../page/)
 - [Main Examples Index](../README.md)
 - [Webflow Pages API Documentation](https://developers.webflow.com/reference/pages)

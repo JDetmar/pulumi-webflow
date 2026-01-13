@@ -258,10 +258,10 @@ This is expected behavior. Email addresses are immutable in the Webflow API. To 
 
 ## Related Resources
 
-- [User API Reference](../../docs/api/user.md) (if available)
 - [Main Examples Index](../README.md)
 - [Webflow Users Documentation](https://university.webflow.com/lesson/memberships)
 - [Access Groups Guide](https://university.webflow.com/lesson/access-groups)
+- [Webflow Users API](https://developers.webflow.com/reference/users)
 
 ## Next Steps
 

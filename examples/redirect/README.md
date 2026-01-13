@@ -156,6 +156,6 @@ The source path already has a redirect. Either:
 
 ## Related Resources
 
-- [Redirect API Reference](../../docs/api/redirect.md)
 - [Main Examples Index](../README.md)
 - [Webflow Redirects Documentation](https://university.webflow.com/lesson/301-redirects)
+- [Webflow Redirects API](https://developers.webflow.com/reference/redirects)

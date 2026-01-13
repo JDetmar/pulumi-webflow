@@ -26,7 +26,7 @@ Concise, task-agnostic instructions so an agent can work efficiently without ext
 - `provider/`: Go provider implementation (`provider.go`, `config.go`, `auth.go`, `*_resource.go`, tests). Entry binary at `provider/cmd/pulumi-resource-webflow/main.go`; schema extracted to `provider/cmd/.../schema.json`.
 - `sdk/`: Generated; do not hand-edit. Language-specific READMEs under each SDK.
 - `examples/`: Extensive Pulumi programs serving as documentation and reference implementations.
-- `docs/`: Guides, API docs (`docs/api/*.md`), troubleshooting, sprint artifacts. `CLAUDE.md` repeats the “run make codegen after provider changes” rule.
+- `docs/`: Guides, troubleshooting, sprint artifacts. `CLAUDE.md` repeats the “run make codegen after provider changes” rule.
 - `Makefile`: All build/test targets and codegen steps; uses `pulumictl convert-version` and `pulumi package gen-sdk`.
 - Config & lint: `.config/mise.toml`, `.golangci.yml`, `.pulumi.version`.
 - GitHub Actions: `build.yml` (push) runs codegen, provider build/tests, SDK matrix build, example tests, and lint; `run-acceptance-tests.yml` runs on `comment /run-acceptance-tests`; `pull-request.yml` posts PR comment for maintainers; `release.yml` handles publishing.

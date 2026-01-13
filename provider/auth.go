@@ -9,8 +9,10 @@ package provider
 import (
 	"crypto/tls"
 	"errors"
+	"math"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -64,6 +66,90 @@ func RedactToken(token string) string {
 	return "[REDACTED]"
 }
 
+// Default retry configuration for rate limit handling.
+const (
+	// DefaultMaxRetries is the maximum number of retry attempts for rate-limited requests.
+	DefaultMaxRetries = 3
+	// DefaultBaseDelay is the initial delay before the first retry.
+	DefaultBaseDelay = 1 * time.Second
+	// DefaultMaxDelay caps the maximum delay between retries.
+	DefaultMaxDelay = 30 * time.Second
+)
+
+// retryTransport is an http.RoundTripper that handles rate limiting with exponential backoff.
+type retryTransport struct {
+	transport  http.RoundTripper // Underlying transport for actual HTTP requests
+	maxRetries int               // Maximum number of retry attempts
+	baseDelay  time.Duration     // Initial delay before first retry
+	maxDelay   time.Duration     // Maximum delay between retries
+}
+
+// RoundTrip implements http.RoundTripper with retry logic for rate-limited requests.
+func (t *retryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	var resp *http.Response
+	var err error
+
+	for attempt := 0; attempt <= t.maxRetries; attempt++ {
+		// Clone the request for each attempt (body may have been consumed)
+		clonedReq := req.Clone(req.Context())
+
+		resp, err = t.transport.RoundTrip(clonedReq)
+		if err != nil {
+			return nil, err
+		}
+
+		// If not rate limited, return immediately
+		if resp.StatusCode != http.StatusTooManyRequests {
+			return resp, nil
+		}
+
+		// Don't retry if we've exhausted attempts
+		if attempt == t.maxRetries {
+			return resp, nil
+		}
+
+		// Close the response body before retrying
+		_ = resp.Body.Close()
+
+		// Calculate delay with exponential backoff
+		delay := t.calculateDelay(resp, attempt)
+
+		// Check if context is cancelled before sleeping
+		select {
+		case <-req.Context().Done():
+			return nil, req.Context().Err()
+		case <-time.After(delay):
+			// Continue to next retry attempt
+		}
+	}
+
+	return resp, nil
+}
+
+// calculateDelay determines how long to wait before the next retry.
+// It respects the Retry-After header if present, otherwise uses exponential backoff.
+func (t *retryTransport) calculateDelay(resp *http.Response, attempt int) time.Duration {
+	// Check for Retry-After header (can be seconds or HTTP-date)
+	if retryAfter := resp.Header.Get("Retry-After"); retryAfter != "" {
+		// Try parsing as seconds first
+		if seconds, err := strconv.ParseInt(retryAfter, 10, 64); err == nil {
+			delay := time.Duration(seconds) * time.Second
+			if delay > t.maxDelay {
+				return t.maxDelay
+			}
+			return delay
+		}
+		// Could also parse HTTP-date format, but seconds is more common for APIs
+	}
+
+	// Exponential backoff: baseDelay * 2^attempt
+	delay := time.Duration(float64(t.baseDelay) * math.Pow(2, float64(attempt)))
+	if delay > t.maxDelay {
+		return t.maxDelay
+	}
+	return delay
+}
+
 // authenticatedTransport is an http.RoundTripper that adds authentication headers.
 type authenticatedTransport struct {
 	token     string            // Webflow API token for Bearer authentication
@@ -91,7 +177,8 @@ func (t *authenticatedTransport) RoundTrip(req *http.Request) (*http.Response, e
 }
 
 // CreateHTTPClient creates an HTTP client configured for Webflow API v2.
-// The client enforces HTTPS/TLS, includes authentication headers, and has appropriate timeouts.
+// The client enforces HTTPS/TLS, includes authentication headers, has appropriate timeouts,
+// and automatically retries rate-limited requests with exponential backoff.
 //
 // Note: This client does not set a base URL. In Pulumi provider architecture, resource
 // implementations construct full URLs (e.g., "https://api.webflow.com/v2/sites/{id}")
@@ -119,10 +206,18 @@ func CreateHTTPClient(token, version string) (*http.Client, error) {
 		transport: baseTransport,
 	}
 
+	// Wrap with retry transport for rate limit handling
+	retryTransport := &retryTransport{
+		transport:  authTransport,
+		maxRetries: DefaultMaxRetries,
+		baseDelay:  DefaultBaseDelay,
+		maxDelay:   DefaultMaxDelay,
+	}
+
 	// Create HTTP client with timeout
 	client := &http.Client{
 		Timeout:   30 * time.Second,
-		Transport: authTransport,
+		Transport: retryTransport,
 	}
 
 	return client, nil

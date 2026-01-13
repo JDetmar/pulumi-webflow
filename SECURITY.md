@@ -69,7 +69,7 @@ This provider implements several security measures:
 - **Input Validation**: All inputs are validated before API calls
 - **Rate Limiting**: Automatic retry with backoff for rate-limited requests
 - **SBOM Generation**: Software Bill of Materials included with releases
-- **SLSA Provenance**: Build provenance attestations for Go binaries (verifiable with `gh attestation verify`)
+- **SLSA Build Level 2 Provenance**: Build provenance attestations for Go binaries produced via standard GitHub Actions workflows (verifiable with `gh attestation verify`; not SLSA Level 3)
 - **Signed Package Releases**: npm and PyPI packages published with Sigstore attestations
 
 ## Acknowledgments

@@ -12,35 +12,22 @@ class Program
         var config = new Config();
 
         // Get configuration values
+        var workspaceId = config.Require("workspaceId");
         var displayName = config.Require("displayName");
         var shortName = config.Require("shortName");
-        var customDomain = config.Get("customDomain");
         var timezone = config.Get("timezone") ?? "America/New_York";
 
         // Example 1: Basic Site Creation
         // Create a simple site with required properties
         var basicSite = new Site("basic-site", new SiteArgs
         {
+            WorkspaceId = workspaceId,
             DisplayName = displayName,
             ShortName = shortName,
-            Timezone = timezone,
+            TimeZone = timezone,
         });
 
-        // Example 2: Site with Custom Domain (conditional creation)
-        // Only create if customDomain is provided in configuration
-        Site? siteWithDomain = null;
-        if (!string.IsNullOrEmpty(customDomain))
-        {
-            siteWithDomain = new Site("site-with-domain", new SiteArgs
-            {
-                DisplayName = $"{displayName}-domain",
-                ShortName = $"{shortName}-domain",
-                CustomDomain = customDomain,
-                Timezone = timezone,
-            });
-        }
-
-        // Example 3: Multi-Environment Site Configuration
+        // Example 2: Multi-Environment Site Configuration
         // Create sites for different environments using a loop
         var environments = new[] { "development", "staging", "production" };
         var environmentSites = new List<Site>();
@@ -49,20 +36,22 @@ class Program
         {
             var site = new Site($"site-{env}", new SiteArgs
             {
+                WorkspaceId = workspaceId,
                 DisplayName = $"{displayName}-{env}",
                 ShortName = $"{shortName}-{env}",
-                Timezone = timezone,
+                TimeZone = timezone,
             });
             environmentSites.Add(site);
         }
 
-        // Example 4: Site with Full Configuration
+        // Example 3: Site with Full Configuration
         // Demonstrates all available configuration options
         var configuredSite = new Site("configured-site", new SiteArgs
         {
+            WorkspaceId = workspaceId,
             DisplayName = $"{displayName}-configured",
             ShortName = $"{shortName}-configured",
-            Timezone = timezone,
+            TimeZone = timezone,
         });
 
         // Export the site resources for reference
@@ -70,7 +59,6 @@ class Program
         {
             ["basicSiteId"] = basicSite.Id,
             ["basicSiteName"] = basicSite.DisplayName,
-            ["customDomainSiteId"] = siteWithDomain?.Id ?? Output.Create("not-created"),
             ["environmentSiteIds"] = Output.All(environmentSites.Select(s => s.Id).ToArray()),
             ["configuredSiteId"] = configuredSite.Id,
         };

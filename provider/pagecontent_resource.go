@@ -10,6 +10,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	p "github.com/pulumi/pulumi-go-provider"
@@ -261,12 +262,13 @@ func (r *PageContent) Read(
 	// Call Webflow API to get current page content
 	response, err := GetPageContent(ctx, client, pageID)
 	if err != nil {
-		// If page not found, return empty ID to signal deletion
-		// Note: We can't easily detect if specific nodes exist without deep traversal
-		// For now, if the page is gone, consider the resource gone
-		return infer.ReadResponse[PageContentArgs, PageContentState]{
-			ID: "",
-		}, nil
+		// Resource not found - return empty ID to signal deletion
+		if strings.Contains(err.Error(), "not found") {
+			return infer.ReadResponse[PageContentArgs, PageContentState]{
+				ID: "",
+			}, nil
+		}
+		return infer.ReadResponse[PageContentArgs, PageContentState]{}, fmt.Errorf("failed to read page content: %w", err)
 	}
 
 	// Build current state

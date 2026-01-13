@@ -5,9 +5,9 @@ import pulumi_webflow as webflow
 config = pulumi.Config()
 
 # Get configuration values
+workspace_id = config.require("workspaceId")
 display_name = config.require("displayName")
 short_name = config.require("shortName")
-custom_domain = config.get("customDomain")
 timezone = config.get("timezone") or "America/New_York"
 
 """
@@ -18,42 +18,35 @@ This example demonstrates how to create and manage Webflow sites using Pulumi.
 
 # Example 1: Basic Site Creation
 basic_site = webflow.Site("basic-site",
+    workspace_id=workspace_id,
     display_name=display_name,
     short_name=short_name,
-    timezone=timezone)
+    time_zone=timezone)
 
-# Example 2: Site with Custom Domain
-site_with_domain = None
-if custom_domain:
-    site_with_domain = webflow.Site("site-with-domain",
-        display_name=f"{display_name}-domain",
-        short_name=f"{short_name}-domain",
-        custom_domain=custom_domain,
-        timezone=timezone)
-
-# Example 3: Multi-Environment Site Configuration
+# Example 2: Multi-Environment Site Configuration
 environments = ["development", "staging", "production"]
 environment_sites = []
 for env in environments:
     site = webflow.Site(f"site-{env}",
+        workspace_id=workspace_id,
         display_name=f"{display_name}-{env}",
         short_name=f"{short_name}-{env}",
-        timezone=timezone)
+        time_zone=timezone)
     environment_sites.append(site)
 
-# Example 4: Site with Configuration
+# Example 3: Site with Configuration
 configured_site = webflow.Site("configured-site",
+    workspace_id=workspace_id,
     display_name=f"{display_name}-configured",
     short_name=f"{short_name}-configured",
-    timezone=timezone)
+    time_zone=timezone)
 
 # Export values
 pulumi.export("basic_site_id", basic_site.id)
 pulumi.export("basic_site_name", basic_site.display_name)
-pulumi.export("custom_domain_site_id", site_with_domain.id if site_with_domain else "not-created")
 pulumi.export("environment_site_ids", [s.id for s in environment_sites])
 pulumi.export("configured_site_id", configured_site.id)
 
 # Print success message
-site_count = len(environment_sites) + 1
+site_count = len(environment_sites) + 2
 print(f"✅ Successfully created {site_count} sites")

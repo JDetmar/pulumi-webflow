@@ -224,11 +224,11 @@ After creating collections, you'll typically want to:
 
 ## Related Resources
 
-- [Collection API Reference](../../docs/api/collection.md)
 - [CollectionField Examples](../collectionfield/) - Define custom fields for your collections
 - [CollectionItem Examples](../collectionitem/) - Add content items to collections
 - [Main Examples Index](../README.md)
 - [Webflow CMS Documentation](https://university.webflow.com/lesson/intro-to-the-cms)
+- [Webflow Collections API](https://developers.webflow.com/reference/collections)
 
 ## Understanding Collections vs Collection Items
 

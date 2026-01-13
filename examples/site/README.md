@@ -169,6 +169,6 @@ You've reached the maximum number of sites for your Webflow plan. Upgrade your p
 
 ## Related Resources
 
-- [Site API Reference](../../docs/api/site.md)
 - [Main Examples Index](../README.md)
 - [Webflow Site Settings](https://university.webflow.com/lesson/site-settings)
+- [Webflow Sites API](https://developers.webflow.com/reference/sites)

@@ -203,7 +203,7 @@ Root Level
 
 ## Related Resources
 
-- [AssetFolder API Reference](../../docs/api/assetfolder.md)
 - [Asset Resource Examples](../asset/)
 - [Main Examples Index](../README.md)
 - [Webflow Assets Documentation](https://university.webflow.com/lesson/assets-panel)
+- [Webflow Asset API](https://developers.webflow.com/reference/assets)

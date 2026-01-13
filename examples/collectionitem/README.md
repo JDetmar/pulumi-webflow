@@ -222,7 +222,7 @@ Slugs must be unique within a collection. Either:
 
 ## Related Resources
 
-- [CollectionItem API Reference](../../docs/api/collectionitem.md)
 - [Collection Resource Example](../collection/)
 - [Main Examples Index](../README.md)
 - [Webflow CMS Documentation](https://university.webflow.com/lesson/intro-to-the-cms)
+- [Webflow Collection Items API](https://developers.webflow.com/reference/collection-items)

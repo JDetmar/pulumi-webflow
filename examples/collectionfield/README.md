@@ -247,11 +247,11 @@ Check that your validations match the field type:
 
 ## Related Resources
 
-- [CollectionField API Reference](../../docs/api/collectionfield.md)
 - [Collection Resource Examples](../collection/)
 - [CollectionItem Resource Examples](../collectionitem/)
 - [Main Examples Index](../README.md)
 - [Webflow CMS Documentation](https://university.webflow.com/lesson/intro-to-the-cms)
+- [Webflow Collection Fields API](https://developers.webflow.com/reference/collection-fields)
 
 ## Next Steps
 

@@ -233,7 +233,7 @@ The MD5 hash must be a 32-character hexadecimal string (lowercase or uppercase).
 
 ## Related Resources
 
-- [Asset API Reference](../../docs/api/asset.md)
 - [AssetFolder Resource](../assetfolder/)
 - [Main Examples Index](../README.md)
 - [AWS S3 POST Documentation](https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html)
+- [Webflow Asset API](https://developers.webflow.com/reference/assets)

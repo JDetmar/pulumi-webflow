@@ -40,7 +40,7 @@ The Webflow Pulumi Provider enables you to manage your Webflow sites and resourc
 
 3. **Install SDK:**
    ```bash
-   npm install @pulumi/webflow  # TypeScript/JavaScript
+   npm install @jdetmar/pulumi-webflow  # TypeScript/JavaScript
    pip install pulumi-webflow   # Python
    ```
 
@@ -67,7 +67,7 @@ The Webflow Pulumi Provider enables you to manage your Webflow sites and resourc
 ### Which languages are supported?
 
 The provider supports:
-- **TypeScript/JavaScript** - Native support via @pulumi/webflow
+- **TypeScript/JavaScript** - Native support via @jdetmar/pulumi-webflow
 - **Python** - Via pulumi-webflow package
 - **Go** - Via pulumi-webflow Go SDK
 - **.NET** - Via Pulumi.Webflow package

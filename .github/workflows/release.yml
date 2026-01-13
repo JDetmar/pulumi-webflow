@@ -176,7 +176,7 @@ jobs:
       - name: Generate SLSA Provenance for Go Binaries
         uses: actions/attest-build-provenance@v3
         with:
-          subject-path: 'dist/*.tar.gz'
+          subject-path: 'dist/checksums.txt'
 
   publish_sdks:
     runs-on: ubuntu-latest

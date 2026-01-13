@@ -2,6 +2,11 @@
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/JDetmar/pulumi-webflow/build.yml?branch=main)](https://github.com/JDetmar/pulumi-webflow/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/@jdetmar/pulumi-webflow)](https://www.npmjs.com/package/@jdetmar/pulumi-webflow)
+[![PyPI version](https://img.shields.io/pypi/v/pulumi-webflow)](https://pypi.org/project/pulumi-webflow/)
+[![NuGet version](https://img.shields.io/nuget/v/Community.Pulumi.Webflow)](https://www.nuget.org/packages/Community.Pulumi.Webflow)
+[![Go Reference](https://pkg.go.dev/badge/github.com/JDetmar/pulumi-webflow/sdk/go/webflow.svg)](https://pkg.go.dev/github.com/JDetmar/pulumi-webflow/sdk/go/webflow)
+[![Go Report Card](https://goreportcard.com/badge/github.com/JDetmar/pulumi-webflow)](https://goreportcard.com/report/github.com/JDetmar/pulumi-webflow)
 
 > **⚠️ Unofficial Community Provider**
 >

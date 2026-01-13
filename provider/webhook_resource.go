@@ -150,14 +150,24 @@ func mapsEqual(a, b map[string]interface{}) bool {
 func (w *Webhook) Create(
 	ctx context.Context, req infer.CreateRequest[WebhookArgs],
 ) (infer.CreateResponse[WebhookState], error) {
+	// Log the start of webhook creation
+	log := NewLogContext(ctx).
+		WithField("siteId", req.Inputs.SiteID).
+		WithField("triggerType", req.Inputs.TriggerType).
+		WithField("url", req.Inputs.URL)
+	log.Info("Creating Webflow webhook")
+
 	// Validate inputs BEFORE generating resource ID
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[WebhookState]{}, fmt.Errorf("validation failed for Webhook resource: %w", err)
 	}
 	if err := ValidateTriggerType(req.Inputs.TriggerType); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[WebhookState]{}, fmt.Errorf("validation failed for Webhook resource: %w", err)
 	}
 	if err := ValidateWebhookURL(req.Inputs.URL); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[WebhookState]{}, fmt.Errorf("validation failed for Webhook resource: %w", err)
 	}
 
@@ -169,6 +179,7 @@ func (w *Webhook) Create(
 
 	// During preview, return expected state without making API calls
 	if req.DryRun {
+		log.Debug("Dry run mode - skipping API call")
 		// Set a preview timestamp
 		state.CreatedOn = time.Now().Format(time.RFC3339)
 		// Generate a predictable ID for dry-run
@@ -182,24 +193,30 @@ func (w *Webhook) Create(
 	// Get HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
+		log.Errorf("Failed to create HTTP client: %v", err)
 		return infer.CreateResponse[WebhookState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
 	// Call Webflow API
+	log.Debug("Calling Webflow API to create webhook")
 	response, err := PostWebhook(
 		ctx, client, req.Inputs.SiteID,
 		req.Inputs.TriggerType, req.Inputs.URL, req.Inputs.Filter,
 	)
 	if err != nil {
+		log.Errorf("Failed to create webhook via API: %v", err)
 		return infer.CreateResponse[WebhookState]{}, fmt.Errorf("failed to create webhook: %w", err)
 	}
 
 	// Defensive check: Ensure Webflow API returned a valid webhook ID
 	if response.ID == "" {
+		log.Error("API returned empty webhook ID")
 		return infer.CreateResponse[WebhookState]{}, errors.New(
 			"webflow API returned empty webhook ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
+
+	log.WithField("webhookId", response.ID).Info("Webhook created successfully")
 
 	// Populate state with API response data
 	state.CreatedOn = response.CreatedOn

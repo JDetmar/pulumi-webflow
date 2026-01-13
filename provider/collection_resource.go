@@ -147,14 +147,24 @@ func (c *CollectionResource) Diff(
 func (c *CollectionResource) Create(
 	ctx context.Context, req infer.CreateRequest[CollectionArgs],
 ) (infer.CreateResponse[CollectionState], error) {
+	// Log the start of collection creation
+	log := NewLogContext(ctx).
+		WithField("siteId", req.Inputs.SiteID).
+		WithField("displayName", req.Inputs.DisplayName).
+		WithField("singularName", req.Inputs.SingularName)
+	log.Info("Creating Webflow collection")
+
 	// Validate inputs BEFORE generating resource ID
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[CollectionState]{}, fmt.Errorf("validation failed for Collection resource: %w", err)
 	}
 	if err := ValidateCollectionDisplayName(req.Inputs.DisplayName); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[CollectionState]{}, fmt.Errorf("validation failed for Collection resource: %w", err)
 	}
 	if err := ValidateSingularName(req.Inputs.SingularName); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[CollectionState]{}, fmt.Errorf("validation failed for Collection resource: %w", err)
 	}
 
@@ -167,6 +177,7 @@ func (c *CollectionResource) Create(
 
 	// During preview, return expected state without making API calls
 	if req.DryRun {
+		log.Debug("Dry run mode - skipping API call")
 		// Set preview timestamps
 		now := time.Now().Format(time.RFC3339)
 		state.CreatedOn = now
@@ -183,24 +194,30 @@ func (c *CollectionResource) Create(
 	// Get HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
+		log.Errorf("Failed to create HTTP client: %v", err)
 		return infer.CreateResponse[CollectionState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
 	// Call Webflow API
+	log.Debug("Calling Webflow API to create collection")
 	response, err := PostCollection(
 		ctx, client, req.Inputs.SiteID,
 		req.Inputs.DisplayName, req.Inputs.SingularName, req.Inputs.Slug,
 	)
 	if err != nil {
+		log.Errorf("Failed to create collection via API: %v", err)
 		return infer.CreateResponse[CollectionState]{}, fmt.Errorf("failed to create collection: %w", err)
 	}
 
 	// Defensive check: Ensure Webflow API returned a valid collection ID
 	if response.ID == "" {
+		log.Error("API returned empty collection ID")
 		return infer.CreateResponse[CollectionState]{}, errors.New(
 			"webflow API returned empty collection ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
+
+	log.WithField("collectionId", response.ID).Info("Collection created successfully")
 
 	// Set output fields from API response
 	state.CollectionID = response.ID

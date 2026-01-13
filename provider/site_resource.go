@@ -254,17 +254,28 @@ func (r *SiteResource) Diff(
 func (r *SiteResource) Create(
 	ctx context.Context, req infer.CreateRequest[SiteArgs],
 ) (infer.CreateResponse[SiteState], error) {
+	// Log the start of site creation
+	log := NewLogContext(ctx).
+		WithField("workspaceId", req.Inputs.WorkspaceID).
+		WithField("displayName", req.Inputs.DisplayName).
+		WithField("shortName", req.Inputs.ShortName)
+	log.Info("Creating Webflow site")
+
 	// Step 1: Validate inputs BEFORE any operations
 	if err := ValidateWorkspaceID(req.Inputs.WorkspaceID); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
 	if err := ValidateDisplayName(req.Inputs.DisplayName); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
 	if err := ValidateShortName(req.Inputs.ShortName); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
 	if err := ValidateTimeZone(req.Inputs.TimeZone); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
 
@@ -276,6 +287,7 @@ func (r *SiteResource) Create(
 
 	// Step 3: Handle DryRun mode (preview without API call)
 	if req.DryRun {
+		log.Debug("Dry run mode - skipping API call")
 		// Return preview state with preview ID
 		// Use consistent "preview-" prefix format for dry-run previews
 		previewID := fmt.Sprintf("preview-%d", time.Now().Unix())
@@ -288,25 +300,31 @@ func (r *SiteResource) Create(
 	// Step 4: Get authenticated HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
+		log.Errorf("Failed to create HTTP client: %v", err)
 		return infer.CreateResponse[SiteState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
 	// Step 5: Call Webflow API to create site
+	log.Debug("Calling Webflow API to create site")
 	response, err := PostSite(
 		ctx, client,
 		req.Inputs.WorkspaceID, req.Inputs.DisplayName,
 		req.Inputs.ParentFolderID, req.Inputs.TemplateName,
 	)
 	if err != nil {
+		log.Errorf("Failed to create site via API: %v", err)
 		return infer.CreateResponse[SiteState]{}, fmt.Errorf("failed to create site: %w", err)
 	}
 
 	// Step 6: Defensive check - ensure API returned valid site ID
 	if response.ID == "" {
+		log.Error("API returned empty site ID")
 		return infer.CreateResponse[SiteState]{}, errors.New(
 			"webflow API returned empty site ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
+
+	log.WithField("siteId", response.ID).Info("Site created successfully")
 
 	// Step 7: Populate state with API response data
 	state.LastPublished = response.LastPublished
@@ -322,11 +340,14 @@ func (r *SiteResource) Create(
 
 	// Step 8: Optionally publish site after creation
 	if req.Inputs.Publish {
+		log.WithField("siteId", response.ID).Debug("Publishing site after creation")
 		if _, err := PublishSite(ctx, client, response.ID, nil); err != nil {
 			// Site was created successfully, publishing is optional enhancement
 			// Return error message explaining what succeeded and what failed
+			log.WithField("siteId", response.ID).Errorf("Publishing failed: %v", err)
 			return infer.CreateResponse[SiteState]{}, fmt.Errorf("site created successfully but publishing failed: %w", err)
 		}
+		log.WithField("siteId", response.ID).Info("Site published successfully")
 	}
 
 	// Step 9: Return successful response with siteId as resource ID
@@ -411,14 +432,23 @@ func (r *SiteResource) Update(
 	// Step 1: Resource ID is just the siteId
 	siteID := req.ID
 
+	// Log the start of site update
+	log := NewLogContext(ctx).
+		WithField("siteId", siteID).
+		WithField("displayName", req.Inputs.DisplayName)
+	log.Info("Updating Webflow site")
+
 	// Step 2: Validate all inputs BEFORE any operations
 	if err := ValidateDisplayName(req.Inputs.DisplayName); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
 	if err := ValidateShortName(req.Inputs.ShortName); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
 	if err := ValidateTimeZone(req.Inputs.TimeZone); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
 
@@ -436,6 +466,7 @@ func (r *SiteResource) Update(
 
 	// Step 4: Handle DryRun mode (preview without API call)
 	if req.DryRun {
+		log.Debug("Dry run mode - skipping API call")
 		return infer.UpdateResponse[SiteState]{
 			Output: state,
 		}, nil
@@ -444,15 +475,20 @@ func (r *SiteResource) Update(
 	// Step 5: Get authenticated HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
+		log.Errorf("Failed to create HTTP client: %v", err)
 		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
 	// Step 6: Call Webflow API to update site
+	log.Debug("Calling Webflow API to update site")
 	// Note: We send all fields, API will handle which ones actually changed
 	response, err := PatchSite(ctx, client, siteID, req.Inputs.DisplayName, req.Inputs.ShortName, req.Inputs.TimeZone)
 	if err != nil {
+		log.Errorf("Failed to update site via API: %v", err)
 		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("failed to update site: %w", err)
 	}
+
+	log.Info("Site updated successfully")
 
 	// Step 7: Update state with API response (API returns full site object)
 	state.DisplayName = response.DisplayName
@@ -469,11 +505,14 @@ func (r *SiteResource) Update(
 
 	// Step 8: Optionally publish site after update
 	if req.Inputs.Publish {
+		log.Debug("Publishing site after update")
 		if _, err := PublishSite(ctx, client, siteID, nil); err != nil {
 			// Site was updated successfully, publishing is optional enhancement
 			// Return error message explaining what succeeded and what failed
+			log.Errorf("Publishing failed: %v", err)
 			return infer.UpdateResponse[SiteState]{}, fmt.Errorf("site updated successfully but publishing failed: %w", err)
 		}
+		log.Info("Site published successfully")
 	}
 
 	// Step 9: Return successful response
@@ -489,16 +528,27 @@ func (r *SiteResource) Delete(ctx context.Context, req infer.DeleteRequest[SiteS
 	// Resource ID is just the siteId
 	siteID := req.ID
 
+	// Log the start of site deletion
+	log := NewLogContext(ctx).
+		WithField("siteId", siteID).
+		WithField("displayName", req.State.DisplayName)
+	log.Warn("Deleting Webflow site - this is a destructive operation")
+
 	// Get HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
+		log.Errorf("Failed to create HTTP client: %v", err)
 		return infer.DeleteResponse{}, fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
 	// Call DeleteSite API (handles 404 gracefully for idempotency)
+	log.Debug("Calling Webflow API to delete site")
 	if err := DeleteSite(ctx, client, siteID); err != nil {
+		log.Errorf("Failed to delete site via API: %v", err)
 		return infer.DeleteResponse{}, fmt.Errorf("failed to delete site (site ID: %s): %w", siteID, err)
 	}
+
+	log.Info("Site deleted successfully")
 
 	// Success - site deleted from Webflow
 	// Pulumi will automatically remove from state

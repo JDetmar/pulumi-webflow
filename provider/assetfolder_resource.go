@@ -287,14 +287,12 @@ func (r *AssetFolder) Delete(
 ) (infer.DeleteResponse, error) {
 	// The Webflow API does not support deleting asset folders.
 	// We can only remove the resource from Pulumi state.
-	// Log a warning but don't error - allow the state to be cleaned up.
-	//
-	// Note: In a production scenario, you might want to use Pulumi's logging
-	// to warn the user. For now, we just succeed silently since there's no
-	// way to actually delete the folder in Webflow.
-	//
-	// The folder will remain in Webflow and can be manually deleted from
-	// the dashboard if needed.
+	// Log a warning to inform the user about the limitation.
+	NewLogContext(ctx).
+		WithField("siteId", req.State.SiteID).
+		WithField("folderName", req.State.DisplayName).
+		Warn("Asset folder cannot be deleted via API - removing from Pulumi state only. " +
+			"The folder will remain in Webflow and must be manually deleted from the dashboard if needed")
 
 	return infer.DeleteResponse{}, nil
 }

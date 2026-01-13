@@ -35,18 +35,38 @@ func (c *Config) Configure(ctx context.Context) error {
 	return nil
 }
 
-// GetHTTPClient retrieves or creates the HTTP client for Webflow API calls.
-func GetHTTPClient(ctx context.Context, version string) (*http.Client, error) {
-	// Get config from context
-	config := infer.GetConfig[*Config](ctx)
+// safeGetConfigToken safely retrieves the API token from provider config.
+// It uses recover() to handle the case where infer.GetConfig panics
+// (which happens when config is not available in the context, e.g., during
+// invoke function calls before Configure() completes).
+func safeGetConfigToken(ctx context.Context) (token string) {
+	defer func() {
+		if r := recover(); r != nil {
+			// GetConfig panicked - config not available in context
+			// This can happen for invoke functions called before Configure()
+			token = ""
+		}
+	}()
 
-	// Try to get token from config, fall back to environment variable
-	token := ""
-	if config != nil && config.APIToken != "" {
-		token = config.APIToken
-	} else {
-		// Config not available or token empty, try environment variable
-		token = getEnvToken()
+	config := infer.GetConfig[*Config](ctx)
+	if config != nil {
+		return config.APIToken
+	}
+	return ""
+}
+
+// GetHTTPClient retrieves or creates the HTTP client for Webflow API calls.
+// It checks for the API token in this order:
+// 1. WEBFLOW_API_TOKEN environment variable (preferred for CI/CD and invoke functions)
+// 2. Provider config (pulumi config set webflow:apiToken)
+func GetHTTPClient(ctx context.Context, version string) (*http.Client, error) {
+	// Try environment variable first - this is safe and never panics
+	// This also handles invoke functions where config may not be available
+	token := getEnvToken()
+
+	// If no env var, safely try to get from provider config
+	if token == "" {
+		token = safeGetConfigToken(ctx)
 	}
 
 	if token == "" {

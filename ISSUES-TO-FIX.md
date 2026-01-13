@@ -32,9 +32,9 @@ Issues discovered during testing session on 2026-01-09.
 
 ## 3. getTokenInfo / getAuthorizedUser Invoke Functions Crash
 
-**Status:** ❌ NOT YET INVESTIGATED
+**Status:** ✅ FIXED
 
-**Files:** `provider/token.go`, `provider/authorized_user.go`
+**Files:** `provider/config.go`, `provider/token_function.go`, `provider/authorizedby_function.go`
 
 **Problem:** When using these invoke functions in Pulumi YAML, the provider crashes with gRPC errors.
 
@@ -43,10 +43,13 @@ Issues discovered during testing session on 2026-01-09.
 error: rpc error: code = Unknown desc = invocation of webflow:index:getTokenInfo returned an error: grpc: the client connection is closing
 ```
 
-**Investigation needed:**
-- Check if invoke functions are implemented correctly
-- May be a context/lifecycle issue
-- Test invoke functions in isolation
+**Root Cause:** The `infer.GetConfig[*Config](ctx)` function panics (not returns nil) when provider config is not available in the context. For invoke functions, which may be called before `Configure()` completes (async), the config might not be injected into the context yet. The code in `GetHTTPClient` incorrectly assumed `GetConfig` returns nil when config is unavailable, but it actually panics, causing the provider process to crash.
+
+**Solution:**
+
+1. Added `safeGetConfigToken()` helper function that wraps `infer.GetConfig` with `recover()` to catch panics
+2. Modified `GetHTTPClient` to check environment variable first (safe, never panics), then fall back to config
+3. Added comprehensive unit tests in `provider/config_test.go` to verify the fix
 
 ---
 

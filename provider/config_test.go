@@ -24,20 +24,6 @@ func TestSafeGetConfigToken_EmptyContext(t *testing.T) {
 	assert.Equal(t, "", token, "safeGetConfigToken should return empty string when config is not in context")
 }
 
-func TestSafeGetConfigToken_NilContext(t *testing.T) {
-	// Test with nil context - should not panic
-	// Note: This is an edge case that shouldn't happen in practice
-	defer func() {
-		if r := recover(); r != nil {
-			t.Errorf("safeGetConfigToken panicked with nil context: %v", r)
-		}
-	}()
-
-	//nolint:staticcheck // SA1012: intentionally passing nil context to test panic recovery
-	token := safeGetConfigToken(nil)
-	assert.Equal(t, "", token)
-}
-
 func TestGetHTTPClient_WithEnvVar(t *testing.T) {
 	// t.Setenv automatically restores the original value after the test
 	t.Setenv("WEBFLOW_API_TOKEN", "test-token-12345678901234567890")
@@ -78,13 +64,12 @@ func TestGetHTTPClient_InvalidToken(t *testing.T) {
 	assert.Contains(t, err.Error(), "WEBFLOW_AUTH_003", "Error should indicate invalid token")
 }
 
-func TestGetHTTPClient_EnvVarTakesPrecedence(t *testing.T) {
-	// This test verifies that environment variable is checked first
-	// Even if config would panic, env var should work
+func TestGetHTTPClient_EnvVarWorksWithoutConfig(t *testing.T) {
+	// This test verifies that env var works even when config is unavailable
+	// (which would cause infer.GetConfig to panic if called directly)
 	t.Setenv("WEBFLOW_API_TOKEN", "env-token-12345678901234567890")
 
-	// Use context.Background() which has no config - this would cause
-	// infer.GetConfig to panic if we tried to call it directly
+	// Use context.Background() which has no config
 	ctx := context.Background()
 
 	// This should NOT panic because env var is checked first

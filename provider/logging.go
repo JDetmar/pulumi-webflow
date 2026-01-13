@@ -44,6 +44,7 @@ func (lc *LogContext) WithFields(fields map[string]interface{}) *LogContext {
 }
 
 // formatMessage formats a message with structured fields.
+// Applies SafeString to all field values to ensure sensitive data is redacted.
 func (lc *LogContext) formatMessage(msg string) string {
 	if len(lc.fields) == 0 {
 		return msg
@@ -51,7 +52,9 @@ func (lc *LogContext) formatMessage(msg string) string {
 
 	var parts []string
 	for k, v := range lc.fields {
-		parts = append(parts, fmt.Sprintf("%s=%v", k, v))
+		// Apply SafeString to ensure sensitive data is redacted
+		safeValue := SafeString(k, v)
+		parts = append(parts, fmt.Sprintf("%s=%s", k, safeValue))
 	}
 	return fmt.Sprintf("%s [%s]", msg, strings.Join(parts, ", "))
 }
@@ -106,16 +109,17 @@ func (lc *LogContext) Errorf(format string, args ...interface{}) {
 
 // RedactSensitiveData redacts sensitive information from a string value.
 // This should be used for any data that might contain tokens, passwords, or PII.
+// For short values, returns [REDACTED]. For longer values (>40 chars), shows first/last 4 chars.
 func RedactSensitiveData(value string) string {
 	if value == "" {
 		return "<empty>"
 	}
-	// For tokens and sensitive data, completely redact
+	// For tokens and sensitive data with reasonable length, show partial content
 	if len(value) > 40 {
-		// Long values (likely tokens) - show first/last 4 chars
+		// Long values (likely tokens) - show first/last 4 chars for identification
 		return value[:4] + "..." + value[len(value)-4:]
 	}
-	// Short values - just redact
+	// Short values - just redact completely
 	return "[REDACTED]"
 }
 
@@ -144,7 +148,7 @@ func SafeString(fieldName string, value interface{}) string {
 		strings.Contains(lowerName, "secret") ||
 		strings.Contains(lowerName, "key") ||
 		strings.Contains(lowerName, "authorization") {
-		return RedactToken(str)
+		return RedactSensitiveData(str)
 	}
 
 	return str

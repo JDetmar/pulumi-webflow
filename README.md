@@ -429,6 +429,11 @@ This project is licensed under the MIT License - see [LICENSE](./LICENSE) file f
 | Deployment times out | Check internet connection, try again |
 | Token format error | Ensure you're using the full API token (not just a prefix) |
 | Site not found | Verify site ID matches the site where you want to deploy |
+| Need detailed logs | Enable debug logging: `PULUMI_LOG_LEVEL=debug pulumi up` - See [Logging Guide](./docs/logging.md) |
+
+For more troubleshooting help and detailed logging documentation:
+- **[Logging and Debugging Guide](./docs/logging.md)** - Comprehensive guide to structured logging features
+- **[Troubleshooting Guide](./docs/troubleshooting.md)** - Common issues and detailed solutions
 
 ---
 

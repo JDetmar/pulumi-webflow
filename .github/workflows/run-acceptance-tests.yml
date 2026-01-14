@@ -107,6 +107,7 @@ jobs:
             sdk/go/**/pulumiUtilities.go
             sdk/nodejs/package.json
             sdk/python/pyproject.toml
+            sdk/python/setup.py
             sdk/java/build.gradle
 
       - name: Tar provider binaries
@@ -181,6 +182,7 @@ jobs:
             sdk/go/**/pulumiUtilities.go
             sdk/nodejs/package.json
             sdk/python/pyproject.toml
+            sdk/python/setup.py
             sdk/java/build.gradle
 
       - name: Tar SDK folder

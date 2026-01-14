@@ -50,7 +50,7 @@ func (lc *LogContext) formatMessage(msg string) string {
 		return msg
 	}
 
-	var parts []string
+	parts := make([]string, 0, len(lc.fields))
 	for k, v := range lc.fields {
 		// Apply SafeString to ensure sensitive data is redacted
 		safeValue := SafeString(k, v)

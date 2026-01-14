@@ -226,14 +226,23 @@ func (r *Asset) Diff(
 func (r *Asset) Create(
 	ctx context.Context, req infer.CreateRequest[AssetArgs],
 ) (infer.CreateResponse[AssetState], error) {
+	// Log the start of asset creation
+	log := NewLogContext(ctx).
+		WithField("siteId", req.Inputs.SiteID).
+		WithField("fileName", req.Inputs.FileName)
+	log.Info("Creating Webflow asset")
+
 	// Validate inputs BEFORE making API calls
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[AssetState]{}, fmt.Errorf("validation failed for Asset resource: %w", err)
 	}
 	if err := ValidateFileName(req.Inputs.FileName); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[AssetState]{}, fmt.Errorf("validation failed for Asset resource: %w", err)
 	}
 	if err := ValidateFileHash(req.Inputs.FileHash); err != nil {
+		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[AssetState]{}, fmt.Errorf("validation failed for Asset resource: %w", err)
 	}
 
@@ -243,6 +252,7 @@ func (r *Asset) Create(
 
 	// During preview, return expected state without making API calls
 	if req.DryRun {
+		log.Debug("Dry run mode - skipping API call")
 		// Set preview values
 		state.AssetID = fmt.Sprintf("preview-%d", time.Now().Unix())
 		state.HostedURL = "https://assets.website-files.com/preview/" + state.FileName
@@ -257,24 +267,30 @@ func (r *Asset) Create(
 	// Get HTTP client
 	client, err := GetHTTPClient(ctx, providerVersion)
 	if err != nil {
+		log.Errorf("Failed to create HTTP client: %v", err)
 		return infer.CreateResponse[AssetState]{}, fmt.Errorf("failed to create HTTP client: %w", err)
 	}
 
 	// Call Webflow API to create asset metadata and get upload URL
+	log.Debug("Calling Webflow API to create asset metadata")
 	uploadResp, err := PostAssetUploadURL(
 		ctx, client, req.Inputs.SiteID,
 		req.Inputs.FileName, req.Inputs.FileHash, req.Inputs.ParentFolder,
 	)
 	if err != nil {
+		log.Errorf("Failed to create asset via API: %v", err)
 		return infer.CreateResponse[AssetState]{}, fmt.Errorf("failed to create asset: %w", err)
 	}
 
 	// Defensive check: Ensure Webflow API returned a valid asset ID
 	if uploadResp.ID == "" {
+		log.Error("API returned empty asset ID")
 		return infer.CreateResponse[AssetState]{}, errors.New(
 			"webflow API returned empty asset ID - " +
 				"this is unexpected and may indicate an API issue")
 	}
+
+	log.WithField("assetId", uploadResp.ID).Info("Asset created successfully")
 
 	// Populate state from API response
 	state.AssetID = uploadResp.ID

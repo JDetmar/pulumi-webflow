@@ -88,15 +88,30 @@ type retryTransport struct {
 func (t *retryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	var resp *http.Response
 	var err error
+	ctx := req.Context()
 
 	for attempt := 0; attempt <= t.maxRetries; attempt++ {
 		// Clone the request for each attempt (body may have been consumed)
-		clonedReq := req.Clone(req.Context())
+		clonedReq := req.Clone(ctx)
 
 		resp, err = t.transport.RoundTrip(clonedReq)
 		if err != nil {
+			// Log API request error
+			NewLogContext(ctx).
+				WithField("method", req.Method).
+				WithField("url", req.URL.Path).
+				WithField("attempt", attempt+1).
+				Errorf("HTTP request failed: %v", err)
 			return nil, err
 		}
+
+		// Log API request at debug level
+		NewLogContext(ctx).
+			WithField("method", req.Method).
+			WithField("url", req.URL.Path).
+			WithField("status", resp.StatusCode).
+			WithField("attempt", attempt+1).
+			Debug("HTTP request completed")
 
 		// If not rate limited, return immediately
 		if resp.StatusCode != http.StatusTooManyRequests {
@@ -105,6 +120,11 @@ func (t *retryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 		// Don't retry if we've exhausted attempts
 		if attempt == t.maxRetries {
+			NewLogContext(ctx).
+				WithField("method", req.Method).
+				WithField("url", req.URL.Path).
+				WithField("maxRetries", t.maxRetries).
+				Warn("Rate limit exceeded, max retries exhausted")
 			return resp, nil
 		}
 
@@ -114,10 +134,18 @@ func (t *retryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 		// Calculate delay with exponential backoff
 		delay := t.calculateDelay(resp, attempt)
 
+		// Log retry attempt
+		NewLogContext(ctx).
+			WithField("method", req.Method).
+			WithField("url", req.URL.Path).
+			WithField("attempt", attempt+1).
+			WithField("retryAfter", delay.String()).
+			Warnf("Rate limited, retrying after %v", delay)
+
 		// Check if context is cancelled before sleeping
 		select {
-		case <-req.Context().Done():
-			return nil, req.Context().Err()
+		case <-ctx.Done():
+			return nil, ctx.Err()
 		case <-time.After(delay):
 			// Continue to next retry attempt
 		}

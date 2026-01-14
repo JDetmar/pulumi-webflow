@@ -8,6 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Pulumi" Version="3.0.0" />
-    <PackageReference Include="Pulumi.Webflow" Version="1.0.0-alpha.0" />
+    <PackageReference Include="Community.Pulumi.Webflow" Version="0.9.0" />
   </ItemGroup>
 </Project>

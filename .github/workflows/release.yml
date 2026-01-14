@@ -141,7 +141,8 @@ jobs:
     name: publish
     permissions:
       contents: write
-      id-token: write  # Required for SLSA provenance attestation
+      id-token: write        # Required for SLSA provenance attestation
+      attestations: write    # Required for actions/attest-build-provenance
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4

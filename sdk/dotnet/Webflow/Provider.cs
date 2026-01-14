@@ -37,6 +37,7 @@ namespace Community.Pulumi.Webflow
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
+                PluginDownloadURL = "github://api.github.com/JDetmar/pulumi-webflow",
                 AdditionalSecretOutputs =
                 {
                     "apiToken",

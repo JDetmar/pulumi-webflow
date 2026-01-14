@@ -223,7 +223,6 @@ func TestAssetCreate_Success(t *testing.T) {
 	}
 
 	resp, err := asset.Create(ctx, req)
-
 	// Verify: No error
 	if err != nil {
 		t.Fatalf("Create() should not return error, got: %v", err)
@@ -392,7 +391,6 @@ func TestAssetCreate_DryRun(t *testing.T) {
 
 	// Execute: Call Create() in dry-run mode
 	resp, err := asset.Create(ctx, req)
-
 	// Verify: No error
 	if err != nil {
 		t.Fatalf("Create() dry-run failed: %v", err)
@@ -460,7 +458,6 @@ func TestAssetDelete_Success(t *testing.T) {
 	}
 
 	_, err := asset.Delete(ctx, req)
-
 	// Verify: No error
 	if err != nil {
 		t.Fatalf("Delete() should not return error, got: %v", err)
@@ -506,7 +503,6 @@ func TestAssetDelete_NotFound(t *testing.T) {
 	}
 
 	_, err := asset.Delete(ctx, req)
-
 	// Verify: No error (404 should be handled gracefully for idempotency)
 	if err != nil {
 		t.Fatalf("Delete() should handle 404 gracefully, got: %v", err)
@@ -541,7 +537,6 @@ func TestAssetDiff_NoChanges(t *testing.T) {
 
 	// Execute: Call Diff()
 	resp, err := asset.Diff(ctx, req)
-
 	// Verify: No error
 	if err != nil {
 		t.Fatalf("Diff() should not return error, got: %v", err)
@@ -627,7 +622,6 @@ func TestAssetDiff_RequiresReplacement(t *testing.T) {
 
 			// Execute: Call Diff()
 			resp, err := asset.Diff(ctx, req)
-
 			// Verify: No error
 			if err != nil {
 				t.Fatalf("Diff() should not return error, got: %v", err)

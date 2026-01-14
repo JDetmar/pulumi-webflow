@@ -4,6 +4,7 @@
   "description": "Unofficial community-maintained Pulumi provider for managing Webflow sites, redirects, and robots.txt. Not affiliated with Pulumi Corporation or Webflow, Inc.",
   "homepage": "https://github.com/JDetmar/pulumi-webflow",
   "repository": "https://github.com/JDetmar/pulumi-webflow",
+  "pluginDownloadURL": "github://api.github.com/JDetmar/pulumi-webflow",
   "namespace": "webflow",
   "language": {
     "csharp": {

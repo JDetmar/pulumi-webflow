@@ -36,6 +36,7 @@ func Provider() p.Provider {
 		).
 		WithHomepage("https://github.com/JDetmar/pulumi-webflow").
 		WithRepository("https://github.com/JDetmar/pulumi-webflow").
+		WithPluginDownloadURL("github://api.github.com/JDetmar/pulumi-webflow").
 		WithNamespace(Name).
 		WithConfig(infer.Config(&Config{})).
 		WithResources(

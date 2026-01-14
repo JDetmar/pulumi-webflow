@@ -1,11 +1,11 @@
-module github.com/jdetmar/pulumi-webflow/examples/site
+module github.com/JDetmar/pulumi-webflow/examples/site
 
 go 1.24.7
 
 toolchain go1.24.11
 
 require (
-	github.com/jdetmar/pulumi-webflow/sdk/go/webflow v0.0.1-alpha.1
+	github.com/JDetmar/pulumi-webflow/sdk/go/webflow v0.0.1-alpha.1
 	github.com/pulumi/pulumi/sdk/v3 v3.212.0
 )
 

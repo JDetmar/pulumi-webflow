@@ -28,8 +28,8 @@
             <version>${pulumi.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.pulumi</groupId>
-            <artifactId>webflow</artifactId>
+            <groupId>io.github.jdetmar</groupId>
+            <artifactId>pulumi-webflow</artifactId>
             <version>${webflow.version}</version>
         </dependency>
     </dependencies>

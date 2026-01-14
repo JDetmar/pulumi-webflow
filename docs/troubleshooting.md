@@ -69,9 +69,9 @@ This guide helps you resolve common issues when using the Webflow Pulumi Provide
 
 **TypeScript/JavaScript:**
 ```bash
-npm install @pulumi/webflow
+npm install @jdetmar/pulumi-webflow
 # or
-yarn add @pulumi/webflow
+yarn add @jdetmar/pulumi-webflow
 ```
 
 **Python:**
@@ -113,14 +113,14 @@ dotnet add package Pulumi.Webflow
    pulumi plugin ls | grep webflow
    ```
 2. Check SDK version in your project:
-   - **TypeScript:** `npm list @pulumi/webflow`
+   - **TypeScript:** `npm list @jdetmar/pulumi-webflow`
    - **Python:** `pip show pulumi-webflow`
    - **Go:** `go list -m github.com/jdetmar/pulumi-webflow`
 
 3. Update to matching versions:
    ```bash
    # Update SDK
-   npm install @pulumi/webflow@0.1.0
+   npm install @jdetmar/pulumi-webflow@0.1.0
 
    # Update plugin
    pulumi plugin install resource webflow v0.1.0

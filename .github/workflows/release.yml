@@ -141,6 +141,7 @@ jobs:
     name: publish
     permissions:
       contents: write
+      id-token: write  # Required for SLSA provenance attestation
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -171,6 +172,11 @@ jobs:
         with:
           args: -p 3 release --clean --timeout 60m0s
           version: latest
+
+      - name: Generate SLSA Provenance for Go Binaries
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: 'dist/checksums.txt'
 
   publish_sdks:
     runs-on: ubuntu-latest

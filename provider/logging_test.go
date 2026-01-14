@@ -30,7 +30,7 @@ func TestRedactSensitiveData(t *testing.T) {
 		{
 			name:     "long token",
 			input:    "abcdef1234567890abcdef1234567890abcdef1234567890",
-			expected: "abcd...7890",
+			expected: "[REDACTED]",
 		},
 	}
 

@@ -109,17 +109,11 @@ func (lc *LogContext) Errorf(format string, args ...interface{}) {
 
 // RedactSensitiveData redacts sensitive information from a string value.
 // This should be used for any data that might contain tokens, passwords, or PII.
-// For short values, returns [REDACTED]. For longer values (>40 chars), shows first/last 4 chars.
+// Always returns [REDACTED] for non-empty values to prevent any credential exposure.
 func RedactSensitiveData(value string) string {
 	if value == "" {
 		return "<empty>"
 	}
-	// For tokens and sensitive data with reasonable length, show partial content
-	if len(value) > 40 {
-		// Long values (likely tokens) - show first/last 4 chars for identification
-		return value[:4] + "..." + value[len(value)-4:]
-	}
-	// Short values - just redact completely
 	return "[REDACTED]"
 }
 

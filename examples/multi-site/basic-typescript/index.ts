@@ -10,19 +10,16 @@ const siteConfigs = [
     name: "marketing-site",
     displayName: "Marketing Site",
     shortName: "marketing-site",
-    timeZone: "America/Los_Angeles",
   },
   {
     name: "docs-site",
     displayName: "Documentation Site",
     shortName: "docs-site",
-    timeZone: "America/New_York",
   },
   {
     name: "blog-site",
     displayName: "Blog Site",
     shortName: "blog-site",
-    timeZone: "America/Chicago",
   },
 ];
 
@@ -31,7 +28,6 @@ const sites = siteConfigs.map((config) => {
   const site = new webflow.Site(config.name, {
     displayName: config.displayName,
     shortName: config.shortName,
-    timeZone: config.timeZone,
   });
 
   // Configure robots.txt for each site

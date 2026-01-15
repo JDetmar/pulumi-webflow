@@ -10,7 +10,6 @@ interface SiteConfig {
   name: string;
   displayName: string;
   shortName: string;
-  timeZone: string;
   redirects?: Array<{
     sourcePath: string;
     destinationPath: string;
@@ -22,7 +21,6 @@ interface SiteConfig {
 interface ConfigFile {
   sites: SiteConfig[];
   defaults?: {
-    timeZone?: string;
     robotsTxtContent?: string;
   };
 }
@@ -33,7 +31,6 @@ const configContent = fs.readFileSync(configPath, "utf8");
 const config = yaml.load(configContent) as ConfigFile;
 
 // Get default values
-const defaultTimeZone = config.defaults?.timeZone || "America/Los_Angeles";
 const defaultRobotsTxt =
   config.defaults?.robotsTxtContent ||
   `User-agent: *
@@ -42,14 +39,12 @@ Allow: /`;
 // Create all sites from configuration
 const sites = config.sites.map((siteConfig) => {
   // Use defaults where not specified
-  const timeZone = siteConfig.timeZone || defaultTimeZone;
   const robotsTxtContent = siteConfig.robotsTxtContent || defaultRobotsTxt;
 
   // Create the site
   const site = new webflow.Site(siteConfig.name, {
     displayName: siteConfig.displayName,
     shortName: siteConfig.shortName,
-    timeZone: timeZone,
   });
 
   // Add robots.txt configuration

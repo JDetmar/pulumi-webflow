@@ -93,21 +93,6 @@ public final class SiteArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., &#39;America/New_York&#39;, &#39;Europe/London&#39;, &#39;Asia/Tokyo&#39;, &#39;UTC&#39;). This timezone is used for scheduling, analytics, and other time-sensitive features.
-     * 
-     */
-    @Import(name="timeZone")
-    private @Nullable Output<String> timeZone;
-
-    /**
-     * @return The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., &#39;America/New_York&#39;, &#39;Europe/London&#39;, &#39;Asia/Tokyo&#39;, &#39;UTC&#39;). This timezone is used for scheduling, analytics, and other time-sensitive features.
-     * 
-     */
-    public Optional<Output<String>> timeZone() {
-        return Optional.ofNullable(this.timeZone);
-    }
-
-    /**
      * The Webflow workspace ID where the site will be created. Required for site creation (Enterprise workspace required by Webflow API). Example: &#39;5f0c8c9e1c9d440000e8d8c3&#39;. You can find your workspace ID in the Webflow dashboard under Account Settings &gt; Workspace.
      * 
      */
@@ -130,7 +115,6 @@ public final class SiteArgs extends com.pulumi.resources.ResourceArgs {
         this.publish = $.publish;
         this.shortName = $.shortName;
         this.templateName = $.templateName;
-        this.timeZone = $.timeZone;
         this.workspaceId = $.workspaceId;
     }
 
@@ -255,27 +239,6 @@ public final class SiteArgs extends com.pulumi.resources.ResourceArgs {
          */
         public Builder templateName(String templateName) {
             return templateName(Output.of(templateName));
-        }
-
-        /**
-         * @param timeZone The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., &#39;America/New_York&#39;, &#39;Europe/London&#39;, &#39;Asia/Tokyo&#39;, &#39;UTC&#39;). This timezone is used for scheduling, analytics, and other time-sensitive features.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder timeZone(@Nullable Output<String> timeZone) {
-            $.timeZone = timeZone;
-            return this;
-        }
-
-        /**
-         * @param timeZone The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., &#39;America/New_York&#39;, &#39;Europe/London&#39;, &#39;Asia/Tokyo&#39;, &#39;UTC&#39;). This timezone is used for scheduling, analytics, and other time-sensitive features.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder timeZone(String timeZone) {
-            return timeZone(Output.of(timeZone));
         }
 
         /**

@@ -8,7 +8,6 @@ config = pulumi.Config()
 workspace_id = config.require("workspaceId")
 display_name = config.require("displayName")
 short_name = config.require("shortName")
-timezone = config.get("timezone") or "America/New_York"
 
 """
 Site Example - Creating and Managing Webflow Sites
@@ -20,8 +19,7 @@ This example demonstrates how to create and manage Webflow sites using Pulumi.
 basic_site = webflow.Site("basic-site",
     workspace_id=workspace_id,
     display_name=display_name,
-    short_name=short_name,
-    time_zone=timezone)
+    short_name=short_name)
 
 # Example 2: Multi-Environment Site Configuration
 environments = ["development", "staging", "production"]
@@ -30,16 +28,14 @@ for env in environments:
     site = webflow.Site(f"site-{env}",
         workspace_id=workspace_id,
         display_name=f"{display_name}-{env}",
-        short_name=f"{short_name}-{env}",
-        time_zone=timezone)
+        short_name=f"{short_name}-{env}")
     environment_sites.append(site)
 
 # Example 3: Site with Configuration
 configured_site = webflow.Site("configured-site",
     workspace_id=workspace_id,
     display_name=f"{display_name}-configured",
-    short_name=f"{short_name}-configured",
-    time_zone=timezone)
+    short_name=f"{short_name}-configured")
 
 # Export values
 pulumi.export("basic_site_id", basic_site.id)

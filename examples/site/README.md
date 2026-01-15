@@ -94,8 +94,10 @@ const basicSite = new webflow.Site("basic-site", {
     workspaceId: "YOUR_WORKSPACE_ID",
     displayName: "My Website",
     shortName: "my-website",
-    timeZone: "America/New_York",
 });
+
+// The site's timezone is available as a read-only output:
+// basicSite.timeZone
 ```
 
 ### 2. Multi-Environment Configuration
@@ -109,7 +111,6 @@ const sites = environments.map(env =>
         workspaceId: "YOUR_WORKSPACE_ID",
         displayName: `My Site - ${env}`,
         shortName: `my-site-${env}`,
-        timeZone: "America/New_York",
     })
 );
 ```
@@ -127,7 +128,8 @@ Each example requires the following configuration:
 | `workspaceId`   | Yes      | Webflow workspace ID where site will be created |
 | `displayName`   | Yes      | Human-readable name for the site               |
 | `shortName`     | Yes      | URL slug for the site                          |
-| `timezone`      | No       | Site timezone (default: America/New_York)      |
+
+**Note:** The site's `timeZone` is a read-only output field that reflects the timezone configured in Webflow. It cannot be set via the API.
 
 ## Expected Output
 

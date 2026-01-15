@@ -57,7 +57,6 @@ for site_key, site_config in sites_config.items():
         site_key,
         display_name=site_config["displayName"],
         short_name=site_config["shortName"],
-        time_zone=site_config["timeZone"],
     )
 
     site_exports[f"{site_key}-id"] = site.id

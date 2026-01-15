@@ -23,7 +23,6 @@ def create_campaign_site(name: str, display_name: str) -> webflow.Site:
         name,
         display_name=display_name,
         short_name=name.lower().replace(" ", "-"),
-        time_zone="America/Los_Angeles",
     )
 
     # Standard robots.txt for campaigns (allow all)
@@ -68,7 +67,6 @@ def create_product_site(name: str, display_name: str) -> webflow.Site:
         name,
         display_name=display_name,
         short_name=name.lower().replace(" ", "-"),
-        time_zone="America/New_York",
     )
 
     # Product-specific robots.txt (allow all for indexing)
@@ -121,7 +119,6 @@ def create_event_site(name: str, display_name: str) -> webflow.Site:
         name,
         display_name=display_name,
         short_name=name.lower().replace(" ", "-"),
-        time_zone="America/Chicago",
     )
 
     # Event-specific robots.txt

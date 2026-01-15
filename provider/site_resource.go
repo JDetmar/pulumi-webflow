@@ -35,10 +35,6 @@ type SiteArgs struct {
 	// Must be lowercase alphanumeric with hyphens only (no spaces, underscores, or special characters).
 	// Examples: "my-site", "company-blog-2024", "product-landing"
 	ShortName string `pulumi:"shortName,optional"`
-	// TimeZone is the IANA timezone identifier for the site.
-	// Optional - defaults to Webflow's default timezone if not specified.
-	// Examples: "America/New_York", "Europe/London", "Asia/Tokyo", "UTC"
-	TimeZone string `pulumi:"timeZone,optional"`
 	// ParentFolderID is the folder ID where the site will be organized in the Webflow dashboard.
 	// Optional - site will be placed at workspace root if not specified.
 	ParentFolderID string `pulumi:"parentFolderId,optional"`
@@ -59,6 +55,10 @@ type SiteArgs struct {
 // It embeds SiteArgs to include input properties in the output.
 type SiteState struct {
 	SiteArgs
+	// TimeZone is the IANA timezone identifier for the site (read-only).
+	// This value is set in Webflow Site Settings and cannot be changed via API.
+	// Examples: "America/New_York", "Europe/London", "Asia/Tokyo", "UTC"
+	TimeZone string `pulumi:"timeZone,optional"`
 	// LastPublished is the timestamp of the last site publish (read-only).
 	// Set automatically by Webflow when the site is published.
 	LastPublished string `pulumi:"lastPublished,optional"`
@@ -109,12 +109,6 @@ func (args *SiteArgs) Annotate(a infer.Annotator) {
 			"Must start and end with a letter or number (no leading/trailing hyphens). "+
 			"Examples: 'my-site', 'company-blog-2024', 'product-landing-page'.")
 
-	a.Describe(&args.TimeZone,
-		"The IANA timezone identifier for the site. "+
-			"Optional - Webflow will use its default timezone if not specified. "+
-			"Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). "+
-			"This timezone is used for scheduling, analytics, and other time-sensitive features.")
-
 	a.Describe(&args.ParentFolderID,
 		"The folder ID where the site will be organized in the Webflow dashboard. "+
 			"Optional - the site will be placed at the workspace root if not specified. "+
@@ -147,6 +141,11 @@ func (args *SiteArgs) Annotate(a infer.Annotator) {
 
 // Annotate adds descriptions to the SiteState fields.
 func (state *SiteState) Annotate(a infer.Annotator) {
+	a.Describe(&state.TimeZone,
+		"The IANA timezone identifier for the site (read-only). "+
+			"This value is configured in Webflow Site Settings and cannot be changed via API. "+
+			"Examples: 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'.")
+
 	a.Describe(&state.LastPublished,
 		"The RFC3339 timestamp of the last time the site was published (read-only). "+
 			"Automatically set by Webflow when changes are published to production.")
@@ -226,12 +225,7 @@ func (r *SiteResource) Diff(
 		}
 	}
 
-	if req.Inputs.TimeZone != req.State.TimeZone {
-		diff.HasChanges = true
-		diff.DetailedDiff["timeZone"] = p.PropertyDiff{
-			Kind: p.Update,
-		}
-	}
+	// Note: TimeZone is read-only (output only) - cannot be changed via API
 
 	if req.Inputs.ParentFolderID != req.State.ParentFolderID {
 		diff.HasChanges = true
@@ -271,10 +265,6 @@ func (r *SiteResource) Create(
 		return infer.CreateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
 	if err := ValidateShortName(req.Inputs.ShortName); err != nil {
-		log.Errorf("Validation failed: %v", err)
-		return infer.CreateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
-	}
-	if err := ValidateTimeZone(req.Inputs.TimeZone); err != nil {
 		log.Errorf("Validation failed: %v", err)
 		return infer.CreateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
@@ -400,7 +390,6 @@ func (r *SiteResource) Read(
 		WorkspaceID:    siteData.WorkspaceID,
 		DisplayName:    siteData.DisplayName,
 		ShortName:      siteData.ShortName,
-		TimeZone:       siteData.TimeZone,
 		ParentFolderID: siteData.ParentFolderID,
 		// Publish property is not returned by GET API - preserve existing value
 		Publish: req.State.Publish,
@@ -408,6 +397,7 @@ func (r *SiteResource) Read(
 
 	currentState := SiteState{
 		SiteArgs:              currentInputs,
+		TimeZone:              siteData.TimeZone, // Read-only output from Webflow
 		LastPublished:         siteData.LastPublished,
 		LastUpdated:           siteData.LastUpdated,
 		PreviewURL:            siteData.PreviewURL,
@@ -447,10 +437,6 @@ func (r *SiteResource) Update(
 		log.Errorf("Validation failed: %v", err)
 		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
 	}
-	if err := ValidateTimeZone(req.Inputs.TimeZone); err != nil {
-		log.Errorf("Validation failed: %v", err)
-		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("validation failed for Site resource: %w", err)
-	}
 
 	// Step 3: Initialize state with current inputs
 	state := SiteState{
@@ -482,7 +468,8 @@ func (r *SiteResource) Update(
 	// Step 6: Call Webflow API to update site
 	log.Debug("Calling Webflow API to update site")
 	// Note: We send all fields, API will handle which ones actually changed
-	response, err := PatchSite(ctx, client, siteID, req.Inputs.DisplayName, req.Inputs.ShortName, req.Inputs.TimeZone)
+	// TimeZone is read-only - cannot be updated via API
+	response, err := PatchSite(ctx, client, siteID, req.Inputs.DisplayName, req.Inputs.ShortName)
 	if err != nil {
 		log.Errorf("Failed to update site via API: %v", err)
 		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("failed to update site: %w", err)
@@ -493,7 +480,7 @@ func (r *SiteResource) Update(
 	// Step 7: Update state with API response (API returns full site object)
 	state.DisplayName = response.DisplayName
 	state.ShortName = response.ShortName
-	state.TimeZone = response.TimeZone
+	state.TimeZone = response.TimeZone // Read-only output from Webflow
 	state.LastPublished = response.LastPublished
 	state.LastUpdated = response.LastUpdated
 	state.PreviewURL = response.PreviewURL

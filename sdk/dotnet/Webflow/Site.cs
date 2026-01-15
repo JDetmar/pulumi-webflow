@@ -83,7 +83,7 @@ namespace Community.Pulumi.Webflow
         public Output<string?> TemplateName { get; private set; } = null!;
 
         /// <summary>
-        /// The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
+        /// The IANA timezone identifier for the site (read-only). This value is configured in Webflow Site Settings and cannot be changed via API. Examples: 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'.
         /// </summary>
         [Output("timeZone")]
         public Output<string?> TimeZone { get; private set; } = null!;
@@ -169,12 +169,6 @@ namespace Community.Pulumi.Webflow
         /// </summary>
         [Input("templateName")]
         public Input<string>? TemplateName { get; set; }
-
-        /// <summary>
-        /// The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
-        /// </summary>
-        [Input("timeZone")]
-        public Input<string>? TimeZone { get; set; }
 
         /// <summary>
         /// The Webflow workspace ID where the site will be created. Required for site creation (Enterprise workspace required by Webflow API). Example: '5f0c8c9e1c9d440000e8d8c3'. You can find your workspace ID in the Webflow dashboard under Account Settings &gt; Workspace.

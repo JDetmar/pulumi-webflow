@@ -179,65 +179,8 @@ func TestValidateShortName_LeadingTrailingHyphens(t *testing.T) {
 	}
 }
 
-// TestValidateTimeZone_Valid tests valid IANA timezone inputs.
-func TestValidateTimeZone_Valid(t *testing.T) {
-	tests := []struct {
-		name     string
-		timeZone string
-	}{
-		{"America/New_York", "America/New_York"},
-		{"Europe/London", "Europe/London"},
-		{"Asia/Tokyo", "Asia/Tokyo"},
-		{"UTC", "UTC"},
-		{"GMT variant", "Etc/GMT+5"},
-		{"Australia/Sydney", "Australia/Sydney"},
-		{"America/Los_Angeles", "America/Los_Angeles"},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := ValidateTimeZone(tt.timeZone)
-			if err != nil {
-				t.Errorf("ValidateTimeZone(%q) returned unexpected error: %v", tt.timeZone, err)
-			}
-		})
-	}
-}
-
-// TestValidateTimeZone_Empty tests empty timezone (optional field, should pass).
-func TestValidateTimeZone_Empty(t *testing.T) {
-	err := ValidateTimeZone("")
-	if err != nil {
-		t.Errorf("ValidateTimeZone(\"\") should return nil for empty string (optional field), got: %v", err)
-	}
-}
-
-// TestValidateTimeZone_Invalid tests invalid timezone identifiers.
-func TestValidateTimeZone_Invalid(t *testing.T) {
-	tests := []struct {
-		name     string
-		timeZone string
-	}{
-		{"plain text", "Eastern"},
-		{"abbreviated", "EST"},
-		{"with lowercase etc", "etc/gmt+5"},
-		{"invalid format", "America_New_York"},
-		{"partial path", "America"},
-		{"random string", "not-a-timezone"},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := ValidateTimeZone(tt.timeZone)
-			if err == nil {
-				t.Errorf("ValidateTimeZone(%q) should return error for invalid timezone", tt.timeZone)
-			}
-			if err != nil && !strings.Contains(err.Error(), "invalid") && !strings.Contains(err.Error(), "recognized") {
-				t.Errorf("ValidateTimeZone error should mention invalid/not recognized, got: %v", err)
-			}
-		})
-	}
-}
+// Note: ValidateTimeZone tests were removed because timezone is now read-only
+// (output only). The Webflow API does not support setting timezone via API.
 
 // TestValidateWorkspaceID_Valid tests valid workspace ID inputs.
 func TestValidateWorkspaceID_Valid(t *testing.T) {
@@ -572,12 +515,7 @@ func TestSiteCreate_ValidationErrors(t *testing.T) {
 			wantErr:   true,
 			errSubstr: "invalid characters",
 		},
-		{
-			name:      "invalid timeZone",
-			args:      SiteArgs{WorkspaceID: "ws123", DisplayName: "Site", TimeZone: "EST"},
-			wantErr:   true,
-			errSubstr: "invalid timezone",
-		},
+		// Note: timezone validation test removed - timezone is now read-only (output only)
 	}
 
 	resource := &SiteResource{}
@@ -656,9 +594,10 @@ func TestPatchSite_Success(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
+	// Note: timeZone parameter removed - timezone is read-only and cannot be set via API
 	site, err := PatchSite(
 		context.Background(), client, "site123",
-		"Updated Site Name", "updated-slug", "America/New_York",
+		"Updated Site Name", "updated-slug",
 	)
 	if err != nil {
 		t.Fatalf("PatchSite failed: %v", err)
@@ -687,7 +626,7 @@ func TestPatchSite_SingleFieldChange(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	site, err := PatchSite(context.Background(), client, "site123", "New Name", "", "")
+	site, err := PatchSite(context.Background(), client, "site123", "New Name", "")
 	if err != nil {
 		t.Fatalf("PatchSite failed: %v", err)
 	}
@@ -715,7 +654,7 @@ func TestPatchSite_NoChanges(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	site, err := PatchSite(context.Background(), client, "site123", "My Site", "my-site", "America/New_York")
+	site, err := PatchSite(context.Background(), client, "site123", "My Site", "my-site")
 	if err != nil {
 		t.Fatalf("PatchSite failed: %v", err)
 	}
@@ -744,7 +683,7 @@ func TestPatchSite_RateLimiting(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	_, err := PatchSite(context.Background(), client, "site123", "Updated Name", "", "")
+	_, err := PatchSite(context.Background(), client, "site123", "Updated Name", "")
 	if err != nil {
 		t.Fatalf("PatchSite should succeed after retry: %v", err)
 	}
@@ -766,7 +705,7 @@ func TestPatchSite_InvalidSiteID(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	_, err := PatchSite(context.Background(), client, "nonexistent", "Name", "", "")
+	_, err := PatchSite(context.Background(), client, "nonexistent", "Name", "")
 
 	if err == nil {
 		t.Error("Expected error for 404, got nil")
@@ -789,7 +728,7 @@ func TestPatchSite_ContextCancellation(t *testing.T) {
 	cancel()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	_, err := PatchSite(ctx, client, "site123", "Name", "", "")
+	_, err := PatchSite(ctx, client, "site123", "Name", "")
 
 	if err == nil {
 		t.Error("Expected error for cancelled context")
@@ -913,14 +852,12 @@ func TestSiteDiff_MultipleFieldsChanged(t *testing.T) {
 			WorkspaceID: "workspace456",
 			DisplayName: "New Name",
 			ShortName:   "new-slug",
-			TimeZone:    "America/Chicago",
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
 				WorkspaceID: "workspace456",
 				DisplayName: "Old Name",
 				ShortName:   "old-slug",
-				TimeZone:    "UTC",
 			},
 		},
 	}
@@ -931,7 +868,8 @@ func TestSiteDiff_MultipleFieldsChanged(t *testing.T) {
 	}
 
 	// CRITICAL: All changes should be accumulated, not overwritten
-	expectedChanges := []string{"displayName", "shortName", "timeZone"}
+	// Note: timeZone removed - it's now read-only (output only)
+	expectedChanges := []string{"displayName", "shortName"}
 	for _, field := range expectedChanges {
 		if _, ok := diff.DetailedDiff[field]; !ok {
 			t.Errorf("Expected '%s' in DetailedDiff", field)
@@ -1007,21 +945,22 @@ func TestSiteDiff_ShortNameChanged(t *testing.T) {
 	}
 }
 
-// TestSiteDiff_TimeZoneChanged tests timeZone change alone
-func TestSiteDiff_TimeZoneChanged(t *testing.T) {
+// TestSiteDiff_TimeZoneReadOnly tests that timezone differences in state don't trigger changes
+// because timezone is read-only (output only) and cannot be set by users.
+func TestSiteDiff_TimeZoneReadOnly(t *testing.T) {
 	resource := &SiteResource{}
 	req := infer.DiffRequest[SiteArgs, SiteState]{
 		Inputs: SiteArgs{
 			WorkspaceID: "workspace456",
 			DisplayName: "My Site",
-			TimeZone:    "America/Chicago",
+			// Note: TimeZone is not in SiteArgs - it's read-only output
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
 				WorkspaceID: "workspace456",
 				DisplayName: "My Site",
-				TimeZone:    "UTC",
 			},
+			TimeZone: "UTC", // This is a read-only output field
 		},
 	}
 
@@ -1030,14 +969,12 @@ func TestSiteDiff_TimeZoneChanged(t *testing.T) {
 		t.Fatalf("Diff failed: %v", err)
 	}
 
-	if !diff.HasChanges {
-		t.Error("Expected HasChanges=true")
+	// No changes should be detected - timezone is read-only
+	if diff.HasChanges {
+		t.Error("Expected HasChanges=false - timezone is read-only and should not trigger changes")
 	}
-	if _, ok := diff.DetailedDiff["timeZone"]; !ok {
-		t.Error("Expected 'timeZone' in DetailedDiff")
-	}
-	if len(diff.DetailedDiff) != 1 {
-		t.Errorf("Expected only 1 change (timeZone), got %d", len(diff.DetailedDiff))
+	if _, ok := diff.DetailedDiff["timeZone"]; ok {
+		t.Error("timeZone should NOT be in DetailedDiff - it's read-only")
 	}
 }
 
@@ -1083,7 +1020,7 @@ func TestPatchSite_NetworkError(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 1 * time.Second}
-	_, err := PatchSite(context.Background(), client, "site123", "Name", "", "")
+	_, err := PatchSite(context.Background(), client, "site123", "Name", "")
 
 	if err == nil {
 		t.Error("Expected network error, got nil")
@@ -1106,7 +1043,7 @@ func TestPatchSite_InvalidJSON(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	_, err := PatchSite(context.Background(), client, "site123", "Name", "", "")
+	_, err := PatchSite(context.Background(), client, "site123", "Name", "")
 
 	if err == nil {
 		t.Error("Expected error for invalid JSON, got nil")
@@ -1514,14 +1451,12 @@ func TestSiteDiff_PublishAndOtherFieldsChanged(t *testing.T) {
 		Inputs: SiteArgs{
 			WorkspaceID: "workspace456",
 			DisplayName: "New Name",
-			TimeZone:    "America/Chicago",
 			Publish:     true,
 		},
 		State: SiteState{
 			SiteArgs: SiteArgs{
 				WorkspaceID: "workspace456",
 				DisplayName: "Old Name",
-				TimeZone:    "UTC",
 				Publish:     false,
 			},
 		},
@@ -1533,7 +1468,8 @@ func TestSiteDiff_PublishAndOtherFieldsChanged(t *testing.T) {
 	}
 
 	// Should accumulate all changes
-	expectedChanges := []string{"displayName", "timeZone", "publish"}
+	// Note: timeZone removed - it's now read-only (output only)
+	expectedChanges := []string{"displayName", "publish"}
 	for _, field := range expectedChanges {
 		if _, ok := diff.DetailedDiff[field]; !ok {
 			t.Errorf("Expected '%s' in DetailedDiff", field)

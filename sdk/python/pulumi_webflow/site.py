@@ -24,8 +24,7 @@ class SiteArgs:
                  parent_folder_id: Optional[pulumi.Input[_builtins.str]] = None,
                  publish: Optional[pulumi.Input[_builtins.bool]] = None,
                  short_name: Optional[pulumi.Input[_builtins.str]] = None,
-                 template_name: Optional[pulumi.Input[_builtins.str]] = None,
-                 time_zone: Optional[pulumi.Input[_builtins.str]] = None):
+                 template_name: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Site resource.
         :param pulumi.Input[_builtins.str] display_name: The human-readable name of the site as shown in the Webflow dashboard. Required - must be a non-empty string. Examples: 'My Marketing Site', 'Company Blog', 'Product Landing Page'. This is the name users will see when managing the site.
@@ -34,7 +33,6 @@ class SiteArgs:
         :param pulumi.Input[_builtins.bool] publish: Automatically publish the site after creation or updates. When set to true, the provider will publish the site to production after successfully creating or updating it. Default: false (manual publishing required). Note: Site must have at least one published version before automatic publishing will work. If publishing fails, the entire operation will fail with an error (site may exist but Pulumi will report failure). Recommendation: Set to false for initial site creation, then enable after first manual publish.
         :param pulumi.Input[_builtins.str] short_name: The slugified version of the site name used in URLs and for file organization. Optional - if not provided, Webflow will automatically generate one from the displayName. Must use only lowercase letters (a-z), numbers (0-9), and hyphens (-). No spaces, underscores, or special characters allowed. Must start and end with a letter or number (no leading/trailing hyphens). Examples: 'my-site', 'company-blog-2024', 'product-landing-page'.
         :param pulumi.Input[_builtins.str] template_name: The template to use for site creation. Optional - if not specified, Webflow will create a blank site. **WARNING: This field is IMMUTABLE.** Once set, it cannot be changed. Changing this value will trigger a REPLACE operation, which will: (1) DELETE your existing site and ALL its content (pages, CMS items, assets, etc.), (2) CREATE a new site with the new template, (3) REPLACE all dependent resources (redirects, robots.txt, etc.). This is a DESTRUCTIVE operation that cannot be undone. Use any valid Webflow template identifier (e.g., 'mast-framework', 'blank'). Consider using resource protection (`protect: true`) to prevent accidental replacement.
-        :param pulumi.Input[_builtins.str] time_zone: The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
         """
         pulumi.set(__self__, "display_name", display_name)
         pulumi.set(__self__, "workspace_id", workspace_id)
@@ -46,8 +44,6 @@ class SiteArgs:
             pulumi.set(__self__, "short_name", short_name)
         if template_name is not None:
             pulumi.set(__self__, "template_name", template_name)
-        if time_zone is not None:
-            pulumi.set(__self__, "time_zone", time_zone)
 
     @_builtins.property
     @pulumi.getter(name="displayName")
@@ -121,18 +117,6 @@ class SiteArgs:
     def template_name(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "template_name", value)
 
-    @_builtins.property
-    @pulumi.getter(name="timeZone")
-    def time_zone(self) -> Optional[pulumi.Input[_builtins.str]]:
-        """
-        The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
-        """
-        return pulumi.get(self, "time_zone")
-
-    @time_zone.setter
-    def time_zone(self, value: Optional[pulumi.Input[_builtins.str]]):
-        pulumi.set(self, "time_zone", value)
-
 
 @pulumi.type_token("webflow:index:Site")
 class Site(pulumi.CustomResource):
@@ -145,7 +129,6 @@ class Site(pulumi.CustomResource):
                  publish: Optional[pulumi.Input[_builtins.bool]] = None,
                  short_name: Optional[pulumi.Input[_builtins.str]] = None,
                  template_name: Optional[pulumi.Input[_builtins.str]] = None,
-                 time_zone: Optional[pulumi.Input[_builtins.str]] = None,
                  workspace_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
@@ -158,7 +141,6 @@ class Site(pulumi.CustomResource):
         :param pulumi.Input[_builtins.bool] publish: Automatically publish the site after creation or updates. When set to true, the provider will publish the site to production after successfully creating or updating it. Default: false (manual publishing required). Note: Site must have at least one published version before automatic publishing will work. If publishing fails, the entire operation will fail with an error (site may exist but Pulumi will report failure). Recommendation: Set to false for initial site creation, then enable after first manual publish.
         :param pulumi.Input[_builtins.str] short_name: The slugified version of the site name used in URLs and for file organization. Optional - if not provided, Webflow will automatically generate one from the displayName. Must use only lowercase letters (a-z), numbers (0-9), and hyphens (-). No spaces, underscores, or special characters allowed. Must start and end with a letter or number (no leading/trailing hyphens). Examples: 'my-site', 'company-blog-2024', 'product-landing-page'.
         :param pulumi.Input[_builtins.str] template_name: The template to use for site creation. Optional - if not specified, Webflow will create a blank site. **WARNING: This field is IMMUTABLE.** Once set, it cannot be changed. Changing this value will trigger a REPLACE operation, which will: (1) DELETE your existing site and ALL its content (pages, CMS items, assets, etc.), (2) CREATE a new site with the new template, (3) REPLACE all dependent resources (redirects, robots.txt, etc.). This is a DESTRUCTIVE operation that cannot be undone. Use any valid Webflow template identifier (e.g., 'mast-framework', 'blank'). Consider using resource protection (`protect: true`) to prevent accidental replacement.
-        :param pulumi.Input[_builtins.str] time_zone: The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
         :param pulumi.Input[_builtins.str] workspace_id: The Webflow workspace ID where the site will be created. Required for site creation (Enterprise workspace required by Webflow API). Example: '5f0c8c9e1c9d440000e8d8c3'. You can find your workspace ID in the Webflow dashboard under Account Settings > Workspace.
         """
         ...
@@ -190,7 +172,6 @@ class Site(pulumi.CustomResource):
                  publish: Optional[pulumi.Input[_builtins.bool]] = None,
                  short_name: Optional[pulumi.Input[_builtins.str]] = None,
                  template_name: Optional[pulumi.Input[_builtins.str]] = None,
-                 time_zone: Optional[pulumi.Input[_builtins.str]] = None,
                  workspace_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
@@ -208,7 +189,6 @@ class Site(pulumi.CustomResource):
             __props__.__dict__["publish"] = publish
             __props__.__dict__["short_name"] = short_name
             __props__.__dict__["template_name"] = template_name
-            __props__.__dict__["time_zone"] = time_zone
             if workspace_id is None and not opts.urn:
                 raise TypeError("Missing required property 'workspace_id'")
             __props__.__dict__["workspace_id"] = workspace_id
@@ -218,6 +198,7 @@ class Site(pulumi.CustomResource):
             __props__.__dict__["last_published"] = None
             __props__.__dict__["last_updated"] = None
             __props__.__dict__["preview_url"] = None
+            __props__.__dict__["time_zone"] = None
         super(Site, __self__).__init__(
             'webflow:index:Site',
             resource_name,
@@ -347,7 +328,7 @@ class Site(pulumi.CustomResource):
     @pulumi.getter(name="timeZone")
     def time_zone(self) -> pulumi.Output[Optional[_builtins.str]]:
         """
-        The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
+        The IANA timezone identifier for the site (read-only). This value is configured in Webflow Site Settings and cannot be changed via API. Examples: 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'.
         """
         return pulumi.get(self, "time_zone")
 

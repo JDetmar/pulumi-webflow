@@ -65,10 +65,10 @@ type SiteCreateRequest struct {
 
 // SiteUpdateRequest represents the request body for updating a site.
 // All fields are optional - send only fields that changed.
+// Note: TimeZone is read-only and cannot be updated via API.
 type SiteUpdateRequest struct {
 	DisplayName string `json:"displayName,omitempty"`
 	ShortName   string `json:"shortName,omitempty"`
-	TimeZone    string `json:"timeZone,omitempty"`
 }
 
 // SitePublishRequest represents the request body for publishing a site.
@@ -122,34 +122,6 @@ func ValidateShortName(shortName string) error {
 			"Must start and end with a letter or number (e.g., 'my-site', 'company-blog-2024', 'product-1'). "+
 			"Fix: Use only lowercase letters, numbers, and hyphens. No spaces, underscores, or special characters. "+
 			"No leading/trailing hyphens", shortName)
-	}
-
-	return nil
-}
-
-// ValidateTimeZone validates that timeZone is a recognized IANA timezone identifier.
-// Common IANA timezone examples: "America/New_York", "Europe/London", "Asia/Tokyo", "UTC"
-// If timeZone is empty, that's OK - Webflow will use its default.
-// Actionable error messages explain: what's wrong, expected format, and how to fix it.
-func ValidateTimeZone(timeZone string) error {
-	// timeZone is optional - if empty, Webflow uses its default
-	if timeZone == "" {
-		return nil
-	}
-
-	// IANA timezone identifiers follow pattern: Continent/City or UTC variants
-	// Supported formats:
-	// - Region/City: America/New_York, Europe/London, Asia/Tokyo, Australia/Sydney
-	// - Plain UTC
-	// - Etc/GMT variants: Etc/GMT+5, Etc/GMT-10 (note: Etc requires capital E)
-	timeZoneRegex := regexp.MustCompile(`^([A-Za-z_]+/[A-Za-z_]+|UTC|Etc/GMT[+-]\d+)$`)
-	if !timeZoneRegex.MatchString(timeZone) {
-		return fmt.Errorf("invalid timezone format: '%s' is not a recognized IANA "+
-			"timezone identifier. "+
-			"Expected format: IANA timezone identifiers like 'America/New_York', "+
-			"'Europe/London', 'Asia/Tokyo', or 'UTC'. "+
-			"Fix: Use a valid IANA timezone. Examples: 'America/Los_Angeles', "+
-			"'Europe/Paris', 'Asia/Singapore', 'Australia/Sydney', 'UTC', 'Etc/GMT+5'", timeZone)
 	}
 
 	return nil
@@ -292,10 +264,11 @@ func PostSite(
 
 // PatchSite updates an existing site's configuration.
 // Only changed fields should be sent in the request to minimize API payload.
+// Note: TimeZone is read-only and cannot be updated via API.
 // Returns the updated Site or an error if the request fails.
 func PatchSite(
 	ctx context.Context, client *http.Client,
-	siteID, displayName, shortName, timeZone string,
+	siteID, displayName, shortName string,
 ) (*Site, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
@@ -309,10 +282,10 @@ func PatchSite(
 	url := fmt.Sprintf("%s/v2/sites/%s", baseURL, siteID)
 
 	// Build request with provided fields (empty strings = not changed)
+	// Note: TimeZone is read-only and cannot be updated via API
 	requestBody := SiteUpdateRequest{
 		DisplayName: displayName,
 		ShortName:   shortName,
-		TimeZone:    timeZone,
 	}
 
 	bodyBytes, err := json.Marshal(requestBody)

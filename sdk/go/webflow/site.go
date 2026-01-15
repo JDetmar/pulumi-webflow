@@ -38,7 +38,7 @@ type Site struct {
 	ShortName pulumi.StringPtrOutput `pulumi:"shortName"`
 	// The template to use for site creation. Optional - if not specified, Webflow will create a blank site. **WARNING: This field is IMMUTABLE.** Once set, it cannot be changed. Changing this value will trigger a REPLACE operation, which will: (1) DELETE your existing site and ALL its content (pages, CMS items, assets, etc.), (2) CREATE a new site with the new template, (3) REPLACE all dependent resources (redirects, robots.txt, etc.). This is a DESTRUCTIVE operation that cannot be undone. Use any valid Webflow template identifier (e.g., 'mast-framework', 'blank'). Consider using resource protection (`protect: true`) to prevent accidental replacement.
 	TemplateName pulumi.StringPtrOutput `pulumi:"templateName"`
-	// The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
+	// The IANA timezone identifier for the site (read-only). This value is configured in Webflow Site Settings and cannot be changed via API. Examples: 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'.
 	TimeZone pulumi.StringPtrOutput `pulumi:"timeZone"`
 	// The Webflow workspace ID where the site will be created. Required for site creation (Enterprise workspace required by Webflow API). Example: '5f0c8c9e1c9d440000e8d8c3'. You can find your workspace ID in the Webflow dashboard under Account Settings > Workspace.
 	WorkspaceId pulumi.StringOutput `pulumi:"workspaceId"`
@@ -100,8 +100,6 @@ type siteArgs struct {
 	ShortName *string `pulumi:"shortName"`
 	// The template to use for site creation. Optional - if not specified, Webflow will create a blank site. **WARNING: This field is IMMUTABLE.** Once set, it cannot be changed. Changing this value will trigger a REPLACE operation, which will: (1) DELETE your existing site and ALL its content (pages, CMS items, assets, etc.), (2) CREATE a new site with the new template, (3) REPLACE all dependent resources (redirects, robots.txt, etc.). This is a DESTRUCTIVE operation that cannot be undone. Use any valid Webflow template identifier (e.g., 'mast-framework', 'blank'). Consider using resource protection (`protect: true`) to prevent accidental replacement.
 	TemplateName *string `pulumi:"templateName"`
-	// The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
-	TimeZone *string `pulumi:"timeZone"`
 	// The Webflow workspace ID where the site will be created. Required for site creation (Enterprise workspace required by Webflow API). Example: '5f0c8c9e1c9d440000e8d8c3'. You can find your workspace ID in the Webflow dashboard under Account Settings > Workspace.
 	WorkspaceId string `pulumi:"workspaceId"`
 }
@@ -118,8 +116,6 @@ type SiteArgs struct {
 	ShortName pulumi.StringPtrInput
 	// The template to use for site creation. Optional - if not specified, Webflow will create a blank site. **WARNING: This field is IMMUTABLE.** Once set, it cannot be changed. Changing this value will trigger a REPLACE operation, which will: (1) DELETE your existing site and ALL its content (pages, CMS items, assets, etc.), (2) CREATE a new site with the new template, (3) REPLACE all dependent resources (redirects, robots.txt, etc.). This is a DESTRUCTIVE operation that cannot be undone. Use any valid Webflow template identifier (e.g., 'mast-framework', 'blank'). Consider using resource protection (`protect: true`) to prevent accidental replacement.
 	TemplateName pulumi.StringPtrInput
-	// The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
-	TimeZone pulumi.StringPtrInput
 	// The Webflow workspace ID where the site will be created. Required for site creation (Enterprise workspace required by Webflow API). Example: '5f0c8c9e1c9d440000e8d8c3'. You can find your workspace ID in the Webflow dashboard under Account Settings > Workspace.
 	WorkspaceId pulumi.StringInput
 }
@@ -216,7 +212,7 @@ func (o SiteOutput) TemplateName() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Site) pulumi.StringPtrOutput { return v.TemplateName }).(pulumi.StringPtrOutput)
 }
 
-// The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'). This timezone is used for scheduling, analytics, and other time-sensitive features.
+// The IANA timezone identifier for the site (read-only). This value is configured in Webflow Site Settings and cannot be changed via API. Examples: 'America/New_York', 'Europe/London', 'Asia/Tokyo', 'UTC'.
 func (o SiteOutput) TimeZone() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Site) pulumi.StringPtrOutput { return v.TimeZone }).(pulumi.StringPtrOutput)
 }

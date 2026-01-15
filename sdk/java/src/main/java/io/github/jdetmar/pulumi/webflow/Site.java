@@ -176,14 +176,14 @@ public class Site extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.templateName);
     }
     /**
-     * The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., &#39;America/New_York&#39;, &#39;Europe/London&#39;, &#39;Asia/Tokyo&#39;, &#39;UTC&#39;). This timezone is used for scheduling, analytics, and other time-sensitive features.
+     * The IANA timezone identifier for the site (read-only). This value is configured in Webflow Site Settings and cannot be changed via API. Examples: &#39;America/New_York&#39;, &#39;Europe/London&#39;, &#39;Asia/Tokyo&#39;, &#39;UTC&#39;.
      * 
      */
     @Export(name="timeZone", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> timeZone;
 
     /**
-     * @return The IANA timezone identifier for the site. Optional - Webflow will use its default timezone if not specified. Use standard IANA timezone identifiers (e.g., &#39;America/New_York&#39;, &#39;Europe/London&#39;, &#39;Asia/Tokyo&#39;, &#39;UTC&#39;). This timezone is used for scheduling, analytics, and other time-sensitive features.
+     * @return The IANA timezone identifier for the site (read-only). This value is configured in Webflow Site Settings and cannot be changed via API. Examples: &#39;America/New_York&#39;, &#39;Europe/London&#39;, &#39;Asia/Tokyo&#39;, &#39;UTC&#39;.
      * 
      */
     public Output<Optional<String>> timeZone() {

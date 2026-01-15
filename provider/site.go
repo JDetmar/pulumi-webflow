@@ -67,8 +67,9 @@ type SiteCreateRequest struct {
 // All fields are optional - send only fields that changed.
 // Note: TimeZone is read-only and cannot be updated via API.
 type SiteUpdateRequest struct {
-	DisplayName string `json:"displayName,omitempty"`
-	ShortName   string `json:"shortName,omitempty"`
+	DisplayName    string `json:"displayName,omitempty"`
+	ShortName      string `json:"shortName,omitempty"`
+	ParentFolderID string `json:"parentFolderId,omitempty"`
 }
 
 // SitePublishRequest represents the request body for publishing a site.
@@ -268,7 +269,7 @@ func PostSite(
 // Returns the updated Site or an error if the request fails.
 func PatchSite(
 	ctx context.Context, client *http.Client,
-	siteID, displayName, shortName string,
+	siteID, displayName, shortName, parentFolderID string,
 ) (*Site, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
@@ -284,8 +285,9 @@ func PatchSite(
 	// Build request with provided fields (empty strings = not changed)
 	// Note: TimeZone is read-only and cannot be updated via API
 	requestBody := SiteUpdateRequest{
-		DisplayName: displayName,
-		ShortName:   shortName,
+		DisplayName:    displayName,
+		ShortName:      shortName,
+		ParentFolderID: parentFolderID,
 	}
 
 	bodyBytes, err := json.Marshal(requestBody)

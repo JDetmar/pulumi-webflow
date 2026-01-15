@@ -597,7 +597,7 @@ func TestPatchSite_Success(t *testing.T) {
 	// Note: timeZone parameter removed - timezone is read-only and cannot be set via API
 	site, err := PatchSite(
 		context.Background(), client, "site123",
-		"Updated Site Name", "updated-slug",
+		"Updated Site Name", "updated-slug", "",
 	)
 	if err != nil {
 		t.Fatalf("PatchSite failed: %v", err)
@@ -626,7 +626,7 @@ func TestPatchSite_SingleFieldChange(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	site, err := PatchSite(context.Background(), client, "site123", "New Name", "")
+	site, err := PatchSite(context.Background(), client, "site123", "New Name", "", "")
 	if err != nil {
 		t.Fatalf("PatchSite failed: %v", err)
 	}
@@ -654,7 +654,7 @@ func TestPatchSite_NoChanges(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	site, err := PatchSite(context.Background(), client, "site123", "My Site", "my-site")
+	site, err := PatchSite(context.Background(), client, "site123", "My Site", "my-site", "")
 	if err != nil {
 		t.Fatalf("PatchSite failed: %v", err)
 	}
@@ -683,7 +683,7 @@ func TestPatchSite_RateLimiting(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	_, err := PatchSite(context.Background(), client, "site123", "Updated Name", "")
+	_, err := PatchSite(context.Background(), client, "site123", "Updated Name", "", "")
 	if err != nil {
 		t.Fatalf("PatchSite should succeed after retry: %v", err)
 	}
@@ -705,7 +705,7 @@ func TestPatchSite_InvalidSiteID(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	_, err := PatchSite(context.Background(), client, "nonexistent", "Name", "")
+	_, err := PatchSite(context.Background(), client, "nonexistent", "Name", "", "")
 
 	if err == nil {
 		t.Error("Expected error for 404, got nil")
@@ -728,7 +728,7 @@ func TestPatchSite_ContextCancellation(t *testing.T) {
 	cancel()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	_, err := PatchSite(ctx, client, "site123", "Name", "")
+	_, err := PatchSite(ctx, client, "site123", "Name", "", "")
 
 	if err == nil {
 		t.Error("Expected error for cancelled context")
@@ -1020,7 +1020,7 @@ func TestPatchSite_NetworkError(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 1 * time.Second}
-	_, err := PatchSite(context.Background(), client, "site123", "Name", "")
+	_, err := PatchSite(context.Background(), client, "site123", "Name", "", "")
 
 	if err == nil {
 		t.Error("Expected network error, got nil")
@@ -1043,7 +1043,7 @@ func TestPatchSite_InvalidJSON(t *testing.T) {
 	defer func() { patchSiteBaseURL = oldURL }()
 
 	client := &http.Client{Timeout: 30 * time.Second}
-	_, err := PatchSite(context.Background(), client, "site123", "Name", "")
+	_, err := PatchSite(context.Background(), client, "site123", "Name", "", "")
 
 	if err == nil {
 		t.Error("Expected error for invalid JSON, got nil")

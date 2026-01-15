@@ -13,17 +13,12 @@ func main() {
 		workspaceID := cfg.Require("workspaceId")
 		displayName := cfg.Require("displayName")
 		shortName := cfg.Require("shortName")
-		timezone := cfg.Get("timezone")
-		if timezone == "" {
-			timezone = "America/New_York"
-		}
 
 		// Example 1: Basic Site Creation
 		basicSite, err := webflow.NewSite(ctx, "basic-site", &webflow.SiteArgs{
 			WorkspaceId: pulumi.String(workspaceID),
 			DisplayName: pulumi.String(displayName),
 			ShortName:   pulumi.String(shortName),
-			TimeZone:    pulumi.String(timezone),
 		})
 		if err != nil {
 			return fmt.Errorf("failed to create basic site: %w", err)
@@ -37,7 +32,6 @@ func main() {
 				WorkspaceId: pulumi.String(workspaceID),
 				DisplayName: pulumi.String(fmt.Sprintf("%s-%s", displayName, env)),
 				ShortName:   pulumi.String(fmt.Sprintf("%s-%s", shortName, env)),
-				TimeZone:    pulumi.String(timezone),
 			})
 			if err != nil {
 				return fmt.Errorf("failed to create site %s: %w", env, err)
@@ -50,7 +44,6 @@ func main() {
 			WorkspaceId: pulumi.String(workspaceID),
 			DisplayName: pulumi.String(fmt.Sprintf("%s-configured", displayName)),
 			ShortName:   pulumi.String(fmt.Sprintf("%s-configured", shortName)),
-			TimeZone:    pulumi.String(timezone),
 		})
 		if err != nil {
 			return fmt.Errorf("failed to create configured site: %w", err)

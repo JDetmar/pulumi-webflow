@@ -8,7 +8,6 @@ const config = new pulumi.Config();
 const workspaceId = config.require("workspaceId");
 const displayName = config.require("displayName");
 const shortName = config.require("shortName");
-const timezone = config.get("timezone") || "America/New_York";
 
 /**
  * Site Example - Creating and Managing Webflow Sites
@@ -22,7 +21,6 @@ const basicSite = new webflow.Site("basic-site", {
   workspaceId: workspaceId,
   displayName: displayName,
   shortName: shortName,
-  timeZone: timezone,
 });
 
 // Example 2: Multi-Environment Site Configuration
@@ -33,7 +31,6 @@ const environmentSites = environments.map(
       workspaceId: workspaceId,
       displayName: `${displayName}-${env}`,
       shortName: `${shortName}-${env}`,
-      timeZone: timezone,
     })
 );
 
@@ -42,7 +39,6 @@ const configuredSite = new webflow.Site("configured-site", {
   workspaceId: workspaceId,
   displayName: `${displayName}-configured`,
   shortName: `${shortName}-configured`,
-  timeZone: timezone,
 });
 
 // Export the site resources for reference

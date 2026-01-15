@@ -15,7 +15,6 @@ class Program
         var workspaceId = config.Require("workspaceId");
         var displayName = config.Require("displayName");
         var shortName = config.Require("shortName");
-        var timezone = config.Get("timezone") ?? "America/New_York";
 
         // Example 1: Basic Site Creation
         // Create a simple site with required properties
@@ -24,7 +23,6 @@ class Program
             WorkspaceId = workspaceId,
             DisplayName = displayName,
             ShortName = shortName,
-            TimeZone = timezone,
         });
 
         // Example 2: Multi-Environment Site Configuration
@@ -39,7 +37,6 @@ class Program
                 WorkspaceId = workspaceId,
                 DisplayName = $"{displayName}-{env}",
                 ShortName = $"{shortName}-{env}",
-                TimeZone = timezone,
             });
             environmentSites.Add(site);
         }
@@ -51,7 +48,6 @@ class Program
             WorkspaceId = workspaceId,
             DisplayName = $"{displayName}-configured",
             ShortName = $"{shortName}-configured",
-            TimeZone = timezone,
         });
 
         // Export the site resources for reference

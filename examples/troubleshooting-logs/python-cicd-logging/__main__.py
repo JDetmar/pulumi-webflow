@@ -45,7 +45,6 @@ site = webflow.Site(
     "cicd-logging-site",
     display_name="CI/CD Logging Example Site",
     short_name="cicd-logging-demo",
-    time_zone="America/Los_Angeles",
 )
 
 pulumi.log.debug(f"Site creation request submitted (details redacted)")

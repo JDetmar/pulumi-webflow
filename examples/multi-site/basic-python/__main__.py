@@ -10,31 +10,26 @@ site_configs = [
         "name": "marketing-site",
         "display_name": "Marketing Site",
         "short_name": "marketing-site",
-        "timezone": "America/Los_Angeles",
     },
     {
         "name": "docs-site",
         "display_name": "Documentation Site",
         "short_name": "docs-site",
-        "timezone": "America/New_York",
     },
     {
         "name": "blog-site",
         "display_name": "Blog Site",
         "short_name": "blog-site",
-        "timezone": "America/Chicago",
     },
     {
         "name": "support-site",
         "display_name": "Support Portal",
         "short_name": "support-site",
-        "timezone": "America/Denver",
     },
     {
         "name": "careers-site",
         "display_name": "Careers Page",
         "short_name": "careers-site",
-        "timezone": "America/Los_Angeles",
     },
 ]
 
@@ -44,7 +39,6 @@ sites = [
         config["name"],
         display_name=config["display_name"],
         short_name=config["short_name"],
-        time_zone=config["timezone"],
     )
     for config in site_configs
 ]

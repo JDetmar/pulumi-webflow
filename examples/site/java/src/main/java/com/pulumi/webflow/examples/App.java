@@ -17,7 +17,6 @@ public class App {
             var workspaceId = config.require("workspaceId");
             var displayName = config.require("displayName");
             var shortName = config.require("shortName");
-            var timezone = config.get("timezone").orElse("America/New_York");
 
             // Example 1: Basic Site Creation
             // Create a simple site with required properties
@@ -26,7 +25,6 @@ public class App {
                     .workspaceId(workspaceId)
                     .displayName(displayName)
                     .shortName(shortName)
-                    .timeZone(timezone)
                     .build());
 
             // Example 2: Multi-Environment Site Configuration
@@ -40,7 +38,6 @@ public class App {
                         .workspaceId(workspaceId)
                         .displayName(displayName + "-" + env)
                         .shortName(shortName + "-" + env)
-                        .timeZone(timezone)
                         .build());
                 environmentSites.add(site);
             }
@@ -52,7 +49,6 @@ public class App {
                     .workspaceId(workspaceId)
                     .displayName(displayName + "-configured")
                     .shortName(shortName + "-configured")
-                    .timeZone(timezone)
                     .build());
 
             // Export values for reference

@@ -47,7 +47,6 @@ if (isProd) {
 interface SiteConfig {
     displayName: string;
     shortName: string;
-    timeZone: string;
     allowIndexing: boolean;  // Whether search engines can index this site
     redirects?: Array<{
         sourcePath: string;
@@ -72,7 +71,6 @@ for (const [siteKey, siteConfig] of Object.entries(sitesConfig)) {
     const site = new webflow.Site(siteKey, {
         displayName: siteConfig.displayName,
         shortName: siteConfig.shortName,
-        timeZone: siteConfig.timeZone,
     });
 
     siteExports[`${siteKey}-id`] = site.id;

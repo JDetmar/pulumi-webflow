@@ -327,6 +327,7 @@ func (r *SiteResource) Create(
 	}
 	state.DataCollectionEnabled = response.DataCollectionEnabled
 	state.DataCollectionType = response.DataCollectionType
+	state.TimeZone = response.TimeZone // Read-only output from Webflow
 
 	// Step 8: Optionally publish site after creation
 	if req.Inputs.Publish {

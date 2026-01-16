@@ -470,7 +470,8 @@ func (r *SiteResource) Update(
 	log.Debug("Calling Webflow API to update site")
 	// Note: We send all fields, API will handle which ones actually changed
 	// TimeZone is read-only - cannot be updated via API
-	response, err := PatchSite(ctx, client, siteID, req.Inputs.DisplayName, req.Inputs.ShortName)
+	response, err := PatchSite(
+		ctx, client, siteID, req.Inputs.DisplayName, req.Inputs.ShortName, req.Inputs.ParentFolderID)
 	if err != nil {
 		log.Errorf("Failed to update site via API: %v", err)
 		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("failed to update site: %w", err)
@@ -481,6 +482,7 @@ func (r *SiteResource) Update(
 	// Step 7: Update state with API response (API returns full site object)
 	state.DisplayName = response.DisplayName
 	state.ShortName = response.ShortName
+	state.ParentFolderID = response.ParentFolderID
 	state.TimeZone = response.TimeZone // Read-only output from Webflow
 	state.LastPublished = response.LastPublished
 	state.LastUpdated = response.LastUpdated

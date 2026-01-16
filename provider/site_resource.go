@@ -470,7 +470,8 @@ func (r *SiteResource) Update(
 	log.Debug("Calling Webflow API to update site")
 	// Note: We send all fields, API will handle which ones actually changed
 	// TimeZone is read-only - cannot be updated via API
-	response, err := PatchSite(ctx, client, siteID, req.Inputs.DisplayName, req.Inputs.ShortName, req.Inputs.ParentFolderID)
+	response, err := PatchSite(
+		ctx, client, siteID, req.Inputs.DisplayName, req.Inputs.ShortName, req.Inputs.ParentFolderID)
 	if err != nil {
 		log.Errorf("Failed to update site via API: %v", err)
 		return infer.UpdateResponse[SiteState]{}, fmt.Errorf("failed to update site: %w", err)

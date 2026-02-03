@@ -329,6 +329,24 @@ func (r *SiteResource) Create(
 	state.DataCollectionType = response.DataCollectionType
 	state.TimeZone = response.TimeZone // Read-only output from Webflow
 
+	// Step 7b: Set shortName via PATCH if user provided one.
+	// The Webflow Create Site API does not accept shortName — it auto-generates one
+	// from displayName. To honor the user's requested shortName, we issue a follow-up PATCH.
+	if req.Inputs.ShortName != "" {
+		log.WithField("siteId", response.ID).WithField("shortName", req.Inputs.ShortName).
+			Debug("Setting shortName via PATCH (not supported on create)")
+		patchResp, err := PatchSite(ctx, client, response.ID, "", req.Inputs.ShortName, "")
+		if err != nil {
+			log.WithField("siteId", response.ID).Errorf("Failed to set shortName: %v", err)
+			return infer.CreateResponse[SiteState]{}, fmt.Errorf(
+				"site created successfully but failed to set shortName: %w", err)
+		}
+		state.ShortName = patchResp.ShortName
+	} else {
+		// User didn't provide shortName — use whatever Webflow auto-generated
+		state.ShortName = response.ShortName
+	}
+
 	// Step 8: Optionally publish site after creation
 	if req.Inputs.Publish {
 		log.WithField("siteId", response.ID).Debug("Publishing site after creation")

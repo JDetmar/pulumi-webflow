@@ -45,6 +45,11 @@ export const getTokenInfo: typeof import("./getTokenInfo").getTokenInfo = null a
 export const getTokenInfoOutput: typeof import("./getTokenInfo").getTokenInfoOutput = null as any;
 utilities.lazyLoad(exports, ["getTokenInfo","getTokenInfoOutput"], () => require("./getTokenInfo"));
 
+export { InlineScriptArgs } from "./inlineScript";
+export type InlineScript = import("./inlineScript").InlineScript;
+export const InlineScript: typeof import("./inlineScript").InlineScript = null as any;
+utilities.lazyLoad(exports, ["InlineScript"], () => require("./inlineScript"));
+
 export { PageContentArgs } from "./pageContent";
 export type PageContent = import("./pageContent").PageContent;
 export const PageContent: typeof import("./pageContent").PageContent = null as any;
@@ -126,6 +131,8 @@ const _module = {
                 return new CollectionItem(name, <any>undefined, { urn })
             case "webflow:index:EcommerceSettings":
                 return new EcommerceSettings(name, <any>undefined, { urn })
+            case "webflow:index:InlineScript":
+                return new InlineScript(name, <any>undefined, { urn })
             case "webflow:index:PageContent":
                 return new PageContent(name, <any>undefined, { urn })
             case "webflow:index:PageCustomCode":

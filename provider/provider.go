@@ -53,6 +53,7 @@ func Provider() p.Provider {
 			infer.Resource(&PageContent{}),
 			infer.Resource(&SiteCustomCode{}),
 			infer.Resource(&RegisteredScriptResource{}),
+			infer.Resource(&InlineScript{}),
 			infer.Resource(&PageCustomCode{}),
 			infer.Resource(&UserResource{}),
 			infer.Resource(&EcommerceSettings{}),

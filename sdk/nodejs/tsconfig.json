@@ -24,6 +24,7 @@
         "getAuthorizedUser.ts",
         "getTokenInfo.ts",
         "index.ts",
+        "inlineScript.ts",
         "pageContent.ts",
         "pageCustomCode.ts",
         "pageData.ts",

@@ -12,6 +12,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
 func TestGenerateSiteCustomCodeResourceID(t *testing.T) {
@@ -176,6 +178,90 @@ func TestDeleteSiteCustomCode(t *testing.T) {
 	err := DeleteSiteCustomCode(context.Background(), client, "test-site-id")
 	if err != nil {
 		t.Fatalf("DeleteSiteCustomCode() error = %v", err)
+	}
+}
+
+// TestSiteCustomCodeCreate_DryRun_WithUnknownScriptIDs verifies that preview succeeds
+// when script IDs are unknown (empty strings from the infer framework).
+// This simulates the case where scripts[].id references a RegisteredScript.scriptId
+// output that hasn't been created yet.
+func TestSiteCustomCodeCreate_DryRun_WithUnknownScriptIDs(t *testing.T) {
+	resource := &SiteCustomCode{}
+	ctx := context.Background()
+
+	// Simulate Pulumi unknowns: empty strings for all script fields
+	req := infer.CreateRequest[SiteCustomCodeArgs]{
+		Inputs: SiteCustomCodeArgs{
+			SiteID: "", // unknown siteId (e.g., from Site resource output)
+			Scripts: []CustomScriptArgs{
+				{
+					ID:       "", // unknown scriptId from RegisteredScript
+					Version:  "", // unknown version
+					Location: "", // unknown location
+				},
+			},
+		},
+		DryRun: true,
+	}
+
+	resp, err := resource.Create(ctx, req)
+	if err != nil {
+		t.Fatalf("Create() DryRun with unknown inputs should succeed, got error: %v", err)
+	}
+
+	if resp.ID == "" {
+		t.Error("Create() DryRun should return a non-empty resource ID")
+	}
+
+	if resp.Output.LastUpdated == "" {
+		t.Error("Create() DryRun should set LastUpdated timestamp")
+	}
+
+	if resp.Output.CreatedOn == "" {
+		t.Error("Create() DryRun should set CreatedOn timestamp")
+	}
+}
+
+// TestSiteCustomCodeUpdate_DryRun_WithUnknownScriptIDs verifies that preview succeeds
+// for updates when script IDs are unknown.
+func TestSiteCustomCodeUpdate_DryRun_WithUnknownScriptIDs(t *testing.T) {
+	resource := &SiteCustomCode{}
+	ctx := context.Background()
+
+	req := infer.UpdateRequest[SiteCustomCodeArgs, SiteCustomCodeState]{
+		ID: "5f0c8c9e1c9d440000e8d8c3/custom_code",
+		Inputs: SiteCustomCodeArgs{
+			SiteID: "5f0c8c9e1c9d440000e8d8c3",
+			Scripts: []CustomScriptArgs{
+				{
+					ID:       "", // unknown scriptId from RegisteredScript
+					Version:  "", // unknown version
+					Location: "", // unknown location
+				},
+			},
+		},
+		State: SiteCustomCodeState{
+			SiteCustomCodeArgs: SiteCustomCodeArgs{
+				SiteID: "5f0c8c9e1c9d440000e8d8c3",
+				Scripts: []CustomScriptArgs{
+					{
+						ID:       "old_script",
+						Version:  "1.0.0",
+						Location: "header",
+					},
+				},
+			},
+		},
+		DryRun: true,
+	}
+
+	resp, err := resource.Update(ctx, req)
+	if err != nil {
+		t.Fatalf("Update() DryRun with unknown inputs should succeed, got error: %v", err)
+	}
+
+	if resp.Output.LastUpdated == "" {
+		t.Error("Update() DryRun should set LastUpdated timestamp")
 	}
 }
 

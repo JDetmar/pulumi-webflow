@@ -12,6 +12,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
 func TestValidatePageID(t *testing.T) {
@@ -436,5 +438,89 @@ func TestDeletePageCustomCode(t *testing.T) {
 				t.Errorf("DeletePageCustomCode() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
+	}
+}
+
+// TestPageCustomCodeCreate_DryRun_WithUnknownScriptIDs verifies that preview succeeds
+// when script IDs are unknown (empty strings from the infer framework).
+// This simulates the case where scripts[].id references a RegisteredScript.scriptId
+// output that hasn't been created yet.
+func TestPageCustomCodeCreate_DryRun_WithUnknownScriptIDs(t *testing.T) {
+	resource := &PageCustomCode{}
+	ctx := context.Background()
+
+	// Simulate Pulumi unknowns: empty strings for all script fields
+	req := infer.CreateRequest[PageCustomCodeArgs]{
+		Inputs: PageCustomCodeArgs{
+			PageID: "", // unknown pageId (e.g., from Page data source)
+			Scripts: []PageCustomCodeScript{
+				{
+					ID:       "", // unknown scriptId from RegisteredScript
+					Version:  "", // unknown version
+					Location: "", // unknown location
+				},
+			},
+		},
+		DryRun: true,
+	}
+
+	resp, err := resource.Create(ctx, req)
+	if err != nil {
+		t.Fatalf("Create() DryRun with unknown inputs should succeed, got error: %v", err)
+	}
+
+	if resp.ID == "" {
+		t.Error("Create() DryRun should return a non-empty resource ID")
+	}
+
+	if resp.Output.LastUpdated == "" {
+		t.Error("Create() DryRun should set LastUpdated timestamp")
+	}
+
+	if resp.Output.CreatedOn == "" {
+		t.Error("Create() DryRun should set CreatedOn timestamp")
+	}
+}
+
+// TestPageCustomCodeUpdate_DryRun_WithUnknownScriptIDs verifies that preview succeeds
+// for updates when script IDs are unknown.
+func TestPageCustomCodeUpdate_DryRun_WithUnknownScriptIDs(t *testing.T) {
+	resource := &PageCustomCode{}
+	ctx := context.Background()
+
+	req := infer.UpdateRequest[PageCustomCodeArgs, PageCustomCodeState]{
+		ID: "63c720f9347c2139b248e552/custom-code",
+		Inputs: PageCustomCodeArgs{
+			PageID: "63c720f9347c2139b248e552",
+			Scripts: []PageCustomCodeScript{
+				{
+					ID:       "", // unknown scriptId from RegisteredScript
+					Version:  "", // unknown version
+					Location: "", // unknown location
+				},
+			},
+		},
+		State: PageCustomCodeState{
+			PageCustomCodeArgs: PageCustomCodeArgs{
+				PageID: "63c720f9347c2139b248e552",
+				Scripts: []PageCustomCodeScript{
+					{
+						ID:       "old_script",
+						Version:  "1.0.0",
+						Location: "header",
+					},
+				},
+			},
+		},
+		DryRun: true,
+	}
+
+	resp, err := resource.Update(ctx, req)
+	if err != nil {
+		t.Fatalf("Update() DryRun with unknown inputs should succeed, got error: %v", err)
+	}
+
+	if resp.Output.LastUpdated == "" {
+		t.Error("Update() DryRun should set LastUpdated timestamp")
 	}
 }

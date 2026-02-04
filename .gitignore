@@ -27,3 +27,6 @@ coverage.txt
 # Environment files (may contain secrets)
 .env
 !.env.example
+
+# Auto Claude data directory
+.auto-claude/

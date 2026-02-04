@@ -37,15 +37,15 @@ export class EcommerceSettings extends pulumi.CustomResource {
     /**
      * The timestamp when ecommerce was enabled on the site (ISO 8601 format). This is automatically set when ecommerce is enabled and is read-only.
      */
-    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
+    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
     /**
      * The three-letter ISO 4217 currency code for the site (e.g., 'USD', 'EUR', 'GBP'). This is the default currency used for ecommerce transactions on this site. This value is set in the Webflow dashboard and is read-only.
      */
-    declare public /*out*/ readonly defaultCurrency: pulumi.Output<string>;
+    public /*out*/ readonly defaultCurrency!: pulumi.Output<string>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). The site must have ecommerce enabled through the Webflow dashboard. You can find your site ID in the Webflow dashboard under Site Settings.
      */
-    declare public readonly siteId: pulumi.Output<string>;
+    public readonly siteId!: pulumi.Output<string>;
 
     /**
      * Create a EcommerceSettings resource with the given unique name, arguments, and options.
@@ -58,10 +58,10 @@ export class EcommerceSettings extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if (args?.siteId === undefined && !opts.urn) {
+            if ((!args || args.siteId === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            resourceInputs["siteId"] = args?.siteId;
+            resourceInputs["siteId"] = args ? args.siteId : undefined;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["defaultCurrency"] = undefined /*out*/;
         } else {

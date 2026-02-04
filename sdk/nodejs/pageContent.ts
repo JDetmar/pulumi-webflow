@@ -41,15 +41,15 @@ export class PageContent extends pulumi.CustomResource {
     /**
      * The timestamp when the page content was last updated (RFC3339 format). This is automatically set when content is updated and is read-only.
      */
-    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
+    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
     /**
      * List of node content updates to apply. Each update specifies the nodeId (from the page's DOM structure) and the new text content. Node IDs can be retrieved by fetching the page DOM using GET /pages/{page_id}/dom. Only text content in existing nodes can be updated via this resource.
      */
-    declare public readonly nodes: pulumi.Output<outputs.NodeContentUpdate[]>;
+    public readonly nodes!: pulumi.Output<outputs.NodeContentUpdate[]>;
     /**
      * The Webflow page ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). You can find page IDs using the Pages API list endpoint or in the Webflow designer. This field will be validated before making any API calls.
      */
-    declare public readonly pageId: pulumi.Output<string>;
+    public readonly pageId!: pulumi.Output<string>;
 
     /**
      * Create a PageContent resource with the given unique name, arguments, and options.
@@ -62,14 +62,14 @@ export class PageContent extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if (args?.nodes === undefined && !opts.urn) {
+            if ((!args || args.nodes === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'nodes'");
             }
-            if (args?.pageId === undefined && !opts.urn) {
+            if ((!args || args.pageId === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'pageId'");
             }
-            resourceInputs["nodes"] = args?.nodes;
-            resourceInputs["pageId"] = args?.pageId;
+            resourceInputs["nodes"] = args ? args.nodes : undefined;
+            resourceInputs["pageId"] = args ? args.pageId : undefined;
             resourceInputs["lastUpdated"] = undefined /*out*/;
         } else {
             resourceInputs["lastUpdated"] = undefined /*out*/;

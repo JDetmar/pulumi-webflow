@@ -37,27 +37,27 @@ export class Webhook extends pulumi.CustomResource {
     /**
      * The timestamp when the webhook was created (RFC3339 format). This is automatically set by Webflow when the webhook is created and is read-only.
      */
-    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
+    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
     /**
      * Optional filter for webhook events. The structure depends on the triggerType and allows you to receive only specific events. For example, for collection_item_created, you can filter by collection ID. Refer to Webflow API documentation for filter options for each trigger type.
      */
-    declare public readonly filter: pulumi.Output<{[key: string]: any} | undefined>;
+    public readonly filter!: pulumi.Output<{[key: string]: any} | undefined>;
     /**
      * The timestamp when the webhook was last triggered (RFC3339 format). This is automatically updated by Webflow when the webhook fires and is read-only. Will be empty if the webhook has never been triggered.
      */
-    declare public /*out*/ readonly lastTriggered: pulumi.Output<string | undefined>;
+    public /*out*/ readonly lastTriggered!: pulumi.Output<string | undefined>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
-    declare public readonly siteId: pulumi.Output<string>;
+    public readonly siteId!: pulumi.Output<string>;
     /**
      * The Webflow event that triggers this webhook. Valid values: form_submission, site_publish, page_created, page_metadata_updated, page_deleted, ecomm_new_order, ecomm_order_changed, ecomm_inventory_changed, memberships_user_account_added, memberships_user_account_updated, memberships_user_account_deleted, collection_item_created, collection_item_changed, collection_item_deleted, collection_item_unpublished. Example: 'form_submission' to receive notifications when forms are submitted.
      */
-    declare public readonly triggerType: pulumi.Output<string>;
+    public readonly triggerType!: pulumi.Output<string>;
     /**
      * The HTTPS endpoint where Webflow will send webhook events (e.g., 'https://example.com/webhooks/webflow', 'https://api.example.com/events'). Must be a valid HTTPS URL. Webflow requires HTTPS for security. Your endpoint should accept POST requests with JSON payloads containing event data.
      */
-    declare public readonly url: pulumi.Output<string>;
+    public readonly url!: pulumi.Output<string>;
 
     /**
      * Create a Webhook resource with the given unique name, arguments, and options.
@@ -70,19 +70,19 @@ export class Webhook extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if (args?.siteId === undefined && !opts.urn) {
+            if ((!args || args.siteId === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            if (args?.triggerType === undefined && !opts.urn) {
+            if ((!args || args.triggerType === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'triggerType'");
             }
-            if (args?.url === undefined && !opts.urn) {
+            if ((!args || args.url === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'url'");
             }
-            resourceInputs["filter"] = args?.filter;
-            resourceInputs["siteId"] = args?.siteId;
-            resourceInputs["triggerType"] = args?.triggerType;
-            resourceInputs["url"] = args?.url;
+            resourceInputs["filter"] = args ? args.filter : undefined;
+            resourceInputs["siteId"] = args ? args.siteId : undefined;
+            resourceInputs["triggerType"] = args ? args.triggerType : undefined;
+            resourceInputs["url"] = args ? args.url : undefined;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["lastTriggered"] = undefined /*out*/;
         } else {

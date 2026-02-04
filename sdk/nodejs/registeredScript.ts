@@ -37,39 +37,39 @@ export class RegisteredScript extends pulumi.CustomResource {
     /**
      * Indicates whether the script can be copied when the site is duplicated. Default: false. When true, the script will be included when creating a copy of the site.
      */
-    declare public readonly canCopy: pulumi.Output<boolean | undefined>;
+    public readonly canCopy!: pulumi.Output<boolean | undefined>;
     /**
      * The timestamp when the script was created (RFC3339 format). This is automatically set by Webflow when the script is created and is read-only.
      */
-    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
+    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
     /**
      * The user-facing name for the script (1-50 alphanumeric characters). This name is used to identify the script in the Webflow interface. Only letters (A-Z, a-z) and numbers (0-9) are allowed. Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'.
      */
-    declare public readonly displayName: pulumi.Output<string>;
+    public readonly displayName!: pulumi.Output<string>;
     /**
      * The URI for the externally hosted script (e.g., 'https://cdn.example.com/my-script.js'). Must be a valid HTTP or HTTPS URL. The script should be publicly accessible and properly configured for cross-origin requests.
      */
-    declare public readonly hostedLocation: pulumi.Output<string>;
+    public readonly hostedLocation!: pulumi.Output<string>;
     /**
      * The Sub-Resource Integrity (SRI) hash for the script. Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/
      */
-    declare public readonly integrityHash: pulumi.Output<string>;
+    public readonly integrityHash!: pulumi.Output<string>;
     /**
      * The timestamp when the script was last updated (RFC3339 format). This is automatically updated by Webflow when the script is modified and is read-only.
      */
-    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
+    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
     /**
      * The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
      */
-    declare public /*out*/ readonly scriptId: pulumi.Output<string | undefined>;
+    public /*out*/ readonly scriptId!: pulumi.Output<string>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
-    declare public readonly siteId: pulumi.Output<string>;
+    public readonly siteId!: pulumi.Output<string>;
     /**
      * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
      */
-    declare public readonly version: pulumi.Output<string | undefined>;
+    public readonly version!: pulumi.Output<string | undefined>;
 
     /**
      * Create a RegisteredScript resource with the given unique name, arguments, and options.
@@ -82,24 +82,24 @@ export class RegisteredScript extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if (args?.displayName === undefined && !opts.urn) {
+            if ((!args || args.displayName === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'displayName'");
             }
-            if (args?.hostedLocation === undefined && !opts.urn) {
+            if ((!args || args.hostedLocation === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'hostedLocation'");
             }
-            if (args?.integrityHash === undefined && !opts.urn) {
+            if ((!args || args.integrityHash === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'integrityHash'");
             }
-            if (args?.siteId === undefined && !opts.urn) {
+            if ((!args || args.siteId === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            resourceInputs["canCopy"] = args?.canCopy;
-            resourceInputs["displayName"] = args?.displayName;
-            resourceInputs["hostedLocation"] = args?.hostedLocation;
-            resourceInputs["integrityHash"] = args?.integrityHash;
-            resourceInputs["siteId"] = args?.siteId;
-            resourceInputs["version"] = args?.version;
+            resourceInputs["canCopy"] = args ? args.canCopy : undefined;
+            resourceInputs["displayName"] = args ? args.displayName : undefined;
+            resourceInputs["hostedLocation"] = args ? args.hostedLocation : undefined;
+            resourceInputs["integrityHash"] = args ? args.integrityHash : undefined;
+            resourceInputs["siteId"] = args ? args.siteId : undefined;
+            resourceInputs["version"] = args ? args.version : undefined;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
             resourceInputs["scriptId"] = undefined /*out*/;

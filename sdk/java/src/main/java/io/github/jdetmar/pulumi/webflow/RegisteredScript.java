@@ -109,14 +109,14 @@ public class RegisteredScript extends com.pulumi.resources.CustomResource {
      * 
      */
     @Export(name="scriptId", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> scriptId;
+    private Output<String> scriptId;
 
     /**
      * @return The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
      * 
      */
-    public Output<Optional<String>> scriptId() {
-        return Codegen.optional(this.scriptId);
+    public Output<String> scriptId() {
+        return this.scriptId;
     }
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.

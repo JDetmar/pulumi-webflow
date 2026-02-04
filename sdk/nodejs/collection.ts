@@ -37,31 +37,31 @@ export class Collection extends pulumi.CustomResource {
     /**
      * The Webflow-assigned collection ID (24-character lowercase hexadecimal string). Use this ID when creating CollectionField or CollectionItem resources. This is automatically assigned when the collection is created and is read-only.
      */
-    declare public /*out*/ readonly collectionId: pulumi.Output<string | undefined>;
+    public /*out*/ readonly collectionId!: pulumi.Output<string | undefined>;
     /**
      * The timestamp when the collection was created (RFC3339 format). This is automatically set by Webflow and is read-only.
      */
-    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
+    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
     /**
      * The human-readable name of the collection (e.g., 'Blog Posts', 'Products', 'Team Members'). This name appears in the Webflow CMS interface. Maximum length: 255 characters.
      */
-    declare public readonly displayName: pulumi.Output<string>;
+    public readonly displayName!: pulumi.Output<string>;
     /**
      * The timestamp when the collection was last updated (RFC3339 format). This is automatically updated by Webflow and is read-only.
      */
-    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
+    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
     /**
      * The singular form of the collection name (e.g., 'Blog Post' for 'Blog Posts', 'Product' for 'Products'). Used in the CMS UI when referring to individual items. Maximum length: 255 characters.
      */
-    declare public readonly singularName: pulumi.Output<string>;
+    public readonly singularName!: pulumi.Output<string>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
-    declare public readonly siteId: pulumi.Output<string>;
+    public readonly siteId!: pulumi.Output<string>;
     /**
      * The URL-friendly slug for the collection (optional, e.g., 'blog-posts', 'products'). If not provided, Webflow will auto-generate a slug from the displayName. The slug determines the URL path for collection items.
      */
-    declare public readonly slug: pulumi.Output<string | undefined>;
+    public readonly slug!: pulumi.Output<string | undefined>;
 
     /**
      * Create a Collection resource with the given unique name, arguments, and options.
@@ -74,19 +74,19 @@ export class Collection extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if (args?.displayName === undefined && !opts.urn) {
+            if ((!args || args.displayName === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'displayName'");
             }
-            if (args?.singularName === undefined && !opts.urn) {
+            if ((!args || args.singularName === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'singularName'");
             }
-            if (args?.siteId === undefined && !opts.urn) {
+            if ((!args || args.siteId === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            resourceInputs["displayName"] = args?.displayName;
-            resourceInputs["singularName"] = args?.singularName;
-            resourceInputs["siteId"] = args?.siteId;
-            resourceInputs["slug"] = args?.slug;
+            resourceInputs["displayName"] = args ? args.displayName : undefined;
+            resourceInputs["singularName"] = args ? args.singularName : undefined;
+            resourceInputs["siteId"] = args ? args.siteId : undefined;
+            resourceInputs["slug"] = args ? args.slug : undefined;
             resourceInputs["collectionId"] = undefined /*out*/;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;

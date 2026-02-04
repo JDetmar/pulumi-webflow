@@ -37,39 +37,39 @@ export class CollectionField extends pulumi.CustomResource {
     /**
      * The Webflow collection ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find collection IDs via the Webflow API or dashboard. This field will be validated before making any API calls.
      */
-    declare public readonly collectionId: pulumi.Output<string>;
+    public readonly collectionId!: pulumi.Output<string>;
     /**
      * The human-readable name of the field (e.g., 'Title', 'Description', 'Author'). This name appears in the Webflow CMS interface. Maximum length: 255 characters.
      */
-    declare public readonly displayName: pulumi.Output<string>;
+    public readonly displayName!: pulumi.Output<string>;
     /**
      * The Webflow-assigned field ID (read-only). This ID is automatically generated when the field is created.
      */
-    declare public /*out*/ readonly fieldId: pulumi.Output<string | undefined>;
+    public /*out*/ readonly fieldId!: pulumi.Output<string | undefined>;
     /**
      * Optional help text shown in the CMS interface (e.g., 'Enter the article title'). Helps content editors understand what to enter in this field.
      */
-    declare public readonly helpText: pulumi.Output<string | undefined>;
+    public readonly helpText!: pulumi.Output<string | undefined>;
     /**
      * Whether the field can be edited (read-only). System fields may not be editable.
      */
-    declare public /*out*/ readonly isEditable: pulumi.Output<boolean | undefined>;
+    public /*out*/ readonly isEditable!: pulumi.Output<boolean | undefined>;
     /**
      * Whether the field is required (optional, defaults to false). When true, content items must provide a value for this field.
      */
-    declare public readonly isRequired: pulumi.Output<boolean | undefined>;
+    public readonly isRequired!: pulumi.Output<boolean | undefined>;
     /**
      * The URL-friendly slug for the field (optional, e.g., 'title', 'description'). If not provided, Webflow will auto-generate a slug from the displayName. The slug is used in API requests and exports.
      */
-    declare public readonly slug: pulumi.Output<string | undefined>;
+    public readonly slug!: pulumi.Output<string | undefined>;
     /**
      * The field type (e.g., 'PlainText', 'RichText', 'Image', 'Number'). Supported types: PlainText, RichText, Image, MultiImage, Video, Link, Email, Phone, Number, DateTime, Switch, Color, Option, File, Reference, MultiReference. IMPORTANT: Cannot be changed after creation - changing this requires replacement.
      */
-    declare public readonly type: pulumi.Output<string>;
+    public readonly type!: pulumi.Output<string>;
     /**
      * Type-specific validation rules (optional). Different field types support different validations. Example for Number type: {"min": 0, "max": 100}. Example for PlainText type: {"maxLength": 500}. Refer to Webflow API documentation for validation options for each field type.
      */
-    declare public readonly validations: pulumi.Output<{[key: string]: any} | undefined>;
+    public readonly validations!: pulumi.Output<{[key: string]: any} | undefined>;
 
     /**
      * Create a CollectionField resource with the given unique name, arguments, and options.
@@ -82,22 +82,22 @@ export class CollectionField extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if (args?.collectionId === undefined && !opts.urn) {
+            if ((!args || args.collectionId === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'collectionId'");
             }
-            if (args?.displayName === undefined && !opts.urn) {
+            if ((!args || args.displayName === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'displayName'");
             }
-            if (args?.type === undefined && !opts.urn) {
+            if ((!args || args.type === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'type'");
             }
-            resourceInputs["collectionId"] = args?.collectionId;
-            resourceInputs["displayName"] = args?.displayName;
-            resourceInputs["helpText"] = args?.helpText;
-            resourceInputs["isRequired"] = args?.isRequired;
-            resourceInputs["slug"] = args?.slug;
-            resourceInputs["type"] = args?.type;
-            resourceInputs["validations"] = args?.validations;
+            resourceInputs["collectionId"] = args ? args.collectionId : undefined;
+            resourceInputs["displayName"] = args ? args.displayName : undefined;
+            resourceInputs["helpText"] = args ? args.helpText : undefined;
+            resourceInputs["isRequired"] = args ? args.isRequired : undefined;
+            resourceInputs["slug"] = args ? args.slug : undefined;
+            resourceInputs["type"] = args ? args.type : undefined;
+            resourceInputs["validations"] = args ? args.validations : undefined;
             resourceInputs["fieldId"] = undefined /*out*/;
             resourceInputs["isEditable"] = undefined /*out*/;
         } else {

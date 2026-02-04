@@ -6,6 +6,9 @@
   "repository": "https://github.com/JDetmar/pulumi-webflow",
   "pluginDownloadURL": "github://api.github.com/JDetmar/pulumi-webflow",
   "namespace": "webflow",
+  "meta": {
+    "moduleFormat": "(.*)"
+  },
   "language": {
     "csharp": {
       "respectSchemaVersion": true,
@@ -63,8 +66,8 @@
       "type": "object",
       "required": [
         "id",
-        "version",
-        "location"
+        "location",
+        "version"
       ]
     },
     "webflow:index:GetTokenInfoApplication": {
@@ -88,10 +91,10 @@
       },
       "type": "object",
       "required": [
-        "id",
         "description",
+        "displayName",
         "homepage",
-        "displayName"
+        "id"
       ]
     },
     "webflow:index:GetTokenInfoAuthorization": {
@@ -127,13 +130,13 @@
       },
       "type": "object",
       "required": [
-        "id",
+        "authorizedTo",
         "createdOn",
-        "lastUsed",
         "grantType",
+        "id",
+        "lastUsed",
         "rateLimit",
-        "scope",
-        "authorizedTo"
+        "scope"
       ]
     },
     "webflow:index:GetTokenInfoAuthorizedTo": {
@@ -163,8 +166,8 @@
       "type": "object",
       "required": [
         "siteIds",
-        "workspaceIds",
-        "userIds"
+        "userIds",
+        "workspaceIds"
       ]
     },
     "webflow:index:NodeContentUpdate": {
@@ -208,10 +211,10 @@
       },
       "type": "object",
       "required": [
+        "attributes",
         "id",
-        "version",
         "location",
-        "attributes"
+        "version"
       ]
     },
     "webflow:index:PageInfo": {
@@ -249,14 +252,14 @@
       },
       "type": "object",
       "required": [
+        "archived",
+        "createdOn",
+        "draft",
+        "lastUpdated",
         "pageId",
         "siteId",
-        "title",
         "slug",
-        "createdOn",
-        "lastUpdated",
-        "archived",
-        "draft"
+        "title"
       ]
     }
   },
@@ -268,6 +271,7 @@
         "secret": true
       }
     },
+    "type": "object",
     "inputProperties": {
       "apiToken": {
         "type": "string",
@@ -340,10 +344,11 @@
           "description": "The presigned S3 URL for uploading the file content (read-only). Use this URL along with uploadDetails to complete the asset upload. See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html"
         }
       },
+      "type": "object",
       "required": [
-        "siteId",
+        "fileHash",
         "fileName",
-        "fileHash"
+        "siteId"
       ],
       "inputProperties": {
         "fileHash": {
@@ -368,9 +373,9 @@
         }
       },
       "requiredInputs": [
-        "siteId",
+        "fileHash",
         "fileName",
-        "fileHash"
+        "siteId"
       ]
     },
     "webflow:index:AssetFolder": {
@@ -408,9 +413,10 @@
           "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
         }
       },
+      "type": "object",
       "required": [
-        "siteId",
-        "displayName"
+        "displayName",
+        "siteId"
       ],
       "inputProperties": {
         "displayName": {
@@ -427,8 +433,8 @@
         }
       },
       "requiredInputs": [
-        "siteId",
-        "displayName"
+        "displayName",
+        "siteId"
       ]
     },
     "webflow:index:Collection": {
@@ -463,10 +469,11 @@
           "description": "The URL-friendly slug for the collection (optional, e.g., 'blog-posts', 'products'). If not provided, Webflow will auto-generate a slug from the displayName. The slug determines the URL path for collection items."
         }
       },
+      "type": "object",
       "required": [
-        "siteId",
         "displayName",
-        "singularName"
+        "singularName",
+        "siteId"
       ],
       "inputProperties": {
         "displayName": {
@@ -487,9 +494,9 @@
         }
       },
       "requiredInputs": [
-        "siteId",
         "displayName",
-        "singularName"
+        "singularName",
+        "siteId"
       ]
     },
     "webflow:index:CollectionField": {
@@ -535,10 +542,11 @@
           "description": "Type-specific validation rules (optional). Different field types support different validations. Example for Number type: {\"min\": 0, \"max\": 100}. Example for PlainText type: {\"maxLength\": 500}. Refer to Webflow API documentation for validation options for each field type."
         }
       },
+      "type": "object",
       "required": [
         "collectionId",
-        "type",
-        "displayName"
+        "displayName",
+        "type"
       ],
       "inputProperties": {
         "collectionId": {
@@ -575,8 +583,8 @@
       },
       "requiredInputs": [
         "collectionId",
-        "type",
-        "displayName"
+        "displayName",
+        "type"
       ]
     },
     "webflow:index:CollectionItem": {
@@ -622,6 +630,7 @@
           "description": "The timestamp when the item was last updated (RFC3339 format, read-only). This is automatically updated by Webflow whenever the item is modified."
         }
       },
+      "type": "object",
       "required": [
         "collectionId",
         "fieldData"
@@ -672,9 +681,10 @@
           "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). The site must have ecommerce enabled through the Webflow dashboard. You can find your site ID in the Webflow dashboard under Site Settings."
         }
       },
+      "type": "object",
       "required": [
-        "siteId",
-        "defaultCurrency"
+        "defaultCurrency",
+        "siteId"
       ],
       "inputProperties": {
         "siteId": {
@@ -730,11 +740,12 @@
           "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
         }
       },
+      "type": "object",
       "required": [
+        "displayName",
         "siteId",
         "sourceCode",
-        "version",
-        "displayName"
+        "version"
       ],
       "inputProperties": {
         "canCopy": {
@@ -763,10 +774,10 @@
         }
       },
       "requiredInputs": [
+        "displayName",
         "siteId",
         "sourceCode",
-        "version",
-        "displayName"
+        "version"
       ]
     },
     "webflow:index:PageContent": {
@@ -788,9 +799,10 @@
           "description": "The Webflow page ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). You can find page IDs using the Pages API list endpoint or in the Webflow designer. This field will be validated before making any API calls."
         }
       },
+      "type": "object",
       "required": [
-        "pageId",
-        "nodes"
+        "nodes",
+        "pageId"
       ],
       "inputProperties": {
         "nodes": {
@@ -806,8 +818,8 @@
         }
       },
       "requiredInputs": [
-        "pageId",
-        "nodes"
+        "nodes",
+        "pageId"
       ]
     },
     "webflow:index:PageCustomCode": {
@@ -833,6 +845,7 @@
           "description": "List of custom code scripts to apply to the page. Each script must reference a script ID and version that have been previously registered. All scripts in this list will be applied to the page; any scripts not listed will be removed from the page."
         }
       },
+      "type": "object",
       "required": [
         "pageId",
         "scripts"
@@ -910,6 +923,7 @@
           "description": "The Webflow page ID (read-only). Only populated when pageId input is specified."
         }
       },
+      "type": "object",
       "required": [
         "siteId"
       ],
@@ -951,10 +965,11 @@
           "description": "The HTTP status code for the redirect. Must be either 301 or 302. 301 = permanent redirect (use when a page has moved permanently; search engines update their index). 302 = temporary redirect (use for maintenance or temporary page moves)."
         }
       },
+      "type": "object",
       "required": [
+        "destinationPath",
         "siteId",
         "sourcePath",
-        "destinationPath",
         "statusCode"
       ],
       "inputProperties": {
@@ -976,9 +991,9 @@
         }
       },
       "requiredInputs": [
+        "destinationPath",
         "siteId",
         "sourcePath",
-        "destinationPath",
         "statusCode"
       ]
     },
@@ -1022,11 +1037,13 @@
           "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
         }
       },
+      "type": "object",
       "required": [
-        "siteId",
         "displayName",
         "hostedLocation",
-        "integrityHash"
+        "integrityHash",
+        "scriptId",
+        "siteId"
       ],
       "inputProperties": {
         "canCopy": {
@@ -1055,10 +1072,10 @@
         }
       },
       "requiredInputs": [
-        "siteId",
         "displayName",
         "hostedLocation",
-        "integrityHash"
+        "integrityHash",
+        "siteId"
       ]
     },
     "webflow:index:RobotsTxt": {
@@ -1077,10 +1094,11 @@
           "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3')."
         }
       },
+      "type": "object",
       "required": [
-        "siteId",
         "content",
-        "lastModified"
+        "lastModified",
+        "siteId"
       ],
       "inputProperties": {
         "content": {
@@ -1093,8 +1111,8 @@
         }
       },
       "requiredInputs": [
-        "siteId",
-        "content"
+        "content",
+        "siteId"
       ]
     },
     "webflow:index:Site": {
@@ -1157,9 +1175,10 @@
           "description": "The Webflow workspace ID where the site will be created. Required for site creation (Enterprise workspace required by Webflow API). Example: '5f0c8c9e1c9d440000e8d8c3'. You can find your workspace ID in the Webflow dashboard under Account Settings > Workspace."
         }
       },
+      "type": "object",
       "required": [
-        "workspaceId",
-        "displayName"
+        "displayName",
+        "workspaceId"
       ],
       "inputProperties": {
         "displayName": {
@@ -1189,8 +1208,8 @@
         }
       },
       "requiredInputs": [
-        "workspaceId",
-        "displayName"
+        "displayName",
+        "workspaceId"
       ]
     },
     "webflow:index:SiteCustomCode": {
@@ -1216,9 +1235,10 @@
           "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
         }
       },
+      "type": "object",
       "required": [
-        "siteId",
-        "scripts"
+        "scripts",
+        "siteId"
       ],
       "inputProperties": {
         "scripts": {
@@ -1234,8 +1254,8 @@
         }
       },
       "requiredInputs": [
-        "siteId",
-        "scripts"
+        "scripts",
+        "siteId"
       ]
     },
     "webflow:index:User": {
@@ -1289,9 +1309,10 @@
           "description": "The Webflow-assigned user ID."
         }
       },
+      "type": "object",
       "required": [
-        "siteId",
-        "email"
+        "email",
+        "siteId"
       ],
       "inputProperties": {
         "accessGroups": {
@@ -1315,8 +1336,8 @@
         }
       },
       "requiredInputs": [
-        "siteId",
-        "email"
+        "email",
+        "siteId"
       ],
       "deprecationMessage": "The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run \"pulumi state delete <URN>\" to clean up existing state."
     },
@@ -1351,6 +1372,7 @@
           "description": "The HTTPS endpoint where Webflow will send webhook events (e.g., 'https://example.com/webhooks/webflow', 'https://api.example.com/events'). Must be a valid HTTPS URL. Webflow requires HTTPS for security. Your endpoint should accept POST requests with JSON payloads containing event data."
         }
       },
+      "type": "object",
       "required": [
         "siteId",
         "triggerType",
@@ -1410,10 +1432,10 @@
           }
         },
         "required": [
-          "userId",
           "email",
           "firstName",
-          "lastName"
+          "lastName",
+          "userId"
         ],
         "type": "object"
       }
@@ -1435,8 +1457,8 @@
           }
         },
         "required": [
-          "authorization",
-          "application"
+          "application",
+          "authorization"
         ],
         "type": "object"
       }

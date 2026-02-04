@@ -22,7 +22,7 @@ export class Provider extends pulumi.ProviderResource {
     /**
      * Webflow API v2 bearer token for authentication. Can also be set via WEBFLOW_API_TOKEN environment variable.
      */
-    declare public readonly apiToken: pulumi.Output<string | undefined>;
+    public readonly apiToken!: pulumi.Output<string | undefined>;
 
     /**
      * Create a Provider resource with the given unique name, arguments, and options.

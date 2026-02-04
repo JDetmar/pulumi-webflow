@@ -95,6 +95,11 @@ export type SiteCustomCode = import("./siteCustomCode").SiteCustomCode;
 export const SiteCustomCode: typeof import("./siteCustomCode").SiteCustomCode = null as any;
 utilities.lazyLoad(exports, ["SiteCustomCode"], () => require("./siteCustomCode"));
 
+export { UserArgs } from "./user";
+export type User = import("./user").User;
+export const User: typeof import("./user").User = null as any;
+utilities.lazyLoad(exports, ["User"], () => require("./user"));
+
 export { WebhookArgs } from "./webhook";
 export type Webhook = import("./webhook").Webhook;
 export const Webhook: typeof import("./webhook").Webhook = null as any;
@@ -144,6 +149,8 @@ const _module = {
                 return new Site(name, <any>undefined, { urn })
             case "webflow:index:SiteCustomCode":
                 return new SiteCustomCode(name, <any>undefined, { urn })
+            case "webflow:index:User":
+                return new User(name, <any>undefined, { urn })
             case "webflow:index:Webhook":
                 return new Webhook(name, <any>undefined, { urn })
             default:

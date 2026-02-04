@@ -1236,6 +1236,88 @@
         "scripts"
       ]
     },
+    "webflow:index:User": {
+      "description": "DEPRECATED: The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run \"pulumi state delete <URN>\" to clean up existing state.",
+      "properties": {
+        "accessGroups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Access group slugs assigned to the user."
+        },
+        "createdOn": {
+          "type": "string",
+          "description": "Timestamp when the user was created."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user."
+        },
+        "invitedOn": {
+          "type": "string",
+          "description": "Timestamp when the user was invited."
+        },
+        "isEmailVerified": {
+          "type": "boolean",
+          "description": "Whether the user has verified their email."
+        },
+        "lastLogin": {
+          "type": "string",
+          "description": "Timestamp when the user last logged in."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "Timestamp when the user was last updated."
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name for the user."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID."
+        },
+        "status": {
+          "type": "string",
+          "description": "The user's status."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The Webflow-assigned user ID."
+        }
+      },
+      "required": [
+        "siteId",
+        "email"
+      ],
+      "inputProperties": {
+        "accessGroups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Access group slugs assigned to the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user."
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name for the user."
+        },
+        "siteId": {
+          "type": "string",
+          "description": "The Webflow site ID."
+        }
+      },
+      "requiredInputs": [
+        "siteId",
+        "email"
+      ],
+      "deprecationMessage": "The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run \"pulumi state delete <URN>\" to clean up existing state."
+    },
     "webflow:index:Webhook": {
       "description": "Manages webhooks for a Webflow site. Webhooks allow you to receive real-time notifications when events occur in your Webflow site, such as form submissions, page updates, e-commerce orders, and more. Note: Webhooks cannot be updated in-place; any change to triggerType, url, or filter requires replacement.",
       "properties": {

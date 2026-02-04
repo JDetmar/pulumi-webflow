@@ -18,14 +18,14 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
     public static final UserArgs Empty = new UserArgs();
 
     /**
-     * Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type &#39;admin&#39; (assigned via API or designer). Example: [&#39;premium-members&#39;, &#39;beta-testers&#39;]. Access group slugs can be found in the Webflow dashboard under Users &gt; Access Groups.
+     * Access group slugs assigned to the user.
      * 
      */
     @Import(name="accessGroups")
     private @Nullable Output<List<String>> accessGroups;
 
     /**
-     * @return Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type &#39;admin&#39; (assigned via API or designer). Example: [&#39;premium-members&#39;, &#39;beta-testers&#39;]. Access group slugs can be found in the Webflow dashboard under Users &gt; Access Groups.
+     * @return Access group slugs assigned to the user.
      * 
      */
     public Optional<Output<List<String>>> accessGroups() {
@@ -33,14 +33,14 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+     * The email address of the user.
      * 
      */
     @Import(name="email", required=true)
     private Output<String> email;
 
     /**
-     * @return The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+     * @return The email address of the user.
      * 
      */
     public Output<String> email() {
@@ -48,14 +48,14 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+     * Display name for the user.
      * 
      */
     @Import(name="name")
     private @Nullable Output<String> name;
 
     /**
-     * @return Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+     * @return Display name for the user.
      * 
      */
     public Optional<Output<String>> name() {
@@ -63,14 +63,14 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+     * The Webflow site ID.
      * 
      */
     @Import(name="siteId", required=true)
     private Output<String> siteId;
 
     /**
-     * @return The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+     * @return The Webflow site ID.
      * 
      */
     public Output<String> siteId() {
@@ -105,7 +105,7 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param accessGroups Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type &#39;admin&#39; (assigned via API or designer). Example: [&#39;premium-members&#39;, &#39;beta-testers&#39;]. Access group slugs can be found in the Webflow dashboard under Users &gt; Access Groups.
+         * @param accessGroups Access group slugs assigned to the user.
          * 
          * @return builder
          * 
@@ -116,7 +116,7 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param accessGroups Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type &#39;admin&#39; (assigned via API or designer). Example: [&#39;premium-members&#39;, &#39;beta-testers&#39;]. Access group slugs can be found in the Webflow dashboard under Users &gt; Access Groups.
+         * @param accessGroups Access group slugs assigned to the user.
          * 
          * @return builder
          * 
@@ -126,7 +126,7 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param accessGroups Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type &#39;admin&#39; (assigned via API or designer). Example: [&#39;premium-members&#39;, &#39;beta-testers&#39;]. Access group slugs can be found in the Webflow dashboard under Users &gt; Access Groups.
+         * @param accessGroups Access group slugs assigned to the user.
          * 
          * @return builder
          * 
@@ -136,7 +136,7 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param email The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+         * @param email The email address of the user.
          * 
          * @return builder
          * 
@@ -147,7 +147,7 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param email The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+         * @param email The email address of the user.
          * 
          * @return builder
          * 
@@ -157,7 +157,7 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param name Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+         * @param name Display name for the user.
          * 
          * @return builder
          * 
@@ -168,7 +168,7 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param name Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+         * @param name Display name for the user.
          * 
          * @return builder
          * 
@@ -178,7 +178,7 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param siteId The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+         * @param siteId The Webflow site ID.
          * 
          * @return builder
          * 
@@ -189,7 +189,7 @@ public final class UserArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param siteId The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+         * @param siteId The Webflow site ID.
          * 
          * @return builder
          * 

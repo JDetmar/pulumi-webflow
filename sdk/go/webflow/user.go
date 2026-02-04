@@ -12,31 +12,33 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-// Manages users for a Webflow site. This resource allows you to invite users to your site with specified access groups. Users will receive an invitation email and must accept it to access paid content. Note: The user's email cannot be changed after creation.
+// DEPRECATED: The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run "pulumi state delete <URN>" to clean up existing state.
+//
+// Deprecated: The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run "pulumi state delete <URN>" to clean up existing state.
 type User struct {
 	pulumi.CustomResourceState
 
-	// Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users > Access Groups.
+	// Access group slugs assigned to the user.
 	AccessGroups pulumi.StringArrayOutput `pulumi:"accessGroups"`
-	// The timestamp when the user was created (RFC3339 format). This is automatically set and is read-only.
+	// Timestamp when the user was created.
 	CreatedOn pulumi.StringPtrOutput `pulumi:"createdOn"`
-	// The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+	// The email address of the user.
 	Email pulumi.StringOutput `pulumi:"email"`
-	// The timestamp when the user was invited (RFC3339 format). This is automatically set and is read-only.
+	// Timestamp when the user was invited.
 	InvitedOn pulumi.StringPtrOutput `pulumi:"invitedOn"`
-	// Indicates whether the user has verified their email address. This is read-only and set by Webflow when the user verifies their email.
+	// Whether the user has verified their email.
 	IsEmailVerified pulumi.BoolPtrOutput `pulumi:"isEmailVerified"`
-	// The timestamp when the user last logged in (RFC3339 format). This is read-only.
+	// Timestamp when the user last logged in.
 	LastLogin pulumi.StringPtrOutput `pulumi:"lastLogin"`
-	// The timestamp when the user was last updated (RFC3339 format). This is read-only.
+	// Timestamp when the user was last updated.
 	LastUpdated pulumi.StringPtrOutput `pulumi:"lastUpdated"`
-	// Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+	// Display name for the user.
 	Name pulumi.StringPtrOutput `pulumi:"name"`
-	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+	// The Webflow site ID.
 	SiteId pulumi.StringOutput `pulumi:"siteId"`
-	// The status of the user. Possible values: 'invited' (invitation sent but not accepted), 'verified' (email verified), 'unverified' (registered but email not verified). This is read-only.
+	// The user's status.
 	Status pulumi.StringPtrOutput `pulumi:"status"`
-	// The Webflow-assigned unique identifier for this user. This is automatically assigned when the user is created and is read-only.
+	// The Webflow-assigned user ID.
 	UserId pulumi.StringPtrOutput `pulumi:"userId"`
 }
 
@@ -86,25 +88,25 @@ func (UserState) ElementType() reflect.Type {
 }
 
 type userArgs struct {
-	// Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users > Access Groups.
+	// Access group slugs assigned to the user.
 	AccessGroups []string `pulumi:"accessGroups"`
-	// The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+	// The email address of the user.
 	Email string `pulumi:"email"`
-	// Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+	// Display name for the user.
 	Name *string `pulumi:"name"`
-	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+	// The Webflow site ID.
 	SiteId string `pulumi:"siteId"`
 }
 
 // The set of arguments for constructing a User resource.
 type UserArgs struct {
-	// Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users > Access Groups.
+	// Access group slugs assigned to the user.
 	AccessGroups pulumi.StringArrayInput
-	// The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+	// The email address of the user.
 	Email pulumi.StringInput
-	// Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+	// Display name for the user.
 	Name pulumi.StringPtrInput
-	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+	// The Webflow site ID.
 	SiteId pulumi.StringInput
 }
 
@@ -145,57 +147,57 @@ func (o UserOutput) ToUserOutputWithContext(ctx context.Context) UserOutput {
 	return o
 }
 
-// Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users > Access Groups.
+// Access group slugs assigned to the user.
 func (o UserOutput) AccessGroups() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *User) pulumi.StringArrayOutput { return v.AccessGroups }).(pulumi.StringArrayOutput)
 }
 
-// The timestamp when the user was created (RFC3339 format). This is automatically set and is read-only.
+// Timestamp when the user was created.
 func (o UserOutput) CreatedOn() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *User) pulumi.StringPtrOutput { return v.CreatedOn }).(pulumi.StringPtrOutput)
 }
 
-// The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+// The email address of the user.
 func (o UserOutput) Email() pulumi.StringOutput {
 	return o.ApplyT(func(v *User) pulumi.StringOutput { return v.Email }).(pulumi.StringOutput)
 }
 
-// The timestamp when the user was invited (RFC3339 format). This is automatically set and is read-only.
+// Timestamp when the user was invited.
 func (o UserOutput) InvitedOn() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *User) pulumi.StringPtrOutput { return v.InvitedOn }).(pulumi.StringPtrOutput)
 }
 
-// Indicates whether the user has verified their email address. This is read-only and set by Webflow when the user verifies their email.
+// Whether the user has verified their email.
 func (o UserOutput) IsEmailVerified() pulumi.BoolPtrOutput {
 	return o.ApplyT(func(v *User) pulumi.BoolPtrOutput { return v.IsEmailVerified }).(pulumi.BoolPtrOutput)
 }
 
-// The timestamp when the user last logged in (RFC3339 format). This is read-only.
+// Timestamp when the user last logged in.
 func (o UserOutput) LastLogin() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *User) pulumi.StringPtrOutput { return v.LastLogin }).(pulumi.StringPtrOutput)
 }
 
-// The timestamp when the user was last updated (RFC3339 format). This is read-only.
+// Timestamp when the user was last updated.
 func (o UserOutput) LastUpdated() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *User) pulumi.StringPtrOutput { return v.LastUpdated }).(pulumi.StringPtrOutput)
 }
 
-// Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+// Display name for the user.
 func (o UserOutput) Name() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *User) pulumi.StringPtrOutput { return v.Name }).(pulumi.StringPtrOutput)
 }
 
-// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+// The Webflow site ID.
 func (o UserOutput) SiteId() pulumi.StringOutput {
 	return o.ApplyT(func(v *User) pulumi.StringOutput { return v.SiteId }).(pulumi.StringOutput)
 }
 
-// The status of the user. Possible values: 'invited' (invitation sent but not accepted), 'verified' (email verified), 'unverified' (registered but email not verified). This is read-only.
+// The user's status.
 func (o UserOutput) Status() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *User) pulumi.StringPtrOutput { return v.Status }).(pulumi.StringPtrOutput)
 }
 
-// The Webflow-assigned unique identifier for this user. This is automatically assigned when the user is created and is read-only.
+// The Webflow-assigned user ID.
 func (o UserOutput) UserId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *User) pulumi.StringPtrOutput { return v.UserId }).(pulumi.StringPtrOutput)
 }

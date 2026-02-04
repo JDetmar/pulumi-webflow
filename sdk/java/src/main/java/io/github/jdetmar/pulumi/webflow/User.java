@@ -16,160 +16,164 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 /**
- * Manages users for a Webflow site. This resource allows you to invite users to your site with specified access groups. Users will receive an invitation email and must accept it to access paid content. Note: The user&#39;s email cannot be changed after creation.
+ * DEPRECATED: The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run &#34;pulumi state delete &lt;URN&gt;&#34; to clean up existing state.
+ * 
+ * @deprecated
+ * The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run &#34;pulumi state delete &lt;URN&gt;&#34; to clean up existing state.
  * 
  */
+@Deprecated /* The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run ""pulumi state delete <URN>"" to clean up existing state. */
 @ResourceType(type="webflow:index:User")
 public class User extends com.pulumi.resources.CustomResource {
     /**
-     * Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type &#39;admin&#39; (assigned via API or designer). Example: [&#39;premium-members&#39;, &#39;beta-testers&#39;]. Access group slugs can be found in the Webflow dashboard under Users &gt; Access Groups.
+     * Access group slugs assigned to the user.
      * 
      */
     @Export(name="accessGroups", refs={List.class,String.class}, tree="[0,1]")
     private Output</* @Nullable */ List<String>> accessGroups;
 
     /**
-     * @return Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type &#39;admin&#39; (assigned via API or designer). Example: [&#39;premium-members&#39;, &#39;beta-testers&#39;]. Access group slugs can be found in the Webflow dashboard under Users &gt; Access Groups.
+     * @return Access group slugs assigned to the user.
      * 
      */
     public Output<Optional<List<String>>> accessGroups() {
         return Codegen.optional(this.accessGroups);
     }
     /**
-     * The timestamp when the user was created (RFC3339 format). This is automatically set and is read-only.
+     * Timestamp when the user was created.
      * 
      */
     @Export(name="createdOn", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> createdOn;
 
     /**
-     * @return The timestamp when the user was created (RFC3339 format). This is automatically set and is read-only.
+     * @return Timestamp when the user was created.
      * 
      */
     public Output<Optional<String>> createdOn() {
         return Codegen.optional(this.createdOn);
     }
     /**
-     * The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+     * The email address of the user.
      * 
      */
     @Export(name="email", refs={String.class}, tree="[0]")
     private Output<String> email;
 
     /**
-     * @return The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+     * @return The email address of the user.
      * 
      */
     public Output<String> email() {
         return this.email;
     }
     /**
-     * The timestamp when the user was invited (RFC3339 format). This is automatically set and is read-only.
+     * Timestamp when the user was invited.
      * 
      */
     @Export(name="invitedOn", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> invitedOn;
 
     /**
-     * @return The timestamp when the user was invited (RFC3339 format). This is automatically set and is read-only.
+     * @return Timestamp when the user was invited.
      * 
      */
     public Output<Optional<String>> invitedOn() {
         return Codegen.optional(this.invitedOn);
     }
     /**
-     * Indicates whether the user has verified their email address. This is read-only and set by Webflow when the user verifies their email.
+     * Whether the user has verified their email.
      * 
      */
     @Export(name="isEmailVerified", refs={Boolean.class}, tree="[0]")
     private Output</* @Nullable */ Boolean> isEmailVerified;
 
     /**
-     * @return Indicates whether the user has verified their email address. This is read-only and set by Webflow when the user verifies their email.
+     * @return Whether the user has verified their email.
      * 
      */
     public Output<Optional<Boolean>> isEmailVerified() {
         return Codegen.optional(this.isEmailVerified);
     }
     /**
-     * The timestamp when the user last logged in (RFC3339 format). This is read-only.
+     * Timestamp when the user last logged in.
      * 
      */
     @Export(name="lastLogin", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> lastLogin;
 
     /**
-     * @return The timestamp when the user last logged in (RFC3339 format). This is read-only.
+     * @return Timestamp when the user last logged in.
      * 
      */
     public Output<Optional<String>> lastLogin() {
         return Codegen.optional(this.lastLogin);
     }
     /**
-     * The timestamp when the user was last updated (RFC3339 format). This is read-only.
+     * Timestamp when the user was last updated.
      * 
      */
     @Export(name="lastUpdated", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> lastUpdated;
 
     /**
-     * @return The timestamp when the user was last updated (RFC3339 format). This is read-only.
+     * @return Timestamp when the user was last updated.
      * 
      */
     public Output<Optional<String>> lastUpdated() {
         return Codegen.optional(this.lastUpdated);
     }
     /**
-     * Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+     * Display name for the user.
      * 
      */
     @Export(name="name", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> name;
 
     /**
-     * @return Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+     * @return Display name for the user.
      * 
      */
     public Output<Optional<String>> name() {
         return Codegen.optional(this.name);
     }
     /**
-     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+     * The Webflow site ID.
      * 
      */
     @Export(name="siteId", refs={String.class}, tree="[0]")
     private Output<String> siteId;
 
     /**
-     * @return The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+     * @return The Webflow site ID.
      * 
      */
     public Output<String> siteId() {
         return this.siteId;
     }
     /**
-     * The status of the user. Possible values: &#39;invited&#39; (invitation sent but not accepted), &#39;verified&#39; (email verified), &#39;unverified&#39; (registered but email not verified). This is read-only.
+     * The user&#39;s status.
      * 
      */
     @Export(name="status", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> status;
 
     /**
-     * @return The status of the user. Possible values: &#39;invited&#39; (invitation sent but not accepted), &#39;verified&#39; (email verified), &#39;unverified&#39; (registered but email not verified). This is read-only.
+     * @return The user&#39;s status.
      * 
      */
     public Output<Optional<String>> status() {
         return Codegen.optional(this.status);
     }
     /**
-     * The Webflow-assigned unique identifier for this user. This is automatically assigned when the user is created and is read-only.
+     * The Webflow-assigned user ID.
      * 
      */
     @Export(name="userId", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> userId;
 
     /**
-     * @return The Webflow-assigned unique identifier for this user. This is automatically assigned when the user is created and is read-only.
+     * @return The Webflow-assigned user ID.
      * 
      */
     public Output<Optional<String>> userId() {

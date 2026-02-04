@@ -11,73 +11,74 @@ using Pulumi;
 namespace Community.Pulumi.Webflow
 {
     /// <summary>
-    /// Manages users for a Webflow site. This resource allows you to invite users to your site with specified access groups. Users will receive an invitation email and must accept it to access paid content. Note: The user's email cannot be changed after creation.
+    /// DEPRECATED: The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run "pulumi state delete &lt;URN&gt;" to clean up existing state.
     /// </summary>
+    [Obsolete(@"The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run ""pulumi state delete <URN>"" to clean up existing state.")]
     [WebflowResourceType("webflow:index:User")]
     public partial class User : global::Pulumi.CustomResource
     {
         /// <summary>
-        /// Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users &gt; Access Groups.
+        /// Access group slugs assigned to the user.
         /// </summary>
         [Output("accessGroups")]
         public Output<ImmutableArray<string>> AccessGroups { get; private set; } = null!;
 
         /// <summary>
-        /// The timestamp when the user was created (RFC3339 format). This is automatically set and is read-only.
+        /// Timestamp when the user was created.
         /// </summary>
         [Output("createdOn")]
         public Output<string?> CreatedOn { get; private set; } = null!;
 
         /// <summary>
-        /// The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+        /// The email address of the user.
         /// </summary>
         [Output("email")]
         public Output<string> Email { get; private set; } = null!;
 
         /// <summary>
-        /// The timestamp when the user was invited (RFC3339 format). This is automatically set and is read-only.
+        /// Timestamp when the user was invited.
         /// </summary>
         [Output("invitedOn")]
         public Output<string?> InvitedOn { get; private set; } = null!;
 
         /// <summary>
-        /// Indicates whether the user has verified their email address. This is read-only and set by Webflow when the user verifies their email.
+        /// Whether the user has verified their email.
         /// </summary>
         [Output("isEmailVerified")]
         public Output<bool?> IsEmailVerified { get; private set; } = null!;
 
         /// <summary>
-        /// The timestamp when the user last logged in (RFC3339 format). This is read-only.
+        /// Timestamp when the user last logged in.
         /// </summary>
         [Output("lastLogin")]
         public Output<string?> LastLogin { get; private set; } = null!;
 
         /// <summary>
-        /// The timestamp when the user was last updated (RFC3339 format). This is read-only.
+        /// Timestamp when the user was last updated.
         /// </summary>
         [Output("lastUpdated")]
         public Output<string?> LastUpdated { get; private set; } = null!;
 
         /// <summary>
-        /// Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+        /// Display name for the user.
         /// </summary>
         [Output("name")]
         public Output<string?> Name { get; private set; } = null!;
 
         /// <summary>
-        /// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+        /// The Webflow site ID.
         /// </summary>
         [Output("siteId")]
         public Output<string> SiteId { get; private set; } = null!;
 
         /// <summary>
-        /// The status of the user. Possible values: 'invited' (invitation sent but not accepted), 'verified' (email verified), 'unverified' (registered but email not verified). This is read-only.
+        /// The user's status.
         /// </summary>
         [Output("status")]
         public Output<string?> Status { get; private set; } = null!;
 
         /// <summary>
-        /// The Webflow-assigned unique identifier for this user. This is automatically assigned when the user is created and is read-only.
+        /// The Webflow-assigned user ID.
         /// </summary>
         [Output("userId")]
         public Output<string?> UserId { get; private set; } = null!;
@@ -132,7 +133,7 @@ namespace Community.Pulumi.Webflow
         private InputList<string>? _accessGroups;
 
         /// <summary>
-        /// Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users &gt; Access Groups.
+        /// Access group slugs assigned to the user.
         /// </summary>
         public InputList<string> AccessGroups
         {
@@ -141,19 +142,19 @@ namespace Community.Pulumi.Webflow
         }
 
         /// <summary>
-        /// The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+        /// The email address of the user.
         /// </summary>
         [Input("email", required: true)]
         public Input<string> Email { get; set; } = null!;
 
         /// <summary>
-        /// Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+        /// Display name for the user.
         /// </summary>
         [Input("name")]
         public Input<string>? Name { get; set; }
 
         /// <summary>
-        /// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+        /// The Webflow site ID.
         /// </summary>
         [Input("siteId", required: true)]
         public Input<string> SiteId { get; set; } = null!;

@@ -1237,54 +1237,54 @@
       ]
     },
     "webflow:index:User": {
-      "description": "Manages users for a Webflow site. This resource allows you to invite users to your site with specified access groups. Users will receive an invitation email and must accept it to access paid content. Note: The user's email cannot be changed after creation.",
+      "description": "DEPRECATED: The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run \"pulumi state delete <URN>\" to clean up existing state.",
       "properties": {
         "accessGroups": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users > Access Groups."
+          "description": "Access group slugs assigned to the user."
         },
         "createdOn": {
           "type": "string",
-          "description": "The timestamp when the user was created (RFC3339 format). This is automatically set and is read-only."
+          "description": "Timestamp when the user was created."
         },
         "email": {
           "type": "string",
-          "description": "The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate)."
+          "description": "The email address of the user."
         },
         "invitedOn": {
           "type": "string",
-          "description": "The timestamp when the user was invited (RFC3339 format). This is automatically set and is read-only."
+          "description": "Timestamp when the user was invited."
         },
         "isEmailVerified": {
           "type": "boolean",
-          "description": "Indicates whether the user has verified their email address. This is read-only and set by Webflow when the user verifies their email."
+          "description": "Whether the user has verified their email."
         },
         "lastLogin": {
           "type": "string",
-          "description": "The timestamp when the user last logged in (RFC3339 format). This is read-only."
+          "description": "Timestamp when the user last logged in."
         },
         "lastUpdated": {
           "type": "string",
-          "description": "The timestamp when the user was last updated (RFC3339 format). This is read-only."
+          "description": "Timestamp when the user was last updated."
         },
         "name": {
           "type": "string",
-          "description": "Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization."
+          "description": "Display name for the user."
         },
         "siteId": {
           "type": "string",
-          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+          "description": "The Webflow site ID."
         },
         "status": {
           "type": "string",
-          "description": "The status of the user. Possible values: 'invited' (invitation sent but not accepted), 'verified' (email verified), 'unverified' (registered but email not verified). This is read-only."
+          "description": "The user's status."
         },
         "userId": {
           "type": "string",
-          "description": "The Webflow-assigned unique identifier for this user. This is automatically assigned when the user is created and is read-only."
+          "description": "The Webflow-assigned user ID."
         }
       },
       "required": [
@@ -1297,25 +1297,26 @@
           "items": {
             "type": "string"
           },
-          "description": "Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users > Access Groups."
+          "description": "Access group slugs assigned to the user."
         },
         "email": {
           "type": "string",
-          "description": "The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate)."
+          "description": "The email address of the user."
         },
         "name": {
           "type": "string",
-          "description": "Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization."
+          "description": "Display name for the user."
         },
         "siteId": {
           "type": "string",
-          "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
+          "description": "The Webflow site ID."
         }
       },
       "requiredInputs": [
         "siteId",
         "email"
-      ]
+      ],
+      "deprecationMessage": "The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run \"pulumi state delete <URN>\" to clean up existing state."
     },
     "webflow:index:Webhook": {
       "description": "Manages webhooks for a Webflow site. Webhooks allow you to receive real-time notifications when events occur in your Webflow site, such as form submissions, page updates, e-commerce orders, and more. Note: Webhooks cannot be updated in-place; any change to triggerType, url, or filter requires replacement.",

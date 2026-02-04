@@ -5,7 +5,9 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 /**
- * Manages users for a Webflow site. This resource allows you to invite users to your site with specified access groups. Users will receive an invitation email and must accept it to access paid content. Note: The user's email cannot be changed after creation.
+ * DEPRECATED: The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run "pulumi state delete <URN>" to clean up existing state.
+ *
+ * @deprecated The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run "pulumi state delete <URN>" to clean up existing state.
  */
 export class User extends pulumi.CustomResource {
     /**
@@ -17,6 +19,7 @@ export class User extends pulumi.CustomResource {
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
     public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): User {
+        pulumi.log.warn("User is deprecated: The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run \"pulumi state delete \u003cURN\u003e\" to clean up existing state.")
         return new User(name, undefined as any, { ...opts, id: id });
     }
 
@@ -35,47 +38,47 @@ export class User extends pulumi.CustomResource {
     }
 
     /**
-     * Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users > Access Groups.
+     * Access group slugs assigned to the user.
      */
     declare public readonly accessGroups: pulumi.Output<string[] | undefined>;
     /**
-     * The timestamp when the user was created (RFC3339 format). This is automatically set and is read-only.
+     * Timestamp when the user was created.
      */
     declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
-     * The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+     * The email address of the user.
      */
     declare public readonly email: pulumi.Output<string>;
     /**
-     * The timestamp when the user was invited (RFC3339 format). This is automatically set and is read-only.
+     * Timestamp when the user was invited.
      */
     declare public /*out*/ readonly invitedOn: pulumi.Output<string | undefined>;
     /**
-     * Indicates whether the user has verified their email address. This is read-only and set by Webflow when the user verifies their email.
+     * Whether the user has verified their email.
      */
     declare public /*out*/ readonly isEmailVerified: pulumi.Output<boolean | undefined>;
     /**
-     * The timestamp when the user last logged in (RFC3339 format). This is read-only.
+     * Timestamp when the user last logged in.
      */
     declare public /*out*/ readonly lastLogin: pulumi.Output<string | undefined>;
     /**
-     * The timestamp when the user was last updated (RFC3339 format). This is read-only.
+     * Timestamp when the user was last updated.
      */
     declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
     /**
-     * Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+     * Display name for the user.
      */
     declare public readonly name: pulumi.Output<string | undefined>;
     /**
-     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+     * The Webflow site ID.
      */
     declare public readonly siteId: pulumi.Output<string>;
     /**
-     * The status of the user. Possible values: 'invited' (invitation sent but not accepted), 'verified' (email verified), 'unverified' (registered but email not verified). This is read-only.
+     * The user's status.
      */
     declare public /*out*/ readonly status: pulumi.Output<string | undefined>;
     /**
-     * The Webflow-assigned unique identifier for this user. This is automatically assigned when the user is created and is read-only.
+     * The Webflow-assigned user ID.
      */
     declare public /*out*/ readonly userId: pulumi.Output<string | undefined>;
 
@@ -86,7 +89,9 @@ export class User extends pulumi.CustomResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
+    /** @deprecated The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run "pulumi state delete <URN>" to clean up existing state. */
     constructor(name: string, args: UserArgs, opts?: pulumi.CustomResourceOptions) {
+        pulumi.log.warn("User is deprecated: The webflow:index:User resource has been removed because the Webflow User Management API has been deprecated by Webflow. Please remove this resource from your Pulumi program and run \"pulumi state delete \u003cURN\u003e\" to clean up existing state.")
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
@@ -130,19 +135,19 @@ export class User extends pulumi.CustomResource {
  */
 export interface UserArgs {
     /**
-     * Optional list of access group slugs to assign to the user. Access groups control what content the user can access. Groups are assigned as type 'admin' (assigned via API or designer). Example: ['premium-members', 'beta-testers']. Access group slugs can be found in the Webflow dashboard under Users > Access Groups.
+     * Access group slugs assigned to the user.
      */
     accessGroups?: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * The email address of the user to invite. The user will receive an invitation email at this address. IMPORTANT: The email cannot be changed after the user is created. Changing the email will require replacing the resource (delete + recreate).
+     * The email address of the user.
      */
     email: pulumi.Input<string>;
     /**
-     * Optional display name for the user. This will be shown in the Webflow dashboard and can be used in site personalization.
+     * Display name for the user.
      */
     name?: pulumi.Input<string>;
     /**
-     * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
+     * The Webflow site ID.
      */
     siteId: pulumi.Input<string>;
 }

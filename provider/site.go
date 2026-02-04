@@ -64,11 +64,11 @@ type SiteCreateRequest struct {
 }
 
 // SiteUpdateRequest represents the request body for updating a site.
-// All fields are optional - send only fields that changed.
+// The Webflow PATCH API accepts "name" (not "displayName") and "parentFolderId".
+// Note: shortName is read-only (auto-generated from name) and cannot be set via API.
 // Note: TimeZone is read-only and cannot be updated via API.
 type SiteUpdateRequest struct {
-	DisplayName    string `json:"displayName,omitempty"`
-	ShortName      string `json:"shortName,omitempty"`
+	Name           string `json:"name,omitempty"`
 	ParentFolderID string `json:"parentFolderId,omitempty"`
 }
 
@@ -265,11 +265,12 @@ func PostSite(
 
 // PatchSite updates an existing site's configuration.
 // Only changed fields should be sent in the request to minimize API payload.
+// Note: shortName is read-only (auto-generated from name) and cannot be set via API.
 // Note: TimeZone is read-only and cannot be updated via API.
 // Returns the updated Site or an error if the request fails.
 func PatchSite(
 	ctx context.Context, client *http.Client,
-	siteID, displayName, shortName, parentFolderID string,
+	siteID, displayName, parentFolderID string,
 ) (*Site, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("context cancelled: %w", err)
@@ -283,10 +284,11 @@ func PatchSite(
 	url := fmt.Sprintf("%s/v2/sites/%s", baseURL, siteID)
 
 	// Build request with provided fields (empty strings = not changed)
+	// Note: Webflow API accepts "name" (not "displayName") for PATCH
+	// Note: shortName is read-only and cannot be set via API
 	// Note: TimeZone is read-only and cannot be updated via API
 	requestBody := SiteUpdateRequest{
-		DisplayName:    displayName,
-		ShortName:      shortName,
+		Name:           displayName,
 		ParentFolderID: parentFolderID,
 	}
 

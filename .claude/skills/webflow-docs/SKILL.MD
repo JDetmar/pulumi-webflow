@@ -209,6 +209,10 @@ Use fuzzy matching to find the best endpoint. Common shortcuts:
 - `enterprise/site-configuration/well-known-files/delete`
 - `enterprise/workspace-audit-logs/get`
 - `enterprise/workspace-audit-logs/event-types`
+- `enterprise/workspace-management/create`
+- `enterprise/workspace-management/update`
+- `enterprise/workspace-management/delete`
+- `enterprise/workspace-management/get-site-plan`
 - `enterprise/site-activity-logs/list`
 
 ### Reference Documentation

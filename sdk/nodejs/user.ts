@@ -40,47 +40,47 @@ export class User extends pulumi.CustomResource {
     /**
      * Access group slugs assigned to the user.
      */
-    public readonly accessGroups!: pulumi.Output<string[] | undefined>;
+    declare public readonly accessGroups: pulumi.Output<string[] | undefined>;
     /**
      * Timestamp when the user was created.
      */
-    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
      * The email address of the user.
      */
-    public readonly email!: pulumi.Output<string>;
+    declare public readonly email: pulumi.Output<string>;
     /**
      * Timestamp when the user was invited.
      */
-    public /*out*/ readonly invitedOn!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly invitedOn: pulumi.Output<string | undefined>;
     /**
      * Whether the user has verified their email.
      */
-    public /*out*/ readonly isEmailVerified!: pulumi.Output<boolean | undefined>;
+    declare public /*out*/ readonly isEmailVerified: pulumi.Output<boolean | undefined>;
     /**
      * Timestamp when the user last logged in.
      */
-    public /*out*/ readonly lastLogin!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly lastLogin: pulumi.Output<string | undefined>;
     /**
      * Timestamp when the user was last updated.
      */
-    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
     /**
      * Display name for the user.
      */
-    public readonly name!: pulumi.Output<string | undefined>;
+    declare public readonly name: pulumi.Output<string | undefined>;
     /**
      * The Webflow site ID.
      */
-    public readonly siteId!: pulumi.Output<string>;
+    declare public readonly siteId: pulumi.Output<string>;
     /**
      * The user's status.
      */
-    public /*out*/ readonly status!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly status: pulumi.Output<string | undefined>;
     /**
      * The Webflow-assigned user ID.
      */
-    public /*out*/ readonly userId!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly userId: pulumi.Output<string | undefined>;
 
     /**
      * Create a User resource with the given unique name, arguments, and options.
@@ -95,16 +95,16 @@ export class User extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.email === undefined) && !opts.urn) {
+            if (args?.email === undefined && !opts.urn) {
                 throw new Error("Missing required property 'email'");
             }
-            if ((!args || args.siteId === undefined) && !opts.urn) {
+            if (args?.siteId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            resourceInputs["accessGroups"] = args ? args.accessGroups : undefined;
-            resourceInputs["email"] = args ? args.email : undefined;
-            resourceInputs["name"] = args ? args.name : undefined;
-            resourceInputs["siteId"] = args ? args.siteId : undefined;
+            resourceInputs["accessGroups"] = args?.accessGroups;
+            resourceInputs["email"] = args?.email;
+            resourceInputs["name"] = args?.name;
+            resourceInputs["siteId"] = args?.siteId;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["invitedOn"] = undefined /*out*/;
             resourceInputs["isEmailVerified"] = undefined /*out*/;

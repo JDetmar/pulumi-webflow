@@ -37,31 +37,31 @@ export class AssetFolder extends pulumi.CustomResource {
     /**
      * List of asset IDs currently contained in this folder (read-only). This is automatically populated by Webflow when assets are added to the folder.
      */
-    public /*out*/ readonly assets!: pulumi.Output<string[] | undefined>;
+    declare public /*out*/ readonly assets: pulumi.Output<string[] | undefined>;
     /**
      * The timestamp when the folder was created (RFC3339 format, read-only). This is automatically set when the folder is created.
      */
-    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
      * The human-readable name for the asset folder. This name appears in the Webflow Assets panel and helps organize your files. Examples: 'Images', 'Documents', 'Icons', 'Hero Backgrounds'. Maximum length: 255 characters.
      */
-    public readonly displayName!: pulumi.Output<string>;
+    declare public readonly displayName: pulumi.Output<string>;
     /**
      * The Webflow-assigned folder ID (read-only). This unique identifier can be used to reference the folder in other resources, such as when uploading assets to this folder.
      */
-    public /*out*/ readonly folderId!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly folderId: pulumi.Output<string | undefined>;
     /**
      * The timestamp when the folder was last modified (RFC3339 format, read-only). This is updated when assets are added or removed from the folder.
      */
-    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
     /**
      * Optional ID of the parent folder for creating nested folder structures. If not specified, the folder will be created at the root level of the Assets panel. Example: '5f0c8c9e1c9d440000e8d8c4'.
      */
-    public readonly parentFolder!: pulumi.Output<string | undefined>;
+    declare public readonly parentFolder: pulumi.Output<string | undefined>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
-    public readonly siteId!: pulumi.Output<string>;
+    declare public readonly siteId: pulumi.Output<string>;
 
     /**
      * Create a AssetFolder resource with the given unique name, arguments, and options.
@@ -74,15 +74,15 @@ export class AssetFolder extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.displayName === undefined) && !opts.urn) {
+            if (args?.displayName === undefined && !opts.urn) {
                 throw new Error("Missing required property 'displayName'");
             }
-            if ((!args || args.siteId === undefined) && !opts.urn) {
+            if (args?.siteId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            resourceInputs["displayName"] = args ? args.displayName : undefined;
-            resourceInputs["parentFolder"] = args ? args.parentFolder : undefined;
-            resourceInputs["siteId"] = args ? args.siteId : undefined;
+            resourceInputs["displayName"] = args?.displayName;
+            resourceInputs["parentFolder"] = args?.parentFolder;
+            resourceInputs["siteId"] = args?.siteId;
             resourceInputs["assets"] = undefined /*out*/;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["folderId"] = undefined /*out*/;

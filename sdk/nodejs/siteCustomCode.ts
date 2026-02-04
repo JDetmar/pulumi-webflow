@@ -39,19 +39,19 @@ export class SiteCustomCode extends pulumi.CustomResource {
     /**
      * The timestamp when the site's custom code was first created (RFC3339 format). This is automatically set when custom code is first applied and is read-only.
      */
-    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
      * The timestamp when the site's custom code was last updated (RFC3339 format). This is automatically set and is read-only.
      */
-    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
     /**
      * A list of custom scripts to apply to the site. Each script must be registered to the site first. To remove individual scripts, simply exclude them from this list on the next update. If you have multiple scripts your app manages, ensure they are always included in this list.
      */
-    public readonly scripts!: pulumi.Output<outputs.CustomScriptArgs[]>;
+    declare public readonly scripts: pulumi.Output<outputs.CustomScriptArgs[]>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
-    public readonly siteId!: pulumi.Output<string>;
+    declare public readonly siteId: pulumi.Output<string>;
 
     /**
      * Create a SiteCustomCode resource with the given unique name, arguments, and options.
@@ -64,14 +64,14 @@ export class SiteCustomCode extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.scripts === undefined) && !opts.urn) {
+            if (args?.scripts === undefined && !opts.urn) {
                 throw new Error("Missing required property 'scripts'");
             }
-            if ((!args || args.siteId === undefined) && !opts.urn) {
+            if (args?.siteId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            resourceInputs["scripts"] = args ? args.scripts : undefined;
-            resourceInputs["siteId"] = args ? args.siteId : undefined;
+            resourceInputs["scripts"] = args?.scripts;
+            resourceInputs["siteId"] = args?.siteId;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
         } else {

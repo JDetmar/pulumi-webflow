@@ -37,23 +37,23 @@ export class Redirect extends pulumi.CustomResource {
     /**
      * The timestamp when the redirect was created (RFC3339 format). This is automatically set when the redirect is created and is read-only.
      */
-    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
      * The URL path to redirect to (e.g., '/new-page', '/home'). Must start with '/' and contain only valid URL characters. This is the location where users will be redirected when they visit the source path.
      */
-    public readonly destinationPath!: pulumi.Output<string>;
+    declare public readonly destinationPath: pulumi.Output<string>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
-    public readonly siteId!: pulumi.Output<string>;
+    declare public readonly siteId: pulumi.Output<string>;
     /**
      * The URL path to redirect from (e.g., '/old-page', '/blog/2023'). Must start with '/' and contain only valid URL characters (letters, numbers, hyphens, underscores, slashes, dots). Query strings and fragments are not allowed in the source path.
      */
-    public readonly sourcePath!: pulumi.Output<string>;
+    declare public readonly sourcePath: pulumi.Output<string>;
     /**
      * The HTTP status code for the redirect. Must be either 301 or 302. 301 = permanent redirect (use when a page has moved permanently; search engines update their index). 302 = temporary redirect (use for maintenance or temporary page moves).
      */
-    public readonly statusCode!: pulumi.Output<number>;
+    declare public readonly statusCode: pulumi.Output<number>;
 
     /**
      * Create a Redirect resource with the given unique name, arguments, and options.
@@ -66,22 +66,22 @@ export class Redirect extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.destinationPath === undefined) && !opts.urn) {
+            if (args?.destinationPath === undefined && !opts.urn) {
                 throw new Error("Missing required property 'destinationPath'");
             }
-            if ((!args || args.siteId === undefined) && !opts.urn) {
+            if (args?.siteId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            if ((!args || args.sourcePath === undefined) && !opts.urn) {
+            if (args?.sourcePath === undefined && !opts.urn) {
                 throw new Error("Missing required property 'sourcePath'");
             }
-            if ((!args || args.statusCode === undefined) && !opts.urn) {
+            if (args?.statusCode === undefined && !opts.urn) {
                 throw new Error("Missing required property 'statusCode'");
             }
-            resourceInputs["destinationPath"] = args ? args.destinationPath : undefined;
-            resourceInputs["siteId"] = args ? args.siteId : undefined;
-            resourceInputs["sourcePath"] = args ? args.sourcePath : undefined;
-            resourceInputs["statusCode"] = args ? args.statusCode : undefined;
+            resourceInputs["destinationPath"] = args?.destinationPath;
+            resourceInputs["siteId"] = args?.siteId;
+            resourceInputs["sourcePath"] = args?.sourcePath;
+            resourceInputs["statusCode"] = args?.statusCode;
             resourceInputs["createdOn"] = undefined /*out*/;
         } else {
             resourceInputs["createdOn"] = undefined /*out*/;

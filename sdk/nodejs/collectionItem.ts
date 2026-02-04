@@ -37,39 +37,39 @@ export class CollectionItem extends pulumi.CustomResource {
     /**
      * The locale ID for localized sites (optional, e.g., 'en-US'). Only required if your site uses Webflow's localization features. Leave empty for non-localized sites.
      */
-    public readonly cmsLocaleId!: pulumi.Output<string | undefined>;
+    declare public readonly cmsLocaleId: pulumi.Output<string | undefined>;
     /**
      * The Webflow collection ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find collection IDs via the Webflow API or dashboard. This field will be validated before making any API calls.
      */
-    public readonly collectionId!: pulumi.Output<string>;
+    declare public readonly collectionId: pulumi.Output<string>;
     /**
      * The timestamp when the item was created (RFC3339 format, read-only). This is automatically set by Webflow and is immutable.
      */
-    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
      * A map of field slugs to values for the collection item. The field slugs must match the fields defined in the collection schema. Common fields include 'name' (required), 'slug' (required, URL-friendly), and any custom fields you've added to the collection. Example: {"name": "My Blog Post", "slug": "my-blog-post", "content": "Post content..."}
      */
-    public readonly fieldData!: pulumi.Output<{[key: string]: any}>;
+    declare public readonly fieldData: pulumi.Output<{[key: string]: any}>;
     /**
      * Whether the item is archived (optional, defaults to false). Archived items are not visible on the published site but remain in the CMS.
      */
-    public readonly isArchived!: pulumi.Output<boolean | undefined>;
+    declare public readonly isArchived: pulumi.Output<boolean | undefined>;
     /**
      * Whether the item is a draft (optional, defaults to true). Draft items are not published to the live site. Set to false to publish the item immediately upon creation.
      */
-    public readonly isDraft!: pulumi.Output<boolean | undefined>;
+    declare public readonly isDraft: pulumi.Output<boolean | undefined>;
     /**
      * The Webflow-assigned item ID (read-only). This is automatically set by Webflow when the item is created.
      */
-    public /*out*/ readonly itemId!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly itemId: pulumi.Output<string | undefined>;
     /**
      * The timestamp when the item was last published (RFC3339 format, read-only). This is automatically updated by Webflow when the item is published.
      */
-    public /*out*/ readonly lastPublished!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly lastPublished: pulumi.Output<string | undefined>;
     /**
      * The timestamp when the item was last updated (RFC3339 format, read-only). This is automatically updated by Webflow whenever the item is modified.
      */
-    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
 
     /**
      * Create a CollectionItem resource with the given unique name, arguments, and options.
@@ -82,17 +82,17 @@ export class CollectionItem extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.collectionId === undefined) && !opts.urn) {
+            if (args?.collectionId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'collectionId'");
             }
-            if ((!args || args.fieldData === undefined) && !opts.urn) {
+            if (args?.fieldData === undefined && !opts.urn) {
                 throw new Error("Missing required property 'fieldData'");
             }
-            resourceInputs["cmsLocaleId"] = args ? args.cmsLocaleId : undefined;
-            resourceInputs["collectionId"] = args ? args.collectionId : undefined;
-            resourceInputs["fieldData"] = args ? args.fieldData : undefined;
-            resourceInputs["isArchived"] = args ? args.isArchived : undefined;
-            resourceInputs["isDraft"] = args ? args.isDraft : undefined;
+            resourceInputs["cmsLocaleId"] = args?.cmsLocaleId;
+            resourceInputs["collectionId"] = args?.collectionId;
+            resourceInputs["fieldData"] = args?.fieldData;
+            resourceInputs["isArchived"] = args?.isArchived;
+            resourceInputs["isDraft"] = args?.isDraft;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["itemId"] = undefined /*out*/;
             resourceInputs["lastPublished"] = undefined /*out*/;

@@ -37,15 +37,15 @@ export class RobotsTxt extends pulumi.CustomResource {
     /**
      * The robots.txt content in traditional format. Supports User-agent, Allow, Disallow, and Sitemap directives.
      */
-    public readonly content!: pulumi.Output<string>;
+    declare public readonly content: pulumi.Output<string>;
     /**
      * RFC3339 timestamp of the last modification.
      */
-    public /*out*/ readonly lastModified!: pulumi.Output<string>;
+    declare public /*out*/ readonly lastModified: pulumi.Output<string>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3').
      */
-    public readonly siteId!: pulumi.Output<string>;
+    declare public readonly siteId: pulumi.Output<string>;
 
     /**
      * Create a RobotsTxt resource with the given unique name, arguments, and options.
@@ -58,14 +58,14 @@ export class RobotsTxt extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.content === undefined) && !opts.urn) {
+            if (args?.content === undefined && !opts.urn) {
                 throw new Error("Missing required property 'content'");
             }
-            if ((!args || args.siteId === undefined) && !opts.urn) {
+            if (args?.siteId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            resourceInputs["content"] = args ? args.content : undefined;
-            resourceInputs["siteId"] = args ? args.siteId : undefined;
+            resourceInputs["content"] = args?.content;
+            resourceInputs["siteId"] = args?.siteId;
             resourceInputs["lastModified"] = undefined /*out*/;
         } else {
             resourceInputs["content"] = undefined /*out*/;

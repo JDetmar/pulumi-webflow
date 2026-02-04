@@ -37,59 +37,59 @@ export class Asset extends pulumi.CustomResource {
     /**
      * The Webflow-assigned asset ID (read-only). This unique identifier can be used to reference the asset in API calls.
      */
-    public /*out*/ readonly assetId!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly assetId: pulumi.Output<string | undefined>;
     /**
      * The direct S3 URL for the asset (read-only). This is the raw S3 location where the file is stored.
      */
-    public /*out*/ readonly assetUrl!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly assetUrl: pulumi.Output<string | undefined>;
     /**
      * The MIME type of the asset (read-only). Examples: 'image/png', 'image/jpeg', 'application/pdf'. Determined by the fileName extension.
      */
-    public /*out*/ readonly contentType!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly contentType: pulumi.Output<string | undefined>;
     /**
      * The timestamp when the asset metadata was created (RFC3339 format, read-only). This is set when the asset is registered with Webflow.
      */
-    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
      * MD5 hash of the file content (required). Webflow uses this hash to identify and deduplicate assets. Generate using: md5sum <filename> (Linux) or md5 <filename> (macOS). Example: 'd41d8cd98f00b204e9800998ecf8427e'.
      */
-    public readonly fileHash!: pulumi.Output<string>;
+    declare public readonly fileHash: pulumi.Output<string>;
     /**
      * The name of the file to upload, including the extension. Examples: 'logo.png', 'hero-image.jpg', 'document.pdf'. The file name must not exceed 255 characters and should not contain invalid characters (<, >, :, ", |, ?, *).
      */
-    public readonly fileName!: pulumi.Output<string>;
+    declare public readonly fileName: pulumi.Output<string>;
     /**
      * The source of the file to upload. For the current implementation, this is a reference field. In future versions, this may support URLs or local file paths for automatic upload. Examples: 'https://example.com/logo.png', '/path/to/local/file.png'.
      */
-    public readonly fileSource!: pulumi.Output<string | undefined>;
+    declare public readonly fileSource: pulumi.Output<string | undefined>;
     /**
      * The Webflow CDN URL where the asset will be hosted (read-only). This URL becomes accessible after completing the S3 upload. Example: 'https://assets.website-files.com/.../logo.png'.
      */
-    public /*out*/ readonly hostedUrl!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly hostedUrl: pulumi.Output<string | undefined>;
     /**
      * The timestamp when the asset was last modified (RFC3339 format, read-only). For most assets, this will be the same as createdOn since assets are immutable.
      */
-    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
     /**
      * Optional folder ID where the asset will be organized in the Webflow Assets panel. If not specified, the asset will be placed at the root level. Example: '5f0c8c9e1c9d440000e8d8c4'.
      */
-    public readonly parentFolder!: pulumi.Output<string | undefined>;
+    declare public readonly parentFolder: pulumi.Output<string | undefined>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
-    public readonly siteId!: pulumi.Output<string>;
+    declare public readonly siteId: pulumi.Output<string>;
     /**
      * The size of the asset in bytes (read-only). This is the actual size of the uploaded file.
      */
-    public /*out*/ readonly size!: pulumi.Output<number | undefined>;
+    declare public /*out*/ readonly size: pulumi.Output<number | undefined>;
     /**
      * AWS S3 POST form fields required to complete the upload (read-only). Include these as form fields when POSTing the file to uploadUrl. Keys: acl, bucket, key, Content-Type, X-Amz-Algorithm, X-Amz-Credential, X-Amz-Date, Policy, X-Amz-Signature, success_action_status, Cache-Control.
      */
-    public /*out*/ readonly uploadDetails!: pulumi.Output<{[key: string]: string} | undefined>;
+    declare public /*out*/ readonly uploadDetails: pulumi.Output<{[key: string]: string} | undefined>;
     /**
      * The presigned S3 URL for uploading the file content (read-only). Use this URL along with uploadDetails to complete the asset upload. See AWS S3 POST documentation: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
      */
-    public /*out*/ readonly uploadUrl!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly uploadUrl: pulumi.Output<string | undefined>;
 
     /**
      * Create a Asset resource with the given unique name, arguments, and options.
@@ -102,20 +102,20 @@ export class Asset extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.fileHash === undefined) && !opts.urn) {
+            if (args?.fileHash === undefined && !opts.urn) {
                 throw new Error("Missing required property 'fileHash'");
             }
-            if ((!args || args.fileName === undefined) && !opts.urn) {
+            if (args?.fileName === undefined && !opts.urn) {
                 throw new Error("Missing required property 'fileName'");
             }
-            if ((!args || args.siteId === undefined) && !opts.urn) {
+            if (args?.siteId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            resourceInputs["fileHash"] = args ? args.fileHash : undefined;
-            resourceInputs["fileName"] = args ? args.fileName : undefined;
-            resourceInputs["fileSource"] = args ? args.fileSource : undefined;
-            resourceInputs["parentFolder"] = args ? args.parentFolder : undefined;
-            resourceInputs["siteId"] = args ? args.siteId : undefined;
+            resourceInputs["fileHash"] = args?.fileHash;
+            resourceInputs["fileName"] = args?.fileName;
+            resourceInputs["fileSource"] = args?.fileSource;
+            resourceInputs["parentFolder"] = args?.parentFolder;
+            resourceInputs["siteId"] = args?.siteId;
             resourceInputs["assetId"] = undefined /*out*/;
             resourceInputs["assetUrl"] = undefined /*out*/;
             resourceInputs["contentType"] = undefined /*out*/;

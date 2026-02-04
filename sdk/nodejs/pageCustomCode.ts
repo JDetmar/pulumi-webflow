@@ -39,19 +39,19 @@ export class PageCustomCode extends pulumi.CustomResource {
     /**
      * The timestamp when the page custom code was first created (RFC3339 format). This is automatically set when the configuration is first created and is read-only.
      */
-    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
      * The timestamp when the page custom code was last updated (RFC3339 format). This is automatically set when the configuration is updated and is read-only.
      */
-    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
     /**
      * The Webflow page ID (24-character hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). You can find page IDs using the Webflow Pages API or in the Webflow designer. This field will be validated before making any API calls.
      */
-    public readonly pageId!: pulumi.Output<string>;
+    declare public readonly pageId: pulumi.Output<string>;
     /**
      * List of custom code scripts to apply to the page. Each script must reference a script ID and version that have been previously registered. All scripts in this list will be applied to the page; any scripts not listed will be removed from the page.
      */
-    public readonly scripts!: pulumi.Output<outputs.PageCustomCodeScript[]>;
+    declare public readonly scripts: pulumi.Output<outputs.PageCustomCodeScript[]>;
 
     /**
      * Create a PageCustomCode resource with the given unique name, arguments, and options.
@@ -64,14 +64,14 @@ export class PageCustomCode extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.pageId === undefined) && !opts.urn) {
+            if (args?.pageId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'pageId'");
             }
-            if ((!args || args.scripts === undefined) && !opts.urn) {
+            if (args?.scripts === undefined && !opts.urn) {
                 throw new Error("Missing required property 'scripts'");
             }
-            resourceInputs["pageId"] = args ? args.pageId : undefined;
-            resourceInputs["scripts"] = args ? args.scripts : undefined;
+            resourceInputs["pageId"] = args?.pageId;
+            resourceInputs["scripts"] = args?.scripts;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
         } else {

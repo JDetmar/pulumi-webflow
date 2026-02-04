@@ -39,51 +39,51 @@ export class PageData extends pulumi.CustomResource {
     /**
      * Indicates if the page is archived (read-only). Only populated when pageId input is specified.
      */
-    public /*out*/ readonly archived!: pulumi.Output<boolean | undefined>;
+    declare public /*out*/ readonly archived: pulumi.Output<boolean | undefined>;
     /**
      * The ID of the CMS collection (read-only, optional). Only present for collection pages. Only populated when pageId input is specified.
      */
-    public /*out*/ readonly collectionId!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly collectionId: pulumi.Output<string | undefined>;
     /**
      * The timestamp when the page was created (read-only, RFC3339 format). Only populated when pageId input is specified.
      */
-    public /*out*/ readonly createdOn!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly createdOn: pulumi.Output<string | undefined>;
     /**
      * Indicates if the page is in draft mode (read-only). Only populated when pageId input is specified.
      */
-    public /*out*/ readonly draft!: pulumi.Output<boolean | undefined>;
+    declare public /*out*/ readonly draft: pulumi.Output<boolean | undefined>;
     /**
      * The timestamp when the page was last updated (read-only, RFC3339 format). Only populated when pageId input is specified.
      */
-    public /*out*/ readonly lastUpdated!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly lastUpdated: pulumi.Output<string | undefined>;
     /**
      * The specific page ID to retrieve (optional, 24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c4'). If specified, only this page's data will be returned. If omitted, all pages for the site will be returned in the 'pages' output.
      */
-    public readonly pageId!: pulumi.Output<string | undefined>;
+    declare public readonly pageId: pulumi.Output<string | undefined>;
     /**
      * List of all pages in the site (read-only). Only populated when pageId input is NOT specified. Each page includes all metadata fields: id, siteId, title, slug, createdOn, lastUpdated, archived, draft, and optional parentId/collectionId.
      */
-    public /*out*/ readonly pages!: pulumi.Output<outputs.PageInfo[] | undefined>;
+    declare public /*out*/ readonly pages: pulumi.Output<outputs.PageInfo[] | undefined>;
     /**
      * The ID of the parent page (read-only, optional). Only present for nested pages. Only populated when pageId input is specified.
      */
-    public /*out*/ readonly parentId!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly parentId: pulumi.Output<string | undefined>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
-    public readonly siteId!: pulumi.Output<string>;
+    declare public readonly siteId: pulumi.Output<string>;
     /**
      * The URL slug for the page (read-only, e.g., 'about' for '/about'). Only populated when pageId input is specified.
      */
-    public /*out*/ readonly slug!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly slug: pulumi.Output<string | undefined>;
     /**
      * The page title (read-only). This is the title shown in browser tabs and search results. Only populated when pageId input is specified.
      */
-    public /*out*/ readonly title!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly title: pulumi.Output<string | undefined>;
     /**
      * The Webflow page ID (read-only). Only populated when pageId input is specified.
      */
-    public /*out*/ readonly webflowPageId!: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly webflowPageId: pulumi.Output<string | undefined>;
 
     /**
      * Create a PageData resource with the given unique name, arguments, and options.
@@ -96,11 +96,11 @@ export class PageData extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.siteId === undefined) && !opts.urn) {
+            if (args?.siteId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
-            resourceInputs["pageId"] = args ? args.pageId : undefined;
-            resourceInputs["siteId"] = args ? args.siteId : undefined;
+            resourceInputs["pageId"] = args?.pageId;
+            resourceInputs["siteId"] = args?.siteId;
             resourceInputs["archived"] = undefined /*out*/;
             resourceInputs["collectionId"] = undefined /*out*/;
             resourceInputs["createdOn"] = undefined /*out*/;

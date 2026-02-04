@@ -29,7 +29,7 @@ type InlineScript struct {
 	// The timestamp when the script was last updated (RFC3339 format). This is automatically updated by Webflow when the script is modified and is read-only.
 	LastUpdated pulumi.StringPtrOutput `pulumi:"lastUpdated"`
 	// The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
-	ScriptId pulumi.StringPtrOutput `pulumi:"scriptId"`
+	ScriptId pulumi.StringOutput `pulumi:"scriptId"`
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringOutput `pulumi:"siteId"`
 	// The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
@@ -188,8 +188,8 @@ func (o InlineScriptOutput) LastUpdated() pulumi.StringPtrOutput {
 }
 
 // The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
-func (o InlineScriptOutput) ScriptId() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *InlineScript) pulumi.StringPtrOutput { return v.ScriptId }).(pulumi.StringPtrOutput)
+func (o InlineScriptOutput) ScriptId() pulumi.StringOutput {
+	return o.ApplyT(func(v *InlineScript) pulumi.StringOutput { return v.ScriptId }).(pulumi.StringOutput)
 }
 
 // The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.

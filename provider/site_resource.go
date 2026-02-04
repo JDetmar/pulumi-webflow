@@ -25,7 +25,7 @@ type SiteArgs struct {
 	// WorkspaceID is the Webflow workspace ID where the site will be created.
 	// Required for site creation operations - Enterprise workspace is required by Webflow API.
 	// Example: "5f0c8c9e1c9d440000e8d8c3"
-	WorkspaceID string `pulumi:"workspaceId"`
+	WorkspaceID string `pulumi:"workspaceId" provider:"replaceOnChanges"`
 	// DisplayName is the human-readable name of the site shown in the Webflow dashboard.
 	// Required - must be a non-empty string.
 	// Examples: "My Marketing Site", "Company Blog", "Product Landing Page"
@@ -48,7 +48,7 @@ type SiteArgs struct {
 	// Optional - used only during site creation, cannot be changed after creation (IMMUTABLE).
 	// WARNING: Changing this value will DELETE the existing site and CREATE a new one (DESTRUCTIVE).
 	// Examples: "mast-framework", "blank", or any other Webflow template identifier.
-	TemplateName string `pulumi:"templateName,optional"`
+	TemplateName string `pulumi:"templateName,optional" provider:"replaceOnChanges"`
 }
 
 // SiteState defines the output properties for the Site resource.

@@ -59,6 +59,11 @@ func NewSite(ctx *pulumi.Context,
 	if args.WorkspaceId == nil {
 		return nil, errors.New("invalid value for required argument 'WorkspaceId'")
 	}
+	replaceOnChanges := pulumi.ReplaceOnChanges([]string{
+		"templateName",
+		"workspaceId",
+	})
+	opts = append(opts, replaceOnChanges)
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Site
 	err := ctx.RegisterResource("webflow:index:Site", name, args, &resource, opts...)

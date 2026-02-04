@@ -203,6 +203,8 @@ class Site(pulumi.CustomResource):
             __props__.__dict__["last_updated"] = None
             __props__.__dict__["preview_url"] = None
             __props__.__dict__["time_zone"] = None
+        replace_on_changes = pulumi.ResourceOptions(replace_on_changes=["templateName", "workspaceId"])
+        opts = pulumi.ResourceOptions.merge(opts, replace_on_changes)
         super(Site, __self__).__init__(
             'webflow:index:Site',
             resource_name,

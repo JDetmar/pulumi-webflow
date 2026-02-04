@@ -192,7 +192,28 @@ func pageCustomCodeAttributesEqual(stateAttrs, inputAttrs map[string]interface{}
 func (r *PageCustomCode) Create(
 	ctx context.Context, req infer.CreateRequest[PageCustomCodeArgs],
 ) (infer.CreateResponse[PageCustomCodeState], error) {
-	// Validate inputs BEFORE generating resource ID
+	state := PageCustomCodeState{
+		PageCustomCodeArgs: req.Inputs,
+		LastUpdated:        "",
+		CreatedOn:          "",
+	}
+
+	// During preview, return expected state without making API calls.
+	// Validation is deferred to apply-time because inputs may contain Pulumi unknowns
+	// (e.g., scripts[].id from a RegisteredScript output) which the infer framework
+	// deserializes as zero values. Validating during preview would incorrectly reject these.
+	if req.DryRun {
+		now := time.Now().Format(time.RFC3339)
+		state.LastUpdated = now
+		state.CreatedOn = now
+		resourceID := GeneratePageCustomCodeResourceID(req.Inputs.PageID)
+		return infer.CreateResponse[PageCustomCodeState]{
+			ID:     resourceID,
+			Output: state,
+		}, nil
+	}
+
+	// Validate inputs BEFORE making API calls (all values are resolved at apply-time)
 	if err := ValidatePageID(req.Inputs.PageID); err != nil {
 		return infer.CreateResponse[PageCustomCodeState]{},
 			fmt.Errorf("validation failed for PageCustomCode resource: %w", err)
@@ -219,24 +240,6 @@ func (r *PageCustomCode) Create(
 			return infer.CreateResponse[PageCustomCodeState]{}, fmt.Errorf(
 				"validation failed for PageCustomCode resource, scripts[%d]: %w", i, err)
 		}
-	}
-
-	state := PageCustomCodeState{
-		PageCustomCodeArgs: req.Inputs,
-		LastUpdated:        "",
-		CreatedOn:          "",
-	}
-
-	// During preview, return expected state without making API calls
-	if req.DryRun {
-		now := time.Now().Format(time.RFC3339)
-		state.LastUpdated = now
-		state.CreatedOn = now
-		resourceID := GeneratePageCustomCodeResourceID(req.Inputs.PageID)
-		return infer.CreateResponse[PageCustomCodeState]{
-			ID:     resourceID,
-			Output: state,
-		}, nil
 	}
 
 	// Get HTTP client
@@ -328,7 +331,22 @@ func (r *PageCustomCode) Read(
 func (r *PageCustomCode) Update(
 	ctx context.Context, req infer.UpdateRequest[PageCustomCodeArgs, PageCustomCodeState],
 ) (infer.UpdateResponse[PageCustomCodeState], error) {
-	// Validate inputs BEFORE making API calls
+	state := PageCustomCodeState{
+		PageCustomCodeArgs: req.Inputs,
+		LastUpdated:        "",
+		CreatedOn:          req.State.CreatedOn, // Preserve original creation time
+	}
+
+	// During preview, return expected state without making API calls.
+	// Validation is deferred to apply-time because inputs may contain Pulumi unknowns.
+	if req.DryRun {
+		state.LastUpdated = time.Now().Format(time.RFC3339)
+		return infer.UpdateResponse[PageCustomCodeState]{
+			Output: state,
+		}, nil
+	}
+
+	// Validate inputs BEFORE making API calls (all values are resolved at apply-time)
 	if err := ValidatePageID(req.Inputs.PageID); err != nil {
 		return infer.UpdateResponse[PageCustomCodeState]{},
 			fmt.Errorf("validation failed for PageCustomCode resource: %w", err)
@@ -355,20 +373,6 @@ func (r *PageCustomCode) Update(
 			return infer.UpdateResponse[PageCustomCodeState]{}, fmt.Errorf(
 				"validation failed for PageCustomCode resource, scripts[%d]: %w", i, err)
 		}
-	}
-
-	state := PageCustomCodeState{
-		PageCustomCodeArgs: req.Inputs,
-		LastUpdated:        "",
-		CreatedOn:          req.State.CreatedOn, // Preserve original creation time
-	}
-
-	// During preview, return expected state without making API calls
-	if req.DryRun {
-		state.LastUpdated = time.Now().Format(time.RFC3339)
-		return infer.UpdateResponse[PageCustomCodeState]{
-			Output: state,
-		}, nil
 	}
 
 	// Get HTTP client

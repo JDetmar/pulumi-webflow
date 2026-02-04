@@ -181,7 +181,28 @@ func siteCustomCodeAttributesEqual(a, b map[string]interface{}) bool {
 func (r *SiteCustomCode) Create(
 	ctx context.Context, req infer.CreateRequest[SiteCustomCodeArgs],
 ) (infer.CreateResponse[SiteCustomCodeState], error) {
-	// Validate inputs BEFORE making API calls
+	state := SiteCustomCodeState{
+		SiteCustomCodeArgs: req.Inputs,
+		LastUpdated:        "",
+		CreatedOn:          "",
+	}
+
+	// During preview, return expected state without making API calls.
+	// Validation is deferred to apply-time because inputs may contain Pulumi unknowns
+	// (e.g., scripts[].id from a RegisteredScript output) which the infer framework
+	// deserializes as zero values. Validating during preview would incorrectly reject these.
+	if req.DryRun {
+		// Set preview timestamps
+		now := time.Now().Format(time.RFC3339)
+		state.LastUpdated = now
+		state.CreatedOn = now
+		return infer.CreateResponse[SiteCustomCodeState]{
+			ID:     GenerateSiteCustomCodeResourceID(req.Inputs.SiteID),
+			Output: state,
+		}, nil
+	}
+
+	// Validate inputs BEFORE making API calls (all values are resolved at apply-time)
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
 		return infer.CreateResponse[SiteCustomCodeState]{},
 			fmt.Errorf("validation failed for SiteCustomCode resource: %w", err)
@@ -201,24 +222,6 @@ func (r *SiteCustomCode) Create(
 			return infer.CreateResponse[SiteCustomCodeState]{},
 				fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
 		}
-	}
-
-	state := SiteCustomCodeState{
-		SiteCustomCodeArgs: req.Inputs,
-		LastUpdated:        "",
-		CreatedOn:          "",
-	}
-
-	// During preview, return expected state without making API calls
-	if req.DryRun {
-		// Set preview timestamps
-		now := time.Now().Format(time.RFC3339)
-		state.LastUpdated = now
-		state.CreatedOn = now
-		return infer.CreateResponse[SiteCustomCodeState]{
-			ID:     GenerateSiteCustomCodeResourceID(req.Inputs.SiteID),
-			Output: state,
-		}, nil
 	}
 
 	// Get HTTP client
@@ -323,7 +326,22 @@ func (r *SiteCustomCode) Read(
 func (r *SiteCustomCode) Update(
 	ctx context.Context, req infer.UpdateRequest[SiteCustomCodeArgs, SiteCustomCodeState],
 ) (infer.UpdateResponse[SiteCustomCodeState], error) {
-	// Validate inputs BEFORE making API calls
+	state := SiteCustomCodeState{
+		SiteCustomCodeArgs: req.Inputs,
+		LastUpdated:        req.State.LastUpdated,
+		CreatedOn:          req.State.CreatedOn,
+	}
+
+	// During preview, return expected state without making API calls.
+	// Validation is deferred to apply-time because inputs may contain Pulumi unknowns.
+	if req.DryRun {
+		state.LastUpdated = time.Now().Format(time.RFC3339)
+		return infer.UpdateResponse[SiteCustomCodeState]{
+			Output: state,
+		}, nil
+	}
+
+	// Validate inputs BEFORE making API calls (all values are resolved at apply-time)
 	if err := ValidateSiteID(req.Inputs.SiteID); err != nil {
 		return infer.UpdateResponse[SiteCustomCodeState]{},
 			fmt.Errorf("validation failed for SiteCustomCode resource: %w", err)
@@ -343,20 +361,6 @@ func (r *SiteCustomCode) Update(
 			return infer.UpdateResponse[SiteCustomCodeState]{},
 				fmt.Errorf("validation failed for SiteCustomCode resource at scripts[%d]: %w", i, err)
 		}
-	}
-
-	state := SiteCustomCodeState{
-		SiteCustomCodeArgs: req.Inputs,
-		LastUpdated:        req.State.LastUpdated,
-		CreatedOn:          req.State.CreatedOn,
-	}
-
-	// During preview, return expected state without making API calls
-	if req.DryRun {
-		state.LastUpdated = time.Now().Format(time.RFC3339)
-		return infer.UpdateResponse[SiteCustomCodeState]{
-			Output: state,
-		}, nil
 	}
 
 	// Get HTTP client

@@ -53,7 +53,7 @@ const siteScripts = new webflow.SiteCustomCode("site-wide-scripts", {
   scripts: [
     {
       // Analytics in header - loads before page renders
-      id: analyticsScript.id,
+      id: analyticsScript.scriptId,
       version: "4.0.0",
       location: "header",
       attributes: {
@@ -62,7 +62,7 @@ const siteScripts = new webflow.SiteCustomCode("site-wide-scripts", {
     },
     {
       // Cookie consent in header - must load early
-      id: cookieConsentScript.id,
+      id: cookieConsentScript.scriptId,
       version: "1.0.0",
       location: "header",
       attributes: {
@@ -72,7 +72,7 @@ const siteScripts = new webflow.SiteCustomCode("site-wide-scripts", {
     },
     {
       // Chat widget in footer - loads after page content
-      id: chatWidgetScript.id,
+      id: chatWidgetScript.scriptId,
       version: "2.5.0",
       location: "footer",
       attributes: {
@@ -88,7 +88,7 @@ const minimalSiteScripts = new webflow.SiteCustomCode("minimal-site-scripts", {
   siteId: siteId,
   scripts: [
     {
-      id: analyticsScript.id,
+      id: analyticsScript.scriptId,
       version: "4.0.0",
       location: "header",
     },
@@ -102,9 +102,9 @@ export const siteScriptsLastUpdated = siteScripts.lastUpdated;
 export const appliedScriptCount = 3;
 
 // Export script IDs for reference
-export const analyticsScriptId = analyticsScript.id;
-export const chatWidgetScriptId = chatWidgetScript.id;
-export const cookieConsentScriptId = cookieConsentScript.id;
+export const analyticsScriptId = analyticsScript.scriptId;
+export const chatWidgetScriptId = chatWidgetScript.scriptId;
+export const cookieConsentScriptId = cookieConsentScript.scriptId;
 
 // Print deployment success message
 const message = pulumi.interpolate`Successfully applied ${appliedScriptCount} site-wide custom scripts to site ${siteId}`;

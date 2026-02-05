@@ -54,7 +54,7 @@ type RegisteredScriptResourceState struct {
 	// ScriptID is the Webflow-assigned script ID (read-only).
 	// This is typically the lowercase version of displayName and is used
 	// when applying scripts via SiteCustomCode or PageCustomCode.
-	ScriptID string `pulumi:"scriptId,optional"`
+	ScriptID string `pulumi:"scriptId"`
 	// CreatedOn is the timestamp when the script was created (read-only).
 	CreatedOn string `pulumi:"createdOn,optional"`
 	// LastUpdated is the timestamp when the script was last updated (read-only).

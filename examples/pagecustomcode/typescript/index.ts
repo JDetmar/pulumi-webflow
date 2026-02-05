@@ -58,7 +58,7 @@ const landingPageScripts = new webflow.PageCustomCode("landing-page-scripts", {
   scripts: [
     {
       // Conversion tracking in header
-      id: conversionTrackingScript.id,
+      id: conversionTrackingScript.scriptId,
       version: "3.2.1",
       location: "header",
       attributes: {
@@ -68,7 +68,7 @@ const landingPageScripts = new webflow.PageCustomCode("landing-page-scripts", {
     },
     {
       // Heatmap tracking in footer
-      id: heatmapScript.id,
+      id: heatmapScript.scriptId,
       version: "2.0.0",
       location: "footer",
       attributes: {
@@ -86,7 +86,7 @@ const productPageScripts = new webflow.PageCustomCode("product-page-scripts", {
   scripts: [
     {
       // 360 product viewer in footer (needs DOM elements)
-      id: productViewerScript.id,
+      id: productViewerScript.scriptId,
       version: "1.5.0",
       location: "footer",
       attributes: {
@@ -97,7 +97,7 @@ const productPageScripts = new webflow.PageCustomCode("product-page-scripts", {
     },
     {
       // Conversion tracking in header
-      id: conversionTrackingScript.id,
+      id: conversionTrackingScript.scriptId,
       version: "3.2.1",
       location: "header",
       attributes: {
@@ -113,7 +113,7 @@ const minimalPageScripts = new webflow.PageCustomCode("thank-you-page-scripts", 
   pageId: landingPageId, // Reusing landingPageId for example
   scripts: [
     {
-      id: conversionTrackingScript.id,
+      id: conversionTrackingScript.scriptId,
       version: "3.2.1",
       location: "header",
     },
@@ -127,9 +127,9 @@ export const landingPageScriptsLastUpdated = landingPageScripts.lastUpdated;
 export const productPageScriptsCreatedOn = productPageScripts.createdOn;
 
 // Export script IDs for reference
-export const conversionTrackingScriptId = conversionTrackingScript.id;
-export const productViewerScriptId = productViewerScript.id;
-export const heatmapScriptId = heatmapScript.id;
+export const conversionTrackingScriptId = conversionTrackingScript.scriptId;
+export const productViewerScriptId = productViewerScript.scriptId;
+export const heatmapScriptId = heatmapScript.scriptId;
 
 // Export page IDs to confirm configuration
 export const configuredLandingPageId = landingPageId;

@@ -734,7 +734,8 @@
         "siteId",
         "sourceCode",
         "version",
-        "displayName"
+        "displayName",
+        "scriptId"
       ],
       "inputProperties": {
         "canCopy": {
@@ -1026,7 +1027,8 @@
         "siteId",
         "displayName",
         "hostedLocation",
-        "integrityHash"
+        "integrityHash",
+        "scriptId"
       ],
       "inputProperties": {
         "canCopy": {

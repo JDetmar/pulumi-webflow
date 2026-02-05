@@ -280,7 +280,7 @@ class RegisteredScript(pulumi.CustomResource):
 
     @_builtins.property
     @pulumi.getter(name="scriptId")
-    def script_id(self) -> pulumi.Output[Optional[_builtins.str]]:
+    def script_id(self) -> pulumi.Output[_builtins.str]:
         """
         The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
         """

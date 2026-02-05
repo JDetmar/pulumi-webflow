@@ -61,7 +61,7 @@ export class RegisteredScript extends pulumi.CustomResource {
     /**
      * The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
      */
-    declare public /*out*/ readonly scriptId: pulumi.Output<string | undefined>;
+    declare public /*out*/ readonly scriptId: pulumi.Output<string>;
     /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */

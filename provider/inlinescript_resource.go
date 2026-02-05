@@ -50,7 +50,7 @@ type InlineScriptState struct {
 	// ScriptID is the Webflow-assigned script ID (read-only).
 	// This is typically the lowercase version of displayName and is used
 	// when applying scripts via SiteCustomCode or PageCustomCode.
-	ScriptID string `pulumi:"scriptId,optional"`
+	ScriptID string `pulumi:"scriptId"`
 	// HostedLocation is the URI for the hosted version of the inline script (read-only).
 	// This is set by Webflow after the inline script is registered.
 	HostedLocation string `pulumi:"hostedLocation,optional"`

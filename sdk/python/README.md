@@ -439,6 +439,7 @@ This project is licensed under the MIT License - see [LICENSE](./LICENSE) file f
 For more troubleshooting help and detailed logging documentation:
 - **[Logging and Debugging Guide](./docs/logging.md)** - Comprehensive guide to structured logging features
 - **[Troubleshooting Guide](./docs/troubleshooting.md)** - Common issues and detailed solutions
+- **[Changelog](./CHANGELOG.md)** - Release history and notable changes
 
 ---
 

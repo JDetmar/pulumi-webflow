@@ -857,6 +857,73 @@ func TestSiteUpdate_DryRun(t *testing.T) {
 	}
 }
 
+// TestSiteUpdate_DryRun_PreservesReadOnlyOutputs tests that DryRun mode preserves
+// all read-only output fields from the previous state. This is important for
+// pulumi preview to show correct state without making API calls.
+// Fixes: https://github.com/JDetmar/pulumi-webflow/issues/81
+func TestSiteUpdate_DryRun_PreservesReadOnlyOutputs(t *testing.T) {
+	resource := &SiteResource{}
+	req := infer.UpdateRequest[SiteArgs, SiteState]{
+		ID: "site123",
+		Inputs: SiteArgs{
+			WorkspaceID: "workspace456",
+			DisplayName: "Updated Site",
+		},
+		State: SiteState{
+			SiteArgs: SiteArgs{
+				WorkspaceID: "workspace456",
+				DisplayName: "Old Site",
+				ShortName:   "old-site",
+			},
+			// All read-only outputs that should be preserved
+			TimeZone:              "America/New_York",
+			LastPublished:         "2024-01-15T10:00:00Z",
+			LastUpdated:           "2024-01-20T15:30:00Z",
+			PreviewURL:            "https://preview.webflow.com/site123",
+			CustomDomains:         []string{"example.com", "www.example.com"},
+			DataCollectionEnabled: true,
+			DataCollectionType:    "optOut",
+		},
+		DryRun: true,
+	}
+
+	resp, err := resource.Update(context.Background(), req)
+	if err != nil {
+		t.Fatalf("Update DryRun failed: %v", err)
+	}
+
+	// Verify inputs are updated
+	if resp.Output.DisplayName != "Updated Site" {
+		t.Errorf("Expected displayName 'Updated Site', got '%s'", resp.Output.DisplayName)
+	}
+
+	// Verify all read-only outputs are preserved from old state
+	if resp.Output.TimeZone != "America/New_York" {
+		t.Errorf("TimeZone not preserved: expected 'America/New_York', got '%s'", resp.Output.TimeZone)
+	}
+	if resp.Output.LastPublished != "2024-01-15T10:00:00Z" {
+		t.Errorf("LastPublished not preserved: expected '2024-01-15T10:00:00Z', got '%s'", resp.Output.LastPublished)
+	}
+	if resp.Output.LastUpdated != "2024-01-20T15:30:00Z" {
+		t.Errorf("LastUpdated not preserved: expected '2024-01-20T15:30:00Z', got '%s'", resp.Output.LastUpdated)
+	}
+	if resp.Output.PreviewURL != "https://preview.webflow.com/site123" {
+		t.Errorf("PreviewURL not preserved: expected 'https://preview.webflow.com/site123', got '%s'", resp.Output.PreviewURL)
+	}
+	if len(resp.Output.CustomDomains) != 2 {
+		t.Errorf("CustomDomains not preserved: expected 2 domains, got %d", len(resp.Output.CustomDomains))
+	}
+	if !resp.Output.DataCollectionEnabled {
+		t.Error("DataCollectionEnabled not preserved: expected true, got false")
+	}
+	if resp.Output.DataCollectionType != "optOut" {
+		t.Errorf("DataCollectionType not preserved: expected 'optOut', got '%s'", resp.Output.DataCollectionType)
+	}
+	if resp.Output.ShortName != "old-site" {
+		t.Errorf("ShortName not preserved: expected 'old-site', got '%s'", resp.Output.ShortName)
+	}
+}
+
 // ============================================================================
 // Diff Method Tests
 // ============================================================================

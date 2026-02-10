@@ -56,7 +56,6 @@ func Provider() p.Provider {
 			infer.Resource(&InlineScript{}),
 			infer.Resource(&PageCustomCode{}),
 			infer.Resource(&EcommerceSettings{}),
-			infer.Resource(&UserResource{}), // Deprecated stub – remove in next breaking release
 		).
 		WithFunctions(
 			infer.Function(&GetTokenInfo{}),

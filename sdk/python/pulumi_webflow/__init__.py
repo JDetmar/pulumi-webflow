@@ -24,7 +24,6 @@ from .registered_script import *
 from .robots_txt import *
 from .site import *
 from .site_custom_code import *
-from .user import *
 from .webhook import *
 from ._inputs import *
 from . import outputs
@@ -59,7 +58,6 @@ _utilities.register(
    "webflow:index:RobotsTxt": "RobotsTxt",
    "webflow:index:Site": "Site",
    "webflow:index:SiteCustomCode": "SiteCustomCode",
-   "webflow:index:User": "User",
    "webflow:index:Webhook": "Webhook"
   }
  }

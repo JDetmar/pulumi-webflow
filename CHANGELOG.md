@@ -4,6 +4,8 @@ All notable changes to the Pulumi Webflow provider will be documented in this fi
 
 ## [Unreleased]
 
+## [v0.9.4] - 2026-02-09
+
 ### Breaking Changes
 
 - feat!(site): remove deprecated `shortName` input property (#84)
@@ -62,7 +64,8 @@ All notable changes to the Pulumi Webflow provider will be documented in this fi
 - fix: add collectionId output and fix provider issues
 - fix: release pipeline and npm publishing
 
-[Unreleased]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.3...HEAD
+[Unreleased]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.4...HEAD
+[v0.9.4]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.3...v0.9.4
 [v0.9.3]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.2...v0.9.3
 [v0.9.2]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.1...v0.9.2
 [v0.9.1]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.0...v0.9.1

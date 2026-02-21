@@ -1,4 +1,0 @@
-# Staging stack configuration
-config:
-  sitePrefix: "staging"
-  siteCount: 5

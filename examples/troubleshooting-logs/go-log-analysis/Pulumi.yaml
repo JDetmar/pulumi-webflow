@@ -1,3 +1,0 @@
-name: webflow-logging-analysis
-runtime: go
-description: Go logging analysis example for troubleshooting Webflow provider deployments

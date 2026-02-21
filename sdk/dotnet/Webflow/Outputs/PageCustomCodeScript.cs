@@ -29,7 +29,7 @@ namespace Community.Pulumi.Webflow.Outputs
         /// <summary>
         /// The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
         /// </summary>
-        public readonly string Version;
+        public readonly string ScriptVersion;
 
         [OutputConstructor]
         private PageCustomCodeScript(
@@ -39,12 +39,12 @@ namespace Community.Pulumi.Webflow.Outputs
 
             string location,
 
-            string version)
+            string scriptVersion)
         {
             Attributes = attributes;
             Id = id;
             Location = location;
-            Version = version;
+            ScriptVersion = scriptVersion;
         }
     }
 }

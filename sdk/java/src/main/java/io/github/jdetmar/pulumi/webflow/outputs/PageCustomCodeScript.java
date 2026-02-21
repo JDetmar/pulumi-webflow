@@ -31,7 +31,7 @@ public final class PageCustomCodeScript {
      * @return The semantic version string for the registered script (e.g., &#39;1.0.0&#39;). This version must match a registered version of the script. You can have multiple versions of the same script registered.
      * 
      */
-    private String version;
+    private String scriptVersion;
 
     private PageCustomCodeScript() {}
     /**
@@ -59,8 +59,8 @@ public final class PageCustomCodeScript {
      * @return The semantic version string for the registered script (e.g., &#39;1.0.0&#39;). This version must match a registered version of the script. You can have multiple versions of the same script registered.
      * 
      */
-    public String version() {
-        return this.version;
+    public String scriptVersion() {
+        return this.scriptVersion;
     }
 
     public static Builder builder() {
@@ -75,14 +75,14 @@ public final class PageCustomCodeScript {
         private Map<String,Object> attributes;
         private String id;
         private String location;
-        private String version;
+        private String scriptVersion;
         public Builder() {}
         public Builder(PageCustomCodeScript defaults) {
     	      Objects.requireNonNull(defaults);
     	      this.attributes = defaults.attributes;
     	      this.id = defaults.id;
     	      this.location = defaults.location;
-    	      this.version = defaults.version;
+    	      this.scriptVersion = defaults.scriptVersion;
         }
 
         @CustomType.Setter
@@ -110,11 +110,11 @@ public final class PageCustomCodeScript {
             return this;
         }
         @CustomType.Setter
-        public Builder version(String version) {
-            if (version == null) {
-              throw new MissingRequiredPropertyException("PageCustomCodeScript", "version");
+        public Builder scriptVersion(String scriptVersion) {
+            if (scriptVersion == null) {
+              throw new MissingRequiredPropertyException("PageCustomCodeScript", "scriptVersion");
             }
-            this.version = version;
+            this.scriptVersion = scriptVersion;
             return this;
         }
         public PageCustomCodeScript build() {
@@ -122,7 +122,7 @@ public final class PageCustomCodeScript {
             _resultValue.attributes = attributes;
             _resultValue.id = id;
             _resultValue.location = location;
-            _resultValue.version = version;
+            _resultValue.scriptVersion = scriptVersion;
             return _resultValue;
         }
     }

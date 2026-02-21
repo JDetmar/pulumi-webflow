@@ -41,7 +41,7 @@ type RegisteredScriptResourceArgs struct {
 	// See https://semver.org/ for more information.
 	// Note: Marked optional for backwards compatibility with existing state, but
 	// Create validates that version is provided for new resources.
-	Version string `pulumi:"version,optional"`
+	Version string `pulumi:"scriptVersion,optional"`
 	// CanCopy indicates whether the script can be copied on site duplication.
 	// Default: false
 	CanCopy bool `pulumi:"canCopy,optional"`
@@ -158,7 +158,7 @@ func (r *RegisteredScriptResource) Diff(
 	stateVersion := req.State.Version
 	inputVersion := req.Inputs.Version
 	if stateVersion != "" && inputVersion != "" && stateVersion != inputVersion {
-		detailedDiff["version"] = p.PropertyDiff{Kind: p.UpdateReplace}
+		detailedDiff["scriptVersion"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
 	if req.State.CanCopy != req.Inputs.CanCopy {

@@ -63,6 +63,10 @@ export class InlineScript extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly scriptId: pulumi.Output<string>;
     /**
+     * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+     */
+    declare public readonly scriptVersion: pulumi.Output<string>;
+    /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
     declare public readonly siteId: pulumi.Output<string>;
@@ -70,10 +74,6 @@ export class InlineScript extends pulumi.CustomResource {
      * The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
      */
     declare public readonly sourceCode: pulumi.Output<string>;
-    /**
-     * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-     */
-    declare public readonly version: pulumi.Output<string>;
 
     /**
      * Create a InlineScript resource with the given unique name, arguments, and options.
@@ -89,21 +89,21 @@ export class InlineScript extends pulumi.CustomResource {
             if (args?.displayName === undefined && !opts.urn) {
                 throw new Error("Missing required property 'displayName'");
             }
+            if (args?.scriptVersion === undefined && !opts.urn) {
+                throw new Error("Missing required property 'scriptVersion'");
+            }
             if (args?.siteId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'siteId'");
             }
             if (args?.sourceCode === undefined && !opts.urn) {
                 throw new Error("Missing required property 'sourceCode'");
             }
-            if (args?.version === undefined && !opts.urn) {
-                throw new Error("Missing required property 'version'");
-            }
             resourceInputs["canCopy"] = args?.canCopy;
             resourceInputs["displayName"] = args?.displayName;
             resourceInputs["integrityHash"] = args?.integrityHash;
+            resourceInputs["scriptVersion"] = args?.scriptVersion;
             resourceInputs["siteId"] = args?.siteId;
             resourceInputs["sourceCode"] = args?.sourceCode;
-            resourceInputs["version"] = args?.version;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["hostedLocation"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
@@ -116,9 +116,9 @@ export class InlineScript extends pulumi.CustomResource {
             resourceInputs["integrityHash"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
             resourceInputs["scriptId"] = undefined /*out*/;
+            resourceInputs["scriptVersion"] = undefined /*out*/;
             resourceInputs["siteId"] = undefined /*out*/;
             resourceInputs["sourceCode"] = undefined /*out*/;
-            resourceInputs["version"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(InlineScript.__pulumiType, name, resourceInputs, opts);
@@ -142,6 +142,10 @@ export interface InlineScriptArgs {
      */
     integrityHash?: pulumi.Input<string>;
     /**
+     * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+     */
+    scriptVersion: pulumi.Input<string>;
+    /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
     siteId: pulumi.Input<string>;
@@ -149,8 +153,4 @@ export interface InlineScriptArgs {
      * The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
      */
     sourceCode: pulumi.Input<string>;
-    /**
-     * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-     */
-    version: pulumi.Input<string>;
 }

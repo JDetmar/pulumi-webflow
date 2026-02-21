@@ -30,12 +30,12 @@ type InlineScript struct {
 	LastUpdated pulumi.StringPtrOutput `pulumi:"lastUpdated"`
 	// The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
 	ScriptId pulumi.StringOutput `pulumi:"scriptId"`
+	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+	ScriptVersion pulumi.StringOutput `pulumi:"scriptVersion"`
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringOutput `pulumi:"siteId"`
 	// The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
 	SourceCode pulumi.StringOutput `pulumi:"sourceCode"`
-	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-	Version pulumi.StringOutput `pulumi:"version"`
 }
 
 // NewInlineScript registers a new resource with the given unique name, arguments, and options.
@@ -48,14 +48,14 @@ func NewInlineScript(ctx *pulumi.Context,
 	if args.DisplayName == nil {
 		return nil, errors.New("invalid value for required argument 'DisplayName'")
 	}
+	if args.ScriptVersion == nil {
+		return nil, errors.New("invalid value for required argument 'ScriptVersion'")
+	}
 	if args.SiteId == nil {
 		return nil, errors.New("invalid value for required argument 'SiteId'")
 	}
 	if args.SourceCode == nil {
 		return nil, errors.New("invalid value for required argument 'SourceCode'")
-	}
-	if args.Version == nil {
-		return nil, errors.New("invalid value for required argument 'Version'")
 	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource InlineScript
@@ -96,12 +96,12 @@ type inlineScriptArgs struct {
 	DisplayName string `pulumi:"displayName"`
 	// The Sub-Resource Integrity (SRI) hash for the script (optional). Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/
 	IntegrityHash *string `pulumi:"integrityHash"`
+	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+	ScriptVersion string `pulumi:"scriptVersion"`
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId string `pulumi:"siteId"`
 	// The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
 	SourceCode string `pulumi:"sourceCode"`
-	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-	Version string `pulumi:"version"`
 }
 
 // The set of arguments for constructing a InlineScript resource.
@@ -112,12 +112,12 @@ type InlineScriptArgs struct {
 	DisplayName pulumi.StringInput
 	// The Sub-Resource Integrity (SRI) hash for the script (optional). Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/
 	IntegrityHash pulumi.StringPtrInput
+	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+	ScriptVersion pulumi.StringInput
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringInput
 	// The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
 	SourceCode pulumi.StringInput
-	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-	Version pulumi.StringInput
 }
 
 func (InlineScriptArgs) ElementType() reflect.Type {
@@ -192,6 +192,11 @@ func (o InlineScriptOutput) ScriptId() pulumi.StringOutput {
 	return o.ApplyT(func(v *InlineScript) pulumi.StringOutput { return v.ScriptId }).(pulumi.StringOutput)
 }
 
+// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+func (o InlineScriptOutput) ScriptVersion() pulumi.StringOutput {
+	return o.ApplyT(func(v *InlineScript) pulumi.StringOutput { return v.ScriptVersion }).(pulumi.StringOutput)
+}
+
 // The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 func (o InlineScriptOutput) SiteId() pulumi.StringOutput {
 	return o.ApplyT(func(v *InlineScript) pulumi.StringOutput { return v.SiteId }).(pulumi.StringOutput)
@@ -200,11 +205,6 @@ func (o InlineScriptOutput) SiteId() pulumi.StringOutput {
 // The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
 func (o InlineScriptOutput) SourceCode() pulumi.StringOutput {
 	return o.ApplyT(func(v *InlineScript) pulumi.StringOutput { return v.SourceCode }).(pulumi.StringOutput)
-}
-
-// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-func (o InlineScriptOutput) Version() pulumi.StringOutput {
-	return o.ApplyT(func(v *InlineScript) pulumi.StringOutput { return v.Version }).(pulumi.StringOutput)
 }
 
 func init() {

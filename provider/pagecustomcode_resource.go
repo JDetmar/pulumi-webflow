@@ -27,7 +27,7 @@ type PageCustomCodeScript struct {
 	ID string `pulumi:"id"`
 	// Version is the semantic version string for the registered script (required).
 	// Example: "1.0.0" or "2.5.3"
-	Version string `pulumi:"version"`
+	Version string `pulumi:"scriptVersion"`
 	// Location is where the script should be applied (required).
 	// Must be either "header" (loaded before body closes) or "footer" (loaded at end of page).
 	Location string `pulumi:"location"`

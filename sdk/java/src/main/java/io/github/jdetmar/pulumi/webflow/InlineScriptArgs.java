@@ -63,6 +63,21 @@ public final class InlineScriptArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
+     * The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+     * 
+     */
+    @Import(name="scriptVersion", required=true)
+    private Output<String> scriptVersion;
+
+    /**
+     * @return The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+     * 
+     */
+    public Output<String> scriptVersion() {
+        return this.scriptVersion;
+    }
+
+    /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      * 
      */
@@ -92,30 +107,15 @@ public final class InlineScriptArgs extends com.pulumi.resources.ResourceArgs {
         return this.sourceCode;
     }
 
-    /**
-     * The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-     * 
-     */
-    @Import(name="version", required=true)
-    private Output<String> version;
-
-    /**
-     * @return The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-     * 
-     */
-    public Output<String> version() {
-        return this.version;
-    }
-
     private InlineScriptArgs() {}
 
     private InlineScriptArgs(InlineScriptArgs $) {
         this.canCopy = $.canCopy;
         this.displayName = $.displayName;
         this.integrityHash = $.integrityHash;
+        this.scriptVersion = $.scriptVersion;
         this.siteId = $.siteId;
         this.sourceCode = $.sourceCode;
-        this.version = $.version;
     }
 
     public static Builder builder() {
@@ -200,6 +200,27 @@ public final class InlineScriptArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
+         * @param scriptVersion The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder scriptVersion(Output<String> scriptVersion) {
+            $.scriptVersion = scriptVersion;
+            return this;
+        }
+
+        /**
+         * @param scriptVersion The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder scriptVersion(String scriptVersion) {
+            return scriptVersion(Output.of(scriptVersion));
+        }
+
+        /**
          * @param siteId The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
          * 
          * @return builder
@@ -241,39 +262,18 @@ public final class InlineScriptArgs extends com.pulumi.resources.ResourceArgs {
             return sourceCode(Output.of(sourceCode));
         }
 
-        /**
-         * @param version The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder version(Output<String> version) {
-            $.version = version;
-            return this;
-        }
-
-        /**
-         * @param version The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder version(String version) {
-            return version(Output.of(version));
-        }
-
         public InlineScriptArgs build() {
             if ($.displayName == null) {
                 throw new MissingRequiredPropertyException("InlineScriptArgs", "displayName");
+            }
+            if ($.scriptVersion == null) {
+                throw new MissingRequiredPropertyException("InlineScriptArgs", "scriptVersion");
             }
             if ($.siteId == null) {
                 throw new MissingRequiredPropertyException("InlineScriptArgs", "siteId");
             }
             if ($.sourceCode == null) {
                 throw new MissingRequiredPropertyException("InlineScriptArgs", "sourceCode");
-            }
-            if ($.version == null) {
-                throw new MissingRequiredPropertyException("InlineScriptArgs", "version");
             }
             return $;
         }

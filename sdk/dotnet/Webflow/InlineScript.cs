@@ -59,6 +59,12 @@ namespace Community.Pulumi.Webflow
         public Output<string> ScriptId { get; private set; } = null!;
 
         /// <summary>
+        /// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+        /// </summary>
+        [Output("scriptVersion")]
+        public Output<string> ScriptVersion { get; private set; } = null!;
+
+        /// <summary>
         /// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
         /// </summary>
         [Output("siteId")]
@@ -69,12 +75,6 @@ namespace Community.Pulumi.Webflow
         /// </summary>
         [Output("sourceCode")]
         public Output<string> SourceCode { get; private set; } = null!;
-
-        /// <summary>
-        /// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-        /// </summary>
-        [Output("version")]
-        public Output<string> Version { get; private set; } = null!;
 
 
         /// <summary>
@@ -141,6 +141,12 @@ namespace Community.Pulumi.Webflow
         public Input<string>? IntegrityHash { get; set; }
 
         /// <summary>
+        /// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+        /// </summary>
+        [Input("scriptVersion", required: true)]
+        public Input<string> ScriptVersion { get; set; } = null!;
+
+        /// <summary>
         /// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
         /// </summary>
         [Input("siteId", required: true)]
@@ -151,12 +157,6 @@ namespace Community.Pulumi.Webflow
         /// </summary>
         [Input("sourceCode", required: true)]
         public Input<string> SourceCode { get; set; } = null!;
-
-        /// <summary>
-        /// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-        /// </summary>
-        [Input("version", required: true)]
-        public Input<string> Version { get; set; } = null!;
 
         public InlineScriptArgs()
         {

@@ -63,13 +63,13 @@ export class RegisteredScript extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly scriptId: pulumi.Output<string>;
     /**
+     * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+     */
+    declare public readonly scriptVersion: pulumi.Output<string | undefined>;
+    /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
     declare public readonly siteId: pulumi.Output<string>;
-    /**
-     * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-     */
-    declare public readonly version: pulumi.Output<string | undefined>;
 
     /**
      * Create a RegisteredScript resource with the given unique name, arguments, and options.
@@ -98,8 +98,8 @@ export class RegisteredScript extends pulumi.CustomResource {
             resourceInputs["displayName"] = args?.displayName;
             resourceInputs["hostedLocation"] = args?.hostedLocation;
             resourceInputs["integrityHash"] = args?.integrityHash;
+            resourceInputs["scriptVersion"] = args?.scriptVersion;
             resourceInputs["siteId"] = args?.siteId;
-            resourceInputs["version"] = args?.version;
             resourceInputs["createdOn"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
             resourceInputs["scriptId"] = undefined /*out*/;
@@ -111,8 +111,8 @@ export class RegisteredScript extends pulumi.CustomResource {
             resourceInputs["integrityHash"] = undefined /*out*/;
             resourceInputs["lastUpdated"] = undefined /*out*/;
             resourceInputs["scriptId"] = undefined /*out*/;
+            resourceInputs["scriptVersion"] = undefined /*out*/;
             resourceInputs["siteId"] = undefined /*out*/;
-            resourceInputs["version"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(RegisteredScript.__pulumiType, name, resourceInputs, opts);
@@ -140,11 +140,11 @@ export interface RegisteredScriptArgs {
      */
     integrityHash: pulumi.Input<string>;
     /**
+     * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+     */
+    scriptVersion?: pulumi.Input<string>;
+    /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      */
     siteId: pulumi.Input<string>;
-    /**
-     * The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-     */
-    version?: pulumi.Input<string>;
 }

@@ -21,7 +21,7 @@ type CustomScriptArgs struct {
 	// The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
 	Location string `pulumi:"location"`
 	// The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
-	Version string `pulumi:"version"`
+	ScriptVersion string `pulumi:"scriptVersion"`
 }
 
 // CustomScriptArgsInput is an input type that accepts CustomScriptArgsArgs and CustomScriptArgsOutput values.
@@ -43,7 +43,7 @@ type CustomScriptArgsArgs struct {
 	// The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
 	Location pulumi.StringInput `pulumi:"location"`
 	// The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
-	Version pulumi.StringInput `pulumi:"version"`
+	ScriptVersion pulumi.StringInput `pulumi:"scriptVersion"`
 }
 
 func (CustomScriptArgsArgs) ElementType() reflect.Type {
@@ -113,8 +113,8 @@ func (o CustomScriptArgsOutput) Location() pulumi.StringOutput {
 }
 
 // The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
-func (o CustomScriptArgsOutput) Version() pulumi.StringOutput {
-	return o.ApplyT(func(v CustomScriptArgs) string { return v.Version }).(pulumi.StringOutput)
+func (o CustomScriptArgsOutput) ScriptVersion() pulumi.StringOutput {
+	return o.ApplyT(func(v CustomScriptArgs) string { return v.ScriptVersion }).(pulumi.StringOutput)
 }
 
 type CustomScriptArgsArrayOutput struct{ *pulumi.OutputState }
@@ -400,7 +400,7 @@ type PageCustomCodeScript struct {
 	// Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
 	Location string `pulumi:"location"`
 	// The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
-	Version string `pulumi:"version"`
+	ScriptVersion string `pulumi:"scriptVersion"`
 }
 
 // PageCustomCodeScriptInput is an input type that accepts PageCustomCodeScriptArgs and PageCustomCodeScriptOutput values.
@@ -422,7 +422,7 @@ type PageCustomCodeScriptArgs struct {
 	// Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
 	Location pulumi.StringInput `pulumi:"location"`
 	// The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
-	Version pulumi.StringInput `pulumi:"version"`
+	ScriptVersion pulumi.StringInput `pulumi:"scriptVersion"`
 }
 
 func (PageCustomCodeScriptArgs) ElementType() reflect.Type {
@@ -492,8 +492,8 @@ func (o PageCustomCodeScriptOutput) Location() pulumi.StringOutput {
 }
 
 // The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
-func (o PageCustomCodeScriptOutput) Version() pulumi.StringOutput {
-	return o.ApplyT(func(v PageCustomCodeScript) string { return v.Version }).(pulumi.StringOutput)
+func (o PageCustomCodeScriptOutput) ScriptVersion() pulumi.StringOutput {
+	return o.ApplyT(func(v PageCustomCodeScript) string { return v.ScriptVersion }).(pulumi.StringOutput)
 }
 
 type PageCustomCodeScriptArrayOutput struct{ *pulumi.OutputState }

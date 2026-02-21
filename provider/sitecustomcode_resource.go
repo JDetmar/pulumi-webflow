@@ -29,7 +29,7 @@ type CustomScriptArgs struct {
 	ID string `pulumi:"id"`
 	// Version is the semantic version string for the registered script (e.g., "1.0.0").
 	// This version must exist for the registered script.
-	Version string `pulumi:"version"`
+	Version string `pulumi:"scriptVersion"`
 	// Location is where the script is placed on the page.
 	// Valid values: "header" (placed in <head>) or "footer" (placed before </body>).
 	Location string `pulumi:"location"`

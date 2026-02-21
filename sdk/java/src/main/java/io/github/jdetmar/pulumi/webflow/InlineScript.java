@@ -119,6 +119,20 @@ public class InlineScript extends com.pulumi.resources.CustomResource {
         return this.scriptId;
     }
     /**
+     * The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+     * 
+     */
+    @Export(name="scriptVersion", refs={String.class}, tree="[0]")
+    private Output<String> scriptVersion;
+
+    /**
+     * @return The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+     * 
+     */
+    public Output<String> scriptVersion() {
+        return this.scriptVersion;
+    }
+    /**
      * The Webflow site ID (24-character lowercase hexadecimal string, e.g., &#39;5f0c8c9e1c9d440000e8d8c3&#39;). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
      * 
      */
@@ -145,20 +159,6 @@ public class InlineScript extends com.pulumi.resources.CustomResource {
      */
     public Output<String> sourceCode() {
         return this.sourceCode;
-    }
-    /**
-     * The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-     * 
-     */
-    @Export(name="version", refs={String.class}, tree="[0]")
-    private Output<String> version;
-
-    /**
-     * @return The Semantic Version (SemVer) string for the script (e.g., &#39;1.0.0&#39;, &#39;2.3.1&#39;). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-     * 
-     */
-    public Output<String> version() {
-        return this.version;
     }
 
     /**

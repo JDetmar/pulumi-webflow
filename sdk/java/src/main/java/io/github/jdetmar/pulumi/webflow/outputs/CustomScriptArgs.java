@@ -32,7 +32,7 @@ public final class CustomScriptArgs {
      * @return The semantic version string for the registered script (e.g., &#39;1.0.0&#39;, &#39;0.1.2&#39;). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
      * 
      */
-    private String version;
+    private String scriptVersion;
 
     private CustomScriptArgs() {}
     /**
@@ -60,8 +60,8 @@ public final class CustomScriptArgs {
      * @return The semantic version string for the registered script (e.g., &#39;1.0.0&#39;, &#39;0.1.2&#39;). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
      * 
      */
-    public String version() {
-        return this.version;
+    public String scriptVersion() {
+        return this.scriptVersion;
     }
 
     public static Builder builder() {
@@ -76,14 +76,14 @@ public final class CustomScriptArgs {
         private @Nullable Map<String,Object> attributes;
         private String id;
         private String location;
-        private String version;
+        private String scriptVersion;
         public Builder() {}
         public Builder(CustomScriptArgs defaults) {
     	      Objects.requireNonNull(defaults);
     	      this.attributes = defaults.attributes;
     	      this.id = defaults.id;
     	      this.location = defaults.location;
-    	      this.version = defaults.version;
+    	      this.scriptVersion = defaults.scriptVersion;
         }
 
         @CustomType.Setter
@@ -109,11 +109,11 @@ public final class CustomScriptArgs {
             return this;
         }
         @CustomType.Setter
-        public Builder version(String version) {
-            if (version == null) {
-              throw new MissingRequiredPropertyException("CustomScriptArgs", "version");
+        public Builder scriptVersion(String scriptVersion) {
+            if (scriptVersion == null) {
+              throw new MissingRequiredPropertyException("CustomScriptArgs", "scriptVersion");
             }
-            this.version = version;
+            this.scriptVersion = scriptVersion;
             return this;
         }
         public CustomScriptArgs build() {
@@ -121,7 +121,7 @@ public final class CustomScriptArgs {
             _resultValue.attributes = attributes;
             _resultValue.id = id;
             _resultValue.location = location;
-            _resultValue.version = version;
+            _resultValue.scriptVersion = scriptVersion;
             return _resultValue;
         }
     }

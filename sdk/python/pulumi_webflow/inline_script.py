@@ -20,24 +20,24 @@ __all__ = ['InlineScriptArgs', 'InlineScript']
 class InlineScriptArgs:
     def __init__(__self__, *,
                  display_name: pulumi.Input[_builtins.str],
+                 script_version: pulumi.Input[_builtins.str],
                  site_id: pulumi.Input[_builtins.str],
                  source_code: pulumi.Input[_builtins.str],
-                 version: pulumi.Input[_builtins.str],
                  can_copy: Optional[pulumi.Input[_builtins.bool]] = None,
                  integrity_hash: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a InlineScript resource.
         :param pulumi.Input[_builtins.str] display_name: The user-facing name for the script (1-50 alphanumeric characters). This name is used to identify the script in the Webflow interface. Only letters (A-Z, a-z) and numbers (0-9) are allowed. Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'.
+        :param pulumi.Input[_builtins.str] script_version: The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
         :param pulumi.Input[_builtins.str] site_id: The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
         :param pulumi.Input[_builtins.str] source_code: The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
-        :param pulumi.Input[_builtins.str] version: The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
         :param pulumi.Input[_builtins.bool] can_copy: Indicates whether the script can be copied when the site is duplicated. Default: false. When true, the script will be included when creating a copy of the site.
         :param pulumi.Input[_builtins.str] integrity_hash: The Sub-Resource Integrity (SRI) hash for the script (optional). Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/
         """
         pulumi.set(__self__, "display_name", display_name)
+        pulumi.set(__self__, "script_version", script_version)
         pulumi.set(__self__, "site_id", site_id)
         pulumi.set(__self__, "source_code", source_code)
-        pulumi.set(__self__, "version", version)
         if can_copy is not None:
             pulumi.set(__self__, "can_copy", can_copy)
         if integrity_hash is not None:
@@ -54,6 +54,18 @@ class InlineScriptArgs:
     @display_name.setter
     def display_name(self, value: pulumi.Input[_builtins.str]):
         pulumi.set(self, "display_name", value)
+
+    @_builtins.property
+    @pulumi.getter(name="scriptVersion")
+    def script_version(self) -> pulumi.Input[_builtins.str]:
+        """
+        The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+        """
+        return pulumi.get(self, "script_version")
+
+    @script_version.setter
+    def script_version(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "script_version", value)
 
     @_builtins.property
     @pulumi.getter(name="siteId")
@@ -78,18 +90,6 @@ class InlineScriptArgs:
     @source_code.setter
     def source_code(self, value: pulumi.Input[_builtins.str]):
         pulumi.set(self, "source_code", value)
-
-    @_builtins.property
-    @pulumi.getter
-    def version(self) -> pulumi.Input[_builtins.str]:
-        """
-        The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-        """
-        return pulumi.get(self, "version")
-
-    @version.setter
-    def version(self, value: pulumi.Input[_builtins.str]):
-        pulumi.set(self, "version", value)
 
     @_builtins.property
     @pulumi.getter(name="canCopy")
@@ -125,9 +125,9 @@ class InlineScript(pulumi.CustomResource):
                  can_copy: Optional[pulumi.Input[_builtins.bool]] = None,
                  display_name: Optional[pulumi.Input[_builtins.str]] = None,
                  integrity_hash: Optional[pulumi.Input[_builtins.str]] = None,
+                 script_version: Optional[pulumi.Input[_builtins.str]] = None,
                  site_id: Optional[pulumi.Input[_builtins.str]] = None,
                  source_code: Optional[pulumi.Input[_builtins.str]] = None,
-                 version: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Manages inline custom code scripts in the Webflow script registry. This resource allows you to register and manage inline JavaScript code that can be deployed across your Webflow site with version control.
@@ -137,9 +137,9 @@ class InlineScript(pulumi.CustomResource):
         :param pulumi.Input[_builtins.bool] can_copy: Indicates whether the script can be copied when the site is duplicated. Default: false. When true, the script will be included when creating a copy of the site.
         :param pulumi.Input[_builtins.str] display_name: The user-facing name for the script (1-50 alphanumeric characters). This name is used to identify the script in the Webflow interface. Only letters (A-Z, a-z) and numbers (0-9) are allowed. Example valid names: 'CmsSlider', 'AnalyticsScript', 'MyCustomScript123'.
         :param pulumi.Input[_builtins.str] integrity_hash: The Sub-Resource Integrity (SRI) hash for the script (optional). Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/
+        :param pulumi.Input[_builtins.str] script_version: The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
         :param pulumi.Input[_builtins.str] site_id: The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
         :param pulumi.Input[_builtins.str] source_code: The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
-        :param pulumi.Input[_builtins.str] version: The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
         """
         ...
     @overload
@@ -168,9 +168,9 @@ class InlineScript(pulumi.CustomResource):
                  can_copy: Optional[pulumi.Input[_builtins.bool]] = None,
                  display_name: Optional[pulumi.Input[_builtins.str]] = None,
                  integrity_hash: Optional[pulumi.Input[_builtins.str]] = None,
+                 script_version: Optional[pulumi.Input[_builtins.str]] = None,
                  site_id: Optional[pulumi.Input[_builtins.str]] = None,
                  source_code: Optional[pulumi.Input[_builtins.str]] = None,
-                 version: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -185,15 +185,15 @@ class InlineScript(pulumi.CustomResource):
                 raise TypeError("Missing required property 'display_name'")
             __props__.__dict__["display_name"] = display_name
             __props__.__dict__["integrity_hash"] = integrity_hash
+            if script_version is None and not opts.urn:
+                raise TypeError("Missing required property 'script_version'")
+            __props__.__dict__["script_version"] = script_version
             if site_id is None and not opts.urn:
                 raise TypeError("Missing required property 'site_id'")
             __props__.__dict__["site_id"] = site_id
             if source_code is None and not opts.urn:
                 raise TypeError("Missing required property 'source_code'")
             __props__.__dict__["source_code"] = source_code
-            if version is None and not opts.urn:
-                raise TypeError("Missing required property 'version'")
-            __props__.__dict__["version"] = version
             __props__.__dict__["created_on"] = None
             __props__.__dict__["hosted_location"] = None
             __props__.__dict__["last_updated"] = None
@@ -227,9 +227,9 @@ class InlineScript(pulumi.CustomResource):
         __props__.__dict__["integrity_hash"] = None
         __props__.__dict__["last_updated"] = None
         __props__.__dict__["script_id"] = None
+        __props__.__dict__["script_version"] = None
         __props__.__dict__["site_id"] = None
         __props__.__dict__["source_code"] = None
-        __props__.__dict__["version"] = None
         return InlineScript(resource_name, opts=opts, __props__=__props__)
 
     @_builtins.property
@@ -289,6 +289,14 @@ class InlineScript(pulumi.CustomResource):
         return pulumi.get(self, "script_id")
 
     @_builtins.property
+    @pulumi.getter(name="scriptVersion")
+    def script_version(self) -> pulumi.Output[_builtins.str]:
+        """
+        The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+        """
+        return pulumi.get(self, "script_version")
+
+    @_builtins.property
     @pulumi.getter(name="siteId")
     def site_id(self) -> pulumi.Output[_builtins.str]:
         """
@@ -303,12 +311,4 @@ class InlineScript(pulumi.CustomResource):
         The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead.
         """
         return pulumi.get(self, "source_code")
-
-    @_builtins.property
-    @pulumi.getter
-    def version(self) -> pulumi.Output[_builtins.str]:
-        """
-        The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-        """
-        return pulumi.get(self, "version")
 

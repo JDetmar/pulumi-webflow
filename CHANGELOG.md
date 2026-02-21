@@ -4,6 +4,14 @@ All notable changes to the Pulumi Webflow provider will be documented in this fi
 
 ## [Unreleased]
 
+## [v0.10.0] - 2026-02-20
+
+### Breaking Changes
+
+- fix!: rename `version` to `scriptVersion` on RegisteredScript and InlineScript resources to avoid pulumi-go-provider framework collision (#88)
+  - The `version` input/output has been renamed to `scriptVersion` on both `RegisteredScript` and `InlineScript` resources
+  - **Migration:** Replace `version` with `scriptVersion` in your resource inputs (e.g., `version: "1.0.0"` → `scriptVersion: "1.0.0"`)
+
 ## [v0.9.4] - 2026-02-09
 
 ### Breaking Changes
@@ -64,7 +72,8 @@ All notable changes to the Pulumi Webflow provider will be documented in this fi
 - fix: add collectionId output and fix provider issues
 - fix: release pipeline and npm publishing
 
-[Unreleased]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.4...HEAD
+[Unreleased]: https://github.com/JDetmar/pulumi-webflow/compare/v0.10.0...HEAD
+[v0.10.0]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.4...v0.10.0
 [v0.9.4]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.3...v0.9.4
 [v0.9.3]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.2...v0.9.3
 [v0.9.2]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.1...v0.9.2

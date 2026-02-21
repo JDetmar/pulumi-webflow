@@ -29,7 +29,7 @@ namespace Community.Pulumi.Webflow.Outputs
         /// <summary>
         /// The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
         /// </summary>
-        public readonly string Version;
+        public readonly string ScriptVersion;
 
         [OutputConstructor]
         private CustomScriptArgs(
@@ -39,12 +39,12 @@ namespace Community.Pulumi.Webflow.Outputs
 
             string location,
 
-            string version)
+            string scriptVersion)
         {
             Attributes = attributes;
             Id = id;
             Location = location;
-            Version = version;
+            ScriptVersion = scriptVersion;
         }
     }
 }

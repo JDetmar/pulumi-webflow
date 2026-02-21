@@ -30,10 +30,10 @@ type RegisteredScript struct {
 	LastUpdated pulumi.StringPtrOutput `pulumi:"lastUpdated"`
 	// The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources.
 	ScriptId pulumi.StringOutput `pulumi:"scriptId"`
+	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+	ScriptVersion pulumi.StringPtrOutput `pulumi:"scriptVersion"`
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringOutput `pulumi:"siteId"`
-	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-	Version pulumi.StringPtrOutput `pulumi:"version"`
 }
 
 // NewRegisteredScript registers a new resource with the given unique name, arguments, and options.
@@ -96,10 +96,10 @@ type registeredScriptArgs struct {
 	HostedLocation string `pulumi:"hostedLocation"`
 	// The Sub-Resource Integrity (SRI) hash for the script. Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/
 	IntegrityHash string `pulumi:"integrityHash"`
+	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+	ScriptVersion *string `pulumi:"scriptVersion"`
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId string `pulumi:"siteId"`
-	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-	Version *string `pulumi:"version"`
 }
 
 // The set of arguments for constructing a RegisteredScript resource.
@@ -112,10 +112,10 @@ type RegisteredScriptArgs struct {
 	HostedLocation pulumi.StringInput
 	// The Sub-Resource Integrity (SRI) hash for the script. Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/
 	IntegrityHash pulumi.StringInput
+	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+	ScriptVersion pulumi.StringPtrInput
 	// The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 	SiteId pulumi.StringInput
-	// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-	Version pulumi.StringPtrInput
 }
 
 func (RegisteredScriptArgs) ElementType() reflect.Type {
@@ -190,14 +190,14 @@ func (o RegisteredScriptOutput) ScriptId() pulumi.StringOutput {
 	return o.ApplyT(func(v *RegisteredScript) pulumi.StringOutput { return v.ScriptId }).(pulumi.StringOutput)
 }
 
+// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
+func (o RegisteredScriptOutput) ScriptVersion() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *RegisteredScript) pulumi.StringPtrOutput { return v.ScriptVersion }).(pulumi.StringPtrOutput)
+}
+
 // The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls.
 func (o RegisteredScriptOutput) SiteId() pulumi.StringOutput {
 	return o.ApplyT(func(v *RegisteredScript) pulumi.StringOutput { return v.SiteId }).(pulumi.StringOutput)
-}
-
-// The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning.
-func (o RegisteredScriptOutput) Version() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *RegisteredScript) pulumi.StringPtrOutput { return v.Version }).(pulumi.StringPtrOutput)
 }
 
 func init() {

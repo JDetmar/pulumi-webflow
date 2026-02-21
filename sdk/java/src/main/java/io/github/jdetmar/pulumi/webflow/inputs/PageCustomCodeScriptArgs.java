@@ -65,15 +65,15 @@ public final class PageCustomCodeScriptArgs extends com.pulumi.resources.Resourc
      * The semantic version string for the registered script (e.g., &#39;1.0.0&#39;). This version must match a registered version of the script. You can have multiple versions of the same script registered.
      * 
      */
-    @Import(name="version", required=true)
-    private Output<String> version;
+    @Import(name="scriptVersion", required=true)
+    private Output<String> scriptVersion;
 
     /**
      * @return The semantic version string for the registered script (e.g., &#39;1.0.0&#39;). This version must match a registered version of the script. You can have multiple versions of the same script registered.
      * 
      */
-    public Output<String> version() {
-        return this.version;
+    public Output<String> scriptVersion() {
+        return this.scriptVersion;
     }
 
     private PageCustomCodeScriptArgs() {}
@@ -82,7 +82,7 @@ public final class PageCustomCodeScriptArgs extends com.pulumi.resources.Resourc
         this.attributes = $.attributes;
         this.id = $.id;
         this.location = $.location;
-        this.version = $.version;
+        this.scriptVersion = $.scriptVersion;
     }
 
     public static Builder builder() {
@@ -167,24 +167,24 @@ public final class PageCustomCodeScriptArgs extends com.pulumi.resources.Resourc
         }
 
         /**
-         * @param version The semantic version string for the registered script (e.g., &#39;1.0.0&#39;). This version must match a registered version of the script. You can have multiple versions of the same script registered.
+         * @param scriptVersion The semantic version string for the registered script (e.g., &#39;1.0.0&#39;). This version must match a registered version of the script. You can have multiple versions of the same script registered.
          * 
          * @return builder
          * 
          */
-        public Builder version(Output<String> version) {
-            $.version = version;
+        public Builder scriptVersion(Output<String> scriptVersion) {
+            $.scriptVersion = scriptVersion;
             return this;
         }
 
         /**
-         * @param version The semantic version string for the registered script (e.g., &#39;1.0.0&#39;). This version must match a registered version of the script. You can have multiple versions of the same script registered.
+         * @param scriptVersion The semantic version string for the registered script (e.g., &#39;1.0.0&#39;). This version must match a registered version of the script. You can have multiple versions of the same script registered.
          * 
          * @return builder
          * 
          */
-        public Builder version(String version) {
-            return version(Output.of(version));
+        public Builder scriptVersion(String scriptVersion) {
+            return scriptVersion(Output.of(scriptVersion));
         }
 
         public PageCustomCodeScriptArgs build() {
@@ -197,8 +197,8 @@ public final class PageCustomCodeScriptArgs extends com.pulumi.resources.Resourc
             if ($.location == null) {
                 throw new MissingRequiredPropertyException("PageCustomCodeScriptArgs", "location");
             }
-            if ($.version == null) {
-                throw new MissingRequiredPropertyException("PageCustomCodeScriptArgs", "version");
+            if ($.scriptVersion == null) {
+                throw new MissingRequiredPropertyException("PageCustomCodeScriptArgs", "scriptVersion");
             }
             return $;
         }

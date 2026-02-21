@@ -40,8 +40,8 @@ namespace Community.Pulumi.Webflow.Inputs
         /// <summary>
         /// The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
         /// </summary>
-        [Input("version", required: true)]
-        public Input<string> Version { get; set; } = null!;
+        [Input("scriptVersion", required: true)]
+        public Input<string> ScriptVersion { get; set; } = null!;
 
         public CustomScriptArgsArgs()
         {

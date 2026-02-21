@@ -563,7 +563,7 @@ func TestInlineScriptDiff_SameVersion_NoChange(t *testing.T) {
 	}
 
 	if diffResp.DetailedDiff != nil {
-		if _, hasVersion := diffResp.DetailedDiff["version"]; hasVersion {
+		if _, hasVersion := diffResp.DetailedDiff["scriptVersion"]; hasVersion {
 			t.Errorf("Diff() incorrectly flagged version for change when values are identical")
 		}
 	}
@@ -664,7 +664,7 @@ func TestInlineScriptDiff_ChangesRequireReplacement(t *testing.T) {
 			modifyFn: func(args *InlineScriptArgs) {
 				args.Version = "2.0.0"
 			},
-			fieldName: "version",
+			fieldName: "scriptVersion",
 		},
 		{
 			name: "canCopy change",

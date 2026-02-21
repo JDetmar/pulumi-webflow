@@ -35,7 +35,7 @@ if not MYPY:
         """
         The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
         """
-        version: pulumi.Input[_builtins.str]
+        script_version: pulumi.Input[_builtins.str]
         """
         The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
         """
@@ -51,17 +51,17 @@ class CustomScriptArgsArgs:
     def __init__(__self__, *,
                  id: pulumi.Input[_builtins.str],
                  location: pulumi.Input[_builtins.str],
-                 version: pulumi.Input[_builtins.str],
+                 script_version: pulumi.Input[_builtins.str],
                  attributes: Optional[pulumi.Input[Mapping[str, Any]]] = None):
         """
         :param pulumi.Input[_builtins.str] id: The unique identifier of the registered custom code script. The script must first be registered to the site using the RegisterScript resource. Examples: 'cms_slider', 'analytics', 'custom_widget'
         :param pulumi.Input[_builtins.str] location: The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded.
-        :param pulumi.Input[_builtins.str] version: The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
+        :param pulumi.Input[_builtins.str] script_version: The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
         :param pulumi.Input[Mapping[str, Any]] attributes: Optional developer-specified key/value pairs applied as HTML attributes to the script tag. Example: {'data-config': 'my-value'}. These attributes are passed directly to the script tag.
         """
         pulumi.set(__self__, "id", id)
         pulumi.set(__self__, "location", location)
-        pulumi.set(__self__, "version", version)
+        pulumi.set(__self__, "script_version", script_version)
         if attributes is not None:
             pulumi.set(__self__, "attributes", attributes)
 
@@ -90,16 +90,16 @@ class CustomScriptArgsArgs:
         pulumi.set(self, "location", value)
 
     @_builtins.property
-    @pulumi.getter
-    def version(self) -> pulumi.Input[_builtins.str]:
+    @pulumi.getter(name="scriptVersion")
+    def script_version(self) -> pulumi.Input[_builtins.str]:
         """
         The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
         """
-        return pulumi.get(self, "version")
+        return pulumi.get(self, "script_version")
 
-    @version.setter
-    def version(self, value: pulumi.Input[_builtins.str]):
-        pulumi.set(self, "version", value)
+    @script_version.setter
+    def script_version(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "script_version", value)
 
     @_builtins.property
     @pulumi.getter
@@ -178,7 +178,7 @@ if not MYPY:
         """
         Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
         """
-        version: pulumi.Input[_builtins.str]
+        script_version: pulumi.Input[_builtins.str]
         """
         The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
         """
@@ -191,17 +191,17 @@ class PageCustomCodeScriptArgs:
                  attributes: pulumi.Input[Mapping[str, Any]],
                  id: pulumi.Input[_builtins.str],
                  location: pulumi.Input[_builtins.str],
-                 version: pulumi.Input[_builtins.str]):
+                 script_version: pulumi.Input[_builtins.str]):
         """
         :param pulumi.Input[Mapping[str, Any]] attributes: Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
         :param pulumi.Input[_builtins.str] id: The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
         :param pulumi.Input[_builtins.str] location: Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
-        :param pulumi.Input[_builtins.str] version: The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
+        :param pulumi.Input[_builtins.str] script_version: The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
         """
         pulumi.set(__self__, "attributes", attributes)
         pulumi.set(__self__, "id", id)
         pulumi.set(__self__, "location", location)
-        pulumi.set(__self__, "version", version)
+        pulumi.set(__self__, "script_version", script_version)
 
     @_builtins.property
     @pulumi.getter
@@ -240,15 +240,15 @@ class PageCustomCodeScriptArgs:
         pulumi.set(self, "location", value)
 
     @_builtins.property
-    @pulumi.getter
-    def version(self) -> pulumi.Input[_builtins.str]:
+    @pulumi.getter(name="scriptVersion")
+    def script_version(self) -> pulumi.Input[_builtins.str]:
         """
         The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
         """
-        return pulumi.get(self, "version")
+        return pulumi.get(self, "script_version")
 
-    @version.setter
-    def version(self, value: pulumi.Input[_builtins.str]):
-        pulumi.set(self, "version", value)
+    @script_version.setter
+    def script_version(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "script_version", value)
 
 

@@ -30,7 +30,7 @@ type InlineScriptArgs struct {
 	SourceCode string `pulumi:"sourceCode"`
 	// Version is the Semantic Version (SemVer) string for the script.
 	// Format: "major.minor.patch" (e.g., "1.0.0", "2.3.1")
-	Version string `pulumi:"version"`
+	Version string `pulumi:"scriptVersion"`
 	// DisplayName is the user-facing name for the script (1-50 alphanumeric characters).
 	// Example: "CmsSlider", "AnalyticsScript", "MyCustomScript123"
 	DisplayName string `pulumi:"displayName"`
@@ -158,7 +158,7 @@ func (r *InlineScript) Diff(
 	stateVersion := req.State.Version
 	inputVersion := req.Inputs.Version
 	if stateVersion != "" && inputVersion != "" && stateVersion != inputVersion {
-		detailedDiff["version"] = p.PropertyDiff{Kind: p.UpdateReplace}
+		detailedDiff["scriptVersion"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
 	if req.State.CanCopy != req.Inputs.CanCopy {

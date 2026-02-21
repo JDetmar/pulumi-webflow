@@ -21,7 +21,7 @@ export interface CustomScriptArgs {
     /**
      * The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied.
      */
-    version: string;
+    scriptVersion: string;
 }
 
 export interface GetTokenInfoApplication {
@@ -116,7 +116,7 @@ export interface PageCustomCodeScript {
     /**
      * The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
      */
-    version: string;
+    scriptVersion: string;
 }
 
 export interface PageInfo {

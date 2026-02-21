@@ -55,7 +55,7 @@
           "type": "string",
           "description": "The location where the script is placed on the page. Valid values: 'header' (placed in the <head> section), 'footer' (placed before </body>). Scripts in the header execute before page content loads, while footer scripts execute after the page has loaded."
         },
-        "version": {
+        "scriptVersion": {
           "type": "string",
           "description": "The semantic version string for the registered script (e.g., '1.0.0', '0.1.2'). This version must exist for the registered script ID. When you update the version, a different version of the script will be applied."
         }
@@ -63,7 +63,7 @@
       "type": "object",
       "required": [
         "id",
-        "version",
+        "scriptVersion",
         "location"
       ]
     },
@@ -201,7 +201,7 @@
           "type": "string",
           "description": "Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded."
         },
-        "version": {
+        "scriptVersion": {
           "type": "string",
           "description": "The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered."
         }
@@ -209,7 +209,7 @@
       "type": "object",
       "required": [
         "id",
-        "version",
+        "scriptVersion",
         "location",
         "attributes"
       ]
@@ -717,6 +717,10 @@
           "type": "string",
           "description": "The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources."
         },
+        "scriptVersion": {
+          "type": "string",
+          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
+        },
         "siteId": {
           "type": "string",
           "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
@@ -724,16 +728,12 @@
         "sourceCode": {
           "type": "string",
           "description": "The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead."
-        },
-        "version": {
-          "type": "string",
-          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
         }
       },
       "required": [
         "siteId",
         "sourceCode",
-        "version",
+        "scriptVersion",
         "displayName",
         "scriptId"
       ],
@@ -750,6 +750,10 @@
           "type": "string",
           "description": "The Sub-Resource Integrity (SRI) hash for the script (optional). Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/"
         },
+        "scriptVersion": {
+          "type": "string",
+          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
+        },
         "siteId": {
           "type": "string",
           "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
@@ -757,16 +761,12 @@
         "sourceCode": {
           "type": "string",
           "description": "The inline JavaScript code to register, limited to 2000 characters. This code will be directly embedded in your Webflow site. If your script exceeds 2000 characters, consider hosting it externally and using the RegisteredScript resource with a hostedLocation instead."
-        },
-        "version": {
-          "type": "string",
-          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
         }
       },
       "requiredInputs": [
         "siteId",
         "sourceCode",
-        "version",
+        "scriptVersion",
         "displayName"
       ]
     },
@@ -1014,13 +1014,13 @@
           "type": "string",
           "description": "The Webflow-assigned script ID (read-only). This is typically the lowercase version of displayName. Use this value when referencing the script in SiteCustomCode or PageCustomCode resources."
         },
+        "scriptVersion": {
+          "type": "string",
+          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
+        },
         "siteId": {
           "type": "string",
           "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
-        },
-        "version": {
-          "type": "string",
-          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
         }
       },
       "required": [
@@ -1047,13 +1047,13 @@
           "type": "string",
           "description": "The Sub-Resource Integrity (SRI) hash for the script. Format: 'sha384-<hash>', 'sha256-<hash>', or 'sha512-<hash>'. SRI hashes help ensure that the script hasn't been modified in transit. You can generate an SRI hash using https://www.srihash.org/"
         },
+        "scriptVersion": {
+          "type": "string",
+          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
+        },
         "siteId": {
           "type": "string",
           "description": "The Webflow site ID (24-character lowercase hexadecimal string, e.g., '5f0c8c9e1c9d440000e8d8c3'). You can find your site ID in the Webflow dashboard under Site Settings. This field will be validated before making any API calls."
-        },
-        "version": {
-          "type": "string",
-          "description": "The Semantic Version (SemVer) string for the script (e.g., '1.0.0', '2.3.1'). This helps track different versions of your script. See https://semver.org/ for more information on semantic versioning."
         }
       },
       "requiredInputs": [

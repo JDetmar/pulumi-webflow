@@ -90,7 +90,7 @@ func TestCredentialNotLogged(t *testing.T) {
 			name:     "TokenNotInStringRepresentation",
 			apiToken: "super-secret-token-xyz",
 		},
-		{
+		{ //nolint:gosec // G101: test fixture, not real credentials
 			name:     "TokenNotExposedInConfig",
 			apiToken: "webflow-api-token-abc123",
 		},

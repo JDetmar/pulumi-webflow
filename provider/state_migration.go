@@ -48,7 +48,9 @@ func (*InlineScript) StateMigrations(_ context.Context) []infer.StateMigrationFu
 	}
 }
 
-func migrateInlineScriptFromV09(_ context.Context, old inlineScriptStateV09) (infer.MigrationResult[InlineScriptState], error) {
+func migrateInlineScriptFromV09(
+	_ context.Context, old inlineScriptStateV09,
+) (infer.MigrationResult[InlineScriptState], error) {
 	return infer.MigrationResult[InlineScriptState]{
 		Result: &InlineScriptState{
 			InlineScriptArgs: InlineScriptArgs{
@@ -83,13 +85,17 @@ type registeredScriptStateV09 struct {
 }
 
 // StateMigrations implements infer.CustomStateMigrations for RegisteredScriptResource.
-func (*RegisteredScriptResource) StateMigrations(_ context.Context) []infer.StateMigrationFunc[RegisteredScriptResourceState] {
+func (*RegisteredScriptResource) StateMigrations(
+	_ context.Context,
+) []infer.StateMigrationFunc[RegisteredScriptResourceState] {
 	return []infer.StateMigrationFunc[RegisteredScriptResourceState]{
 		infer.StateMigration(migrateRegisteredScriptFromV09),
 	}
 }
 
-func migrateRegisteredScriptFromV09(_ context.Context, old registeredScriptStateV09) (infer.MigrationResult[RegisteredScriptResourceState], error) {
+func migrateRegisteredScriptFromV09(
+	_ context.Context, old registeredScriptStateV09,
+) (infer.MigrationResult[RegisteredScriptResourceState], error) {
 	return infer.MigrationResult[RegisteredScriptResourceState]{
 		Result: &RegisteredScriptResourceState{
 			RegisteredScriptResourceArgs: RegisteredScriptResourceArgs{
@@ -133,7 +139,9 @@ func (*SiteCustomCode) StateMigrations(_ context.Context) []infer.StateMigration
 	}
 }
 
-func migrateSiteCustomCodeFromV09(_ context.Context, old siteCustomCodeStateV09) (infer.MigrationResult[SiteCustomCodeState], error) {
+func migrateSiteCustomCodeFromV09(
+	_ context.Context, old siteCustomCodeStateV09,
+) (infer.MigrationResult[SiteCustomCodeState], error) {
 	scripts := make([]CustomScriptArgs, len(old.Scripts))
 	for i, s := range old.Scripts {
 		scripts[i] = CustomScriptArgs{
@@ -167,10 +175,10 @@ type pageCustomCodeScriptV09 struct {
 
 // pageCustomCodeStateV09 represents the PageCustomCode state shape from v0.9.x.
 type pageCustomCodeStateV09 struct {
-	PageID      string                     `pulumi:"pageId"`
-	Scripts     []pageCustomCodeScriptV09  `pulumi:"scripts"`
-	LastUpdated string                     `pulumi:"lastUpdated,optional"`
-	CreatedOn   string                     `pulumi:"createdOn,optional"`
+	PageID      string                    `pulumi:"pageId"`
+	Scripts     []pageCustomCodeScriptV09 `pulumi:"scripts"`
+	LastUpdated string                    `pulumi:"lastUpdated,optional"`
+	CreatedOn   string                    `pulumi:"createdOn,optional"`
 }
 
 // StateMigrations implements infer.CustomStateMigrations for PageCustomCode.
@@ -180,7 +188,9 @@ func (*PageCustomCode) StateMigrations(_ context.Context) []infer.StateMigration
 	}
 }
 
-func migratePageCustomCodeFromV09(_ context.Context, old pageCustomCodeStateV09) (infer.MigrationResult[PageCustomCodeState], error) {
+func migratePageCustomCodeFromV09(
+	_ context.Context, old pageCustomCodeStateV09,
+) (infer.MigrationResult[PageCustomCodeState], error) {
 	scripts := make([]PageCustomCodeScript, len(old.Scripts))
 	for i, s := range old.Scripts {
 		scripts[i] = PageCustomCodeScript{

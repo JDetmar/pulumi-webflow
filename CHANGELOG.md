@@ -4,6 +4,14 @@ All notable changes to the Pulumi Webflow provider will be documented in this fi
 
 ## [Unreleased]
 
+## [v0.10.1] - 2026-03-19
+
+### Bug Fixes
+
+- fix: add automatic state migrations for `version`→`scriptVersion` rename (#90)
+  - Upgrades from v0.9.x to v0.10.x no longer fail on `pulumi preview` for stacks with `InlineScript`, `RegisteredScript`, `SiteCustomCode`, or `PageCustomCode` resources
+  - Old state containing the `version` property is automatically migrated to `scriptVersion` on first access
+
 ## [v0.10.0] - 2026-02-20
 
 ### Breaking Changes
@@ -72,7 +80,8 @@ All notable changes to the Pulumi Webflow provider will be documented in this fi
 - fix: add collectionId output and fix provider issues
 - fix: release pipeline and npm publishing
 
-[Unreleased]: https://github.com/JDetmar/pulumi-webflow/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/JDetmar/pulumi-webflow/compare/v0.10.1...HEAD
+[v0.10.1]: https://github.com/JDetmar/pulumi-webflow/compare/v0.10.0...v0.10.1
 [v0.10.0]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.4...v0.10.0
 [v0.9.4]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.3...v0.9.4
 [v0.9.3]: https://github.com/JDetmar/pulumi-webflow/compare/v0.9.2...v0.9.3

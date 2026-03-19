@@ -1,8 +1,0 @@
-name: webflow-multi-site-template
-runtime: python
-description: Multi-Site Management Example - Python (Template-Based)
-
-config:
-  webflow:apiToken:
-    description: Webflow API token (from WEBFLOW_API_TOKEN environment variable)
-    secret: true

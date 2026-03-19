@@ -1,8 +1,0 @@
-name: webflow-multi-site-basic-go
-runtime: go
-description: Multi-Site Management Example - Go (Basic)
-
-config:
-  webflow:apiToken:
-    description: Webflow API token (from WEBFLOW_API_TOKEN environment variable)
-    secret: true

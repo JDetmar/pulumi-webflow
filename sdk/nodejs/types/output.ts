@@ -104,7 +104,7 @@ export interface PageCustomCodeScript {
     /**
      * Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
      */
-    attributes: {[key: string]: any};
+    attributes?: {[key: string]: any};
     /**
      * The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
      */

@@ -10,6 +10,8 @@ import java.lang.Object;
 import java.lang.String;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import javax.annotation.Nullable;
 
 
 public final class PageCustomCodeScriptArgs extends com.pulumi.resources.ResourceArgs {
@@ -20,15 +22,15 @@ public final class PageCustomCodeScriptArgs extends com.pulumi.resources.Resourc
      * Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
      * 
      */
-    @Import(name="attributes", required=true)
-    private Output<Map<String,Object>> attributes;
+    @Import(name="attributes")
+    private @Nullable Output<Map<String,Object>> attributes;
 
     /**
      * @return Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
      * 
      */
-    public Output<Map<String,Object>> attributes() {
-        return this.attributes;
+    public Optional<Output<Map<String,Object>>> attributes() {
+        return Optional.ofNullable(this.attributes);
     }
 
     /**
@@ -109,7 +111,7 @@ public final class PageCustomCodeScriptArgs extends com.pulumi.resources.Resourc
          * @return builder
          * 
          */
-        public Builder attributes(Output<Map<String,Object>> attributes) {
+        public Builder attributes(@Nullable Output<Map<String,Object>> attributes) {
             $.attributes = attributes;
             return this;
         }
@@ -188,9 +190,6 @@ public final class PageCustomCodeScriptArgs extends com.pulumi.resources.Resourc
         }
 
         public PageCustomCodeScriptArgs build() {
-            if ($.attributes == null) {
-                throw new MissingRequiredPropertyException("PageCustomCodeScriptArgs", "attributes");
-            }
             if ($.id == null) {
                 throw new MissingRequiredPropertyException("PageCustomCodeScriptArgs", "id");
             }

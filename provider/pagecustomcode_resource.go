@@ -32,7 +32,7 @@ type PageCustomCodeScript struct {
 	// Must be either "header" (loaded before body closes) or "footer" (loaded at end of page).
 	Location string `pulumi:"location"`
 	// Attributes is an optional map of developer-specified key/value pairs for script attributes.
-	Attributes map[string]interface{} `pulumi:"attributes,omitempty"`
+	Attributes map[string]interface{} `pulumi:"attributes,optional"`
 }
 
 // PageCustomCodeArgs defines the input properties for the PageCustomCode resource.

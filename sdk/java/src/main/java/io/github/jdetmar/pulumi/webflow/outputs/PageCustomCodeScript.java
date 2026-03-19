@@ -9,6 +9,7 @@ import java.lang.Object;
 import java.lang.String;
 import java.util.Map;
 import java.util.Objects;
+import javax.annotation.Nullable;
 
 @CustomType
 public final class PageCustomCodeScript {
@@ -16,7 +17,7 @@ public final class PageCustomCodeScript {
      * @return Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
      * 
      */
-    private Map<String,Object> attributes;
+    private @Nullable Map<String,Object> attributes;
     /**
      * @return The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
      * 
@@ -39,7 +40,7 @@ public final class PageCustomCodeScript {
      * 
      */
     public Map<String,Object> attributes() {
-        return this.attributes;
+        return this.attributes == null ? Map.of() : this.attributes;
     }
     /**
      * @return The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
@@ -72,7 +73,7 @@ public final class PageCustomCodeScript {
     }
     @CustomType.Builder
     public static final class Builder {
-        private Map<String,Object> attributes;
+        private @Nullable Map<String,Object> attributes;
         private String id;
         private String location;
         private String scriptVersion;
@@ -86,10 +87,8 @@ public final class PageCustomCodeScript {
         }
 
         @CustomType.Setter
-        public Builder attributes(Map<String,Object> attributes) {
-            if (attributes == null) {
-              throw new MissingRequiredPropertyException("PageCustomCodeScript", "attributes");
-            }
+        public Builder attributes(@Nullable Map<String,Object> attributes) {
+
             this.attributes = attributes;
             return this;
         }

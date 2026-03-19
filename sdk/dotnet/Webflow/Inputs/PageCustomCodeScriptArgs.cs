@@ -13,7 +13,7 @@ namespace Community.Pulumi.Webflow.Inputs
 
     public sealed class PageCustomCodeScriptArgs : global::Pulumi.ResourceArgs
     {
-        [Input("attributes", required: true)]
+        [Input("attributes")]
         private InputMap<object>? _attributes;
 
         /// <summary>

@@ -144,11 +144,15 @@ func migrateSiteCustomCodeFromV09(
 ) (infer.MigrationResult[SiteCustomCodeState], error) {
 	scripts := make([]CustomScriptArgs, len(old.Scripts))
 	for i, s := range old.Scripts {
+		attrs := s.Attributes
+		if attrs == nil {
+			attrs = map[string]interface{}{}
+		}
 		scripts[i] = CustomScriptArgs{
 			ID:         s.ID,
 			Version:    s.Version,
 			Location:   s.Location,
-			Attributes: s.Attributes,
+			Attributes: attrs,
 		}
 	}
 	return infer.MigrationResult[SiteCustomCodeState]{
@@ -170,7 +174,7 @@ type pageCustomCodeScriptV09 struct {
 	ID         string                 `pulumi:"id"`
 	Version    string                 `pulumi:"version"`
 	Location   string                 `pulumi:"location"`
-	Attributes map[string]interface{} `pulumi:"attributes,omitempty"`
+	Attributes map[string]interface{} `pulumi:"attributes,optional"`
 }
 
 // pageCustomCodeStateV09 represents the PageCustomCode state shape from v0.9.x.
@@ -193,11 +197,15 @@ func migratePageCustomCodeFromV09(
 ) (infer.MigrationResult[PageCustomCodeState], error) {
 	scripts := make([]PageCustomCodeScript, len(old.Scripts))
 	for i, s := range old.Scripts {
+		attrs := s.Attributes
+		if attrs == nil {
+			attrs = map[string]interface{}{}
+		}
 		scripts[i] = PageCustomCodeScript{
 			ID:         s.ID,
 			Version:    s.Version,
 			Location:   s.Location,
-			Attributes: s.Attributes,
+			Attributes: attrs,
 		}
 	}
 	return infer.MigrationResult[PageCustomCodeState]{

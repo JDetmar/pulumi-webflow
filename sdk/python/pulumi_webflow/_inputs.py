@@ -166,10 +166,6 @@ class NodeContentUpdateArgs:
 
 if not MYPY:
     class PageCustomCodeScriptArgsDict(TypedDict):
-        attributes: pulumi.Input[Mapping[str, Any]]
-        """
-        Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
-        """
         id: pulumi.Input[_builtins.str]
         """
         The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
@@ -182,38 +178,31 @@ if not MYPY:
         """
         The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
         """
+        attributes: NotRequired[pulumi.Input[Mapping[str, Any]]]
+        """
+        Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
+        """
 elif False:
     PageCustomCodeScriptArgsDict: TypeAlias = Mapping[str, Any]
 
 @pulumi.input_type
 class PageCustomCodeScriptArgs:
     def __init__(__self__, *,
-                 attributes: pulumi.Input[Mapping[str, Any]],
                  id: pulumi.Input[_builtins.str],
                  location: pulumi.Input[_builtins.str],
-                 script_version: pulumi.Input[_builtins.str]):
+                 script_version: pulumi.Input[_builtins.str],
+                 attributes: Optional[pulumi.Input[Mapping[str, Any]]] = None):
         """
-        :param pulumi.Input[Mapping[str, Any]] attributes: Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
         :param pulumi.Input[_builtins.str] id: The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
         :param pulumi.Input[_builtins.str] location: Where the script should be applied on the page. Must be either 'header' (loaded in page header) or 'footer' (loaded at end of page). Use 'header' for scripts that don't depend on DOM elements. Use 'footer' for scripts that need to run after DOM is fully loaded.
         :param pulumi.Input[_builtins.str] script_version: The semantic version string for the registered script (e.g., '1.0.0'). This version must match a registered version of the script. You can have multiple versions of the same script registered.
+        :param pulumi.Input[Mapping[str, Any]] attributes: Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
         """
-        pulumi.set(__self__, "attributes", attributes)
         pulumi.set(__self__, "id", id)
         pulumi.set(__self__, "location", location)
         pulumi.set(__self__, "script_version", script_version)
-
-    @_builtins.property
-    @pulumi.getter
-    def attributes(self) -> pulumi.Input[Mapping[str, Any]]:
-        """
-        Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
-        """
-        return pulumi.get(self, "attributes")
-
-    @attributes.setter
-    def attributes(self, value: pulumi.Input[Mapping[str, Any]]):
-        pulumi.set(self, "attributes", value)
+        if attributes is not None:
+            pulumi.set(__self__, "attributes", attributes)
 
     @_builtins.property
     @pulumi.getter
@@ -250,5 +239,17 @@ class PageCustomCodeScriptArgs:
     @script_version.setter
     def script_version(self, value: pulumi.Input[_builtins.str]):
         pulumi.set(self, "script_version", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def attributes(self) -> Optional[pulumi.Input[Mapping[str, Any]]]:
+        """
+        Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
+        """
+        return pulumi.get(self, "attributes")
+
+    @attributes.setter
+    def attributes(self, value: Optional[pulumi.Input[Mapping[str, Any]]]):
+        pulumi.set(self, "attributes", value)
 
 

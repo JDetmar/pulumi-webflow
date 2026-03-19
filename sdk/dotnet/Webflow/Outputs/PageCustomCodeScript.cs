@@ -17,7 +17,7 @@ namespace Community.Pulumi.Webflow.Outputs
         /// <summary>
         /// Optional developer-specified key/value pairs for script attributes. These attributes can be used by the script to customize its behavior on this page.
         /// </summary>
-        public readonly ImmutableDictionary<string, object> Attributes;
+        public readonly ImmutableDictionary<string, object>? Attributes;
         /// <summary>
         /// The unique identifier of a registered custom code script. This must be a script that was previously registered using the RegisteredScript resource. Script IDs are assigned by Webflow when the script is registered.
         /// </summary>
@@ -33,7 +33,7 @@ namespace Community.Pulumi.Webflow.Outputs
 
         [OutputConstructor]
         private PageCustomCodeScript(
-            ImmutableDictionary<string, object> attributes,
+            ImmutableDictionary<string, object>? attributes,
 
             string id,
 

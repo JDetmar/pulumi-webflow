@@ -210,8 +210,7 @@
       "required": [
         "id",
         "scriptVersion",
-        "location",
-        "attributes"
+        "location"
       ]
     },
     "webflow:index:PageInfo": {

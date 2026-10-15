@@ -125,6 +125,7 @@ examples/           # Example programs (documentation)
 | `make codegen` | **Run after ANY provider code change** |
 | `make build` | Build provider + all SDKs |
 | `make test_provider` | Run Go unit tests (mocked HTTP, no API token needed) |
+| `make test_scripts` | Run Python unit tests for `scripts/` (no network needed) |
 | `make lint` | Run golangci-lint |
 
 ## Commit Message Conventions

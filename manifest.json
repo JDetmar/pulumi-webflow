@@ -8,7 +8,8 @@
       "path": "/sites/{site_id}/aeo/prompt_executions",
       "section": "AEO Analytics",
       "title": "List Prompt Executions",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-prompt-executions.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-prompt-executions",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-prompt-executions.md",
       "slug": "aeo-analytics/list-prompt-executions",
       "hash": "9c91991f4c133b7a",
       "wrapped": false
@@ -19,7 +20,8 @@
       "path": "/sites/{site_id}/aeo/prompt_executions/{execution_id}",
       "section": "AEO Analytics",
       "title": "Get Prompt Execution",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-prompt-execution.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-prompt-execution",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-prompt-execution.md",
       "slug": "aeo-analytics/get-prompt-execution",
       "hash": "f2300832649072ee",
       "wrapped": false
@@ -30,7 +32,8 @@
       "path": "/sites/{site_id}/aeo/prompts",
       "section": "AEO Analytics",
       "title": "List Prompts",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-prompts.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-prompts",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-prompts.md",
       "slug": "aeo-analytics/list-prompts",
       "hash": "8c0ad108aca1d0b5",
       "wrapped": false
@@ -41,7 +44,8 @@
       "path": "/sites/{site_id}/aeo/reports/bot_traffic",
       "section": "AEO Analytics",
       "title": "Get Bot Traffic",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-bot-traffic.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-bot-traffic",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-bot-traffic.md",
       "slug": "aeo-analytics/get-bot-traffic",
       "hash": "4145471f55e5e96b",
       "wrapped": false
@@ -52,7 +56,8 @@
       "path": "/sites/{site_id}/aeo/reports/bot_traffic_pages",
       "section": "AEO Analytics",
       "title": "Get Bot Traffic by Page",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-bot-traffic-by-page.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-bot-traffic-by-page",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-bot-traffic-by-page.md",
       "slug": "aeo-analytics/get-bot-traffic-by-page",
       "hash": "733353f9a444fafe",
       "wrapped": false
@@ -63,7 +68,8 @@
       "path": "/sites/{site_id}/aeo/reports/citation_rate",
       "section": "AEO Analytics",
       "title": "Get Citation Rate",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-citation-rate.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-citation-rate",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-citation-rate.md",
       "slug": "aeo-analytics/get-citation-rate",
       "hash": "78a07cd48c091f1d",
       "wrapped": false
@@ -74,7 +80,8 @@
       "path": "/sites/{site_id}/aeo/reports/citations",
       "section": "AEO Analytics",
       "title": "List Citations",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-citations.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-citations",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-citations.md",
       "slug": "aeo-analytics/list-citations",
       "hash": "8d7ded00a6bffe7e",
       "wrapped": false
@@ -85,7 +92,8 @@
       "path": "/sites/{site_id}/aeo/reports/cited_domain_paths",
       "section": "AEO Analytics",
       "title": "Get Cited Paths for a Domain",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-cited-paths-for-a-domain.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-cited-paths-for-a-domain",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-cited-paths-for-a-domain.md",
       "slug": "aeo-analytics/get-cited-paths-for-a-domain",
       "hash": "12479a5b10765302",
       "wrapped": false
@@ -96,7 +104,8 @@
       "path": "/sites/{site_id}/aeo/reports/competitor_citations",
       "section": "AEO Analytics",
       "title": "List Competitor Citations",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-competitor-citations.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-competitor-citations",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/list-competitor-citations.md",
       "slug": "aeo-analytics/list-competitor-citations",
       "hash": "fa5999c1a8bd7685",
       "wrapped": false
@@ -107,7 +116,8 @@
       "path": "/sites/{site_id}/aeo/reports/page_citation_share",
       "section": "AEO Analytics",
       "title": "Get Page Citation Share",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-page-citation-share.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-page-citation-share",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-page-citation-share.md",
       "slug": "aeo-analytics/get-page-citation-share",
       "hash": "7895c32db7ac61e4",
       "wrapped": false
@@ -118,7 +128,8 @@
       "path": "/sites/{site_id}/aeo/reports/top_cited_domains",
       "section": "AEO Analytics",
       "title": "Get Top Cited Domains",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-top-cited-domains.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-top-cited-domains",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-top-cited-domains.md",
       "slug": "aeo-analytics/get-top-cited-domains",
       "hash": "2ecf48a479579894",
       "wrapped": false
@@ -129,7 +140,8 @@
       "path": "/sites/{site_id}/aeo/reports/visibility",
       "section": "AEO Analytics",
       "title": "Get Visibility Score",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-visibility-score.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-visibility-score",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-visibility-score.md",
       "slug": "aeo-analytics/get-visibility-score",
       "hash": "daac57da4184ea0f",
       "wrapped": false
@@ -140,7 +152,8 @@
       "path": "/sites/{site_id}/aeo/reports/visibility_breakdown",
       "section": "AEO Analytics",
       "title": "Get Visibility Score Breakdown",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-visibility-score-breakdown.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-visibility-score-breakdown",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-visibility-score-breakdown.md",
       "slug": "aeo-analytics/get-visibility-score-breakdown",
       "hash": "78c7952621b4e39a",
       "wrapped": false
@@ -151,7 +164,8 @@
       "path": "/sites/{site_id}/analyze/goals",
       "section": "Analyze",
       "title": "List Goals",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/list-goals.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/list-goals",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/list-goals.md",
       "slug": "analyze/list-goals",
       "hash": "ffe1fe7da001e842",
       "wrapped": false
@@ -162,7 +176,8 @@
       "path": "/sites/{site_id}/analyze/goals/{goal_id}/performance",
       "section": "Analyze",
       "title": "Get Goal Performance",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/goal-performance.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/goal-performance",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/goal-performance.md",
       "slug": "analyze/goal-performance",
       "hash": "6840357e3c3271a7",
       "wrapped": false
@@ -173,7 +188,8 @@
       "path": "/sites/{site_id}/analyze/reports/browser_window_height",
       "section": "Analyze",
       "title": "Get Browser Window Height Report",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/browser-window-height.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/browser-window-height",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/browser-window-height.md",
       "slug": "analyze/browser-window-height",
       "hash": "8b46b55bc55b448b",
       "wrapped": false
@@ -184,7 +200,8 @@
       "path": "/sites/{site_id}/analyze/reports/page_flow",
       "section": "Analyze",
       "title": "Get Page Flow Report",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/page-flow.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/page-flow",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/page-flow.md",
       "slug": "analyze/page-flow",
       "hash": "ffb594717a4429b8",
       "wrapped": false
@@ -195,7 +212,8 @@
       "path": "/sites/{site_id}/analyze/reports/scroll_depth",
       "section": "Analyze",
       "title": "Get Scroll Depth Report",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/scroll-depth.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/scroll-depth",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/scroll-depth.md",
       "slug": "analyze/scroll-depth",
       "hash": "67cf876fd45bd3ac",
       "wrapped": false
@@ -206,7 +224,8 @@
       "path": "/sites/{site_id}/analyze/reports/time_on_page",
       "section": "Analyze",
       "title": "Get Time On Page Report",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/time-on-page.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/time-on-page",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/time-on-page.md",
       "slug": "analyze/time-on-page",
       "hash": "cb96366626939148",
       "wrapped": false
@@ -217,7 +236,8 @@
       "path": "/sites/{site_id}/analyze/reports/top_dimensions",
       "section": "Analyze",
       "title": "Get Top Dimensions Report",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/top-dimensions.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/top-dimensions",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/top-dimensions.md",
       "slug": "analyze/top-dimensions",
       "hash": "5628e6e0ac6e8645",
       "wrapped": false
@@ -228,7 +248,8 @@
       "path": "/sites/{site_id}/analyze/reports/top_events",
       "section": "Analyze",
       "title": "Get Top Events Report",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/top-events.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/top-events",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/top-events.md",
       "slug": "analyze/top-events",
       "hash": "fcdb951a1840e969",
       "wrapped": false
@@ -239,7 +260,8 @@
       "path": "/sites/{site_id}/analyze/reports/top_pages",
       "section": "Analyze",
       "title": "Get Top Pages Report",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/top-pages.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/top-pages",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/top-pages.md",
       "slug": "analyze/top-pages",
       "hash": "69add0df22baabba",
       "wrapped": false
@@ -250,7 +272,8 @@
       "path": "/sites/{site_id}/analyze/reports/traffic",
       "section": "Analyze",
       "title": "Get Traffic Report",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/traffic.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/traffic",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/analyze/traffic.md",
       "slug": "analyze/traffic",
       "hash": "0a819aef45023b77",
       "wrapped": false
@@ -261,7 +284,8 @@
       "path": "/asset_folders/{asset_folder_id}",
       "section": "Assets > Asset Folders",
       "title": "Get Asset Folder",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/asset-folders/get-folder.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/asset-folders/get-folder",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/assets/asset-folders/get-folder.md",
       "slug": "assets/asset-folders/get-folder",
       "hash": "6d97a32e48e71df2",
       "wrapped": true
@@ -272,7 +296,8 @@
       "path": "/sites/{site_id}/asset_folders",
       "section": "Assets > Asset Folders",
       "title": "List Asset Folders",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/asset-folders/list-folders.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/asset-folders/list-folders",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/assets/asset-folders/list-folders.md",
       "slug": "assets/asset-folders/list-folders",
       "hash": "fc5c4795766dd9db",
       "wrapped": true
@@ -283,7 +308,8 @@
       "path": "/sites/{site_id}/asset_folders",
       "section": "Assets > Asset Folders",
       "title": "Create Asset Folder",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/asset-folders/create-folder.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/asset-folders/create-folder",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/assets/asset-folders/create-folder.md",
       "slug": "assets/asset-folders/create-folder",
       "hash": "2a2a8d0a863ed140",
       "wrapped": true
@@ -294,7 +320,8 @@
       "path": "/assets/{asset_id}",
       "section": "Assets > Assets",
       "title": "Delete Asset",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/delete.md",
       "slug": "assets/assets/delete",
       "hash": "2a92f425153cfe5c",
       "wrapped": true
@@ -305,7 +332,8 @@
       "path": "/assets/{asset_id}",
       "section": "Assets > Assets",
       "title": "Get Asset",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/get.md",
       "slug": "assets/assets/get",
       "hash": "6ca236c95e0fed60",
       "wrapped": true
@@ -316,7 +344,8 @@
       "path": "/sites/{site_id}/assets",
       "section": "Assets > Assets",
       "title": "List Assets",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/list.md",
       "slug": "assets/assets/list",
       "hash": "0015f51b6c3b3f67",
       "wrapped": true
@@ -327,7 +356,8 @@
       "path": "/assets/{asset_id}",
       "section": "Assets > Assets",
       "title": "Update Asset",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/update.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/update",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/update.md",
       "slug": "assets/assets/update",
       "hash": "9f4051912fd9098e",
       "wrapped": false
@@ -338,7 +368,8 @@
       "path": "/sites/{site_id}/assets",
       "section": "Assets > Assets",
       "title": "Upload Asset",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/create.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/create",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/assets/assets/create.md",
       "slug": "assets/assets/create",
       "hash": "a6e5faa6115d73f4",
       "wrapped": true
@@ -349,7 +380,8 @@
       "path": "/collections/{collection_id}/fields/{field_id}",
       "section": "CMS > Collection Fields",
       "title": "Delete field",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-fields/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-fields/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-fields/delete.md",
       "slug": "cms/collection-fields/delete",
       "hash": "0fee5a94215d6a23",
       "wrapped": true
@@ -360,7 +392,8 @@
       "path": "/collections/{collection_id}/fields/{field_id}",
       "section": "CMS > Collection Fields",
       "title": "Update field",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-fields/update.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-fields/update",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-fields/update.md",
       "slug": "cms/collection-fields/update",
       "hash": "4f195972f7d34c62",
       "wrapped": false
@@ -371,7 +404,8 @@
       "path": "/collections/{collection_id}/fields",
       "section": "CMS > Collection Fields",
       "title": "Create field",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-fields/create.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-fields/create",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-fields/create.md",
       "slug": "cms/collection-fields/create",
       "hash": "c5f2f496ffb57c99",
       "wrapped": true
@@ -382,7 +416,8 @@
       "path": "/collections/{collection_id}/items/live",
       "section": "CMS > Collection Items > Live Items",
       "title": "Unpublish Live Items",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/delete-items-live.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/delete-items-live",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/delete-items-live.md",
       "slug": "cms/collection-items/live-items/delete-items-live",
       "hash": "99f7046e2d6b9049",
       "wrapped": false
@@ -393,7 +428,8 @@
       "path": "/collections/{collection_id}/items/live",
       "section": "CMS > Collection Items > Live Items",
       "title": "List Live Items",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/list-items-live.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/list-items-live",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/list-items-live.md",
       "slug": "cms/collection-items/live-items/list-items-live",
       "hash": "bd134a1f4b92f95a",
       "wrapped": false
@@ -404,7 +440,8 @@
       "path": "/collections/{collection_id}/items/{item_id}/live",
       "section": "CMS > Collection Items > Live Items",
       "title": "Get Live Item",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/get-item-live.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/get-item-live",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/get-item-live.md",
       "slug": "cms/collection-items/live-items/get-item-live",
       "hash": "a3d713cd88727871",
       "wrapped": false
@@ -415,7 +452,8 @@
       "path": "/collections/{collection_id}/items/live",
       "section": "CMS > Collection Items > Live Items",
       "title": "Update Live Items",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/update-items-live.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/update-items-live",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/update-items-live.md",
       "slug": "cms/collection-items/live-items/update-items-live",
       "hash": "4d838e8d0ba2ca3e",
       "wrapped": false
@@ -426,7 +464,8 @@
       "path": "/collections/{collection_id}/items/live",
       "section": "CMS > Collection Items > Live Items",
       "title": "Create Live Items",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/create-item-live.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/create-item-live",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/live-items/create-item-live.md",
       "slug": "cms/collection-items/live-items/create-item-live",
       "hash": "7a75912876b8f5ca",
       "wrapped": false
@@ -437,7 +476,8 @@
       "path": "/collections/{collection_id}/items",
       "section": "CMS > Collection Items > Staged Items",
       "title": "Delete Items",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/delete-items.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/delete-items",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/delete-items.md",
       "slug": "cms/collection-items/staged-items/delete-items",
       "hash": "9c681fe3ed096ab1",
       "wrapped": false
@@ -448,7 +488,8 @@
       "path": "/collections/{collection_id}/items",
       "section": "CMS > Collection Items > Staged Items",
       "title": "List Items",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/list-items.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/list-items",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/list-items.md",
       "slug": "cms/collection-items/staged-items/list-items",
       "hash": "fbbd73f7a8e50711",
       "wrapped": true
@@ -459,7 +500,8 @@
       "path": "/collections/{collection_id}/items/{item_id}",
       "section": "CMS > Collection Items > Staged Items",
       "title": "Get Item",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/get-item.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/get-item",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/get-item.md",
       "slug": "cms/collection-items/staged-items/get-item",
       "hash": "bcee12dbd1d3715f",
       "wrapped": true
@@ -470,7 +512,8 @@
       "path": "/collections/{collection_id}/items",
       "section": "CMS > Collection Items > Staged Items",
       "title": "Update Items",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/update-items.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/update-items",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/update-items.md",
       "slug": "cms/collection-items/staged-items/update-items",
       "hash": "6097a369c80ae714",
       "wrapped": false
@@ -481,7 +524,8 @@
       "path": "/collections/{collection_id}/items/insert",
       "section": "CMS > Collection Items > Staged Items",
       "title": "Create Items",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/create-items.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/create-items",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/create-items.md",
       "slug": "cms/collection-items/staged-items/create-items",
       "hash": "aed375a8e4d1d3b3",
       "wrapped": false
@@ -492,7 +536,8 @@
       "path": "/collections/{collection_id}/items/publish",
       "section": "CMS > Collection Items > Staged Items",
       "title": "Publish Items",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/publish-item.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/publish-item",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collection-items/staged-items/publish-item.md",
       "slug": "cms/collection-items/staged-items/publish-item",
       "hash": "2c3758d596fdbeef",
       "wrapped": false
@@ -503,7 +548,8 @@
       "path": "/collections/{collection_id}",
       "section": "CMS > Collections",
       "title": "Delete Collection",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/delete.md",
       "slug": "cms/collections/delete",
       "hash": "1546f1081798bfb2",
       "wrapped": true
@@ -514,7 +560,8 @@
       "path": "/collections/{collection_id}",
       "section": "CMS > Collections",
       "title": "Get Collection Details",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/get.md",
       "slug": "cms/collections/get",
       "hash": "822220f386b3dbfa",
       "wrapped": true
@@ -525,7 +572,8 @@
       "path": "/sites/{site_id}/collections",
       "section": "CMS > Collections",
       "title": "List Collections",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/list.md",
       "slug": "cms/collections/list",
       "hash": "95635885fcd8457f",
       "wrapped": true
@@ -536,7 +584,8 @@
       "path": "/collections/{collection_id}",
       "section": "CMS > Collections",
       "title": "Update Collection",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/patch.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/patch",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/patch.md",
       "slug": "cms/collections/patch",
       "hash": "eb944c51f40556fe",
       "wrapped": false
@@ -547,7 +596,8 @@
       "path": "/sites/{site_id}/collections",
       "section": "CMS > Collections",
       "title": "Create Collection",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/create.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/create",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/cms/collections/create.md",
       "slug": "cms/collections/create",
       "hash": "f412cc9983397b4a",
       "wrapped": true
@@ -558,7 +608,8 @@
       "path": "/sites/{site_id}/comments",
       "section": "Comments",
       "title": "List Comment Threads",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/list-comment-threads.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/list-comment-threads",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/comments/list-comment-threads.md",
       "slug": "comments/list-comment-threads",
       "hash": "837a3d774a4789d0",
       "wrapped": false
@@ -569,7 +620,8 @@
       "path": "/sites/{site_id}/comments/{comment_thread_id}",
       "section": "Comments",
       "title": "Get Comment Thread",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/get-comment-thread.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/get-comment-thread",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/comments/get-comment-thread.md",
       "slug": "comments/get-comment-thread",
       "hash": "6b6ee0d42e9bc0bc",
       "wrapped": false
@@ -580,7 +632,8 @@
       "path": "/sites/{site_id}/comments/{comment_thread_id}/replies",
       "section": "Comments",
       "title": "List Comment Replies",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/list-comment-replies.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/list-comment-replies",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/comments/list-comment-replies.md",
       "slug": "comments/list-comment-replies",
       "hash": "632a029a73c25353",
       "wrapped": false
@@ -591,7 +644,8 @@
       "path": "/sites/{site_id}/comments/{comment_thread_id}",
       "section": "Comments",
       "title": "Resolve Comment Thread",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/resolve-comment-thread.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/resolve-comment-thread",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/comments/resolve-comment-thread.md",
       "slug": "comments/resolve-comment-thread",
       "hash": "b35d4155201e4165",
       "wrapped": false
@@ -602,7 +656,8 @@
       "path": "/sites/{site_id}/comments/{comment_thread_id}/replies",
       "section": "Comments",
       "title": "Create Comment Reply",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/create-comment-reply.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/comments/create-comment-reply",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/comments/create-comment-reply.md",
       "slug": "comments/create-comment-reply",
       "hash": "65624e1629d76925",
       "wrapped": false
@@ -613,7 +668,8 @@
       "path": "/sites/{site_id}/custom_code/blocks",
       "section": "Custom Code > Custom Code",
       "title": "List Custom Code Blocks",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/list-custom-code-blocks.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/list-custom-code-blocks",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/list-custom-code-blocks.md",
       "slug": "custom-code/custom-code/list-custom-code-blocks",
       "hash": "a0e048fcc748215c",
       "wrapped": false
@@ -624,7 +680,8 @@
       "path": "/sites/{site_id}/registered_scripts",
       "section": "Custom Code > Custom Code",
       "title": "Get Registered Scripts",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/list.md",
       "slug": "custom-code/custom-code/list",
       "hash": "032b12a8af4cddd1",
       "wrapped": true
@@ -635,7 +692,8 @@
       "path": "/sites/{site_id}/registered_scripts/hosted",
       "section": "Custom Code > Custom Code",
       "title": "Register Script - Hosted",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/register-hosted.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/register-hosted",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/register-hosted.md",
       "slug": "custom-code/custom-code/register-hosted",
       "hash": "28029941b4d769f7",
       "wrapped": true
@@ -646,7 +704,8 @@
       "path": "/sites/{site_id}/registered_scripts/inline",
       "section": "Custom Code > Custom Code",
       "title": "Register Script - Inline",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/register-inline.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/register-inline",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code/register-inline.md",
       "slug": "custom-code/custom-code/register-inline",
       "hash": "9883fea67c7e6961",
       "wrapped": true
@@ -657,7 +716,8 @@
       "path": "/pages/{page_id}/custom_code",
       "section": "Custom Code > Custom Code - Pages",
       "title": "Delete Custom Code",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-pages/delete-custom-code.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-pages/delete-custom-code",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-pages/delete-custom-code.md",
       "slug": "custom-code/custom-code-pages/delete-custom-code",
       "hash": "f90fb417633e9ee5",
       "wrapped": true
@@ -668,7 +728,8 @@
       "path": "/pages/{page_id}/custom_code",
       "section": "Custom Code > Custom Code - Pages",
       "title": "Get Custom Code",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-pages/get-custom-code.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-pages/get-custom-code",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-pages/get-custom-code.md",
       "slug": "custom-code/custom-code-pages/get-custom-code",
       "hash": "046660d40e4e3234",
       "wrapped": true
@@ -679,7 +740,8 @@
       "path": "/pages/{page_id}/custom_code",
       "section": "Custom Code > Custom Code - Pages",
       "title": "Add/Update Custom Code",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-pages/upsert-custom-code.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-pages/upsert-custom-code",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-pages/upsert-custom-code.md",
       "slug": "custom-code/custom-code-pages/upsert-custom-code",
       "hash": "ac5e2bdcd55a9980",
       "wrapped": true
@@ -690,7 +752,8 @@
       "path": "/sites/{site_id}/custom_code",
       "section": "Custom Code > Custom Code - Sites",
       "title": "Delete Custom Code",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-sites/delete-custom-code.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-sites/delete-custom-code",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-sites/delete-custom-code.md",
       "slug": "custom-code/custom-code-sites/delete-custom-code",
       "hash": "4bc4b1fe8c79f04d",
       "wrapped": true
@@ -701,7 +764,8 @@
       "path": "/sites/{site_id}/custom_code",
       "section": "Custom Code > Custom Code - Sites",
       "title": "Get Custom Code",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-sites/get-custom-code.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-sites/get-custom-code",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-sites/get-custom-code.md",
       "slug": "custom-code/custom-code-sites/get-custom-code",
       "hash": "0d83b85b40921999",
       "wrapped": true
@@ -712,7 +776,8 @@
       "path": "/sites/{site_id}/custom_code",
       "section": "Custom Code > Custom Code - Sites",
       "title": "Add/Update Custom Code",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-sites/upsert-custom-code.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-sites/upsert-custom-code",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-code/custom-code-sites/upsert-custom-code.md",
       "slug": "custom-code/custom-code-sites/upsert-custom-code",
       "hash": "6a1217b400525381",
       "wrapped": true
@@ -723,7 +788,8 @@
       "path": "/sites/{site_id}/custom_fonts/{font_id}",
       "section": "Custom fonts > Custom fonts",
       "title": "Delete custom font",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/delete.md",
       "slug": "custom-fonts/custom-fonts/delete",
       "hash": "9236bfef056ecc61",
       "wrapped": false
@@ -734,7 +800,8 @@
       "path": "/sites/{site_id}/custom_fonts",
       "section": "Custom fonts > Custom fonts",
       "title": "List custom fonts",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/list.md",
       "slug": "custom-fonts/custom-fonts/list",
       "hash": "2a4dc2ef317d3017",
       "wrapped": false
@@ -745,7 +812,8 @@
       "path": "/sites/{site_id}/custom_fonts/{font_id}",
       "section": "Custom fonts > Custom fonts",
       "title": "Get custom font",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/get.md",
       "slug": "custom-fonts/custom-fonts/get",
       "hash": "e0118e0de8d9ea75",
       "wrapped": false
@@ -756,7 +824,8 @@
       "path": "/sites/{site_id}/custom_fonts/{font_id}",
       "section": "Custom fonts > Custom fonts",
       "title": "Update custom font",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/update.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/update",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/update.md",
       "slug": "custom-fonts/custom-fonts/update",
       "hash": "fa67aec2fb0f84f9",
       "wrapped": false
@@ -767,7 +836,8 @@
       "path": "/sites/{site_id}/custom_fonts",
       "section": "Custom fonts > Custom fonts",
       "title": "Create custom font",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/create.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/create",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/create.md",
       "slug": "custom-fonts/custom-fonts/create",
       "hash": "fe6713b120c612ba",
       "wrapped": false
@@ -778,7 +848,8 @@
       "path": "/sites/{site_id}/custom_fonts/batchCreate",
       "section": "Custom fonts > Custom fonts",
       "title": "Batch create custom fonts",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/batch-create.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/batch-create",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/batch-create.md",
       "slug": "custom-fonts/custom-fonts/batch-create",
       "hash": "4a55d1cd8b34fe15",
       "wrapped": false
@@ -789,7 +860,8 @@
       "path": "/sites/{site_id}/custom_fonts/batchDelete",
       "section": "Custom fonts > Custom fonts",
       "title": "Batch delete custom fonts",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/batch-delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/batch-delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/batch-delete.md",
       "slug": "custom-fonts/custom-fonts/batch-delete",
       "hash": "e7fcd0f43b1d6e2d",
       "wrapped": false
@@ -800,7 +872,8 @@
       "path": "/sites/{site_id}/custom_fonts/{font_id}/file",
       "section": "Custom fonts > Custom fonts",
       "title": "Replace custom font file",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/replace-file.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/replace-file",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/custom-fonts/custom-fonts/replace-file.md",
       "slug": "custom-fonts/custom-fonts/replace-file",
       "hash": "39101e1d6a10f43a",
       "wrapped": false
@@ -811,7 +884,8 @@
       "path": "/collections/{sku_collection_id}/items/{sku_id}/inventory",
       "section": "Ecommerce > Inventory",
       "title": "List Inventory",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/inventory/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/inventory/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/inventory/list.md",
       "slug": "ecommerce/inventory/list",
       "hash": "e67b1e4d852ac518",
       "wrapped": false
@@ -822,7 +896,8 @@
       "path": "/collections/{sku_collection_id}/items/{sku_id}/inventory",
       "section": "Ecommerce > Inventory",
       "title": "Update Item Inventory",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/inventory/update.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/inventory/update",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/inventory/update.md",
       "slug": "ecommerce/inventory/update",
       "hash": "497c1559158a0809",
       "wrapped": false
@@ -833,7 +908,8 @@
       "path": "/sites/{site_id}/orders",
       "section": "Ecommerce > Orders",
       "title": "List Orders",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/list.md",
       "slug": "ecommerce/orders/list",
       "hash": "9ff1f31c8cdd5aab",
       "wrapped": false
@@ -844,7 +920,8 @@
       "path": "/sites/{site_id}/orders/{order_id}",
       "section": "Ecommerce > Orders",
       "title": "Get Order",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/get.md",
       "slug": "ecommerce/orders/get",
       "hash": "354a93e44cff9799",
       "wrapped": false
@@ -855,7 +932,8 @@
       "path": "/sites/{site_id}/orders/{order_id}",
       "section": "Ecommerce > Orders",
       "title": "Update Order",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/update.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/update",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/update.md",
       "slug": "ecommerce/orders/update",
       "hash": "3adbcc5810453c84",
       "wrapped": false
@@ -866,7 +944,8 @@
       "path": "/sites/{site_id}/orders/{order_id}/fulfill",
       "section": "Ecommerce > Orders",
       "title": "Fulfill Order",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/update-fulfill.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/update-fulfill",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/update-fulfill.md",
       "slug": "ecommerce/orders/update-fulfill",
       "hash": "10799478e261d57b",
       "wrapped": false
@@ -877,7 +956,8 @@
       "path": "/sites/{site_id}/orders/{order_id}/refund",
       "section": "Ecommerce > Orders",
       "title": "Refund Order",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/refund.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/refund",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/refund.md",
       "slug": "ecommerce/orders/refund",
       "hash": "ff6ea1e271d019b4",
       "wrapped": false
@@ -888,7 +968,8 @@
       "path": "/sites/{site_id}/orders/{order_id}/unfulfill",
       "section": "Ecommerce > Orders",
       "title": "Unfulfill Order",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/update-unfulfill.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/update-unfulfill",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/orders/update-unfulfill.md",
       "slug": "ecommerce/orders/update-unfulfill",
       "hash": "6d011688cdbb265e",
       "wrapped": false
@@ -899,7 +980,8 @@
       "path": "/sites/{site_id}/products",
       "section": "Ecommerce > Products",
       "title": "List Products & SKUs",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/list.md",
       "slug": "ecommerce/products/list",
       "hash": "6e0209112d5839f2",
       "wrapped": false
@@ -910,7 +992,8 @@
       "path": "/sites/{site_id}/products/{product_id}",
       "section": "Ecommerce > Products",
       "title": "Get Product and SKUs",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/get.md",
       "slug": "ecommerce/products/get",
       "hash": "5e2d72c54e41bed2",
       "wrapped": false
@@ -921,7 +1004,8 @@
       "path": "/sites/{site_id}/products/{product_id}",
       "section": "Ecommerce > Products",
       "title": "Update Product",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/update.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/update",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/update.md",
       "slug": "ecommerce/products/update",
       "hash": "355cd1f831e175e3",
       "wrapped": false
@@ -932,7 +1016,8 @@
       "path": "/sites/{site_id}/products/{product_id}/skus/{sku_id}",
       "section": "Ecommerce > Products",
       "title": "Update SKU",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/update-sku.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/update-sku",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/update-sku.md",
       "slug": "ecommerce/products/update-sku",
       "hash": "d6b781f43c302834",
       "wrapped": false
@@ -943,7 +1028,8 @@
       "path": "/sites/{site_id}/products",
       "section": "Ecommerce > Products",
       "title": "Create Product & SKU",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/create.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/create",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/create.md",
       "slug": "ecommerce/products/create",
       "hash": "a51412c1f5ef512e",
       "wrapped": false
@@ -954,7 +1040,8 @@
       "path": "/sites/{site_id}/products/{product_id}/skus",
       "section": "Ecommerce > Products",
       "title": "Create SKUs",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/create-sku.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/create-sku",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/products/create-sku.md",
       "slug": "ecommerce/products/create-sku",
       "hash": "0c6945860eaa1d6b",
       "wrapped": false
@@ -965,7 +1052,8 @@
       "path": "/sites/{site_id}/ecommerce/settings",
       "section": "Ecommerce > Settings",
       "title": "Get Ecommerce Settings",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/settings/get-settings.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/settings/get-settings",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/ecommerce/settings/get-settings.md",
       "slug": "ecommerce/settings/get-settings",
       "hash": "bf212624332122c0",
       "wrapped": true
@@ -976,7 +1064,8 @@
       "path": "/sites/{site_id}/members",
       "section": "Enterprise > Site Access",
       "title": "Revoke Site Access (by email)",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/remove-member-by-email.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/remove-member-by-email",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/remove-member-by-email.md",
       "slug": "enterprise/site-access/remove-member-by-email",
       "hash": "a8bf065ba70d4d9d",
       "wrapped": false
@@ -987,7 +1076,8 @@
       "path": "/sites/{site_id}/members/{member_id}",
       "section": "Enterprise > Site Access",
       "title": "Revoke Site Access",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/remove-member.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/remove-member",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/remove-member.md",
       "slug": "enterprise/site-access/remove-member",
       "hash": "3bf33bc3e032dbfc",
       "wrapped": false
@@ -998,7 +1088,8 @@
       "path": "/sites/{site_id}/members",
       "section": "Enterprise > Site Access",
       "title": "List Site Members",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/list-members.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/list-members",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/list-members.md",
       "slug": "enterprise/site-access/list-members",
       "hash": "8e103f72331c77b0",
       "wrapped": false
@@ -1009,7 +1100,8 @@
       "path": "/sites/{site_id}/members",
       "section": "Enterprise > Site Access",
       "title": "Update Site Member Role (by email)",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/update-member-role-by-email.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/update-member-role-by-email",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/update-member-role-by-email.md",
       "slug": "enterprise/site-access/update-member-role-by-email",
       "hash": "c43b784b43bf9494",
       "wrapped": false
@@ -1020,7 +1112,8 @@
       "path": "/sites/{site_id}/members/{member_id}",
       "section": "Enterprise > Site Access",
       "title": "Update Site Member Role",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/update-member-role.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/update-member-role",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/update-member-role.md",
       "slug": "enterprise/site-access/update-member-role",
       "hash": "75700767bdabf305",
       "wrapped": false
@@ -1031,7 +1124,8 @@
       "path": "/sites/{site_id}/members",
       "section": "Enterprise > Site Access",
       "title": "Grant Site Access",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/add-member.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/add-member",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-access/add-member.md",
       "slug": "enterprise/site-access/add-member",
       "hash": "ba6e387499f8e01e",
       "wrapped": false
@@ -1042,7 +1136,8 @@
       "path": "/sites/{site_id}/activity_logs",
       "section": "Enterprise > Site Activity Logs",
       "title": "Get Site Activity Logs",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-activity-logs/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-activity-logs/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-activity-logs/list.md",
       "slug": "enterprise/site-activity-logs/list",
       "hash": "82c071642f6eeea8",
       "wrapped": false
@@ -1053,7 +1148,8 @@
       "path": "/sites/{site_id}/redirects/{redirect_id}",
       "section": "Enterprise > Site Configuration > 301 Redirects",
       "title": "Delete 301 redirects",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/delete.md",
       "slug": "enterprise/site-configuration/301-redirects/delete",
       "hash": "e664a0767ced4f27",
       "wrapped": true
@@ -1064,7 +1160,8 @@
       "path": "/sites/{site_id}/redirects",
       "section": "Enterprise > Site Configuration > 301 Redirects",
       "title": "Get 301 redirects",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/get.md",
       "slug": "enterprise/site-configuration/301-redirects/get",
       "hash": "7f7fddca8cd8ba2b",
       "wrapped": true
@@ -1075,7 +1172,8 @@
       "path": "/sites/{site_id}/redirects/{redirect_id}",
       "section": "Enterprise > Site Configuration > 301 Redirects",
       "title": "Update 301 redirect",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/patch.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/patch",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/patch.md",
       "slug": "enterprise/site-configuration/301-redirects/patch",
       "hash": "89065d9b6d906677",
       "wrapped": true
@@ -1086,7 +1184,8 @@
       "path": "/sites/{site_id}/redirects",
       "section": "Enterprise > Site Configuration > 301 Redirects",
       "title": "Create a 301 redirect",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/create.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/create",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/301-redirects/create.md",
       "slug": "enterprise/site-configuration/301-redirects/create",
       "hash": "c74a80e3c5f19f94",
       "wrapped": true
@@ -1097,7 +1196,8 @@
       "path": "/sites/{site_id}/well_known",
       "section": "Enterprise > Site Configuration > Well-Known Files",
       "title": "Delete a well-known file",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/well-known-files/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/well-known-files/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/well-known-files/delete.md",
       "slug": "enterprise/site-configuration/well-known-files/delete",
       "hash": "d6d002ea5a3a988f",
       "wrapped": false
@@ -1108,7 +1208,8 @@
       "path": "/sites/{site_id}/well_known",
       "section": "Enterprise > Site Configuration > Well-Known Files",
       "title": "Set a well-known file",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/well-known-files/put.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/well-known-files/put",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/well-known-files/put.md",
       "slug": "enterprise/site-configuration/well-known-files/put",
       "hash": "ad5bda0d7a26fec6",
       "wrapped": false
@@ -1119,7 +1220,8 @@
       "path": "/sites/{site_id}/robots_txt",
       "section": "Enterprise > Site Configuration > robots.txt",
       "title": "Delete robots.txt",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/delete.md",
       "slug": "enterprise/site-configuration/robots-txt/delete",
       "hash": "8da2c3be7458a449",
       "wrapped": true
@@ -1130,7 +1232,8 @@
       "path": "/sites/{site_id}/robots_txt",
       "section": "Enterprise > Site Configuration > robots.txt",
       "title": "Get robots.txt",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/get.md",
       "slug": "enterprise/site-configuration/robots-txt/get",
       "hash": "5f1f9e24c371303c",
       "wrapped": true
@@ -1141,7 +1244,8 @@
       "path": "/sites/{site_id}/robots_txt",
       "section": "Enterprise > Site Configuration > robots.txt",
       "title": "Update robots.txt",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/patch.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/patch",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/patch.md",
       "slug": "enterprise/site-configuration/robots-txt/patch",
       "hash": "fd91287bcde96f66",
       "wrapped": false
@@ -1152,7 +1256,8 @@
       "path": "/sites/{site_id}/robots_txt",
       "section": "Enterprise > Site Configuration > robots.txt",
       "title": "Replace robots.txt",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/put.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/put",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/site-configuration/robots-txt/put.md",
       "slug": "enterprise/site-configuration/robots-txt/put",
       "hash": "d43d37c84961bd6a",
       "wrapped": true
@@ -1163,7 +1268,8 @@
       "path": "/workspaces/{workspace_id_or_slug}/audit_logs",
       "section": "Enterprise > Workspace Audit Logs",
       "title": "Get Workspace Audit Logs",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-audit-logs/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-audit-logs/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-audit-logs/get.md",
       "slug": "enterprise/workspace-audit-logs/get",
       "hash": "917c4cd5f02d7cc9",
       "wrapped": false
@@ -1174,7 +1280,8 @@
       "path": "/sites/{site_id}",
       "section": "Enterprise > Workspace Management",
       "title": "Delete Site",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/delete.md",
       "slug": "enterprise/workspace-management/delete",
       "hash": "e644281b963bb588",
       "wrapped": true
@@ -1185,7 +1292,8 @@
       "path": "/sites/{site_id}/plan",
       "section": "Enterprise > Workspace Management",
       "title": "Get Site Plan",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/get-site-plan.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/get-site-plan",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/get-site-plan.md",
       "slug": "enterprise/workspace-management/get-site-plan",
       "hash": "47b540e88e663a8c",
       "wrapped": false
@@ -1196,7 +1304,8 @@
       "path": "/workspaces",
       "section": "Enterprise > Workspace Management",
       "title": "List Workspaces",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/list.md",
       "slug": "enterprise/workspace-management/list",
       "hash": "a6c131dd4b35db74",
       "wrapped": false
@@ -1207,7 +1316,8 @@
       "path": "/sites/{site_id}",
       "section": "Enterprise > Workspace Management",
       "title": "Update Site",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/update.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/update",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/update.md",
       "slug": "enterprise/workspace-management/update",
       "hash": "01ee53320e6a9808",
       "wrapped": true
@@ -1218,7 +1328,8 @@
       "path": "/workspaces/{workspace_id}/sites",
       "section": "Enterprise > Workspace Management",
       "title": "Create Site",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/create.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/create",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-management/create.md",
       "slug": "enterprise/workspace-management/create",
       "hash": "6201ae14eff98835",
       "wrapped": true
@@ -1229,7 +1340,8 @@
       "path": "/workspaces/{workspace_id}/members/{member_id}",
       "section": "Enterprise > Workspace Members",
       "title": "Remove Workspace Member",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/remove-member.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/remove-member",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/remove-member.md",
       "slug": "enterprise/workspace-members/remove-member",
       "hash": "7e26160d1ac7e616",
       "wrapped": false
@@ -1240,7 +1352,8 @@
       "path": "/workspaces/{workspace_id}/members",
       "section": "Enterprise > Workspace Members",
       "title": "List Workspace Members",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/list-members.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/list-members",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/list-members.md",
       "slug": "enterprise/workspace-members/list-members",
       "hash": "b14e76086f2b880e",
       "wrapped": false
@@ -1251,7 +1364,8 @@
       "path": "/workspaces/{workspace_id}/members/{member_id}",
       "section": "Enterprise > Workspace Members",
       "title": "Update Workspace Member Role",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/update-member-role.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/update-member-role",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/update-member-role.md",
       "slug": "enterprise/workspace-members/update-member-role",
       "hash": "69b4943e1ad251a8",
       "wrapped": false
@@ -1262,7 +1376,8 @@
       "path": "/workspaces/{workspace_id}/members",
       "section": "Enterprise > Workspace Members",
       "title": "Invite Workspace Member",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/invite-member.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/invite-member",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/invite-member.md",
       "slug": "enterprise/workspace-members/invite-member",
       "hash": "e9b17c0134a336e0",
       "wrapped": false
@@ -1273,7 +1388,8 @@
       "path": "/workspaces/{workspace_id}/members/bulk",
       "section": "Enterprise > Workspace Members",
       "title": "Bulk Update Workspace Member Roles",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/bulk-update-member-roles.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/bulk-update-member-roles",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/bulk-update-member-roles.md",
       "slug": "enterprise/workspace-members/bulk-update-member-roles",
       "hash": "223689bd969cb6f3",
       "wrapped": false
@@ -1284,7 +1400,8 @@
       "path": "/sites/{site_id}/form_submissions/{form_submission_id}",
       "section": "Forms > Form submissions",
       "title": "Delete Form Submission",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/delete-submission.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/delete-submission",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/delete-submission.md",
       "slug": "forms/form-submissions/delete-submission",
       "hash": "30fc49ec59b39f44",
       "wrapped": false
@@ -1295,7 +1412,8 @@
       "path": "/sites/{site_id}/form_submissions",
       "section": "Forms > Form submissions",
       "title": "List Form Submissions by Site",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/list-submissions-by-site.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/list-submissions-by-site",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/list-submissions-by-site.md",
       "slug": "forms/form-submissions/list-submissions-by-site",
       "hash": "5c3ac980e8087f0b",
       "wrapped": false
@@ -1306,7 +1424,8 @@
       "path": "/sites/{site_id}/form_submissions/{form_submission_id}",
       "section": "Forms > Form submissions",
       "title": "Get Form Submission",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/get-submission.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/get-submission",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/get-submission.md",
       "slug": "forms/form-submissions/get-submission",
       "hash": "c07b84de904ead5e",
       "wrapped": false
@@ -1317,7 +1436,8 @@
       "path": "/sites/{site_id}/forms/{form_id}/submissions",
       "section": "Forms > Form submissions",
       "title": "List Form Submissions",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/list-submissions.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/list-submissions",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/list-submissions.md",
       "slug": "forms/form-submissions/list-submissions",
       "hash": "25a5132ebb4881c8",
       "wrapped": false
@@ -1328,7 +1448,8 @@
       "path": "/sites/{site_id}/form_submissions/{form_submission_id}",
       "section": "Forms > Form submissions",
       "title": "Update Form Submission",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/update-submission.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/update-submission",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/forms/form-submissions/update-submission.md",
       "slug": "forms/form-submissions/update-submission",
       "hash": "d25964d79284912c",
       "wrapped": false
@@ -1339,7 +1460,8 @@
       "path": "/forms/{form_id}",
       "section": "Forms > Forms",
       "title": "Get Form Schema",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/forms/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/forms/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/forms/forms/get.md",
       "slug": "forms/forms/get",
       "hash": "ce9fe504c5013672",
       "wrapped": false
@@ -1350,7 +1472,8 @@
       "path": "/sites/{site_id}/forms",
       "section": "Forms > Forms",
       "title": "List Forms",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/forms/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/forms/forms/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/forms/forms/list.md",
       "slug": "forms/forms/list",
       "hash": "563f27015587dbfc",
       "wrapped": false
@@ -1361,7 +1484,8 @@
       "path": "/optimize",
       "section": "Optimize",
       "title": "List Optimize IDs",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-optimize-ids.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-optimize-ids",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-optimize-ids.md",
       "slug": "optimize/list-optimize-ids",
       "hash": "486dd91ca117dc72",
       "wrapped": false
@@ -1372,7 +1496,8 @@
       "path": "/optimize/{optimize_id}/optimizations",
       "section": "Optimize",
       "title": "List Optimizations",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-optimizations.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-optimizations",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-optimizations.md",
       "slug": "optimize/list-optimizations",
       "hash": "5114200094fa4a2f",
       "wrapped": false
@@ -1383,7 +1508,8 @@
       "path": "/optimize/{optimize_id}/optimizations/{optimization_id}/audience-insights",
       "section": "Optimize",
       "title": "Get Audience Insights",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/get-audience-insights.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/get-audience-insights",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/get-audience-insights.md",
       "slug": "optimize/get-audience-insights",
       "hash": "d4a5d78dcf35addd",
       "wrapped": false
@@ -1394,7 +1520,8 @@
       "path": "/optimize/{optimize_id}/optimizations/{optimization_id}/dimensions",
       "section": "Optimize",
       "title": "List Dimensions",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-dimensions.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-dimensions",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-dimensions.md",
       "slug": "optimize/list-dimensions",
       "hash": "97346e4f4d774d3a",
       "wrapped": false
@@ -1405,7 +1532,8 @@
       "path": "/optimize/{optimize_id}/optimizations/{optimization_id}/dimensions/{dimension_id}/values",
       "section": "Optimize",
       "title": "List Dimension Values",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-dimension-values.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-dimension-values",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-dimension-values.md",
       "slug": "optimize/list-dimension-values",
       "hash": "4114c16b15e0fff4",
       "wrapped": false
@@ -1416,7 +1544,8 @@
       "path": "/optimize/{optimize_id}/optimizations/{optimization_id}/goals",
       "section": "Optimize",
       "title": "List Optimization Goals",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-optimization-goals.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-optimization-goals",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/list-optimization-goals.md",
       "slug": "optimize/list-optimization-goals",
       "hash": "a688e288f70d5d74",
       "wrapped": false
@@ -1427,7 +1556,8 @@
       "path": "/optimize/{optimize_id}/optimizations/{optimization_id}/summary",
       "section": "Optimize",
       "title": "Get Optimization Results",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/get-optimization-results.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/get-optimization-results",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/get-optimization-results.md",
       "slug": "optimize/get-optimization-results",
       "hash": "646928937156492d",
       "wrapped": false
@@ -1438,7 +1568,8 @@
       "path": "/optimize/{optimize_id}/optimizations/{optimization_id}/trend",
       "section": "Optimize",
       "title": "Get Performance Over Time",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/get-performance-over-time.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/get-performance-over-time",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/optimize/get-performance-over-time.md",
       "slug": "optimize/get-performance-over-time",
       "hash": "ddc99d329aec097d",
       "wrapped": false
@@ -1449,7 +1580,8 @@
       "path": "/sites/{site_id}/components",
       "section": "Pages and Components > Components",
       "title": "List Components",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/list.md",
       "slug": "pages-and-components/components/list",
       "hash": "bd96b7cd5170c737",
       "wrapped": false
@@ -1460,7 +1592,8 @@
       "path": "/sites/{site_id}/components/{component_id}/dom",
       "section": "Pages and Components > Components",
       "title": "Get Component Content",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/get-content.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/get-content",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/get-content.md",
       "slug": "pages-and-components/components/get-content",
       "hash": "0e4d7b8c2f20cb4b",
       "wrapped": false
@@ -1471,7 +1604,8 @@
       "path": "/sites/{site_id}/components/{component_id}/properties",
       "section": "Pages and Components > Components",
       "title": "Get Component Properties",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/get-properties.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/get-properties",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/get-properties.md",
       "slug": "pages-and-components/components/get-properties",
       "hash": "5808c1cba721327d",
       "wrapped": false
@@ -1482,7 +1616,8 @@
       "path": "/sites/{site_id}/components/{component_id}/dom",
       "section": "Pages and Components > Components",
       "title": "Update Component Content",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/update-content.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/update-content",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/update-content.md",
       "slug": "pages-and-components/components/update-content",
       "hash": "4687dadc34f3455f",
       "wrapped": false
@@ -1493,7 +1628,8 @@
       "path": "/sites/{site_id}/components/{component_id}/properties",
       "section": "Pages and Components > Components",
       "title": "Update Component Properties",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/update-properties.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/update-properties",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/components/update-properties.md",
       "slug": "pages-and-components/components/update-properties",
       "hash": "ea996e9181e7ab5d",
       "wrapped": false
@@ -1504,7 +1640,8 @@
       "path": "/pages/{page_id}",
       "section": "Pages and Components > Pages",
       "title": "Get Page Metadata",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/get-metadata.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/get-metadata",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/get-metadata.md",
       "slug": "pages-and-components/pages/get-metadata",
       "hash": "ca1d175d7935bebe",
       "wrapped": true
@@ -1515,7 +1652,8 @@
       "path": "/pages/{page_id}/dom",
       "section": "Pages and Components > Pages",
       "title": "Get Page Content",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/get-content.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/get-content",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/get-content.md",
       "slug": "pages-and-components/pages/get-content",
       "hash": "d47a139d42aedf59",
       "wrapped": true
@@ -1526,7 +1664,8 @@
       "path": "/sites/{site_id}/pages",
       "section": "Pages and Components > Pages",
       "title": "List Pages",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/list.md",
       "slug": "pages-and-components/pages/list",
       "hash": "fc07f6f5ffb415e8",
       "wrapped": true
@@ -1537,7 +1676,8 @@
       "path": "/pages/{page_id}/dom",
       "section": "Pages and Components > Pages",
       "title": "Update Page Content",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/update-static-content.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/update-static-content",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/update-static-content.md",
       "slug": "pages-and-components/pages/update-static-content",
       "hash": "e3f7d21987bacf70",
       "wrapped": false
@@ -1548,7 +1688,8 @@
       "path": "/pages/{page_id}",
       "section": "Pages and Components > Pages",
       "title": "Update Page Metadata",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/update-page-settings.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/update-page-settings",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/pages-and-components/pages/update-page-settings.md",
       "slug": "pages-and-components/pages/update-page-settings",
       "hash": "92f14be4581fb10a",
       "wrapped": false
@@ -1559,7 +1700,8 @@
       "path": "/sites/{site_id}/integrations/google_tags",
       "section": "Site Configuration > Google Tag Manager",
       "title": "Delete Google Tags",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/delete-all.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/delete-all",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/delete-all.md",
       "slug": "site-configuration/google-tag-manager/delete-all",
       "hash": "86ec891e7954d7d0",
       "wrapped": false
@@ -1570,7 +1712,8 @@
       "path": "/sites/{site_id}/integrations/google_tags/{tag_id}",
       "section": "Site Configuration > Google Tag Manager",
       "title": "Delete Google Tag",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/delete.md",
       "slug": "site-configuration/google-tag-manager/delete",
       "hash": "e9521e00e3ef1180",
       "wrapped": false
@@ -1581,7 +1724,8 @@
       "path": "/sites/{site_id}/integrations/google_tags",
       "section": "Site Configuration > Google Tag Manager",
       "title": "List Google Tags",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/list.md",
       "slug": "site-configuration/google-tag-manager/list",
       "hash": "74c61a68ed1bec9e",
       "wrapped": false
@@ -1592,7 +1736,8 @@
       "path": "/sites/{site_id}/integrations/google_tags",
       "section": "Site Configuration > Google Tag Manager",
       "title": "Update Google Tag",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/upsert.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/upsert",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/site-configuration/google-tag-manager/upsert.md",
       "slug": "site-configuration/google-tag-manager/upsert",
       "hash": "dc78c45c62c24975",
       "wrapped": false
@@ -1603,7 +1748,8 @@
       "path": "/sites",
       "section": "Sites",
       "title": "List Sites",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/sites/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/sites/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/sites/list.md",
       "slug": "sites/list",
       "hash": "16c43b672fbdd874",
       "wrapped": false
@@ -1614,7 +1760,8 @@
       "path": "/sites/{site_id}",
       "section": "Sites",
       "title": "Get Site",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/sites/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/sites/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/sites/get.md",
       "slug": "sites/get",
       "hash": "3d9e30e14d124d1f",
       "wrapped": true
@@ -1625,7 +1772,8 @@
       "path": "/sites/{site_id}/custom_domains",
       "section": "Sites",
       "title": "Get Custom Domains",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/sites/get-custom-domain.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/sites/get-custom-domain",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/sites/get-custom-domain.md",
       "slug": "sites/get-custom-domain",
       "hash": "0797a6e04b9c9c6e",
       "wrapped": false
@@ -1636,7 +1784,8 @@
       "path": "/sites/{site_id}/publish",
       "section": "Sites",
       "title": "Publish Site",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/sites/publish.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/sites/publish",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/sites/publish.md",
       "slug": "sites/publish",
       "hash": "e7fc3706e2a00dba",
       "wrapped": true
@@ -1647,7 +1796,8 @@
       "path": "/token/authorized_by",
       "section": "Token",
       "title": "Get Authorization User Info",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/token/authorized-by.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/token/authorized-by",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/token/authorized-by.md",
       "slug": "token/authorized-by",
       "hash": "a0babdfa951b85bd",
       "wrapped": true
@@ -1658,7 +1808,8 @@
       "path": "/token/introspect",
       "section": "Token",
       "title": "Get Authorization Info",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/token/introspect.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/token/introspect",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/token/introspect.md",
       "slug": "token/introspect",
       "hash": "b6ce5bc8593b9a73",
       "wrapped": true
@@ -1669,7 +1820,8 @@
       "path": "/webhooks/{webhook_id}",
       "section": "Webhooks",
       "title": "Remove Webhook",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/delete.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/delete",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/delete.md",
       "slug": "webhooks/delete",
       "hash": "bc3b96fa3a6af6c0",
       "wrapped": true
@@ -1680,7 +1832,8 @@
       "path": "/sites/{site_id}/webhooks",
       "section": "Webhooks",
       "title": "List Webhooks",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/list.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/list",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/list.md",
       "slug": "webhooks/list",
       "hash": "e0f433ed6538d14b",
       "wrapped": true
@@ -1691,7 +1844,8 @@
       "path": "/webhooks/{webhook_id}",
       "section": "Webhooks",
       "title": "Get Webhook",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/get.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/get",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/get.md",
       "slug": "webhooks/get",
       "hash": "2aee6728497e1dbb",
       "wrapped": true
@@ -1702,7 +1856,8 @@
       "path": "/sites/{site_id}/webhooks",
       "section": "Webhooks",
       "title": "Create Webhook",
-      "url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/create.md",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/create",
+      "markdown_url": "https://developers.webflow.com/data/v2.0.0/reference/webhooks/create.md",
       "slug": "webhooks/create",
       "hash": "58e26da454c0143e",
       "wrapped": true

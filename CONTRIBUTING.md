@@ -25,7 +25,7 @@ Thank you for your interest in contributing to the Pulumi Webflow provider!
 ### Prerequisites
 
 - Go 1.21+
-- Node.js 20.x
+- Node.js 24.x
 - Python 3.11
 - .NET 8.0 (for C# examples)
 - Java 11 (for Java examples)

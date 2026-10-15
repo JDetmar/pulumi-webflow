@@ -14,28 +14,35 @@ The reference index at `https://developers.webflow.com/data/v2.0.0/llms.txt` lis
 
 1. Reads the reference index and downloads every reference page.
 2. Extracts the method and path from each page, and normalizes the page text.
-   Normalizing drops the preamble, code samples, the error list, and the examples, so the hash changes only when the documented contract changes.
-3. Scans `provider/*.go` (excluding tests) for `/v2/...` URL templates.
-   A documented endpoint is "wrapped" when its path, with parameters erased, matches a provider template.
-   Matching is by path only, so an unimplemented method on a wrapped path counts as wrapped.
-4. Compares the snapshot with the baseline from the previous run:
+   Normalizing drops the preamble, code samples, the error list, and the examples.
+3. Hashes only the page's contract: the endpoint, content type, headings, each parameter or field with its type and required-ness, allowed values, and required scopes.
+   Wording edits to descriptions change the stored text but not the hash, so they are not drift.
+4. Scans `provider/*.go` (excluding tests and comment lines) for `/v2/...` URL templates.
+   Each template is paired with the method of the `http.NewRequest` call in the same function.
+   A documented endpoint is "wrapped" when its method and path, with parameters erased, match a provider call.
+   A template in a function that sends no request matches any method on its path.
+5. Compares the snapshot with the baseline:
    - **gap**: a documented endpoint the provider does not wrap.
-   - **drift**: a wrapped endpoint whose normalized page changed.
+   - **drift**: a wrapped endpoint whose contract hash changed.
    - **removed**: an endpoint in the baseline that the reference no longer lists.
-5. Drops every finding already recorded in an issue.
-   Issues carry hidden markers such as `<!-- api-parity:gap GET /sites/{}/aeo/reports/bot_traffic -->`.
-   A marker counts in any issue state, so closing an issue as "not planned" stops it from coming back.
-6. Writes `work.json` (the pending findings), a new `baseline/` directory, and `has_work` to `$GITHUB_OUTPUT`.
+6. Drops every finding whose marker is already published in an issue or an issue comment, in any state.
+   Markers are inline code spans, such as `` `api-parity:gap GET /sites/{}/aeo/reports/bot_traffic` ``, because gh-aw's output sanitizer removes HTML comments.
+   Closing an issue as "not planned" therefore stops its finding from coming back.
+7. Writes `work.json` (the pending findings), the baseline to save, and `has_work` to `$GITHUB_OUTPUT`.
 
 The agent runs only when `has_work` is true.
-The baseline holds hashes for every page and the normalized text for wrapped pages only, about 350 KB.
+
+## The baseline
+
+The baseline holds the contract hash of every endpoint and the normalized text of wrapped pages, about 350 KB.
 It lives on the `memory/api-parity` branch, one commit per change, so the branch history doubles as a log of Webflow reference changes.
 
-The workflow's `save_baseline` job commits the new baseline only after both the agent and the safe-output jobs succeed.
-If either fails, the old baseline stays and the next run sees the same drift again.
-gh-aw `repo-memory` is not used, because it saves memory even when the agent fails.
+The `save_baseline` job commits it after every successful snapshot, whether or not the agent runs or succeeds.
+A drift or removal stays pending until its marker is published: until then, the saved baseline keeps that endpoint's previous state, and every run reports it again.
+A preview run, a failed agent, or an exhausted output budget therefore loses nothing.
+Once an issue or comment carries the marker, the next snapshot advances the baseline for that endpoint.
 
-To re-report drift after a run that filed nothing useful, revert the last commit on `memory/api-parity` and run the workflow again.
+gh-aw `repo-memory` is not used, because it lives inside the agent job and saves even when the agent fails.
 
 ## Run it locally
 
@@ -47,7 +54,7 @@ python3 scripts/api_parity/snapshot.py \
 python3 -m unittest discover -s scripts/api_parity
 ```
 
-Without `--issues`, nothing counts as already reported.
+Without `--issues` and `--comments`, nothing counts as already reported.
 An empty or missing baseline directory means a first run: gaps are reported, and drift starts from the next run.
 
 ## Threat model
@@ -59,7 +66,7 @@ The workflow cannot change code, releases, or settings.
 |---|---|---|
 | Prompt injection in Webflow docs content tells the agent to do something else | Reference pages and diffs in `work.json` | The agent job has read-only permissions. Writes go only through gh-aw safe outputs, capped at a few issues and comments per run, and gh-aw's threat-detection job screens them. The prompt treats page content as data. Network egress is limited to GitHub and `developers.webflow.com`. |
 | The docs site returns partial or bad content and the workflow reports false removals | Index or page fetch | Every fetch has a timeout and bounded retries. Any failure fails the job before the agent runs. An index with suspiciously few endpoints is rejected. |
-| A hostile issue body forges markers to hide findings | Prior issues read for dedupe | Only collaborators can trigger the workflow, but anyone can open an issue on a public repo. A forged marker can only suppress a report, never cause an action, and suppression is visible in the issue list. Accepted. |
+| A hostile issue or comment forges markers to hide findings | Prior issues and comments read for dedupe | Only collaborators can trigger the workflow, but anyone can open an issue or comment on a public repo. A forged marker can only suppress a report, never cause an action, and it is visible in the issue. Accepted. |
 | Runaway cost or issue spam | Agent loop | `timeout-minutes`, `max-turns`, per-output `max`, and the `has_work` gate bound each run. Stop it with `gh aw disable api-parity-maintainer`. |
 
 Receipts: each issue and comment carries gh-aw's footer with the workflow run link, and the baseline branch keeps a commit per change.

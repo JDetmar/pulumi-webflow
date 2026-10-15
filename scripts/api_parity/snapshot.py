@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Compare the Webflow Data API reference with the endpoints the provider calls.
 
-Writes work.json (findings not yet recorded in an issue) and a new baseline
-directory for the api-parity-maintainer agentic workflow. See README.md.
+Writes work.json (findings not yet published in an issue or comment) and a new
+baseline directory for the api-parity-maintainer agentic workflow. See README.md.
 """
 
 import argparse
@@ -30,6 +30,8 @@ MIN_INDEX_ENTRIES = 100
 MAX_DIFF_LINES = 300
 BASELINE_VERSION = 1
 MARKER_PREFIX = "api-parity:"
+# Matches any method: the URL template is built in a function that sends no request.
+ANY_METHOD = "*"
 
 _INDEX_LINE = re.compile(
     r"^- API Reference > (?P<section>.+?) \[(?P<title>.+)\]"
@@ -37,9 +39,17 @@ _INDEX_LINE = re.compile(
 )
 _ENDPOINT_LINE = re.compile(r"^(GET|POST|PUT|PATCH|DELETE) https://api\.webflow\.com/v2(/\S*)\s*$")
 _PATH_PARAM = re.compile(r"\{[^}]+\}")
+_GO_FUNC = re.compile(r"^func ", re.MULTILINE)
+_GO_LINE_COMMENT = re.compile(r"^\s*//.*$", re.MULTILINE)
 _GO_V2_LITERAL = re.compile(r'"[^"\n]*?/v2(/[^"\n]*)"')
 _GO_VERB = re.compile(r"%[sdv]")
-_MARKER = re.compile(r"<!--\s*" + re.escape(MARKER_PREFIX) + r"(gap|drift|removed) (.+?)\s*-->")
+_GO_REQUEST_METHOD = re.compile(
+    r'NewRequest(?:WithContext)?\([^,]*,\s*(?:"(GET|POST|PUT|PATCH|DELETE)"|http\.Method(Get|Post|Put|Patch|Delete)\b)'
+)
+# Markers are inline code spans: gh-aw's output sanitizer removes HTML comments.
+_MARKER = re.compile(r"`" + re.escape(MARKER_PREFIX) + r"(gap|drift|removed) ([^`\n]+?)`")
+_CONTRACT_FIELD = re.compile(r"^\s*- `[^`]+` \(")
+_CONTRACT_SCOPE = re.compile(r"Required scope \| `([^`]+)`")
 
 
 @dataclasses.dataclass(frozen=True)
@@ -66,7 +76,8 @@ class Page:
 
     @property
     def digest(self) -> str:
-        return hashlib.sha256(self.normalized.encode()).hexdigest()
+        """Hash of the documented contract only, so wording edits are not drift."""
+        return hashlib.sha256(contract(self.normalized).encode()).hexdigest()[:16]
 
 
 def normalize_path(path: str) -> str:
@@ -86,7 +97,7 @@ def parse_index(text: str) -> list[IndexEntry]:
 
 
 def normalize_page(text: str) -> str:
-    """Keep only the documented contract: title, endpoint, description, request, response, types.
+    """Keep the documented contract with its prose: title, endpoint, description, request, response, types.
 
     Drops the site-wide preamble, fenced code samples, the error list and the
     examples, which change for reasons unrelated to the API contract.
@@ -118,6 +129,25 @@ def normalize_page(text: str) -> str:
     return re.sub(r"\n{3,}", "\n\n", "\n".join(kept)).strip() + "\n"
 
 
+def contract(normalized: str) -> str:
+    """Reduce a normalized page to the lines that define the API contract.
+
+    Keeps the endpoint, content type, section and status headings, each
+    parameter or field with its type and required-ness, allowed values, and
+    required scopes. Drops descriptions and other prose.
+    """
+    lines = []
+    for line in normalized.splitlines():
+        if _ENDPOINT_LINE.match(line) or line.startswith("Content-Type:") or line.startswith(("## ", "### ")):
+            lines.append(line)
+        elif _CONTRACT_FIELD.match(line):
+            lines.append(line.split(" — ", 1)[0])
+        elif line.lstrip().startswith("- Allowed values:"):
+            lines.append(line)
+        lines.extend(f"scope {scope}" for scope in _CONTRACT_SCOPE.findall(line))
+    return "\n".join(lines) + "\n"
+
+
 def parse_page(entry: IndexEntry, text: str) -> Page:
     method = path = None
     for line in text.splitlines():
@@ -128,37 +158,52 @@ def parse_page(entry: IndexEntry, text: str) -> Page:
     return Page(entry, method, path, normalize_page(text))
 
 
-def provider_paths(provider_dir: Path) -> dict[str, list[str]]:
-    """Map each normalized /v2 path the provider builds to the files that build it."""
+def provider_endpoints(provider_dir: Path) -> dict[str, list[str]]:
+    """Map each endpoint the provider calls, as "METHOD /normalized/path", to the files that call it.
+
+    The method comes from the http.NewRequest call in the same function as the
+    URL template. A template in a function without a request matches any method.
+    """
     found: dict[str, set[str]] = {}
     for go_file in sorted(provider_dir.glob("*.go")):
         if go_file.name.endswith("_test.go"):
             continue
-        for literal in _GO_V2_LITERAL.findall(go_file.read_text()):
-            path = normalize_path(_GO_VERB.sub("{}", literal))
-            found.setdefault(path, set()).add(go_file.name)
-    return {path: sorted(files) for path, files in sorted(found.items())}
+        source = _GO_LINE_COMMENT.sub("", go_file.read_text())
+        for chunk in _GO_FUNC.split(source):
+            paths = {normalize_path(_GO_VERB.sub("{}", literal)) for literal in _GO_V2_LITERAL.findall(chunk)}
+            methods = {(literal or constant).upper() for literal, constant in _GO_REQUEST_METHOD.findall(chunk)}
+            for path in paths:
+                for method in methods or {ANY_METHOD}:
+                    found.setdefault(f"{method} {path}", set()).add(go_file.name)
+    return {key: sorted(files) for key, files in sorted(found.items())}
 
 
-def reported_markers(issues: list[dict]) -> tuple[set[tuple[str, str]], dict[str, int]]:
-    """Collect markers from prior issues, in any state.
+def wrapping_files(page: Page, endpoints: dict[str, list[str]]) -> list[str]:
+    path = normalize_path(page.path)
+    return sorted(set(endpoints.get(f"{page.method} {path}", []) + endpoints.get(f"{ANY_METHOD} {path}", [])))
+
+
+def published_markers(issues: list[dict], comments: list[dict]) -> tuple[set[tuple[str, str]], dict[str, int]]:
+    """Collect markers from prior issues and their comments, in any state.
 
     Returns every (kind, value) marker, and for drift the open issue number per
     endpoint key so a new change can be added there as a comment.
     """
+    state_by_number = {issue["number"]: issue.get("state", "").upper() for issue in issues}
+    sources = [(issue["number"], issue.get("body")) for issue in issues]
+    sources += [(comment["issue_number"], comment.get("body")) for comment in comments]
     markers: set[tuple[str, str]] = set()
     open_drift: dict[str, int] = {}
-    for issue in issues:
-        for kind, value in _MARKER.findall(issue.get("body") or ""):
+    for number, body in sources:
+        for kind, value in _MARKER.findall(body or ""):
             markers.add((kind, value))
-            if kind == "drift" and issue.get("state", "").upper() == "OPEN":
-                endpoint_key = value.rsplit(" ", 1)[0]
-                open_drift.setdefault(endpoint_key, issue["number"])
+            if kind == "drift" and state_by_number.get(number) == "OPEN":
+                open_drift.setdefault(value.rsplit(" ", 1)[0], number)
     return markers, open_drift
 
 
 def marker(kind: str, value: str) -> str:
-    return f"<!-- {MARKER_PREFIX}{kind} {value} -->"
+    return f"`{MARKER_PREFIX}{kind} {value}`"
 
 
 def load_baseline(baseline_dir: Path) -> dict | None:
@@ -183,13 +228,22 @@ def unified_diff(old: str, new: str, slug: str) -> tuple[str, bool]:
 
 def compare(
     pages: list[Page],
-    wrapped_paths: dict[str, list[str]],
+    endpoints_called: dict[str, list[str]],
     baseline: dict | None,
     baseline_dir: Path,
     issues: list[dict],
+    comments: list[dict] | None = None,
 ) -> tuple[dict, dict, dict[str, str]]:
-    """Compute pending findings. Returns (work, new manifest, wrapped page texts by filename)."""
-    markers, open_drift = reported_markers(issues)
+    """Compute pending findings and the baseline to save.
+
+    A drift or removal stays pending, and the saved baseline keeps its previous
+    state, until an issue or comment publishes its marker. A run that publishes
+    nothing (a preview, a failure, or an exhausted output budget) therefore loses
+    nothing, and the next run reports it again.
+
+    Returns (work, manifest to save, page texts to save by filename).
+    """
+    markers, open_drift = published_markers(issues, comments or [])
     endpoints = [page for page in pages if page.key is not None]
 
     previous = {item["key"]: item for item in (baseline or {}).get("endpoints", [])}
@@ -201,7 +255,7 @@ def compare(
     drift = []
 
     for page in sorted(endpoints, key=lambda p: (p.entry.section, p.key)):
-        provider_files = wrapped_paths.get(normalize_path(page.path))
+        provider_files = wrapping_files(page, endpoints_called)
         summary = {
             "key": page.key,
             "method": page.method,
@@ -210,22 +264,26 @@ def compare(
             "title": page.entry.title,
             "url": page.entry.url,
         }
-        manifest_entries.append({**summary, "slug": page.entry.slug, "hash": page.digest, "wrapped": bool(provider_files)})
+        current_entry = {**summary, "slug": page.entry.slug, "hash": page.digest, "wrapped": bool(provider_files)}
 
         if not provider_files:
+            manifest_entries.append(current_entry)
             if ("gap", page.key) not in markers:
                 gaps_by_section.setdefault(page.entry.section, []).append(summary)
             continue
 
-        filename = page_filename(page.entry.slug)
-        baseline_pages[filename] = page.normalized
         before = previous.get(page.key)
         old_page = baseline_dir / "pages" / page_filename(before["slug"]) if before else None
-        if not before or not before.get("wrapped") or before["hash"] == page.digest or not old_page.is_file():
+        changed = bool(before and before.get("wrapped") and before["hash"] != page.digest and old_page.is_file())
+        if not changed or ("drift", f"{page.key} {page.digest}") in markers:
+            manifest_entries.append(current_entry)
+            baseline_pages[page_filename(page.entry.slug)] = page.normalized
             continue
-        if ("drift", f"{page.key} {page.digest}") in markers:
-            continue
-        diff, truncated = unified_diff(old_page.read_text(), page.normalized, page.entry.slug)
+
+        old_text = old_page.read_text()
+        manifest_entries.append(before)
+        baseline_pages[page_filename(before["slug"])] = old_text
+        diff, truncated = unified_diff(old_text, page.normalized, page.entry.slug)
         drift.append(
             {
                 **summary,
@@ -237,20 +295,26 @@ def compare(
             }
         )
 
-    removed = [
-        {
-            "key": key,
-            "method": item["method"],
-            "path": item["path"],
-            "section": item["section"],
-            "title": item["title"],
-            "url": item["url"],
-            "was_wrapped": item["wrapped"],
-            "marker": marker("removed", key),
-        }
-        for key, item in sorted(previous.items())
-        if key not in current_keys and ("removed", key) not in markers
-    ]
+    removed = []
+    for key, item in sorted(previous.items()):
+        if key in current_keys or ("removed", key) in markers:
+            continue
+        manifest_entries.append(item)
+        old_page = baseline_dir / "pages" / page_filename(item["slug"])
+        if item.get("wrapped") and old_page.is_file():
+            baseline_pages[page_filename(item["slug"])] = old_page.read_text()
+        removed.append(
+            {
+                "key": key,
+                "method": item["method"],
+                "path": item["path"],
+                "section": item["section"],
+                "title": item["title"],
+                "url": item["url"],
+                "was_wrapped": item["wrapped"],
+                "marker": marker("removed", key),
+            }
+        )
 
     gaps = [
         {
@@ -266,7 +330,7 @@ def compare(
         "baseline": "present" if baseline else "missing",
         "counts": {
             "documented_endpoints": len(endpoints),
-            "wrapped_endpoints": len(baseline_pages),
+            "wrapped_endpoints": sum(1 for page in endpoints if wrapping_files(page, endpoints_called)),
             "pending_removed": len(removed),
             "pending_drift": len(drift),
             "pending_gap_sections": len(gaps),
@@ -276,7 +340,11 @@ def compare(
         "drift": drift,
         "gaps": gaps,
     }
-    manifest = {"version": BASELINE_VERSION, "index": DOCS_INDEX_URL, "endpoints": manifest_entries}
+    manifest = {
+        "version": BASELINE_VERSION,
+        "index": DOCS_INDEX_URL,
+        "endpoints": sorted(manifest_entries, key=lambda item: (item["section"], item["key"])),
+    }
     return work, manifest, baseline_pages
 
 
@@ -321,13 +389,17 @@ def run(
     out_dir: Path,
     fetch=fetch_text,
     min_index_entries: int = MIN_INDEX_ENTRIES,
+    comments_path: Path | None = None,
 ) -> dict:
     entries = parse_index(fetch(DOCS_INDEX_URL))
     if len(entries) < min_index_entries:
         raise RuntimeError(f"docs index listed only {len(entries)} reference pages; expected at least {min_index_entries}")
     pages = fetch_pages(entries, fetch)
     issues = json.loads(issues_path.read_text()) if issues_path else []
-    work, manifest, baseline_pages = compare(pages, provider_paths(provider_dir), load_baseline(baseline_dir), baseline_dir, issues)
+    comments = json.loads(comments_path.read_text()) if comments_path else []
+    work, manifest, baseline_pages = compare(
+        pages, provider_endpoints(provider_dir), load_baseline(baseline_dir), baseline_dir, issues, comments
+    )
     write_outputs(out_dir, work, manifest, baseline_pages)
     return work
 
@@ -337,10 +409,11 @@ def main() -> int:
     parser.add_argument("--provider-dir", type=Path, required=True)
     parser.add_argument("--baseline-dir", type=Path, required=True, help="previous baseline; missing or empty on the first run")
     parser.add_argument("--issues", type=Path, help="JSON array of prior issues with number, state and body")
+    parser.add_argument("--comments", type=Path, help="JSON array of issue comments with issue_number and body")
     parser.add_argument("--out-dir", type=Path, required=True)
     args = parser.parse_args()
 
-    work = run(args.provider_dir, args.baseline_dir, args.issues, args.out_dir)
+    work = run(args.provider_dir, args.baseline_dir, args.issues, args.out_dir, comments_path=args.comments)
     print(json.dumps(work["counts"]))
     pending = has_work(work)
     if github_output := os.environ.get("GITHUB_OUTPUT"):

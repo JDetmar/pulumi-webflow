@@ -24,7 +24,7 @@ PAGE_TEMPLATE = """\
 
 {method} https://api.webflow.com/v2{path}
 
-{description}
+{description}Required scope | `sites:read`
 
 ## Request
 
@@ -53,13 +53,30 @@ curl https://api.webflow.com/v2{path}
 ```
 """
 
+SITE_RESPONSE = "- `id` (string, required) — Unique identifier for the Site"
 
-def page_text(title, method, path, description="Description.", response="- `id` (string, required)"):
+
+def page_text(title, method, path, description="Description.", response=SITE_RESPONSE):
     return PAGE_TEMPLATE.format(title=title, method=method, path=path, description=description, response=response)
 
 
 def entry(slug, section="Sites", title="Get Site"):
     return snapshot.IndexEntry(section, title, f"https://developers.webflow.com/data/v2.0.0/reference/{slug}.md", slug)
+
+
+def site_page(**kwargs):
+    return snapshot.parse_page(entry("sites/get"), page_text("Get Site", "GET", "/sites/{site_id}", **kwargs))
+
+
+def bot_traffic_page():
+    return snapshot.parse_page(
+        entry("aeo-analytics/get-bot-traffic", "AEO Analytics", "Get Bot Traffic"),
+        page_text("Get Bot Traffic", "GET", "/sites/{site_id}/aeo/reports/bot_traffic"),
+    )
+
+
+def issue(number, state, body):
+    return {"number": number, "state": state, "body": body}
 
 
 class ParseIndexTest(unittest.TestCase):
@@ -80,7 +97,7 @@ class ParseIndexTest(unittest.TestCase):
 
 class ParsePageTest(unittest.TestCase):
     def test_extracts_method_and_path(self):
-        page = snapshot.parse_page(entry("sites/get"), page_text("Get Site", "GET", "/sites/{site_id}"))
+        page = site_page()
 
         self.assertEqual((page.method, page.path, page.key), ("GET", "/sites/{site_id}", "GET /sites/{}"))
 
@@ -97,29 +114,70 @@ class ParsePageTest(unittest.TestCase):
         for dropped in ("This page is for Data API", "## Errors", "Unauthorized", "## Examples", "curl"):
             self.assertNotIn(dropped, normalized)
 
-    def test_hash_ignores_changes_outside_the_contract(self):
-        before = snapshot.parse_page(entry("sites/get"), page_text("Get Site", "GET", "/sites/{site_id}"))
-        after_text = page_text("Get Site", "GET", "/sites/{site_id}").replace("curl https", "wget https").replace(
-            "Request not authorized", "Not authorized"
+    def test_contract_keeps_fields_types_and_scopes_but_not_prose(self):
+        lines = snapshot.contract(site_page().normalized).splitlines()
+
+        self.assertIn("GET https://api.webflow.com/v2/sites/{site_id}", lines)
+        self.assertIn("- `site_id` (string, required)", lines)
+        self.assertIn("scope sites:read", lines)
+        self.assertNotIn("Description.", "\n".join(lines))
+        self.assertNotIn("Unique identifier", "\n".join(lines))
+
+    def test_wording_edits_do_not_change_the_digest(self):
+        reworded = site_page(
+            description="A clearer description.", response="- `id` (string, required) — The Site's unique identifier"
         )
-        after = snapshot.parse_page(entry("sites/get"), after_text)
 
-        self.assertEqual(before.digest, after.digest)
+        self.assertEqual(site_page().digest, reworded.digest)
+
+    def test_field_changes_change_the_digest(self):
+        optional = site_page(response="- `id` (string, optional) — Unique identifier for the Site")
+        added = site_page(response=SITE_RESPONSE + "\n- `locale` (string, optional) — Default locale")
+
+        self.assertNotEqual(site_page().digest, optional.digest)
+        self.assertNotEqual(site_page().digest, added.digest)
 
 
-class ProviderPathsTest(unittest.TestCase):
-    def test_collects_v2_templates_and_skips_tests(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            provider = Path(tmp)
-            (provider / "redirect.go").write_text(
-                'url := fmt.Sprintf("%s/v2/sites/%s/redirects/%s", base, siteID, id)\n'
-                'list := fmt.Sprintf("%s/v2/sites/%s/redirects?offset=%d", base, siteID, offset)\n'
-            )
-            (provider / "redirect_test.go").write_text('url := "/v2/sites/5f0c8c9e1c9d440000e8d8c3/webhooks"\n')
+class ProviderEndpointsTest(unittest.TestCase):
+    def provider(self, files):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        for name, text in files.items():
+            (Path(tmp.name) / name).write_text(text)
+        return snapshot.provider_endpoints(Path(tmp.name))
 
-            paths = snapshot.provider_paths(provider)
+    def test_pairs_each_url_template_with_its_request_method(self):
+        endpoints = self.provider(
+            {
+                "redirect.go": (
+                    "func GetRedirects() {\n"
+                    '\turl := fmt.Sprintf("%s/v2/sites/%s/redirects?offset=%d", base, siteID, offset)\n'
+                    '\treq, _ := http.NewRequestWithContext(ctx, "GET", url, http.NoBody)\n'
+                    "}\n"
+                    "func DeleteRedirect() {\n"
+                    '\turl := fmt.Sprintf("%s/v2/sites/%s/redirects/%s", base, siteID, id)\n'
+                    "\treq, _ := http.NewRequestWithContext(ctx, http.MethodDelete, url, http.NoBody)\n"
+                    "}\n"
+                ),
+                "redirect_test.go": 'func TestX() { u := "/v2/sites/5f0c8c9e1c9d440000e8d8c3/webhooks" }\n',
+            }
+        )
 
-        self.assertEqual(paths, {"/sites/{}/redirects": ["redirect.go"], "/sites/{}/redirects/{}": ["redirect.go"]})
+        self.assertEqual(
+            endpoints, {"DELETE /sites/{}/redirects/{}": ["redirect.go"], "GET /sites/{}/redirects": ["redirect.go"]}
+        )
+
+    def test_template_without_a_request_matches_any_method_and_comments_are_ignored(self):
+        endpoints = self.provider(
+            {
+                "urls.go": (
+                    '// Example: "https://api.webflow.com/v2/sites/{id}/pages"\n'
+                    'func siteURL(id string) string { return fmt.Sprintf("%s/v2/sites/%s", base, id) }\n'
+                )
+            }
+        )
+
+        self.assertEqual(endpoints, {"* /sites/{}": ["urls.go"]})
 
 
 class CompareTest(unittest.TestCase):
@@ -127,35 +185,35 @@ class CompareTest(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
         self.baseline_dir = self.root / "baseline"
-        self.wrapped = {"/sites/{}": ["site.go"]}
+        self.saves = 0
+        self.called = {"GET /sites/{}": ["site.go"]}
 
     def tearDown(self):
         self.tmp.cleanup()
 
-    def pages(self, site_response="- `id` (string, required)", include_bot_traffic=True):
-        pages = [snapshot.parse_page(entry("sites/get"), page_text("Get Site", "GET", "/sites/{site_id}", response=site_response))]
-        if include_bot_traffic:
-            pages.append(
-                snapshot.parse_page(
-                    entry("aeo-analytics/get-bot-traffic", "AEO Analytics", "Get Bot Traffic"),
-                    page_text("Get Bot Traffic", "GET", "/sites/{site_id}/aeo/reports/bot_traffic"),
-                )
-            )
-        return pages
+    def compare(self, pages, baseline=None, issues=(), comments=(), called=None):
+        return snapshot.compare(
+            pages, self.called if called is None else called, baseline, self.baseline_dir, list(issues), list(comments)
+        )
 
-    def save_baseline(self, pages):
-        _, manifest, baseline_pages = snapshot.compare(pages, self.wrapped, None, self.baseline_dir, [])
-        snapshot.write_outputs(self.root, {"removed": [], "drift": [], "gaps": []}, manifest, baseline_pages)
-        return snapshot.load_baseline(self.baseline_dir)
+    def save(self, pages, baseline=None, issues=(), comments=()):
+        """Run compare and save its baseline, as the save_baseline job does after every snapshot."""
+        work, manifest, baseline_pages = self.compare(pages, baseline, issues, comments)
+        self.saves += 1
+        out = self.root / f"out-{self.saves}"
+        snapshot.write_outputs(out, work, manifest, baseline_pages)
+        self.baseline_dir = out / "baseline"
+        return work, snapshot.load_baseline(self.baseline_dir)
 
-    def test_first_run_reports_gaps_grouped_by_section_and_no_drift(self):
-        work, manifest, baseline_pages = snapshot.compare(self.pages(), self.wrapped, None, self.baseline_dir, [])
+    def changed_site_page(self):
+        return site_page(response=SITE_RESPONSE + "\n- `locale` (string, optional) — Default locale")
+
+    def test_first_run_reports_gaps_grouped_by_section_with_code_span_markers(self):
+        work, manifest, baseline_pages = self.compare([site_page(), bot_traffic_page()])
 
         self.assertEqual(work["baseline"], "missing")
         self.assertEqual([gap["title"] for gap in work["gaps"]], ["API gap: AEO Analytics"])
-        self.assertEqual(
-            work["gaps"][0]["markers"], "<!-- api-parity:gap GET /sites/{}/aeo/reports/bot_traffic -->"
-        )
+        self.assertEqual(work["gaps"][0]["markers"], "`api-parity:gap GET /sites/{}/aeo/reports/bot_traffic`")
         self.assertEqual(work["drift"], [])
         self.assertEqual(list(baseline_pages), ["sites__get.md"])
         self.assertEqual(
@@ -163,63 +221,109 @@ class CompareTest(unittest.TestCase):
             {"GET /sites/{}": True, "GET /sites/{}/aeo/reports/bot_traffic": False},
         )
 
-    def test_changed_wrapped_page_is_drift_with_a_diff(self):
-        baseline = self.save_baseline(self.pages())
+    def test_other_method_on_a_wrapped_path_is_a_gap(self):
+        delete_site = snapshot.parse_page(entry("sites/delete", title="Delete Site"), page_text("Delete Site", "DELETE", "/sites/{site_id}"))
 
-        work, _, _ = snapshot.compare(
-            self.pages(site_response="- `id` (string, required)\n- `locale` (string, optional)"),
-            self.wrapped,
-            baseline,
-            self.baseline_dir,
-            [],
-        )
+        work, _, _ = self.compare([site_page(), delete_site])
+
+        self.assertEqual([e["key"] for gap in work["gaps"] for e in gap["endpoints"]], ["DELETE /sites/{}"])
+
+    def test_any_method_template_wraps_every_method_on_its_path(self):
+        delete_site = snapshot.parse_page(entry("sites/delete", title="Delete Site"), page_text("Delete Site", "DELETE", "/sites/{site_id}"))
+
+        work, _, _ = self.compare([site_page(), delete_site], called={"* /sites/{}": ["site.go"]})
+
+        self.assertEqual(work["gaps"], [])
+
+    def test_contract_change_on_wrapped_endpoint_is_drift_with_a_full_diff(self):
+        _, baseline = self.save([site_page()])
+
+        work, _, _ = self.compare([self.changed_site_page()], baseline)
 
         [drift] = work["drift"]
         self.assertEqual(drift["key"], "GET /sites/{}")
         self.assertEqual(drift["provider_files"], ["site.go"])
-        self.assertIn("+- `locale` (string, optional)", drift["diff"])
+        self.assertIn("+- `locale` (string, optional) — Default locale", drift["diff"])
+        self.assertRegex(drift["marker"], r"^`api-parity:drift GET /sites/\{\} [0-9a-f]{16}`$")
         self.assertIsNone(drift["open_issue"])
 
-    def test_unchanged_pages_produce_no_work(self):
-        baseline = self.save_baseline(self.pages())
-        issues = [{"number": 7, "state": "OPEN", "body": "<!-- api-parity:gap GET /sites/{}/aeo/reports/bot_traffic -->"}]
+    def test_wording_change_is_not_drift_and_the_baseline_takes_the_new_text(self):
+        _, baseline = self.save([site_page()])
 
-        work, _, _ = snapshot.compare(self.pages(), self.wrapped, baseline, self.baseline_dir, issues)
+        work, _, baseline_pages = self.compare([site_page(description="Reworded.")], baseline)
 
         self.assertFalse(snapshot.has_work(work))
+        self.assertIn("Reworded.", baseline_pages["sites__get.md"])
 
-    def test_gap_already_in_a_closed_issue_is_not_reported_again(self):
-        issues = [{"number": 3, "state": "CLOSED", "body": "Not planned.\n<!-- api-parity:gap GET /sites/{}/aeo/reports/bot_traffic -->"}]
+    def test_unpublished_drift_keeps_the_old_baseline_and_is_reported_again(self):
+        _, baseline = self.save([site_page()])
 
-        work, _, _ = snapshot.compare(self.pages(), self.wrapped, None, self.baseline_dir, issues)
+        first, kept = self.save([self.changed_site_page()], baseline)
+        second, _, _ = self.compare([self.changed_site_page()], kept)
+
+        self.assertEqual(kept["endpoints"], baseline["endpoints"])
+        self.assertEqual(second["drift"][0]["marker"], first["drift"][0]["marker"])
+
+    def test_published_drift_advances_the_baseline(self):
+        _, baseline = self.save([site_page()])
+        first, kept = self.save([self.changed_site_page()], baseline)
+        published = [issue(12, "OPEN", "Details.\n\n" + first["drift"][0]["marker"])]
+
+        work, advanced = self.save([self.changed_site_page()], kept, issues=published)
+
+        self.assertFalse(snapshot.has_work(work))
+        self.assertEqual(advanced["endpoints"][0]["hash"], self.changed_site_page().digest)
+
+    def test_drift_published_in_a_comment_counts_and_routes_new_drift_to_that_open_issue(self):
+        _, baseline = self.save([site_page()])
+        first, kept = self.save([self.changed_site_page()], baseline)
+        issues = [issue(12, "OPEN", "Original drift report.")]
+        comments = [{"issue_number": 12, "body": "Another change.\n" + first["drift"][0]["marker"]}]
+
+        settled, advanced = self.save([self.changed_site_page()], kept, issues, comments)
+        newer = site_page(response=SITE_RESPONSE + "\n- `locale` (string, required) — Default locale")
+        again, _, _ = self.compare([newer], advanced, issues, comments)
+
+        self.assertFalse(snapshot.has_work(settled))
+        self.assertEqual(again["drift"][0]["open_issue"], 12)
+
+    def test_gap_published_in_a_closed_issue_is_not_reported_again(self):
+        issues = [issue(3, "CLOSED", "Not planned.\n`api-parity:gap GET /sites/{}/aeo/reports/bot_traffic`")]
+
+        work, _, _ = self.compare([site_page(), bot_traffic_page()], issues=issues)
 
         self.assertEqual(work["gaps"], [])
 
-    def test_new_drift_on_endpoint_with_open_drift_issue_points_at_that_issue(self):
-        baseline = self.save_baseline(self.pages())
-        issues = [{"number": 12, "state": "OPEN", "body": "<!-- api-parity:drift GET /sites/{} oldhash -->"}]
+    def test_html_comment_markers_are_not_recognized(self):
+        issues = [issue(3, "OPEN", "<!-- api-parity:gap GET /sites/{}/aeo/reports/bot_traffic -->")]
 
-        work, _, _ = snapshot.compare(self.pages(site_response="- `name` (string)"), self.wrapped, baseline, self.baseline_dir, issues)
+        work, _, _ = self.compare([site_page(), bot_traffic_page()], issues=issues)
 
-        self.assertEqual(work["drift"][0]["open_issue"], 12)
+        self.assertEqual(len(work["gaps"]), 1)
 
-    def test_drift_already_reported_for_the_same_content_is_skipped(self):
-        baseline = self.save_baseline(self.pages())
-        changed = self.pages(site_response="- `name` (string)")
-        issues = [{"number": 12, "state": "CLOSED", "body": f"<!-- api-parity:drift GET /sites/{{}} {changed[0].digest} -->"}]
+    def test_newly_wrapped_endpoint_starts_drift_tracking_after_the_next_save(self):
+        tracked_gap = [issue(1, "OPEN", "`api-parity:gap GET /sites/{}`")]
+        self.called = {}
+        _, unwrapped = self.save([site_page()], issues=tracked_gap)
+        self.called = {"GET /sites/{}": ["site.go"]}
+        _, wrapped = self.save([site_page()], unwrapped, issues=tracked_gap)
 
-        work, _, _ = snapshot.compare(changed, self.wrapped, baseline, self.baseline_dir, issues)
+        work, _, _ = self.compare([self.changed_site_page()], wrapped, issues=tracked_gap)
 
-        self.assertEqual(work["drift"], [])
+        self.assertEqual([d["key"] for d in work["drift"]], ["GET /sites/{}"])
 
-    def test_endpoint_missing_from_index_is_reported_as_removed(self):
-        baseline = self.save_baseline(self.pages())
+    def test_unpublished_removal_stays_in_the_baseline_until_published(self):
+        _, baseline = self.save([site_page(), bot_traffic_page()])
 
-        work, _, _ = snapshot.compare(self.pages(include_bot_traffic=False), self.wrapped, baseline, self.baseline_dir, [])
+        first, kept = self.save([site_page()], baseline)
+        second, dropped = self.save([site_page()], kept, issues=[issue(9, "OPEN", first["removed"][0]["marker"])])
 
         self.assertEqual(
-            [(r["key"], r["was_wrapped"]) for r in work["removed"]], [("GET /sites/{}/aeo/reports/bot_traffic", False)]
+            [(r["key"], r["was_wrapped"]) for r in first["removed"]], [("GET /sites/{}/aeo/reports/bot_traffic", False)]
         )
+        self.assertIn("GET /sites/{}/aeo/reports/bot_traffic", {e["key"] for e in kept["endpoints"]})
+        self.assertEqual(second["removed"], [])
+        self.assertEqual([e["key"] for e in dropped["endpoints"]], ["GET /sites/{}"])
 
 
 class RunTest(unittest.TestCase):
@@ -253,8 +357,15 @@ class RunTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "provider").mkdir()
-            (root / "provider" / "site.go").write_text('u := fmt.Sprintf("%s/v2/sites/%s", base, id)\n')
-            work = snapshot.run(root / "provider", root / "baseline", None, root / "out", fetch=fetch, min_index_entries=1)
+            (root / "provider" / "site.go").write_text(
+                'func GetSite() {\n\tu := fmt.Sprintf("%s/v2/sites/%s", base, id)\n'
+                '\treq, _ := http.NewRequestWithContext(ctx, "GET", u, http.NoBody)\n}\n'
+            )
+            comments = root / "comments.json"
+            comments.write_text("[]")
+            work = snapshot.run(
+                root / "provider", root / "baseline", None, root / "out", fetch=fetch, min_index_entries=1, comments_path=comments
+            )
 
             written = json.loads((root / "out" / "work.json").read_text())
             baseline_files = sorted(p.name for p in (root / "out" / "baseline" / "pages").iterdir())

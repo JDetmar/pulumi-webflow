@@ -25,10 +25,15 @@ The reference index at `https://developers.webflow.com/data/v2.0.0/llms.txt` lis
    - **gap**: a documented endpoint the provider does not wrap.
    - **drift**: a wrapped endpoint whose contract hash changed.
    - **removed**: an endpoint in the baseline that the reference no longer lists.
+   - **undocumented**: a method and path the provider calls that no reference page documents.
+     This catches endpoints that left the reference before the first baseline, and methods the provider sends that the reference never listed, such as `PUT` where the reference documents `PATCH`.
+     Calls are grouped by the provider files that make them.
 6. Drops every finding whose marker is already published in an issue or an issue comment, in any state.
    Markers are inline code spans, such as `` `api-parity:gap GET /sites/{}/aeo/reports/bot_traffic` ``, because gh-aw's output sanitizer removes HTML comments.
    Closing an issue as "not planned" therefore stops its finding from coming back.
 7. Writes `work.json` (the pending findings), the baseline to save, and `has_work` to `$GITHUB_OUTPUT`.
+   Each gap section lists the provider files that already cover part of it, and sections with such files come first, so the agent reads the existing resource before recommending a change.
+   Each finding links its reference page (`url`) and that page's Markdown source (`markdown_url`).
 
 The agent runs only when `has_work` is true.
 

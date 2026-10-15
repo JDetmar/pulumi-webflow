@@ -52,7 +52,7 @@ _GO_REQUEST_METHOD = re.compile(
     r'NewRequest(?:WithContext)?\([^,]*,\s*(?:"(GET|POST|PUT|PATCH|DELETE)"|http\.Method(Get|Post|Put|Patch|Delete)\b)'
 )
 # Markers are inline code spans: gh-aw's output sanitizer removes HTML comments.
-_MARKER = re.compile(r"`" + re.escape(MARKER_PREFIX) + r"(gap|drift|removed) ([^`\n]+?)`")
+_MARKER = re.compile(r"`" + re.escape(MARKER_PREFIX) + r"(gap|drift|removed|undocumented) ([^`\n]+?)`")
 _CONTRACT_FIELD = re.compile(r"^\s*- `[^`]+` \(")
 _CONTRACT_SCOPE = re.compile(r"Required scope \| `([^`]+)`")
 
@@ -63,6 +63,11 @@ class IndexEntry:
     title: str
     url: str
     slug: str
+
+    @property
+    def page_url(self) -> str:
+        """The reference page for people; `url` is its Markdown source."""
+        return self.url.removesuffix(".md")
 
 
 @dataclasses.dataclass(frozen=True)
@@ -296,6 +301,7 @@ def compare(
     manifest_entries = []
     baseline_pages: dict[str, str] = {}
     gaps_by_section: dict[str, list[dict]] = {}
+    section_files: dict[str, set[str]] = {}
     drift = []
 
     for page in sorted(endpoints, key=lambda p: (p.entry.section, p.key)):
@@ -306,9 +312,11 @@ def compare(
             "path": page.path,
             "section": page.entry.section,
             "title": page.entry.title,
-            "url": page.entry.url,
+            "url": page.entry.page_url,
+            "markdown_url": page.entry.url,
         }
         current_entry = {**summary, "slug": page.entry.slug, "hash": page.digest, "wrapped": bool(provider_files)}
+        section_files.setdefault(page.entry.section, set()).update(provider_files)
 
         if not provider_files:
             manifest_entries.append(current_entry)
@@ -354,7 +362,7 @@ def compare(
                 "path": item["path"],
                 "section": item["section"],
                 "title": item["title"],
-                "url": item["url"],
+                "url": item["url"].removesuffix(".md"),
                 "was_wrapped": item["wrapped"],
                 "marker": marker("removed", key),
             }
@@ -364,10 +372,35 @@ def compare(
         {
             "section": section,
             "title": f"API gap: {section}",
+            "provider_files": sorted(section_files[section]),
             "endpoints": items,
             "markers": "\n".join(marker("gap", item["key"]) for item in items),
         }
-        for section, items in sorted(gaps_by_section.items())
+        for section, items in gaps_by_section.items()
+    ]
+    # A gap next to a resource the provider already has comes first: it is
+    # cheaper to close than a new area, and its issue can be specific.
+    gaps.sort(key=lambda gap: (not gap["provider_files"], gap["section"]))
+
+    # Calls the reference does not document were never in a baseline (or would
+    # be pending removals), so the removal check cannot catch them.
+    pending_removed = {item["key"] for item in removed}
+    undocumented_by_files: dict[tuple[str, ...], list[dict]] = {}
+    for key, files in endpoints_called.items():
+        method, path = key.split(" ", 1)
+        if method == ANY_METHOD or key in current_keys or key in pending_removed:
+            continue
+        if ("undocumented", key) in markers or ("removed", key) in markers:
+            continue
+        undocumented_by_files.setdefault(tuple(files), []).append({"key": key, "method": method, "path": path})
+    undocumented = [
+        {
+            "title": f"API undocumented: {', '.join(files)}",
+            "provider_files": list(files),
+            "endpoints": items,
+            "markers": "\n".join(marker("undocumented", item["key"]) for item in items),
+        }
+        for files, items in sorted(undocumented_by_files.items())
     ]
 
     work = {
@@ -377,11 +410,13 @@ def compare(
             "wrapped_endpoints": sum(1 for page in endpoints if wrapping_files(page, endpoints_called)),
             "pending_removed": len(removed),
             "pending_drift": len(drift),
+            "pending_undocumented": sum(len(item["endpoints"]) for item in undocumented),
             "pending_gap_sections": len(gaps),
             "pending_gap_endpoints": sum(len(gap["endpoints"]) for gap in gaps),
         },
         "removed": removed,
         "drift": drift,
+        "undocumented": undocumented,
         "gaps": gaps,
     }
     manifest = {
@@ -423,7 +458,7 @@ def write_outputs(out_dir: Path, work: dict, manifest: dict, baseline_pages: dic
 
 
 def has_work(work: dict) -> bool:
-    return bool(work["removed"] or work["drift"] or work["gaps"])
+    return bool(work["removed"] or work["drift"] or work["undocumented"] or work["gaps"])
 
 
 def run(

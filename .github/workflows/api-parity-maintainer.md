@@ -152,7 +152,7 @@ Objective: every Webflow Data API endpoint the provider does not cover, and ever
 
 A deterministic step already compared the Webflow reference with the provider and removed everything that an earlier issue reports.
 Read `/tmp/gh-aw/data/api-parity/work.json`.
-It has three lists, all pending: `removed`, `drift`, and `gaps`.
+It has four lists, all pending: `removed`, `drift`, `undocumented`, and `gaps`.
 Do not re-fetch the reference index or search issues to rediscover findings; that file is complete.
 Every item is a contract change or a gap that needs an issue or a comment; none is a wording-only edit.
 
@@ -181,21 +181,36 @@ For each item:
 Explain what changed, which provider resource and fields it affects, and what the provider should do (for example add an optional input, update a schema, or handle a new error).
 If the provider needs no change, say so and why; the issue still records the change.
 Quote only the relevant lines of the diff.
-If `diff_truncated` is true, fetch the page at `url` to see the rest.
+If `diff_truncated` is true, fetch the page's Markdown at `markdown_url` to see the rest.
 
-### 3. Gaps
+### 3. Undocumented provider calls
+
+Each `undocumented` item groups calls that the provider makes but that no reference page documents: no page has that method on that path.
+The endpoint may be deprecated or replaced (for example by a bulk endpoint), or the provider may send the wrong method.
+File one issue per item, labeled `api-drift`, using the item's `title` exactly.
+
+Read every file in `provider_files` to see what each call does and which resource uses it.
+Then find the documented replacement: look for the same path with another method, or a related path, in the reference index at https://developers.webflow.com/data/v2.0.0/llms.txt, and fetch the candidate page (append `.md` to its URL).
+For each call, say what it does, which documented endpoint replaces it (or that you found none), and what the provider should change.
+Say plainly that the call may still work; this issue is a prompt to verify it against the live API before the endpoint is removed.
+
+### 4. Gaps
 
 Each `gaps` item is one docs section with endpoints the provider does not wrap.
+Sections that the provider already partly covers come first, and their `provider_files` lists the files that cover them.
 File one issue per section, labeled `api-gap` and `enhancement`, using the item's `title` exactly.
 In the body, list each endpoint (method, path, title, and link to `url`).
-Then recommend how it could fit a Pulumi provider: a resource with create, read, update, delete; a read-only function (invoke); or out of scope, with a reason.
+
+Before recommending anything, read every file in `provider_files`, and state what the provider already does in this section.
+For example, a resource may already update in place with a different, undocumented method, or replace on every change.
+Then recommend how each endpoint could fit: a change to an existing resource; a new resource with create, read, update, delete; a read-only function (invoke); or out of scope, with a reason.
+Before recommending a new resource or a change to an existing one, fetch the endpoint's page at `markdown_url` and base the recommendation on its fields.
 Read-only reporting endpoints, such as analytics, usually fit a function or are out of scope.
-You may fetch a page at its `url` to judge this.
 File gaps in the order listed until the budget runs out; the rest are picked up next week.
 
 ## Issue and comment format
 
-- End every issue body with a line `Tracking:` followed by its markers, copied verbatim with their backticks: a drift or removed item's `marker` field, or a gap item's `markers` field.
+- End every issue body with a line `Tracking:` followed by its markers, copied verbatim with their backticks: a drift or removed item's `marker` field, or an undocumented or gap item's `markers` field.
   For the combined unwrapped-removals issue, include the marker of every item it covers.
   Without its marker, a finding counts as unreported and is listed again next week.
 - End every drift comment the same way, with that drift item's `marker`.

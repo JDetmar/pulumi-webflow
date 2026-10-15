@@ -214,6 +214,10 @@ class CompareTest(unittest.TestCase):
         self.assertEqual(work["baseline"], "missing")
         self.assertEqual([gap["title"] for gap in work["gaps"]], ["API gap: AEO Analytics"])
         self.assertEqual(work["gaps"][0]["markers"], "`api-parity:gap GET /sites/{}/aeo/reports/bot_traffic`")
+        gap = work["gaps"][0]["endpoints"][0]
+        self.assertEqual(gap["url"], "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-bot-traffic")
+        self.assertEqual(gap["markdown_url"], gap["url"] + ".md")
+        self.assertEqual(work["gaps"][0]["provider_files"], [])
         self.assertEqual(work["drift"], [])
         self.assertEqual(list(baseline_pages), ["sites__get.md"])
         self.assertEqual(
@@ -227,6 +231,64 @@ class CompareTest(unittest.TestCase):
         work, _, _ = self.compare([site_page(), delete_site])
 
         self.assertEqual([e["key"] for gap in work["gaps"] for e in gap["endpoints"]], ["DELETE /sites/{}"])
+        self.assertEqual(work["gaps"][0]["provider_files"], ["site.go"])
+
+    def test_provider_call_the_reference_does_not_document_is_reported_once(self):
+        update_field = snapshot.parse_page(
+            entry("cms/collection-fields/update", "CMS > Collection Fields", "Update field"),
+            page_text("Update field", "PATCH", "/collections/{collection_id}/fields/{field_id}"),
+        )
+        called = {
+            "PUT /collections/{}/fields/{}": ["collectionfield.go"],
+            "* /collections/{}/legacy": ["urls.go"],
+            "GET /sites/{}": ["site.go"],
+        }
+
+        work, _, _ = self.compare([site_page(), update_field], called=called)
+
+        self.assertEqual(
+            work["undocumented"],
+            [
+                {
+                    "title": "API undocumented: collectionfield.go",
+                    "provider_files": ["collectionfield.go"],
+                    "endpoints": [{"key": "PUT /collections/{}/fields/{}", "method": "PUT", "path": "/collections/{}/fields/{}"}],
+                    "markers": "`api-parity:undocumented PUT /collections/{}/fields/{}`",
+                }
+            ],
+        )
+        published = [issue(9, "CLOSED", work["undocumented"][0]["markers"])]
+        work, _, _ = self.compare([site_page(), update_field], called=called, issues=published)
+        self.assertEqual(work["undocumented"], [])
+
+    def test_pending_removal_of_a_wrapped_endpoint_is_not_also_reported_as_undocumented(self):
+        _, baseline = self.save([site_page()])
+
+        work, _, _ = self.compare([bot_traffic_page()], baseline)
+
+        self.assertEqual([item["key"] for item in work["removed"]], ["GET /sites/{}"])
+        self.assertEqual(work["undocumented"], [])
+
+        published = [issue(4, "OPEN", work["removed"][0]["marker"])]
+        _, baseline = self.save([bot_traffic_page()], baseline, published)
+        work, _, _ = self.compare([bot_traffic_page()], baseline, published)
+        self.assertEqual((work["removed"], work["undocumented"]), ([], []))
+
+    def test_gaps_touching_provider_code_come_first(self):
+        def page(slug, section, method, path):
+            return snapshot.parse_page(entry(slug, section, slug), page_text(slug, method, path))
+
+        pages = [
+            bot_traffic_page(),
+            page("collections/get", "CMS > Collections", "GET", "/collections/{collection_id}"),
+            page("collections/create-field", "CMS > Collections", "POST", "/collections/{collection_id}/fields"),
+            site_page(),
+            page("sites/delete", "Sites", "DELETE", "/sites/{site_id}"),
+        ]
+
+        work, _, _ = self.compare(pages, called={"GET /sites/{}": ["site.go"], "GET /collections/{}": ["collection.go"]})
+
+        self.assertEqual([gap["section"] for gap in work["gaps"]], ["CMS > Collections", "Sites", "AEO Analytics"])
 
     def test_any_method_template_wraps_every_method_on_its_path(self):
         delete_site = snapshot.parse_page(entry("sites/delete", title="Delete Site"), page_text("Delete Site", "DELETE", "/sites/{site_id}"))

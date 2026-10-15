@@ -141,7 +141,7 @@ examples/           # Example Pulumi programs for each language
 
 Tools are managed via [mise](https://mise.jdx.dev/). Key versions in `.config/mise.toml`:
 - Go (latest)
-- Node.js 20.x
+- Node.js 24.x
 - Python 3.11
 - .NET 6.0
 - Java 11 (Corretto)

@@ -124,6 +124,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Test build scripts
+        run: make test_scripts
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         continue-on-error: true

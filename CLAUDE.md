@@ -55,6 +55,7 @@ git commit -m "your message"
 | `make build` | Build provider + compile all SDKs |
 | `make provider` | Build only the provider binary |
 | `make test_provider` | Run provider unit tests |
+| `make test_scripts` | Run unit tests for scripts (API parity snapshot) |
 | `make lint` | Run golangci-lint on provider code |
 
 ### Adding New Resources

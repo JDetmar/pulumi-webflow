@@ -127,6 +127,10 @@ provider_debug:
 test_provider:
 	cd provider && go test -short -race -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM} -coverprofile="coverage.txt" ./...
 
+.PHONY: test_scripts
+test_scripts:
+	python3 -m unittest discover -s scripts/api_parity
+
 dotnet_sdk: sdk/dotnet
 	cd ${PACKDIR}/dotnet/&& \
 		echo "${VERSION_GENERIC}" > version.txt && \
@@ -198,7 +202,7 @@ install_nodejs_sdk::
 	-yarn unlink --cwd $(WORKING_DIR)/sdk/nodejs/bin
 	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin
 
-test:: test_provider
+test:: test_provider test_scripts
 
 # Set these variables to enable signing of the windows binary
 AZURE_SIGNING_CLIENT_ID ?=

@@ -30,3 +30,6 @@ coverage.txt
 
 # Auto Claude data directory
 .auto-claude/
+
+# Python bytecode from scripts/
+__pycache__/

@@ -134,6 +134,8 @@ safe-outputs:
   # Preview: show the issues and comments in the run summary without creating them.
   # Set to false after reviewing the first run.
   staged: true
+  # Links in issue text only; the agent itself has no network access to Webflow.
+  allowed-domains: [developers.webflow.com]
   create-issue:
     title-prefix: "[api-parity] "
     allowed-labels: [api-gap, api-drift, enhancement, bug]

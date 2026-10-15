@@ -22,14 +22,28 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Restore previous baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          mkdir -p /tmp/api-parity/memory /tmp/api-parity/baseline
-          if git ls-remote --exit-code --heads origin memory/api-parity >/dev/null; then
-            git fetch --depth=1 origin memory/api-parity
-            git archive FETCH_HEAD | tar -x -C /tmp/api-parity/memory
-            manifest=$(find /tmp/api-parity/memory -name manifest.json -print -quit)
-            if [ -n "$manifest" ]; then cp -R "$(dirname "$manifest")/." /tmp/api-parity/baseline/; fi
-          fi
+          set -euo pipefail
+          gh auth setup-git
+          mkdir -p /tmp/api-parity/baseline
+          # Exit code 2 means the branch does not exist (first run). Any other
+          # failure must stop the run: treating it as a first run would save a
+          # fresh baseline over findings that are not yet published.
+          rc=0
+          git ls-remote --exit-code --heads origin memory/api-parity >/dev/null || rc=$?
+          case "$rc" in
+            0)
+              git fetch --depth=1 origin memory/api-parity
+              git archive FETCH_HEAD | tar -x -C /tmp/api-parity/baseline
+              if [ ! -f /tmp/api-parity/baseline/manifest.json ]; then
+                echo "::error::Branch memory/api-parity has no manifest.json"; exit 1
+              fi
+              ;;
+            2) echo "No memory/api-parity branch yet; this is the first run" ;;
+            *) echo "::error::git ls-remote failed with exit code $rc"; exit 1 ;;
+          esac
           echo "Baseline files: $(find /tmp/api-parity/baseline -type f | wc -l)"
       - name: Fetch published markers from prior issues and comments
         env:
@@ -86,12 +100,16 @@ jobs:
           git init -q /tmp/baseline-repo
           cd /tmp/baseline-repo
           git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git"
-          if git ls-remote --exit-code --heads origin memory/api-parity >/dev/null; then
-            git fetch -q --depth=1 origin memory/api-parity
-            git checkout -q -B memory/api-parity FETCH_HEAD
-          else
-            git checkout -q --orphan memory/api-parity
-          fi
+          rc=0
+          git ls-remote --exit-code --heads origin memory/api-parity >/dev/null || rc=$?
+          case "$rc" in
+            0)
+              git fetch -q --depth=1 origin memory/api-parity
+              git checkout -q -B memory/api-parity FETCH_HEAD
+              ;;
+            2) git checkout -q --orphan memory/api-parity ;;
+            *) echo "::error::git ls-remote failed with exit code $rc"; exit 1 ;;
+          esac
           git rm -rq --ignore-unmatch .
           cp -R /tmp/api-parity/baseline/. .
           git add -A

@@ -23,9 +23,9 @@ DOCS_INDEX_URL = "https://developers.webflow.com/data/v2.0.0/llms.txt"
 FETCH_TIMEOUT_SECONDS = 30
 FETCH_ATTEMPTS = 3
 FETCH_WORKERS = 8
-# The index listed ~160 reference pages in October 2026. Far fewer means the
-# docs site served something unexpected, and reporting every missing endpoint
-# as removed would flood the issue tracker.
+# The index listed ~160 reference pages and ~150 endpoints in October 2026.
+# Far fewer means the docs site served something unexpected, and reporting
+# every missing endpoint as removed would flood the issue tracker.
 MIN_INDEX_ENTRIES = 100
 MAX_DIFF_LINES = 300
 BASELINE_VERSION = 1
@@ -226,6 +226,34 @@ def unified_diff(old: str, new: str, slug: str) -> tuple[str, bool]:
     return "\n".join(lines[:MAX_DIFF_LINES]), truncated
 
 
+class SnapshotError(RuntimeError):
+    """The reference served content that cannot be compared safely; fail before reporting anything."""
+
+
+def check_pages(pages: list[Page], baseline: dict | None) -> None:
+    """Refuse to compare when the fetched pages look wrong, instead of reporting false findings.
+
+    A page the baseline knew as an endpoint that now has no endpoint line is
+    most likely an error page or a format change, not a removal. Two pages with
+    the same endpoint would make the baseline compare the wrong pages.
+    """
+    keys: dict[str, str] = {}
+    duplicates = []
+    for page in pages:
+        if page.key is None:
+            continue
+        if page.key in keys:
+            duplicates.append(f"{page.key} ({keys[page.key]}, {page.entry.slug})")
+        keys[page.key] = page.entry.slug
+    if duplicates:
+        raise SnapshotError(f"endpoints documented on more than one page: {'; '.join(duplicates)}")
+
+    known_endpoint_slugs = {item["slug"] for item in (baseline or {}).get("endpoints", [])}
+    unparsed = sorted(page.entry.slug for page in pages if page.key is None and page.entry.slug in known_endpoint_slugs)
+    if unparsed:
+        raise SnapshotError(f"pages that documented an endpoint no longer have an endpoint line: {', '.join(unparsed)}")
+
+
 def compare(
     pages: list[Page],
     endpoints_called: dict[str, list[str]],
@@ -242,7 +270,9 @@ def compare(
     nothing, and the next run reports it again.
 
     Returns (work, manifest to save, page texts to save by filename).
+    Raises SnapshotError when the pages cannot be compared safely.
     """
+    check_pages(pages, baseline)
     markers, open_drift = published_markers(issues, comments or [])
     endpoints = [page for page in pages if page.key is not None]
 
@@ -393,8 +423,11 @@ def run(
 ) -> dict:
     entries = parse_index(fetch(DOCS_INDEX_URL))
     if len(entries) < min_index_entries:
-        raise RuntimeError(f"docs index listed only {len(entries)} reference pages; expected at least {min_index_entries}")
+        raise SnapshotError(f"docs index listed only {len(entries)} reference pages; expected at least {min_index_entries}")
     pages = fetch_pages(entries, fetch)
+    endpoint_count = sum(1 for page in pages if page.key is not None)
+    if endpoint_count < min_index_entries:
+        raise SnapshotError(f"reference pages documented only {endpoint_count} endpoints; expected at least {min_index_entries}")
     issues = json.loads(issues_path.read_text()) if issues_path else []
     comments = json.loads(comments_path.read_text()) if comments_path else []
     work, manifest, baseline_pages = compare(

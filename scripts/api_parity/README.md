@@ -65,7 +65,8 @@ The workflow cannot change code, releases, or settings.
 | Threat | Entry point | Mitigation |
 |---|---|---|
 | Prompt injection in Webflow docs content tells the agent to do something else | Reference pages and diffs in `work.json` | The agent job has read-only permissions. Writes go only through gh-aw safe outputs, capped at a few issues and comments per run, and gh-aw's threat-detection job screens them. The prompt treats page content as data. Network egress is limited to GitHub and `developers.webflow.com`. |
-| The docs site returns partial or bad content and the workflow reports false removals | Index or page fetch | Every fetch has a timeout and bounded retries. Any failure fails the job before the agent runs. An index with suspiciously few endpoints is rejected. |
+| The docs site returns partial or bad content and the workflow reports false removals | Index or page fetch | Every fetch has a timeout and bounded retries, and any failure fails the job before the agent runs. The job also fails when the index or the pages document suspiciously few endpoints, when a page that documented an endpoint has no endpoint line, or when two pages document the same endpoint. |
+| A transient GitHub error hides the baseline and a fresh one overwrites unpublished findings | Restoring the `memory/api-parity` branch | Only "branch does not exist" counts as a first run; any other `git` failure, or a branch without `manifest.json`, fails the job. |
 | A hostile issue or comment forges markers to hide findings | Prior issues and comments read for dedupe | Only collaborators can trigger the workflow, but anyone can open an issue or comment on a public repo. A forged marker can only suppress a report, never cause an action, and it is visible in the issue. Accepted. |
 | Runaway cost or issue spam | Agent loop | `timeout-minutes`, `max-turns`, per-output `max`, and the `has_work` gate bound each run. Stop it with `gh aw disable api-parity-maintainer`. |
 

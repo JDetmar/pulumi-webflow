@@ -326,6 +326,28 @@ class CompareTest(unittest.TestCase):
         self.assertEqual([e["key"] for e in dropped["endpoints"]], ["GET /sites/{}"])
 
 
+class CheckPagesTest(unittest.TestCase):
+    def test_known_endpoint_page_without_an_endpoint_line_fails_instead_of_reporting_removal(self):
+        baseline = {"endpoints": [{"key": "GET /sites/{}", "slug": "sites/get"}]}
+        error_page = snapshot.parse_page(entry("sites/get"), "# Something went wrong\n\nPlease try again.\n")
+
+        with self.assertRaisesRegex(snapshot.SnapshotError, "sites/get"):
+            snapshot.compare([error_page], {}, baseline, Path("unused"), [])
+
+    def test_two_pages_for_the_same_endpoint_fail(self):
+        legacy = snapshot.parse_page(entry("legacy/sites/get"), page_text("Get Site (legacy)", "GET", "/sites/{siteId}"))
+
+        with self.assertRaisesRegex(snapshot.SnapshotError, r"GET /sites/\{\} \(sites/get, legacy/sites/get\)"):
+            snapshot.compare([site_page(), legacy], {}, None, Path("unused"), [])
+
+    def test_new_page_without_an_endpoint_line_is_allowed(self):
+        event = snapshot.parse_page(entry("webhooks/events/site-publish"), "# Site publish\n\nPayload.\n")
+
+        work, _, _ = snapshot.compare([site_page(), event], {"GET /sites/{}": ["site.go"]}, None, Path("unused"), [])
+
+        self.assertEqual(work["counts"]["documented_endpoints"], 1)
+
+
 class RunTest(unittest.TestCase):
     def test_rejects_a_truncated_index_before_fetching_pages(self):
         fetched = []
@@ -335,10 +357,18 @@ class RunTest(unittest.TestCase):
             return INDEX
 
         with tempfile.TemporaryDirectory() as tmp:
-            with self.assertRaisesRegex(RuntimeError, "listed only 5 reference pages"):
+            with self.assertRaisesRegex(snapshot.SnapshotError, "listed only 5 reference pages"):
                 snapshot.run(Path(tmp), Path(tmp) / "baseline", None, Path(tmp) / "out", fetch=fetch)
 
         self.assertEqual(fetched, [snapshot.DOCS_INDEX_URL])
+
+    def test_rejects_pages_that_document_too_few_endpoints(self):
+        def fetch(url):
+            return INDEX if url == snapshot.DOCS_INDEX_URL else "# Maintenance\n\nBack soon.\n"
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(snapshot.SnapshotError, "documented only 0 endpoints"):
+                snapshot.run(Path(tmp), Path(tmp) / "baseline", None, Path(tmp) / "out", fetch=fetch, min_index_entries=1)
 
     def test_writes_work_and_baseline_from_fetched_pages(self):
         pages = {

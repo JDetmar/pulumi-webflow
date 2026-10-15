@@ -10,6 +10,7 @@ import concurrent.futures
 import dataclasses
 import difflib
 import hashlib
+import http.client
 import json
 import os
 import re
@@ -230,6 +231,20 @@ def page_filename(slug: str) -> str:
     return slug.replace("/", "__") + ".md"
 
 
+def reference_file(slug: str) -> str:
+    """Where write_outputs puts a page's normalized text, relative to work.json."""
+    return f"reference/{page_filename(slug)}"
+
+
+def reference_files(pages: list[Page]) -> dict[str, str]:
+    """Every documented page's normalized text, plus an index, for the agent to read offline."""
+    endpoints = sorted((page for page in pages if page.key is not None), key=lambda p: (p.entry.section, p.key))
+    files = {reference_file(page.entry.slug): page.normalized for page in endpoints}
+    lines = [f"- `{page.method} {page.path}` | {page.entry.section} | {page.entry.title} | {reference_file(page.entry.slug)}" for page in endpoints]
+    files["reference/index.md"] = "# Documented endpoints\n\n" + "\n".join(lines) + "\n"
+    return files
+
+
 def unified_diff(old: str, new: str, slug: str) -> tuple[str, bool]:
     lines = list(difflib.unified_diff(old.splitlines(), new.splitlines(), f"before/{slug}", f"after/{slug}", lineterm=""))
     truncated = len(lines) > MAX_DIFF_LINES
@@ -313,7 +328,6 @@ def compare(
             "section": page.entry.section,
             "title": page.entry.title,
             "url": page.entry.page_url,
-            "markdown_url": page.entry.url,
         }
         current_entry = {**summary, "slug": page.entry.slug, "hash": page.digest, "wrapped": bool(provider_files)}
         section_files.setdefault(page.entry.section, set()).update(provider_files)
@@ -321,7 +335,9 @@ def compare(
         if not provider_files:
             manifest_entries.append(current_entry)
             if ("gap", page.key) not in markers:
-                gaps_by_section.setdefault(page.entry.section, []).append(summary)
+                gaps_by_section.setdefault(page.entry.section, []).append(
+                    {**summary, "page_file": reference_file(page.entry.slug)}
+                )
             continue
 
         before = previous.get(page.key)
@@ -339,6 +355,7 @@ def compare(
         drift.append(
             {
                 **summary,
+                "page_file": reference_file(page.entry.slug),
                 "provider_files": provider_files,
                 "open_issue": open_drift.get(page.key),
                 "diff": diff,
@@ -434,7 +451,9 @@ def fetch_text(url: str) -> str:
         try:
             with urllib.request.urlopen(request, timeout=FETCH_TIMEOUT_SECONDS) as response:
                 return response.read().decode("utf-8")
-        except (urllib.error.URLError, TimeoutError) as error:
+        # OSError covers URLError, timeouts, and resets; HTTPException covers a
+        # body cut short (IncompleteRead), which the CDN does under load.
+        except (OSError, http.client.HTTPException) as error:
             permanent = isinstance(error, urllib.error.HTTPError) and error.code < 500 and error.code != 429
             if permanent or attempt == FETCH_ATTEMPTS:
                 raise RuntimeError(f"fetching {url} failed after {attempt} attempt(s): {error}") from error
@@ -448,13 +467,18 @@ def fetch_pages(entries: list[IndexEntry], fetch) -> list[Page]:
     return [parse_page(entry, text) for entry, text in zip(entries, texts)]
 
 
-def write_outputs(out_dir: Path, work: dict, manifest: dict, baseline_pages: dict[str, str]) -> None:
+def write_outputs(
+    out_dir: Path, work: dict, manifest: dict, baseline_pages: dict[str, str], reference: dict[str, str] | None = None
+) -> None:
     baseline_out = out_dir / "baseline"
     (baseline_out / "pages").mkdir(parents=True, exist_ok=True)
     (out_dir / "work.json").write_text(json.dumps(work, indent=2) + "\n")
     (baseline_out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     for filename, text in baseline_pages.items():
         (baseline_out / "pages" / filename).write_text(text)
+    for relative, text in (reference or {}).items():
+        (out_dir / relative).parent.mkdir(parents=True, exist_ok=True)
+        (out_dir / relative).write_text(text)
 
 
 def has_work(work: dict) -> bool:
@@ -482,7 +506,7 @@ def run(
     work, manifest, baseline_pages = compare(
         pages, provider_endpoints(provider_dir), load_baseline(baseline_dir), baseline_dir, issues, comments
     )
-    write_outputs(out_dir, work, manifest, baseline_pages)
+    write_outputs(out_dir, work, manifest, baseline_pages, reference_files(pages))
     return work
 
 

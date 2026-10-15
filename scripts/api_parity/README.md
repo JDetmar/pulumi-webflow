@@ -33,7 +33,8 @@ The reference index at `https://developers.webflow.com/data/v2.0.0/llms.txt` lis
    Closing an issue as "not planned" therefore stops its finding from coming back.
 7. Writes `work.json` (the pending findings), the baseline to save, and `has_work` to `$GITHUB_OUTPUT`.
    Each gap section lists the provider files that already cover part of it, and sections with such files come first, so the agent reads the existing resource before recommending a change.
-   Each finding links its reference page (`url`) and that page's Markdown source (`markdown_url`).
+   The normalized text of every documented page, and an index of them, go in `reference/` next to `work.json`, and each finding names its page file (`page_file`) and links its reference page (`url`).
+   The agent reads the reference from there, so it needs no network access to Webflow.
 
 The agent runs only when `has_work` is true.
 
@@ -69,7 +70,7 @@ The workflow cannot change code, releases, or settings.
 
 | Threat | Entry point | Mitigation |
 |---|---|---|
-| Prompt injection in Webflow docs content tells the agent to do something else | Reference pages and diffs in `work.json` | The agent job has read-only permissions. Writes go only through gh-aw safe outputs, capped at a few issues and comments per run, and gh-aw's threat-detection job screens them. The prompt treats page content as data. Network egress is limited to GitHub and `developers.webflow.com`. |
+| Prompt injection in Webflow docs content tells the agent to do something else | Reference pages and diffs in `work.json` | The agent job has read-only permissions. Writes go only through gh-aw safe outputs, capped at a few issues and comments per run, and gh-aw's threat-detection job screens them. The prompt treats page content as data. The agent reads the reference from files the snapshot job wrote, and its network egress is limited to GitHub. |
 | The docs site returns partial or bad content and the workflow reports false removals | Index or page fetch | Every fetch has a timeout and bounded retries, and any failure fails the job before the agent runs. The job also fails when the index or the pages document suspiciously few endpoints, when more than 10% of the baseline's endpoints (and more than 5) vanish in one run, when a page that documented an endpoint has no endpoint line, or when two pages document the same endpoint. |
 | A transient GitHub error hides the baseline and a fresh one overwrites unpublished findings | Restoring the `memory/api-parity` branch | Only "branch does not exist" counts as a first run; any other `git` failure, or a branch without `manifest.json`, fails the job. |
 | A hostile issue or comment forges markers to hide findings | Prior issues and comments read for dedupe | Only collaborators can trigger the workflow, but anyone can open an issue or comment on a public repo. A forged marker can only suppress a report, never cause an action, and it is visible in the issue. Accepted. |

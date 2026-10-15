@@ -27,6 +27,11 @@ FETCH_WORKERS = 8
 # Far fewer means the docs site served something unexpected, and reporting
 # every missing endpoint as removed would flood the issue tracker.
 MIN_INDEX_ENTRIES = 100
+# Webflow removing a whole product area (User Accounts, January 2026) dropped
+# 6 of ~150 endpoints. Losing more than this share in one run is more likely a
+# partial index than real removals. A few removals never trip it.
+MAX_REMOVED_FRACTION = 0.1
+MAX_REMOVED_ALWAYS_ALLOWED = 5
 MAX_DIFF_LINES = 300
 BASELINE_VERSION = 1
 MARKER_PREFIX = "api-parity:"
@@ -234,8 +239,9 @@ def check_pages(pages: list[Page], baseline: dict | None) -> None:
     """Refuse to compare when the fetched pages look wrong, instead of reporting false findings.
 
     A page the baseline knew as an endpoint that now has no endpoint line is
-    most likely an error page or a format change, not a removal. Two pages with
-    the same endpoint would make the baseline compare the wrong pages.
+    most likely an error page or a format change, not a removal, and so is a
+    large share of endpoints vanishing at once. Two pages with the same
+    endpoint would make the baseline compare the wrong pages.
     """
     keys: dict[str, str] = {}
     duplicates = []
@@ -252,6 +258,14 @@ def check_pages(pages: list[Page], baseline: dict | None) -> None:
     unparsed = sorted(page.entry.slug for page in pages if page.key is None and page.entry.slug in known_endpoint_slugs)
     if unparsed:
         raise SnapshotError(f"pages that documented an endpoint no longer have an endpoint line: {', '.join(unparsed)}")
+
+    baseline_keys = {item["key"] for item in (baseline or {}).get("endpoints", [])}
+    vanished = baseline_keys - set(keys)
+    if len(vanished) > max(MAX_REMOVED_ALWAYS_ALLOWED, MAX_REMOVED_FRACTION * len(baseline_keys)):
+        raise SnapshotError(
+            f"{len(vanished)} of {len(baseline_keys)} baseline endpoints are missing from the reference; "
+            "the index is probably incomplete"
+        )
 
 
 def compare(

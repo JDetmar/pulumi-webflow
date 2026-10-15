@@ -340,6 +340,13 @@ class CheckPagesTest(unittest.TestCase):
         with self.assertRaisesRegex(snapshot.SnapshotError, r"GET /sites/\{\} \(sites/get, legacy/sites/get\)"):
             snapshot.compare([site_page(), legacy], {}, None, Path("unused"), [])
 
+    def test_large_share_of_endpoints_vanishing_at_once_fails(self):
+        baseline = {"endpoints": [{"key": f"GET /things/{n}", "slug": f"things/{n}"} for n in range(9)]}
+        baseline["endpoints"].append({"key": "GET /sites/{}", "slug": "sites/get"})
+
+        with self.assertRaisesRegex(snapshot.SnapshotError, "9 of 10 baseline endpoints are missing"):
+            snapshot.compare([site_page()], {}, baseline, Path("unused"), [])
+
     def test_new_page_without_an_endpoint_line_is_allowed(self):
         event = snapshot.parse_page(entry("webhooks/events/site-publish"), "# Site publish\n\nPayload.\n")
 

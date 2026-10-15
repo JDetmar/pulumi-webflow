@@ -16,7 +16,7 @@ env:
   PROVIDER: webflow
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   GOVERSION: "1.21.x"
-  NODEVERSION: "20.x"
+  NODEVERSION: "24.x"
   PYTHONVERSION: "3.11.8"
   DOTNETVERSION: "8.0.x"
   JAVAVERSION: "11"
@@ -169,7 +169,10 @@ jobs:
         run: git grep -l 'go:embed' -- provider | xargs --no-run-if-empty sed -i 's/go:embed/ goembed/g'
 
       - name: golangci-lint provider pkg
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@55c2c1448f86e01eaae002a5a3a9624417608d84 # v6.5.2
         with:
           working-directory: .
           install-mode: none
+          # Schema verification downloads the schema from golangci-lint.run and
+          # fails the job when that site is slow. The linter still loads the config.
+          verify: false

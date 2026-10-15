@@ -9,7 +9,7 @@ env:
   PROVIDER: webflow
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   GOVERSION: "1.21.x"
-  NODEVERSION: "20.x"
+  NODEVERSION: "24.x"
   PYTHONVERSION: "3.11.8"
   DOTNETVERSION: "8.0.x"
   JAVAVERSION: "11"
@@ -244,7 +244,7 @@ jobs:
       - name: Setup Node for npm publishing
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
 
       - name: Upgrade npm for Trusted Publishing

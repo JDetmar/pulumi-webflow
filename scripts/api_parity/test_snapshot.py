@@ -1,7 +1,10 @@
+import http.server
 import json
 import tempfile
+import threading
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import snapshot
 
@@ -214,6 +217,9 @@ class CompareTest(unittest.TestCase):
         self.assertEqual(work["baseline"], "missing")
         self.assertEqual([gap["title"] for gap in work["gaps"]], ["API gap: AEO Analytics"])
         self.assertEqual(work["gaps"][0]["markers"], "`api-parity:gap GET /sites/{}/aeo/reports/bot_traffic`")
+        gap = work["gaps"][0]["endpoints"][0]
+        self.assertEqual(gap["url"], "https://developers.webflow.com/data/v2.0.0/reference/aeo-analytics/get-bot-traffic")
+        self.assertEqual(work["gaps"][0]["provider_files"], [])
         self.assertEqual(work["drift"], [])
         self.assertEqual(list(baseline_pages), ["sites__get.md"])
         self.assertEqual(
@@ -227,6 +233,64 @@ class CompareTest(unittest.TestCase):
         work, _, _ = self.compare([site_page(), delete_site])
 
         self.assertEqual([e["key"] for gap in work["gaps"] for e in gap["endpoints"]], ["DELETE /sites/{}"])
+        self.assertEqual(work["gaps"][0]["provider_files"], ["site.go"])
+
+    def test_provider_call_the_reference_does_not_document_is_reported_once(self):
+        update_field = snapshot.parse_page(
+            entry("cms/collection-fields/update", "CMS > Collection Fields", "Update field"),
+            page_text("Update field", "PATCH", "/collections/{collection_id}/fields/{field_id}"),
+        )
+        called = {
+            "PUT /collections/{}/fields/{}": ["collectionfield.go"],
+            "* /collections/{}/legacy": ["urls.go"],
+            "GET /sites/{}": ["site.go"],
+        }
+
+        work, _, _ = self.compare([site_page(), update_field], called=called)
+
+        self.assertEqual(
+            work["undocumented"],
+            [
+                {
+                    "title": "API undocumented: collectionfield.go",
+                    "provider_files": ["collectionfield.go"],
+                    "endpoints": [{"key": "PUT /collections/{}/fields/{}", "method": "PUT", "path": "/collections/{}/fields/{}"}],
+                    "markers": "`api-parity:undocumented PUT /collections/{}/fields/{}`",
+                }
+            ],
+        )
+        published = [issue(9, "CLOSED", work["undocumented"][0]["markers"])]
+        work, _, _ = self.compare([site_page(), update_field], called=called, issues=published)
+        self.assertEqual(work["undocumented"], [])
+
+    def test_pending_removal_of_a_wrapped_endpoint_is_not_also_reported_as_undocumented(self):
+        _, baseline = self.save([site_page()])
+
+        work, _, _ = self.compare([bot_traffic_page()], baseline)
+
+        self.assertEqual([item["key"] for item in work["removed"]], ["GET /sites/{}"])
+        self.assertEqual(work["undocumented"], [])
+
+        published = [issue(4, "OPEN", work["removed"][0]["marker"])]
+        _, baseline = self.save([bot_traffic_page()], baseline, published)
+        work, _, _ = self.compare([bot_traffic_page()], baseline, published)
+        self.assertEqual((work["removed"], work["undocumented"]), ([], []))
+
+    def test_gaps_touching_provider_code_come_first(self):
+        def page(slug, section, method, path):
+            return snapshot.parse_page(entry(slug, section, slug), page_text(slug, method, path))
+
+        pages = [
+            bot_traffic_page(),
+            page("collections/get", "CMS > Collections", "GET", "/collections/{collection_id}"),
+            page("collections/create-field", "CMS > Collections", "POST", "/collections/{collection_id}/fields"),
+            site_page(),
+            page("sites/delete", "Sites", "DELETE", "/sites/{site_id}"),
+        ]
+
+        work, _, _ = self.compare(pages, called={"GET /sites/{}": ["site.go"], "GET /collections/{}": ["collection.go"]})
+
+        self.assertEqual([gap["section"] for gap in work["gaps"]], ["CMS > Collections", "Sites", "AEO Analytics"])
 
     def test_any_method_template_wraps_every_method_on_its_path(self):
         delete_site = snapshot.parse_page(entry("sites/delete", title="Delete Site"), page_text("Delete Site", "DELETE", "/sites/{site_id}"))
@@ -243,6 +307,7 @@ class CompareTest(unittest.TestCase):
         [drift] = work["drift"]
         self.assertEqual(drift["key"], "GET /sites/{}")
         self.assertEqual(drift["provider_files"], ["site.go"])
+        self.assertEqual(drift["page_file"], "reference/sites__get.md")
         self.assertIn("+- `locale` (string, optional) — Default locale", drift["diff"])
         self.assertRegex(drift["marker"], r"^`api-parity:drift GET /sites/\{\} [0-9a-f]{16}`$")
         self.assertIsNone(drift["open_issue"])
@@ -355,6 +420,57 @@ class CheckPagesTest(unittest.TestCase):
         self.assertEqual(work["counts"]["documented_endpoints"], 1)
 
 
+class FetchTextTest(unittest.TestCase):
+    """fetch_text against a local server that misbehaves the way a flaky CDN does."""
+
+    def serve(self, responses):
+        """Serve one scripted response per request: (status, body, declared length)."""
+        requests = []
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):
+                requests.append(self.path)
+                status, body, length = responses[min(len(requests), len(responses)) - 1]
+                self.send_response(status)
+                self.send_header("Content-Length", str(length))
+                self.end_headers()
+                self.wfile.write(body)
+                self.close_connection = True
+
+            def log_message(self, *args):
+                pass
+
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        sleep = mock.patch.object(snapshot.time, "sleep")
+        sleep.start()
+        self.addCleanup(sleep.stop)
+        return f"http://127.0.0.1:{server.server_address[1]}/page.md", requests
+
+    def test_retries_a_body_cut_short(self):
+        body = b"# Get Site\n"
+        url, requests = self.serve([(200, body[:4], len(body)), (200, body, len(body))])
+
+        self.assertEqual(snapshot.fetch_text(url), "# Get Site\n")
+        self.assertEqual(len(requests), 2)
+
+    def test_retries_server_errors_then_gives_up(self):
+        url, requests = self.serve([(503, b"busy", 4)])
+
+        with self.assertRaisesRegex(RuntimeError, "after 3 attempt"):
+            snapshot.fetch_text(url)
+        self.assertEqual(len(requests), snapshot.FETCH_ATTEMPTS)
+
+    def test_does_not_retry_a_missing_page(self):
+        url, requests = self.serve([(404, b"gone", 4)])
+
+        with self.assertRaisesRegex(RuntimeError, "after 1 attempt"):
+            snapshot.fetch_text(url)
+        self.assertEqual(len(requests), 1)
+
+
 class RunTest(unittest.TestCase):
     def test_rejects_a_truncated_index_before_fetching_pages(self):
         fetched = []
@@ -406,11 +522,21 @@ class RunTest(unittest.TestCase):
 
             written = json.loads((root / "out" / "work.json").read_text())
             baseline_files = sorted(p.name for p in (root / "out" / "baseline" / "pages").iterdir())
+            gap_pages = [(root / "out" / e["page_file"]).read_text() for gap in work["gaps"] for e in gap["endpoints"]]
+            index = (root / "out" / "reference" / "index.md").read_text()
 
         self.assertEqual(written, work)
         self.assertEqual(work["counts"]["documented_endpoints"], 4)
         self.assertEqual(work["counts"]["wrapped_endpoints"], 1)
         self.assertEqual(baseline_files, ["sites__get.md"])
+        self.assertEqual(len(gap_pages), 3)
+        self.assertTrue(all(text.startswith("# ") and "## Examples" not in text for text in gap_pages))
+        self.assertIn(
+            "- `DELETE /sites/{site_id}/access` | Enterprise > Site Access | Revoke Site Access (by email) | "
+            "reference/enterprise__site-access__remove-member-by-email.md",
+            index,
+        )
+        self.assertNotIn("site-publish", index)
 
 
 if __name__ == "__main__":

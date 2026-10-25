@@ -52,6 +52,9 @@ Pagination object
 
 ### SitesSiteIdWebhooksGetResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### SitesSiteIdWebhooksGetResponsesContentApplicationJsonSchemaWebhooksItemsFilter
 
 Only supported for the `form_submission` trigger type. Filter for the form you want Webhooks to be sent for.

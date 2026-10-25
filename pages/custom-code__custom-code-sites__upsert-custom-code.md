@@ -55,6 +55,9 @@ Request was successful
 
 ### SitesSiteIdCustomCodePutResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### SitesSiteIdCustomCodePutRequestBodyContentApplicationJsonSchemaScriptsItemsAttributes
 
 Developer-specified key/value pairs to be applied as attributes to the script

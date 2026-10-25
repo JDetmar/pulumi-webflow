@@ -44,3 +44,6 @@ Pagination object
 - `total` (integer, required) — The total number of records
 
 ### SitesSiteIdRedirectsGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

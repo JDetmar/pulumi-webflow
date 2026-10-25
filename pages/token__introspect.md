@@ -44,9 +44,18 @@ Details of the OAuth app the token belongs to. Present only for tokens issued to
 
 ### TokenIntrospectGetResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### TokenIntrospectGetResponses4XxContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### TokenIntrospectGetResponses5XxContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any
 
 ### TokenIntrospectGetResponsesContentApplicationJsonSchemaAuthorizationAuthorizedTo
 

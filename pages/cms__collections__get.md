@@ -59,6 +59,9 @@ A group of fields within a collection
 
 ### CollectionsCollectionIdGetResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### CollectionsCollectionIdGetResponsesContentApplicationJsonSchemaFieldsItemsValidations
 
 The validations for the field
@@ -66,3 +69,9 @@ The validations for the field
 - `additionalProperties` (CollectionsCollectionIdGetResponsesContentApplicationJsonSchemaFieldsItemsValidationsAdditionalProperties, optional)
 
 ### CollectionsCollectionIdGetResponsesContentApplicationJsonSchemaFieldsItemsValidationsAdditionalProperties
+
+- string
+- double
+- boolean
+- integer
+- map from string to any

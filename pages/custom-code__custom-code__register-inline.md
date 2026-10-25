@@ -45,3 +45,6 @@ Created
 ## Types
 
 ### SitesSiteIdRegisteredScriptsInlinePostResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

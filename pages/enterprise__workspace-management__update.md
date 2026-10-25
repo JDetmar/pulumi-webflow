@@ -61,6 +61,9 @@ Request was successful
 
 ### SitesSiteIdPatchResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### SitesSiteIdPatchResponsesContentApplicationJsonSchemaLocalesPrimary
 
 The primary locale for the site or application.

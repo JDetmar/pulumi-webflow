@@ -41,6 +41,14 @@ Request was successful
 
 A generic representation of a content element within the Document Object Model (DOM). Each node has a unique identifier and a specific type that determines its content structure and attributes.
 
+- Text Node DOM: Text Node DOM
+- Image Node: Image Node
+- Component Node: Component Node
+- Text Input Node: Text Input Node
+- Select Node: Select Node
+- Submit Button Node: Submit Button Node
+- Search Button Node: Search Button Node
+
 ### PagesPageIdDomGetResponsesContentApplicationJsonSchemaPagination
 
 Pagination object
@@ -50,6 +58,9 @@ Pagination object
 - `total` (integer, required) — The total number of records
 
 ### PagesPageIdDomGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any
 
 ### Text Node DOM
 
@@ -137,6 +148,8 @@ The image details of the node
 - `assetId` (string, optional)
 
 ### PagesPageIdDomGetResponsesContentApplicationJsonSchemaNodesItemsOneOf2PropertyOverridesItems
+
+- Component Property Text: Component Property Text
 
 ### PagesPageIdDomGetResponsesContentApplicationJsonSchemaNodesItemsOneOf4ChoicesItems
 

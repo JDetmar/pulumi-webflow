@@ -63,6 +63,9 @@ Pagination object
 
 ### SitesSiteIdAssetsGetResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### SitesSiteIdAssetsGetResponsesContentApplicationJsonSchemaAssetsItemsVariantsItems
 
 Asset variant details

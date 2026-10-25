@@ -34,3 +34,6 @@ Request was successful
 - `disallows` (list of string, optional) — List of paths disallowed for this user agent.
 
 ### SitesSiteIdRobotsTxtGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

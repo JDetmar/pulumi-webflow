@@ -62,6 +62,9 @@ Request was successful
 
 ### WorkspacesWorkspaceIdSitesPostResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### WorkspacesWorkspaceIdSitesPostResponsesContentApplicationJsonSchemaLocalesPrimary
 
 The primary locale for the site or application.

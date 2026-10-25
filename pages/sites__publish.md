@@ -46,3 +46,6 @@ Request accepted
 - `lastPublished` (string, optional, nullable) — The date the custom domain was last published to
 
 ### SitesSiteIdPublishPostResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

@@ -45,3 +45,6 @@ Request was successful
 ## Types
 
 ### SitesSiteIdRegisteredScriptsHostedPostResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

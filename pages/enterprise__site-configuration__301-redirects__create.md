@@ -38,3 +38,6 @@ Request was successful
 ## Types
 
 ### SitesSiteIdRedirectsPostResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

@@ -28,6 +28,9 @@ Reference: https://developers.webflow.com/data/reference/cms/collection-fields/c
 This endpoint expects a collections_fields_create_Request.
 
 - `collections_fields_create_Request`
+  - Static Field: Static Field
+  - Option Field: Option Field
+  - Reference Field: Reference Field
 
 ## Response
 
@@ -36,6 +39,9 @@ This endpoint expects a collections_fields_create_Request.
 Request was successful
 
 - `collections_fields_create_Response_200`
+  - Static Field: Static Field
+  - Option Field: Option Field
+  - Reference Field: Reference Field
 
 ## Types
 
@@ -104,6 +110,9 @@ Request was successful
 - `helpText` (string, optional) — Additional text to help anyone filling out this field
 
 ### CollectionsCollectionIdFieldsPostResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any
 
 ### CollectionsCollectionIdFieldsPostRequestBodyContentApplicationJsonSchemaOneOf1Metadata
 

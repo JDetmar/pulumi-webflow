@@ -44,3 +44,6 @@ Only supported for the `form_submission` trigger type. Filter for the form you w
 - `name` (string, optional) — The name of the form you'd like to recieve notifications for.
 
 ### WebhooksWebhookIdGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

@@ -31,3 +31,6 @@ Request was successful
 ## Types
 
 ### SitesSiteIdEcommerceSettingsGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

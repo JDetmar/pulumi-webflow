@@ -25,3 +25,6 @@ Request was successful. No Content is returned.
 ## Types
 
 ### SitesSiteIdDeleteResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

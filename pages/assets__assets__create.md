@@ -69,3 +69,6 @@ Metadata for uploading the asset binary
 - `Cache-Control` (string, optional)
 
 ### SitesSiteIdAssetsPostResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

@@ -38,6 +38,9 @@ Request was successful
 
 ### SitesSiteIdCustomCodeGetResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### SitesSiteIdCustomCodeGetResponsesContentApplicationJsonSchemaScriptsItemsAttributes
 
 Developer-specified key/value pairs to be applied as attributes to the script

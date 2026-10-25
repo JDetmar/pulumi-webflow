@@ -49,3 +49,6 @@ Request was successful
 - `slug` (string, required) — URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug.
 
 ### CollectionsCollectionIdItemsItemIdGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

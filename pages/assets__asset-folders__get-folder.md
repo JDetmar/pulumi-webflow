@@ -35,3 +35,6 @@ Request was successful
 ## Types
 
 ### AssetFoldersAssetFolderIdGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

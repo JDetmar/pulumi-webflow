@@ -106,9 +106,18 @@ A Collection Item represents a single entry in your collection. Each item includ
 
 ### CollectionsCollectionIdItemsGetResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### CollectionsCollectionIdItemsGetParametersFilterSchemaIn
 
+- string
+- list of string
+
 ### CollectionsCollectionIdItemsGetParametersFilterSchemaNin
+
+- string
+- list of string
 
 ### CollectionsCollectionIdItemsGetResponsesContentApplicationJsonSchemaItemsItemsFieldData
 

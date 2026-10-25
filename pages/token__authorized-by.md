@@ -27,6 +27,15 @@ Request was successful
 
 ### TokenAuthorizedByGetResponsesContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### TokenAuthorizedByGetResponses4XxContentApplicationJsonSchemaDetailsItems
 
+- string
+- map from string to any
+
 ### TokenAuthorizedByGetResponses5XxContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

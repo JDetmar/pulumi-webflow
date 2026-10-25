@@ -51,6 +51,10 @@ Request was successful
 
 Details about the field of a collection
 
+- Static Field: Static Field
+- Option Field: Option Field
+- Reference Field: Reference Field
+
 ### SitesSiteIdCollectionsPostResponsesContentApplicationJsonSchemaFieldsItems
 
 The details of a field in a collection
@@ -74,6 +78,9 @@ A group of fields within a collection
 - `description` (string, optional) — A description of the field group
 
 ### SitesSiteIdCollectionsPostResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any
 
 ### Static Field
 
@@ -126,6 +133,12 @@ The collectionId for the referenced collection. Only applicable for Reference an
 - `collectionId` (string, required) — The unique identifier of the collection
 
 ### SitesSiteIdCollectionsPostResponsesContentApplicationJsonSchemaFieldsItemsValidationsAdditionalProperties
+
+- string
+- double
+- boolean
+- integer
+- map from string to any
 
 ### SitesSiteIdCollectionsPostRequestBodyContentApplicationJsonSchemaFieldsItemsOneOf1MetadataOptionsItems
 

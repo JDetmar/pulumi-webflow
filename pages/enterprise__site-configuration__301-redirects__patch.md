@@ -39,3 +39,6 @@ Request was successful
 ## Types
 
 ### SitesSiteIdRedirectsRedirectIdPatchResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

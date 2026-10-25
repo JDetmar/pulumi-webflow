@@ -43,3 +43,6 @@ Request was successful
 ## Types
 
 ### SitesSiteIdAssetFoldersPostResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

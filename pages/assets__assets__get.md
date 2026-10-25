@@ -57,3 +57,6 @@ Asset variant details
 - `error` (string, optional, nullable) — Any associated validation errors
 
 ### AssetsAssetIdGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

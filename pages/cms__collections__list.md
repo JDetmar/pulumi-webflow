@@ -40,3 +40,6 @@ A collection object
 - `lastUpdated` (string, optional) — The date the collection was last updated
 
 ### SitesSiteIdCollectionsGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

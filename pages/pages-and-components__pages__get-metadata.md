@@ -66,3 +66,6 @@ Open Graph fields for the Page
 - `descriptionCopied` (boolean, optional, default: true) — Indicates the Open Graph description was copied from the SEO description
 
 ### PagesPageIdGetResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

@@ -27,3 +27,6 @@ Request was successful. No Content is returned.
 ## Types
 
 ### CollectionsCollectionIdDeleteResponsesContentApplicationJsonSchemaDetailsItems
+
+- string
+- map from string to any

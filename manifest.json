@@ -1224,6 +1224,17 @@
       "wrapped": true
     },
     {
+      "key": "DELETE /workspaces/{}/members/bulk",
+      "method": "DELETE",
+      "path": "/workspaces/{workspace_id}/members/bulk",
+      "section": "Enterprise > Workspace Members",
+      "title": "Bulk Remove Workspace Members",
+      "url": "https://developers.webflow.com/data/v2.0.0/reference/enterprise/workspace-members/bulk-remove-members",
+      "slug": "enterprise/workspace-members/bulk-remove-members",
+      "hash": "2ac6074ae7bc6f2f",
+      "wrapped": false
+    },
+    {
       "key": "DELETE /workspaces/{}/members/{}",
       "method": "DELETE",
       "path": "/workspaces/{workspace_id}/members/{member_id}",
